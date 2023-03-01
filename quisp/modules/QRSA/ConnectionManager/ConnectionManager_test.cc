@@ -205,6 +205,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   {
     auto *packetFor3 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[1]);
     ASSERT_NE(packetFor3, nullptr);
+    EXPECT_EQ(packetFor3->getApplication_id(), 1);
     EXPECT_EQ(packetFor3->getDestAddr(), 3);
     auto ruleset = packetFor3->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
@@ -259,6 +260,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   {
     auto *packetFor4 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[2]);
     ASSERT_NE(packetFor4, nullptr);
+    EXPECT_EQ(packetFor4->getApplication_id(), 1);
     EXPECT_EQ(packetFor4->getDestAddr(), 4);
     auto ruleset = packetFor4->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
@@ -322,6 +324,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   {
     auto *packetFor5 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[3]);
     ASSERT_NE(packetFor5, nullptr);
+    EXPECT_EQ(packetFor5->getApplication_id(), 1);
     EXPECT_EQ(packetFor5->getDestAddr(), 5);
     auto ruleset = packetFor5->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
