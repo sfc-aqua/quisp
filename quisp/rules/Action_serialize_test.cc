@@ -90,7 +90,6 @@ TEST(ActionTest, Purification_Correlation_Action_Deserialization) {}
 TEST(ActionTest, Swapping_Correction_Action_Serialization) {}
 TEST(ActionTest, Swapping_Correction_Action_Deserialization) {}
 
-
 TEST(ActionTest, Tomography_serialize_json) {
   prepareSimulation();
   // num measure

@@ -31,7 +31,7 @@ OP(BLT)  // branch if less than
 OP(BGE)  // branch if greater or equal
 OP(BRANCH_IF_LOCKED)  // branch if the given qubit is locked
 OP(BRANCH_IF_QUBIT_FOUND)  // branch if the qubit found after GET_QUBIT
-OP(BRANCH_IF_MESSAGE_FOUND) // branch if GET_MESSAGE flag is set
+OP(BRANCH_IF_MESSAGE_FOUND)  // branch if GET_MESSAGE flag is set
 
 // memory
 OP(LOAD)

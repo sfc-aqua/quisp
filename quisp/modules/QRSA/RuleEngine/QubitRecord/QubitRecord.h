@@ -1,9 +1,9 @@
 #pragma once
 
+#include "IQubitRecord.h"
 #include "modules/Logger/ILogger.h"
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
-#include "IQubitRecord.h"
 
 namespace quisp::modules::qubit_record {
 

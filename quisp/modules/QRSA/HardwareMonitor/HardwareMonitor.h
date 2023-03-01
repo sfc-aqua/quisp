@@ -91,8 +91,8 @@ class HardwareMonitor : public IHardwareMonitor {
   std::unique_ptr<quisp::rules::Rule> constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address, const QNIC_type qnic_type,
                                                           const int qnic_index, const int send_tag) const;
 
-  std::unique_ptr<quisp::rules::Rule> constructCorrelationCheckRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address, const QNIC_type qnic_type,
-                                                          const int qnic_index, const int receive_tag) const;
+  std::unique_ptr<quisp::rules::Rule> constructCorrelationCheckRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address,
+                                                                    const QNIC_type qnic_type, const int qnic_index, const int receive_tag) const;
 };
 
 Define_Module(HardwareMonitor);
