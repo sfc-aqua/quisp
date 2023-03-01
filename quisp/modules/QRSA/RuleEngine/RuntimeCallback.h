@@ -37,6 +37,11 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     return MeasurementOutcome{.basis = 'Z', .outcome_is_plus = qubit->measureZ() == types::EigenvalueResult::PLUS_ONE};
   }
 
+  MeasurementOutcome measureQubitY(IQubitRecord *qubit_rec) override {
+    auto qubit = provider.getStationaryQubit(qubit_rec);
+    return MeasurementOutcome{.basis = 'Y', .outcome_is_plus = qubit->measureY() == types::EigenvalueResult::PLUS_ONE};
+  }
+
   void gateX(IQubitRecord *qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     assert(qubit != nullptr);

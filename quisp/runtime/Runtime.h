@@ -57,6 +57,7 @@ class Runtime {
     virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
     virtual MeasurementOutcome measureQubitX(IQubitRecord*) = 0;
     virtual MeasurementOutcome measureQubitZ(IQubitRecord*) = 0;
+    virtual MeasurementOutcome measureQubitY(IQubitRecord*) = 0;
     virtual void gateX(IQubitRecord*) = 0;
     virtual void gateZ(IQubitRecord*) = 0;
     virtual void gateY(IQubitRecord*) = 0;
