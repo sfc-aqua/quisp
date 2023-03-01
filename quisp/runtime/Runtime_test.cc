@@ -97,7 +97,8 @@ TEST_F(RuntimeTest, ExecRuleSetWithCondPassed) {
   RuleSet rs{"",
              {Rule{
                  "",
-                 1,
+                 -1,
+                 -1,
                  Program{"cond passed",
                          {// initialize the memory with 0
                           INSTR_STORE_MemoryKey_int_{{result_key, 0}},
@@ -118,7 +119,8 @@ TEST_F(RuntimeTest, ExecRuleSetWithCondFailed) {
   RuleSet rs{"",
              {Rule{
                  "",
-                 1,
+                 -1,
+                 -1,
                  Program{"cond failed",
                          {// initialize the memory with 0
                           INSTR_STORE_MemoryKey_int_{{result_key, 0}},
@@ -139,7 +141,8 @@ TEST_F(RuntimeTest, PromoteQubit) {
              {
                  Rule{
                      "requires qubit with partner_addr",
-                     1,
+                     -1,
+                     -1,
                      Program{"",
                              {
 
@@ -148,7 +151,7 @@ TEST_F(RuntimeTest, PromoteQubit) {
                                  INSTR_RET_ReturnCode_{{ReturnCode::COND_FAILED}}}},
                      Program{"action", {}},
                  },
-                 Rule{"requires qubit with partner_addr", 1,
+                 Rule{"requires qubit with partner_addr", -1, -1,
                       Program{"",
                               {
                                   // clang-format off
@@ -171,7 +174,7 @@ TEST_F(RuntimeTest, PromoteQubit) {
   auto* first_rule_qubit = runtime->getQubitByPartnerAddr(partner_addr, 0);
   EXPECT_EQ(first_rule_qubit, qubit);
   auto it = runtime->qubits.begin();
-  runtime->promoteQubit(it);
+  runtime->promoteQubit(qubit);
   runtime->rule_id = 1;
   auto* second_rule_qubit = runtime->getQubitByPartnerAddr(partner_addr, 0);
   EXPECT_EQ(second_rule_qubit, qubit);
@@ -184,7 +187,8 @@ TEST_F(RuntimeTest, AssignQubit) {
       {
           Rule{
               "requires qubit with partner_addr",
-              1,
+              -1,
+              -1,
               Program{"",
                       {
 
@@ -193,7 +197,7 @@ TEST_F(RuntimeTest, AssignQubit) {
                           INSTR_RET_ReturnCode_{{ReturnCode::COND_FAILED}}}},
               Program{"action", {}},
           },
-          Rule{"requires qubit with partner_addr", 1,
+          Rule{"requires qubit with partner_addr", -1, -1,
                Program{"",
                        {
                            // clang-format off

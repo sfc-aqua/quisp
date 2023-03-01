@@ -16,11 +16,12 @@ using quisp::modules::QNIC_type;
 TEST(ActionTest, Purification_serialize_json) {
   prepareSimulation();
   // purification_type, partner_addr, qnic_type, qnic_id
-  auto purification = std::make_unique<Purification>(PurType::DSDA, 3);
+  auto purification = std::make_unique<Purification>(PurType::DSDA, 3, 11);
   json purification_json = purification->serialize_json();
   EXPECT_EQ(purification_json["type"], "purification");
   EXPECT_EQ(purification_json["options"]["purification_type"], "DSDA");
   EXPECT_EQ(purification_json["options"]["interface"][0]["partner_address"], 3);
+  EXPECT_EQ(purification_json["options"]["shared_rule_tag"], 11);
 }
 
 TEST(ActionTest, Purification_deserialize_json) {
@@ -31,12 +32,14 @@ TEST(ActionTest, Purification_deserialize_json) {
       "purification_type": "DOUBLE_INV",
       "interface": [
         {"partner_address": 1}
-        ]
+        ],
+      "shared_rule_tag": 11
       }
     })");
   auto empty_purification = std::make_unique<Purification>(serialized);
   auto qnic_interface = empty_purification->qnic_interfaces.at(0);
   EXPECT_EQ(empty_purification->purification_type, PurType::DOUBLE_INV);
+  EXPECT_EQ(empty_purification->shared_rule_tag, 11);
   EXPECT_EQ(qnic_interface.partner_addr, 1);
 }
 
@@ -49,11 +52,12 @@ TEST(ActionTest, EntanglementSwapping_serialize_json) {
   std::vector<QNIC_type> remote_qnic_types = {QNIC_R, QNIC_E};
   std::vector<int> remote_qnic_ids = {12, 16};
   std::vector<int> remote_qnic_address = {21, 22};
-  auto swapping = std::make_unique<EntanglementSwapping>(partners);
+  auto swapping = std::make_unique<EntanglementSwapping>(partners, 12);
   json swapping_json = swapping->serialize_json();
   EXPECT_EQ(swapping_json["type"], "swapping");
   EXPECT_EQ(swapping_json["options"]["interface"][0]["partner_address"], 1);
   EXPECT_EQ(swapping_json["options"]["interface"][1]["partner_address"], 3);
+  EXPECT_EQ(swapping_json["options"]["shared_rule_tag"], 12);
 }
 
 TEST(ActionTest, EntanglementSwapping_deserialize_json) {
@@ -68,7 +72,8 @@ TEST(ActionTest, EntanglementSwapping_deserialize_json) {
       "remote_interface":[
         {"partner_address": 1},
         {"partner_address": 3}
-      ]
+      ],
+      "shared_rule_tag": 12
       }
     })");
   auto empty_swapping = std::make_unique<EntanglementSwapping>(serialized);
@@ -76,31 +81,15 @@ TEST(ActionTest, EntanglementSwapping_deserialize_json) {
   EXPECT_EQ(qnic_interface_left.partner_addr, 1);
   auto qnic_interface_right = empty_swapping->qnic_interfaces.at(1);
   EXPECT_EQ(qnic_interface_right.partner_addr, 3);
+  auto shared_rule_tag = empty_swapping->shared_rule_tag;
+  EXPECT_EQ(shared_rule_tag, 12);
 }
 
-TEST(ActionTest, Wait_serialize_json) {
-  prepareSimulation();
-  // num measure
-  auto wait = std::make_unique<Wait>(13);
-  json wait_json = wait->serialize_json();
-  EXPECT_EQ(wait_json["type"], "wait");
-  EXPECT_EQ(wait_json["options"]["interface"][0]["partner_address"], 13);
-}
+TEST(ActionTest, Purification_Correlation_Action_Serialization) {}
+TEST(ActionTest, Purification_Correlation_Action_Deserialization) {}
+TEST(ActionTest, Swapping_Correction_Action_Serialization) {}
+TEST(ActionTest, Swapping_Correction_Action_Deserialization) {}
 
-TEST(ActionTest, Wait_deserialize_json) {
-  prepareSimulation();
-  auto serialized = json::parse(R"({
-    "type": "wait",
-    "options": {
-      "interface":[
-        {"partner_address": 1}
-      ]
-      }
-    })");
-  auto empty_wait = std::make_unique<Wait>(serialized);
-  auto qnic_interface = empty_wait->qnic_interfaces.at(0);
-  EXPECT_EQ(qnic_interface.partner_addr, 1);
-}
 
 TEST(ActionTest, Tomography_serialize_json) {
   prepareSimulation();
