@@ -21,7 +21,6 @@ class Rule {
   Rule(int partner_address, int send_tag, int receive_tag);
   Rule(std::vector<int> partner_address, int send_tag, int receive_tag);
   Rule(json serialized) { deserialize_json(serialized); };
-  unsigned long parent_ruleset_id;
   int send_tag;  ///< used to denote which rules should receive this message
   int receive_tag;  ///< RuleEngine will assign a message with this tag to this rule.
   std::vector<QnicInterface> qnic_interfaces;
