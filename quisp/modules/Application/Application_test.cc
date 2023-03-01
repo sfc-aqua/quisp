@@ -35,11 +35,13 @@ class AppTestTarget : public quisp::modules::Application {
     return toRouterGate;
   };
   explicit AppTestTarget(TestQNode *parent_qnode) : Application(), toRouterGate(new TestGate(this, "toRouter")) {
+    this->id = 1;
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     setComponentType(new TestModuleType("test qnode"));
   }
   virtual ~AppTestTarget() { EVCB.gateDeleted(toRouterGate); }
   std::unordered_map<int, int> getEndNodeWeightMap() { return this->end_node_weight_map; }
+  int getId() { return this->id; }
   int getAddress() { return this->my_address; }
   bool isInitiator() { return this->is_initiator; }
 
@@ -53,7 +55,7 @@ TEST(AppTest, Init_IsNotInitiator) {
 
   sim->registerComponent(app);
   app->callInitialize();
-
+  ASSERT_EQ(app->getId(), 1);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 0);
 }
@@ -70,6 +72,7 @@ TEST(AppTest, Init_IsInitiator) {
   sim->registerComponent(app);
   app->callInitialize();
 
+  ASSERT_EQ(app->getId(), 1);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 1);
   ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());
@@ -90,6 +93,7 @@ TEST(AppTest, Init_WeightMap_Generation) {
   sim->registerComponent(app);
   app->callInitialize();
 
+  ASSERT_EQ(app->getId(), 1);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 3);
   ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());
@@ -115,6 +119,7 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   sim->registerComponent(app);
   app->callInitialize();
 
+  ASSERT_EQ(app->getId(), 1);
   ASSERT_EQ(app->getAddress(), 123);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 2);
 
@@ -124,6 +129,7 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   auto *msg = app->toRouterGate->messages.at(0);
   ASSERT_NE(msg, nullptr);
   auto *pkt = dynamic_cast<ConnectionSetupRequest *>(msg);
+  ASSERT_EQ(pkt->getApplication_id(), 1);
   ASSERT_EQ(pkt->getActual_srcAddr(), 123);
   ASSERT_EQ(pkt->getActual_destAddr(), mock_qnode2->address);
   ASSERT_EQ(pkt->getSrcAddr(), 123);
@@ -206,6 +212,7 @@ TEST(AppTest, Specifying_Valid_Addresses_As_Recipients) {
   sim->registerComponent(app);
   app->callInitialize();
 
+  ASSERT_EQ(app->getId(), 1);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 2);  // self and 456
   ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());
