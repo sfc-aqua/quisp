@@ -23,6 +23,7 @@ Application::Application() : provider(utils::ComponentProvider{this}) {}
  * If the node type is not EndNode, this module is automatically deleted in this function.
  */
 void Application::initialize() {
+
   initializeLogger(provider);
 
   // Since we only need this module in EndNode, delete it otherwise.
@@ -52,7 +53,7 @@ void Application::initialize() {
  */
 ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources) {
   ConnectionSetupRequest *pk = new ConnectionSetupRequest("ConnSetupRequest");
-  pk->setApplication_id(application_id);
+  pk->setApplication_id(id);
   pk->setActual_srcAddr(my_address);
   pk->setActual_destAddr(dest_addr);
   pk->setDestAddr(my_address);
