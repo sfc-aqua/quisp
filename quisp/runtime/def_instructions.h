@@ -91,10 +91,10 @@ INSTR(PROMOTE, QubitId, RegId /* new partner addr */)  // promote with new partn
 INSTR(LOCK_QUBIT, QubitId, RegId /* action index */)
 
 // message operations
-INSTR(GET_MESSAGE_SEQ, RegId /* read: message index */, RegId /* write: sequence number */)
-INSTR(COUNT_MESSAGE, RegId /* read: sequence number */, RegId /* write: count */)
-INSTR(GET_MESSAGE, RegId /* read: sequence number */, int /* read: message index */, RegId /* write: correction_frame */)  // for swapping
-INSTR(GET_MESSAGE, RegId /* read: sequence number */, int /* read: message index */, RegId /* write: measurement_result */, RegId /* write: protocol */)  // for purification
+INSTR(GET_MESSAGE_SEQ, RegId /* write: sequence number */, RegId /* read: message index */)
+INSTR(COUNT_MESSAGE, RegId /* write: count */, RegId /* read: sequence number */)
+INSTR(GET_MESSAGE, RegId /* w: content[1] */, RegId /* r: sequence number */, int /* r: message index */)  // for purification [result]
+INSTR(GET_MESSAGE, RegId /* w: content[1] */, RegId /* w: content[2] */, RegId /* r: sequence number */, int /* r: message index */)  // for swapping [correction_op, new_partner]
 INSTR(DELETE_MESSAGE, RegId /* read: sequence number */)  // delete all messages with this sequence number
 
 // send classical messages

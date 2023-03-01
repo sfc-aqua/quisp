@@ -1,9 +1,8 @@
-#include <iostream>
+#include "InstructionVisitor.h"
+
 #include <stdexcept>
 
-#include "InstructionVisitor.h"
 #include "Runtime.h"
-#include "runtime/types.h"
 
 namespace quisp::runtime {
 
@@ -427,7 +426,7 @@ void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_RegId_& instruct
 }
 
 void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_SEQ_RegId_RegId_& instruction) {
-  auto [message_index_reg_id, sequence_number_reg_id] = instruction.args;
+  auto [sequence_number_reg_id, message_index_reg_id] = instruction.args;
   auto message_index = runtime->getRegVal(message_index_reg_id);
   auto& rule_messages = runtime->messages[{runtime->rule_id}];
   if (message_index >= rule_messages.size()) {
@@ -440,7 +439,7 @@ void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_SEQ_RegId_RegId_& in
 }
 
 void InstructionVisitor::operator()(const INSTR_COUNT_MESSAGE_RegId_RegId_& instruction) {
-  auto [sequence_number_reg_id, return_reg_id] = instruction.args;
+  auto [return_reg_id, sequence_number_reg_id] = instruction.args;
   auto sequence_number = runtime->getRegVal(sequence_number_reg_id);
   auto& rule_messages = runtime->messages[{runtime->rule_id}];
   int count = 0;
@@ -452,8 +451,8 @@ void InstructionVisitor::operator()(const INSTR_COUNT_MESSAGE_RegId_RegId_& inst
   runtime->setRegVal(return_reg_id, count);
 }
 
-void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_& instruction) {
-  auto [sequence_number_reg_id, message_index, content_reg_id_1] = instruction.args;
+void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_RegId_int_& instruction) {
+  auto [content_reg_id_1, sequence_number_reg_id, message_index] = instruction.args;
   auto sequence_number = runtime->getRegVal(sequence_number_reg_id);
   auto& rule_messages = runtime->messages[{runtime->rule_id}];
 
@@ -469,8 +468,8 @@ void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_& in
   }
 }
 
-void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_RegId_& instruction) {
-  auto [sequence_number_reg_id, message_index, content_reg_id_1, content_reg_id_2] = instruction.args;
+void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_RegId_RegId_int_& instruction) {
+  auto [content_reg_id_1, content_reg_id_2, sequence_number_reg_id, message_index] = instruction.args;
   auto sequence_number = runtime->getRegVal(sequence_number_reg_id);
   auto& rule_messages = runtime->messages[{runtime->rule_id}];
 

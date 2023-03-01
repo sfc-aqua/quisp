@@ -160,11 +160,11 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       opcodes.push_back(INSTR_SET_RegId_int_{{qubit_id, -1}});
       // LOOP
       opcodes.push_back(INSTR_INC_RegId_{{msg_index}, {loop_label}});
-      opcodes.push_back(INSTR_GET_MESSAGE_SEQ_RegId_RegId_{{msg_index, seq_no}});
+      opcodes.push_back(INSTR_GET_MESSAGE_SEQ_RegId_RegId_{{seq_no, msg_index}});
       opcodes.push_back(INSTR_BRANCH_IF_MESSAGE_FOUND_Label_{found_message_label});
       opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_FAILED});
       // FOUND_MESSAGE
-      opcodes.push_back(INSTR_COUNT_MESSAGE_RegId_RegId_{{seq_no, msg_count}, found_message_label});
+      opcodes.push_back(INSTR_COUNT_MESSAGE_RegId_RegId_{{msg_count, seq_no}, found_message_label});
       opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{find_qubit_label, msg_count, 2}});
       opcodes.push_back(INSTR_JMP_Label_{loop_label});
       // FIND_QUBIT
@@ -212,7 +212,7 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       opcodes.push_back(INSTR_SET_RegId_int_{{qubit_id, -1}});
       // LOOP
       opcodes.push_back(INSTR_INC_RegId_{{msg_index}, {loop_label}});
-      opcodes.push_back(INSTR_GET_MESSAGE_SEQ_RegId_RegId_{{msg_index, seq_no}});
+      opcodes.push_back(INSTR_GET_MESSAGE_SEQ_RegId_RegId_{{seq_no, msg_index}});
       opcodes.push_back(INSTR_BRANCH_IF_MESSAGE_FOUND_Label_{find_qubit_label});
       opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_FAILED});
       // FIND_QUBIT
@@ -715,8 +715,8 @@ Program RuleSetConverter::constructPurificationCorrelationAction(const Purificat
   std::vector<InstructionTypes> opcodes;
   opcodes.push_back(INSTR_LOAD_RegId_MemoryKey_{{seq_no, key}});
   opcodes.push_back(INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_{{qubit, partner_address, seq_no}});
-  opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_{{seq_no, 0, result_0}});
-  opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_{{seq_no, 1, result_1}});
+  opcodes.push_back(INSTR_GET_MESSAGE_RegId_RegId_int_{{result_0, seq_no, 0}});
+  opcodes.push_back(INSTR_GET_MESSAGE_RegId_RegId_int_{{result_1, seq_no, 1}});
   opcodes.push_back(INSTR_DELETE_MESSAGE_RegId_{seq_no});
   opcodes.push_back(INSTR_BEQ_Label_RegId_RegId_{{result_match_label, result_0, result_1}});
   opcodes.push_back(INSTR_FREE_QUBIT_QubitId_{qubit});
@@ -765,7 +765,7 @@ Program RuleSetConverter::constructSwappingCorrectionAction(const SwappingCorrec
   std::vector<InstructionTypes> opcodes;
   opcodes.push_back(INSTR_LOAD_RegId_MemoryKey_{{seq_no, key}});
   opcodes.push_back(INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_{{qubit, partner_address, seq_no}});
-  opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_RegId_{{seq_no, 0, pauli_op, new_partner_addr}});
+  opcodes.push_back(INSTR_GET_MESSAGE_RegId_RegId_RegId_int_{{pauli_op, new_partner_addr, seq_no, 0}});
   opcodes.push_back(INSTR_DELETE_MESSAGE_RegId_{seq_no});
   opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{pauli_z_label, pauli_op, 1}});
   opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{pauli_x_label, pauli_op, 2}});

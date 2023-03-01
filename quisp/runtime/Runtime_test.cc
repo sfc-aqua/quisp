@@ -1,7 +1,9 @@
 #include "Runtime.h"
+
 #include <gtest/gtest.h>
-#include <modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h>
+
 #include "modules/QRSA/QRSA.h"
+#include "modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h"
 #include "runtime/InstructionVisitor.h"
 #include "runtime/types.h"
 #include "test.h"

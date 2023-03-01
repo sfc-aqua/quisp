@@ -1,11 +1,6 @@
-#include <stdexcept>
-#include <variant>
-
-#include "InstructionVisitor.h"
 #include "Runtime.h"
-#include "Value.h"
-#include "omnetpp/cexception.h"
-#include "types.h"
+
+#include <omnetpp.h>
 
 namespace quisp::runtime {
 
@@ -192,7 +187,6 @@ void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr n
   sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit_record]);
   sequence_number_to_qubit[{new_partner_addr, next_rule_id, next_rule_sequence_number}] = qubit_record;
   qubit_to_sequence_number[qubit_record] = {new_partner_addr, next_rule_id, next_rule_sequence_number};
-  std::cout << "promote from " << partner_addr << " to " << new_partner_addr << " seq_no " << next_rule_sequence_number << '\n';
 }
 void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) {
   qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record);
