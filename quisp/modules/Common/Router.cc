@@ -29,8 +29,6 @@ void Router::initialize() {
 
   cTopology::Node *thisNode = topo->getNodeFor(getParentModule());  // The parent node with this specific router
 
-  int number_of_links_total = 0;
-
   // Initialize channel weights for all existing links.
   for (int x = 0; x < topo->getNumNodes(); x++) {  // Traverse through all nodes
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.

@@ -379,7 +379,6 @@ void HardwareMonitor::finish() {
     double Yerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_Y.real()).trace();
     EV << "Yerr = " << Yerr_rate << "\n";
 
-    double bellpairs_per_sec = 10;  // FIXME should be sec
     // FIXME should be updated
     double denom = fidelity * fidelity * tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec;
     double link_cost;
@@ -626,7 +625,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   auto *tomography_RuleSet = new RuleSet(RuleSet_id, my_address);
   EV_INFO << "Creating rules now ruleset_id = " << RuleSet_id << ", partner_address = " << partner_address << "\n";
 
-  int rule_id = 0;
   int shared_tag = 0;
   std::string rule_name;
   std::vector<int> partners = {partner_address};
@@ -658,7 +656,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         {
           rule_name = "X purification with: " + std::to_string(partner_address);
           auto rule = constructPurifyRule(rule_name, PurType::SINGLE_X, partner_address, qnic_type, qnic_index, shared_tag);
-          rule_id++;
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_X, partner_address, qnic_type, qnic_index, shared_tag++));
         }
@@ -666,7 +663,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         {
           rule_name = "Z purification with: " + std::to_string(partner_address);
           auto rule = constructPurifyRule(rule_name, PurType::SINGLE_Z, partner_address, qnic_type, qnic_index, shared_tag);
-          rule_id++;
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_Z, partner_address, qnic_type, qnic_index, shared_tag++));
         }
@@ -706,7 +702,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_Z, partner_address, qnic_type, qnic_index, shared_tag++));
         }
-        rule_id++;
       }
     } else if (purification_type == 1001) {
       /// # Purification_type 1001: #
@@ -727,7 +722,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       for (int i = 0; i < num_purification; i++) {
         rule_name = "Double purification with: " + std::to_string(partner_address);
         auto rule = constructPurifyRule(rule_name, PurType::DOUBLE, partner_address, qnic_type, qnic_index, shared_tag);
-        rule_id++;
         tomography_RuleSet->addRule(std::move(rule));
         tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE, partner_address, qnic_type, qnic_index, shared_tag++));
       }
@@ -758,7 +752,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_INV, partner_address, qnic_type, qnic_index, shared_tag++));
         }
-        rule_id++;
       }
     } else if (purification_type == 1011) {
       /// # Purification_type 1011: #
@@ -778,7 +771,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       for (int i = 0; i < num_purification; i++) {
         rule_name = "Double Selection with: " + std::to_string(partner_address);
         auto rule = constructPurifyRule(rule_name, PurType::DSSA, partner_address, qnic_type, qnic_index, shared_tag);
-        rule_id++;
         tomography_RuleSet->addRule(std::move(rule));
         tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::DSSA, partner_address, qnic_type, qnic_index, shared_tag++));
       }
@@ -809,7 +801,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::DSSA_INV, partner_address, qnic_type, qnic_index, shared_tag++));
         }
-        rule_id++;
       }
     } else if (purification_type == 1031) {
       /// # Purification_type 1031: #
@@ -839,7 +830,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::DSSA_INV, partner_address, qnic_type, qnic_index, shared_tag++));
         }
-        rule_id++;
       }
     } else if (purification_type == 1061) {
       /// # Purification_type 1061: #
@@ -869,7 +859,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           tomography_RuleSet->addRule(
               constructCorrelationCheckRule("purification correlation check", PurType::DSDA_SECOND_INV, partner_address, qnic_type, qnic_index, shared_tag++));
         }
-        rule_id++;
       }
     } else if (purification_type == 5555) {  // Predefined purification method
       /// # Purification_type 5555: #
@@ -906,7 +895,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::DSDA_INV, partner_address, qnic_type, qnic_index, shared_tag++));
         }
-        rule_id++;
       }
 
       for (int i = 0; i < num_purification; i++) {
@@ -922,7 +910,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_Z, partner_address, qnic_type, qnic_index, shared_tag++));
         }
-        rule_id++;
       }
     } else if (purification_type == 5556) {  // Predefined purification method
       /// # Purification_type 5556: #
@@ -938,7 +925,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// scheme, but can use different schemes in different rounds.
       rule_name = "Double selection action with: " + std::to_string(partner_address);
       auto rule = constructPurifyRule(rule_name, PurType::DSSA, partner_address, qnic_type, qnic_index, shared_tag);
-      rule_id++;
       tomography_RuleSet->addRule(std::move(rule));
       tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::DSSA, partner_address, qnic_type, qnic_index, shared_tag++));
 
@@ -955,7 +941,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_X, partner_address, qnic_type, qnic_index, shared_tag++));
         }
-        rule_id++;
       }
     } else if ((X_Purification && !Z_Purification) || (!X_Purification && Z_Purification)) {  // X or Z purification. Out-dated syntax.
       /// # Purification_type default: #
@@ -971,7 +956,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// purification. Use of this for new work is deprecated.
       rule_name = "Single purification with: " + std::to_string(partner_address);
       auto rule = constructPurifyRule(rule_name, (X_Purification ? PurType::SINGLE_X : PurType::SINGLE_Z), partner_address, qnic_type, qnic_index, shared_tag);
-      rule_id++;
       tomography_RuleSet->addRule(std::move(rule));
       tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", (X_Purification ? PurType::SINGLE_X : PurType::SINGLE_Z), partner_address,
                                                                 qnic_type, qnic_index, shared_tag++));
