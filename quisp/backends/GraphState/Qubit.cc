@@ -419,6 +419,12 @@ void GraphStateQubit::gateX() {
   this->applyClifford(CliffordOperator::X);
   this->applySingleQubitGateError(gate_err_x);
 }
+void GraphStateQubit::gateY() {
+  this->applyMemoryError();
+  this->applyClifford(CliffordOperator::Y);
+  // TODO: add single qubit error gate for Y?
+  this->applySingleQubitGateError(gate_err_x);
+}
 void GraphStateQubit::gateS() {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::S);

@@ -107,6 +107,11 @@ void InstructionVisitor::operator()(const INSTR_GATE_Z_QubitId_& instruction) {
   runtime->gateZ(qubit_id);
 }
 
+void InstructionVisitor::operator()(const INSTR_GATE_Y_QubitId_& instruction) {
+  auto [qubit_id] = instruction.args;
+  runtime->gateY(qubit_id);
+}
+
 void InstructionVisitor::operator()(const INSTR_GATE_CNOT_QubitId_QubitId_& instruction) {
   auto [control_qubit_id, target_qubit_id] = instruction.args;
   runtime->gateCNOT(control_qubit_id, target_qubit_id);

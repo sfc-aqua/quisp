@@ -49,6 +49,12 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     qubit->gateZ();
   }
 
+  void gateY(IQubitRecord *qubit_rec) override {
+    auto *qubit = provider.getStationaryQubit(qubit_rec);
+    assert(qubit != nullptr);
+    qubit->gateY();
+  }
+
   void gateCNOT(IQubitRecord *control_qubit_rec, IQubitRecord *target_qubit_rec) override {
     auto *control_qubit = provider.getStationaryQubit(control_qubit_rec);
     auto *target_qubit = provider.getStationaryQubit(target_qubit_rec);

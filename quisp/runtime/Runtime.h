@@ -59,6 +59,7 @@ class Runtime {
     virtual MeasurementOutcome measureQubitZ(IQubitRecord*) = 0;
     virtual void gateX(IQubitRecord*) = 0;
     virtual void gateZ(IQubitRecord*) = 0;
+    virtual void gateY(IQubitRecord*) = 0;
     virtual void gateCNOT(IQubitRecord* control_qubit_rec, IQubitRecord* target_qubit_rec) = 0;
     virtual bool purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
     virtual bool purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
@@ -270,6 +271,9 @@ class Runtime {
 
   /// @brief apply Z gate
   void gateZ(QubitId);
+
+  /// @brief apply Y gate
+  void gateY(QubitId);
 
   /// @brief apply CNOT gate
   void gateCNOT(QubitId control_qubit_id, QubitId target_qubit_id);

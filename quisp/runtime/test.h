@@ -19,6 +19,7 @@ class MockRuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   MOCK_METHOD(MeasurementOutcome, measureQubitX, (IQubitRecord*), (override));
   MOCK_METHOD(MeasurementOutcome, measureQubitZ, (IQubitRecord*), (override));
   MOCK_METHOD(void, gateX, (IQubitRecord*), (override));
+  MOCK_METHOD(void, gateY, (IQubitRecord*), (override));
   MOCK_METHOD(void, gateZ, (IQubitRecord*), (override));
   MOCK_METHOD(void, gateCNOT, (IQubitRecord*, IQubitRecord*), (override));
   MOCK_METHOD(bool, purifyX, (IQubitRecord*, IQubitRecord*), (override));

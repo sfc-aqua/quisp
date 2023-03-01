@@ -263,6 +263,14 @@ void Runtime::gateZ(QubitId qubit_id) {
   callback->gateZ(qubit_ref);
 }
 
+void Runtime::gateY(QubitId qubit_id) {
+  auto qubit_ref = getQubitByQubitId(qubit_id);
+  if (qubit_ref == nullptr) {
+    return;
+  }
+  callback->gateY(qubit_ref);
+}
+
 void Runtime::gateCNOT(QubitId control_qubit_id, QubitId target_qubit_id) {
   auto control_qubit = getQubitByQubitId(control_qubit_id);
   auto target_qubit = getQubitByQubitId(target_qubit_id);
