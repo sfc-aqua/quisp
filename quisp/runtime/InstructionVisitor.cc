@@ -39,45 +39,11 @@ void InstructionVisitor::operator()(const INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNod
 }
 
 void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_PurType_& instruction) {
-  auto [partner_addr, result_reg_id, action_index_reg_id, pur_type] = instruction.args;
-  bool result = runtime->getRegVal(result_reg_id);
-  int action_index = runtime->getRegVal(action_index_reg_id);
-  auto& rs = runtime->ruleset;
-  auto& rule = rs.rules.at(runtime->rule_id);
-  runtime->callback->sendSinglePurificationResult(rs.id, rule, action_index, partner_addr, result, pur_type);
-}
-
-void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_PurType_& instruction) {
-  auto [partner_addr, result_z_reg_id, result_x_reg_id, action_index_reg_id, pur_type] = instruction.args;
-  bool result_z = runtime->getRegVal(result_z_reg_id);
-  bool result_x = runtime->getRegVal(result_x_reg_id);
-  int action_index = runtime->getRegVal(action_index_reg_id);
-  auto& rs = runtime->ruleset;
-  auto& rule = rs.rules.at(runtime->rule_id);
-  runtime->callback->sendDoublePurificationResult(rs.id, rule, action_index, partner_addr, result_z, result_x, pur_type);
-}
-
-void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_RegId_PurType_& instruction) {
-  auto [partner_addr, result_z_reg_id, result_x_reg_id, ds_result_reg_id, action_index_reg_id, pur_type] = instruction.args;
-  bool result_z = runtime->getRegVal(result_z_reg_id);
-  bool result_x = runtime->getRegVal(result_x_reg_id);
-  bool ds_result = runtime->getRegVal(ds_result_reg_id);
-  int action_index = runtime->getRegVal(action_index_reg_id);
-  auto& rs = runtime->ruleset;
-  auto& rule = rs.rules.at(runtime->rule_id);
-  runtime->callback->sendTriplePurificationResult(rs.id, rule, action_index, partner_addr, result_z, result_x, ds_result, pur_type);
-}
-
-void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_RegId_RegId_PurType_& instruction) {
-  auto [partner_addr, result_z_reg_id, result_x_reg_id, ds_res_z_reg_id, ds_res_x_reg_id, action_index_reg_id, pur_type] = instruction.args;
-  bool result_z = runtime->getRegVal(result_z_reg_id);
-  bool result_x = runtime->getRegVal(result_x_reg_id);
-  bool ds_result_z = runtime->getRegVal(ds_res_z_reg_id);
-  bool ds_result_x = runtime->getRegVal(ds_res_x_reg_id);
-  int action_index = runtime->getRegVal(action_index_reg_id);
-  auto& rs = runtime->ruleset;
-  auto& rule = rs.rules.at(runtime->rule_id);
-  runtime->callback->sendQuadruplePurificationResult(rs.id, rule, action_index, partner_addr, result_z, result_x, ds_result_z, ds_result_x, pur_type);
+  auto [partner_addr, result_reg, sequence_number_reg, protocol] = instruction.args;
+  int measurement_result = runtime->getRegVal(result_reg);  // can only handle up to 32 qubits
+  int sequence_number = runtime->getRegVal(sequence_number_reg);
+  auto ruleset_id = runtime->ruleset.id;
+  runtime->callback->sendPurificationResult(ruleset_id, partner_addr, runtime->send_tag, sequence_number, measurement_result, protocol);
 }
 
 void InstructionVisitor::operator()(const INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_& instruction) {
@@ -128,19 +94,19 @@ void InstructionVisitor::operator()(const INSTR_GATE_CNOT_QubitId_QubitId_& inst
   runtime->gateCNOT(control_qubit_id, target_qubit_id);
 }
 
-void InstructionVisitor::operator()(const INSTR_PURIFY_X_RegId_QubitId_QubitId_& instruction) {
-  auto [result_reg_id, qubit_id, trash_qubit_id] = instruction.args;
-  runtime->purifyX(result_reg_id, qubit_id, trash_qubit_id);
+void InstructionVisitor::operator()(const INSTR_PURIFY_X_RegId_int_QubitId_QubitId_& instruction) {
+  auto [result_reg_id, bitset_index, qubit_id, trash_qubit_id] = instruction.args;
+  runtime->purifyX(result_reg_id, bitset_index, qubit_id, trash_qubit_id);
 }
 
-void InstructionVisitor::operator()(const INSTR_PURIFY_Z_RegId_QubitId_QubitId_& instruction) {
-  auto [result_reg_id, qubit_id, trash_qubit_id] = instruction.args;
-  runtime->purifyZ(result_reg_id, qubit_id, trash_qubit_id);
+void InstructionVisitor::operator()(const INSTR_PURIFY_Z_RegId_int_QubitId_QubitId_& instruction) {
+  auto [result_reg_id, bitset_index, qubit_id, trash_qubit_id] = instruction.args;
+  runtime->purifyZ(result_reg_id, bitset_index, qubit_id, trash_qubit_id);
 }
 
-void InstructionVisitor::operator()(const INSTR_PURIFY_Y_RegId_QubitId_QubitId_& instruction) {
-  auto [result_reg_id, qubit_id, trash_qubit_id] = instruction.args;
-  runtime->purifyY(result_reg_id, qubit_id, trash_qubit_id);
+void InstructionVisitor::operator()(const INSTR_PURIFY_Y_RegId_int_QubitId_QubitId_& instruction) {
+  auto [result_reg_id, bitset_index, qubit_id, trash_qubit_id] = instruction.args;
+  runtime->purifyY(result_reg_id, bitset_index, qubit_id, trash_qubit_id);
 }
 
 void InstructionVisitor::operator()(const INSTR_FREE_QUBIT_QubitId_& instruction) {
@@ -298,6 +264,89 @@ void InstructionVisitor::operator()(const INSTR_SUB_RegId_RegId_RegId_& instruct
   runtime->setRegVal(reg_id1, val);
 }
 
+// bitwise operation with output reg
+void InstructionVisitor::operator()(const INSTR_BITWISE_AND_RegId_RegId_RegId_& instruction) {
+  auto [result_reg, reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 & arg2;
+  runtime->setRegVal(result_reg, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_AND_RegId_RegId_int_& instruction) {
+  auto [result_reg, reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 & arg2;
+  runtime->setRegVal(result_reg, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_OR_RegId_RegId_RegId_& instruction) {
+  auto [result_reg, reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 | arg2;
+  runtime->setRegVal(result_reg, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_OR_RegId_RegId_int_& instruction) {
+  auto [result_reg, reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 | arg2;
+  runtime->setRegVal(result_reg, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_XOR_RegId_RegId_RegId_& instruction) {
+  auto [result_reg, reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 ^ arg2;
+  runtime->setRegVal(result_reg, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_XOR_RegId_RegId_int_& instruction) {
+  auto [result_reg, reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 ^ arg2;
+  runtime->setRegVal(result_reg, val);
+}
+
+// bitwise operation in-place
+void InstructionVisitor::operator()(const INSTR_BITWISE_AND_RegId_RegId_& instruction) {
+  auto [reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 & arg2;
+  runtime->setRegVal(reg_1, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_AND_RegId_int_& instruction) {
+  auto [reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 & arg2;
+  runtime->setRegVal(reg_1, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_OR_RegId_RegId_& instruction) {
+  auto [reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 | arg2;
+  runtime->setRegVal(reg_1, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_OR_RegId_int_& instruction) {
+  auto [reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 | arg2;
+  runtime->setRegVal(reg_1, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_XOR_RegId_RegId_& instruction) {
+  auto [reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 ^ arg2;
+  runtime->setRegVal(reg_1, val);
+}
+
+void InstructionVisitor::operator()(const INSTR_BITWISE_XOR_RegId_int_& instruction) {
+  auto [reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 ^ arg2;
+  runtime->setRegVal(reg_1, val);
+}
+
 void InstructionVisitor::operator()(const INSTR_SET_RegId_int_& instruction) {
   auto [reg_id1, arg1] = instruction.args;
   runtime->setRegVal(reg_id1, arg1);
@@ -409,7 +458,6 @@ void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_& in
   auto& rule_messages = runtime->messages[{runtime->rule_id}];
 
   int i = 0;
-  bool message_found = false;
   for (auto& message : rule_messages) {
     if (message[0] != sequence_number) continue;
     if (i == message_index && message.size() >= 2) {

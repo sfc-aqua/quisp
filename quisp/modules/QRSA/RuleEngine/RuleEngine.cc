@@ -100,9 +100,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
-    bool from_self = pkt->getSrcAddr() == parentAddress;
-    const PurificationResultKey key{*pkt};
-    handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
+    handlePurificationResult(pkt);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
     handleSwappingResult(pkt);
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
@@ -187,14 +185,17 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
   }
 }
 
-void RuleEngine::handlePurificationResult(const PurificationResultKey &key, const PurificationResultData &result, bool from_self) {
-  auto it = purification_result_table.find(key);
-  if (it == purification_result_table.end()) {
-    purification_result_table.insert({key, result});
-    return;
-  }
-  // rule_id might be different from other node's rule, so use rule id comes from our runtime
-  auto rule_id = from_self ? key.rule_id : it->first.rule_id;
+void RuleEngine::handlePurificationResult(PurificationResult *result) {
+  auto ruleset_id = result->getRulesetId();
+  auto shared_rule_tag = result->getSharedRuleTag();
+  auto sequence_number = result->getSequenceNumber();
+  auto measurement_result = result->getMeasurementResult();
+  auto purification_protocol = result->getProtocol();
+  std::vector<int> message_content = {sequence_number, measurement_result, purification_protocol};
+  auto runtime = runtimes.findById(ruleset_id);
+  if (runtime == nullptr) return;
+  runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
+}
 
 void RuleEngine::handleSwappingResult(SwappingResult *result) {
   auto ruleset_id = result->getRulesetId();
@@ -205,10 +206,6 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   std::vector<int> message_content = {sequence_number, correction_frame, new_partner_addr};
   auto runtime = runtimes.findById(ruleset_id);
   if (runtime == nullptr) return;
-  auto x = 1;
-  if (parentAddress == 2) {
-    x++;
-  }
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
 }
 
@@ -226,7 +223,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
         // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
         if (!qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
           qubit_record->setAllocated(true);
-          // qubit_record->markRuleApplied((*rule)->rule_id);
           runtime.assignQubitToRuleSet(partner_addr, qubit_record);
         }
       }
@@ -243,7 +239,6 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
   if (qubit_record->isAllocated()) {
     qubit_record->setAllocated(false);
   }
-  qubit_record->clearAppliedRules();
   bell_pair_store.eraseQubit(qubit_record);
 }
 

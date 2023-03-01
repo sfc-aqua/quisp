@@ -1,12 +1,13 @@
 #pragma once
 
-#include <rules/Action.h>
-#include <rules/Clause.h>
-#include <rules/Rule.h>
-#include <rules/RuleSet.h>
-#include <runtime/RuleSet.h>
-#include <runtime/types.h>
 #include <cstddef>
+
+#include "rules/Action.h"
+#include "rules/Clause.h"
+#include "rules/Rule.h"
+#include "rules/RuleSet.h"
+#include "runtime/RuleSet.h"
+#include "runtime/types.h"
 
 namespace quisp::rules::rs_converter {
 
@@ -22,10 +23,9 @@ using rules::EntanglementSwapping;
 using rules::FidelityConditionClause;
 using rules::MeasureCountConditionClause;
 using rules::Purification;
+using rules::PurificationCorrelationClause;
 using rules::SwappingCorrectionClause;
 using rules::Tomography;
-using rules::Wait;
-using rules::WaitConditionClause;
 
 // Runtime's RuleSet representation
 using quisp::runtime::Label;
@@ -49,8 +49,8 @@ class RuleSetConverter {
   // actions
   static Program constructEntanglementSwappingAction(const EntanglementSwapping* data);
   static Program constructPurificationAction(const Purification* data);
-  static Program constructWaitAction(const Wait* data);
   static Program constructTomographyAction(const Tomography* data);
+  static Program constructPurificationCorrelationAction(const PurificationCorrelation* data);
   static Program constructSwappingCorrectionAction(const SwappingCorrection* data);
 };
 }  // namespace quisp::rules::rs_converter

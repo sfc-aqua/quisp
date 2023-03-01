@@ -15,13 +15,15 @@ Action::Action(std::vector<int> partner_addr) {
   }
 }
 
-Purification::Purification(PurType purification_type, int partner_addr) : Action(partner_addr), purification_type(purification_type) {}
+Purification::Purification(PurType purification_type, int partner_addr, int shared_rule_tag)
+    : Action(partner_addr), purification_type(purification_type), shared_rule_tag(shared_rule_tag) {}
 
 json Purification::serialize_json() {
   json purification_json;
   purification_json["type"] = "purification";
   purification_json["options"]["purification_type"] = purification_type;
   purification_json["options"]["interface"] = qnic_interfaces;
+  purification_json["options"]["shared_rule_tag"] = shared_rule_tag;
   return purification_json;
 }
 
@@ -31,6 +33,7 @@ void Purification::deserialize_json(json serialized) {
     // get options one by one
     options["purification_type"].get_to(purification_type);
     options["interface"].get_to(qnic_interfaces);
+    options["shared_rule_tag"].get_to(shared_rule_tag);
   }
 }
 
@@ -60,7 +63,22 @@ void EntanglementSwapping::deserialize_json(json serialized) {
   }
 }
 
-Wait::Wait(int swapper_addr) : Action(swapper_addr) {}
+PurificationCorrelation::PurificationCorrelation(int partner_addr, int shared_rule_tag) : Action(partner_addr), shared_rule_tag(shared_rule_tag) {}
+json PurificationCorrelation::serialize_json() {
+  json wait_json;
+  wait_json["type"] = "purification_correlation";
+  wait_json["options"]["interface"] = qnic_interfaces;
+  wait_json["options"]["shared_rule_tag"] = shared_rule_tag;
+  return wait_json;
+}
+
+void PurificationCorrelation::deserialize_json(json serialized) {
+  auto options = serialized["options"];
+  if (options != nullptr) {
+    options["interface"].get_to(qnic_interfaces);
+    options["shared_rule_tag"].get_to(shared_rule_tag);
+  }
+}
 
 SwappingCorrection::SwappingCorrection(int swapper_addr, int shared_rule_tag) : Action(swapper_addr), shared_rule_tag(shared_rule_tag) {}
 

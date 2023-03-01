@@ -59,6 +59,24 @@ void FidelityConditionClause::deserialize_json(json serialized) {
   }
 }
 
+PurificationCorrelationClause::PurificationCorrelationClause(int partner_address, int shared_rule_tag) : Clause(partner_address), shared_rule_tag(shared_rule_tag) {}
+
+json PurificationCorrelationClause::serialize_json() {
+  json wait_json;
+  wait_json["type"] = "purification_correlation";
+  wait_json["options"]["interface"]["partner_address"] = partner_address;
+  wait_json["options"]["shared_rule_tag"] = shared_rule_tag;
+  return wait_json;
+}
+
+void PurificationCorrelationClause::deserialize_json(json serialized) {
+  auto options = serialized["options"];
+  if (options != nullptr) {
+    options["interface"]["partner_address"].get_to(partner_address);
+    options["shared_rule_tag"].get_to(shared_rule_tag);
+  }
+}
+
 SwappingCorrectionClause::SwappingCorrectionClause(int swapper_address, int shared_rule_tag) : Clause(swapper_address), shared_rule_tag(shared_rule_tag) {}
 
 json SwappingCorrectionClause::serialize_json() {

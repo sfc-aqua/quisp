@@ -106,8 +106,10 @@ std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int 
   return tomography_rule;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType purification_type, int shared_tag) {
-  auto purify_rule = std::make_unique<Rule>(partner_address, shared_tag, false);
+std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType purification_type, int shared_rule_tag) {
+  auto purify_rule = std::make_unique<Rule>(partner_address, shared_rule_tag, -1);
+  // TODO: add purification protocol to rule name
+  purify_rule->setName("purification with " + std::to_string(partner_address));
 
   // decide how many Bell pairs are required
   int num_resource;
@@ -130,14 +132,26 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
   purify_rule->setCondition(std::move(condition));
 
   // prepare action
-  auto purify_action = std::make_unique<Purification>(purification_type, partner_address);
+  auto purify_action = std::make_unique<Purification>(purification_type, partner_address, shared_rule_tag);
   purify_rule->setAction(std::move(purify_action));
 
   return purify_rule;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_address, int shared_tag) {
-  auto swap_rule = std::make_unique<Rule>(std::vector<int>{partner_address.first, partner_address.second}, shared_tag, true);
+std::unique_ptr<Rule> RuleSetGenerator::purificationCorrelationRule(int partner_address, PurType protocol, int shared_rule_tag) {
+  auto correlation_rule = std::make_unique<Rule>(partner_address, -1, shared_rule_tag);
+  correlation_rule->setName("purification correlation with " + std::to_string(partner_address));
+
+  auto condition = std::make_unique<Condition>();
+  auto correlation_clause = std::make_unique<PurificationCorrelationClause>(partner_address, shared_rule_tag);
+  condition->addClause(std::move(correlation_clause));
+
+  auto action = std::make_unique<PurificationCorrelation>(partner_address, shared_rule_tag);
+
+  correlation_rule->setCondition(std::move(condition));
+  correlation_rule->setAction(std::move(action));
+  return correlation_rule;
+}
 
 std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_address, int shared_rule_tag) {
   auto swap_rule = std::make_unique<Rule>(std::vector<int>{partner_address.first, partner_address.second}, shared_rule_tag, -1);

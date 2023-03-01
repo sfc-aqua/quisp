@@ -59,10 +59,20 @@ class RuleSetGenerator {
    *
    * @param partner_address
    * @param purification_type
-   * @param shared_tag
+   * @param shared_rule_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> purifyRule(int partner_address, rules::PurType purification_type, int shared_tag);
+  std::unique_ptr<rules::Rule> purifyRule(int partner_address, rules::PurType purification_type, int shared_rule_tag);
+
+  /**
+   * @brief create rule that waits for purification measurement result and check for its correlation
+   *
+   * @param partner_address
+   * @param purification_protocol
+   * @param shared_rule_tag
+   * @return std::unique_ptr<rules::Rule>
+   */
+  std::unique_ptr<rules::Rule> purificationCorrelationRule(int partner_address, rules::PurType purification_protocol, int shared_rule_tag);
 
   /**
    * @brief create entanglement swapping rule

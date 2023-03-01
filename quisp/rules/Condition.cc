@@ -1,5 +1,5 @@
 #include "Condition.h"
-#include <memory>
+
 namespace quisp::rules {
 void Condition::addClause(std::unique_ptr<Clause> clause) { clauses.push_back(std::move(clause)); }
 
@@ -28,6 +28,9 @@ void Condition::deserialize_json(json serialized) {
       } else if (clause_type == "fidelity") {
         auto fidelity = std::make_unique<FidelityConditionClause>(clause);
         clauses.push_back(std::move(fidelity));
+      } else if (clause_type == "purification_correlation") {
+        auto wait = std::make_unique<PurificationCorrelationClause>(clause);
+        clauses.push_back(std::move(wait));
       } else if (clause_type == "swapping_correction") {
         auto wait = std::make_unique<SwappingCorrectionClause>(clause);
         clauses.push_back(std::move(wait));

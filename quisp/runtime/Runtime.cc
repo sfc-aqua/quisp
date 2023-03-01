@@ -374,31 +374,37 @@ void Runtime::gateCNOT(QubitId control_qubit_id, QubitId target_qubit_id) {
   callback->gateCNOT(control_qubit, target_qubit);
 }
 
-void Runtime::purifyX(RegId result_reg_id, QubitId qubit_id, QubitId trash_qubit_id) {
+void Runtime::purifyX(RegId result_reg_id, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id) {
   auto qubit = getQubitByQubitId(qubit_id);
   auto trash_qubit = getQubitByQubitId(trash_qubit_id);
   if (qubit == nullptr) return;
   if (trash_qubit == nullptr) return;
-  bool result = callback->purifyX(qubit, trash_qubit);
-  setRegVal(result_reg_id, result);
+  int result = callback->purifyX(qubit, trash_qubit);
+  auto val = getRegVal(result_reg_id);
+  val |= (result << bitset_index);
+  setRegVal(result_reg_id, val);
 }
 
-void Runtime::purifyZ(RegId result_reg_id, QubitId qubit_id, QubitId trash_qubit_id) {
+void Runtime::purifyZ(RegId result_reg_id, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id) {
   auto qubit = getQubitByQubitId(qubit_id);
   auto trash_qubit = getQubitByQubitId(trash_qubit_id);
   if (qubit == nullptr) return;
   if (trash_qubit == nullptr) return;
-  bool result = callback->purifyZ(qubit, trash_qubit);
-  setRegVal(result_reg_id, result);
+  int result = callback->purifyZ(qubit, trash_qubit) ? 1 : 0;
+  auto val = getRegVal(result_reg_id);
+  val |= (result << bitset_index);
+  setRegVal(result_reg_id, val);
 }
 
-void Runtime::purifyY(RegId result_reg_id, QubitId qubit_id, QubitId trash_qubit_id) {
+void Runtime::purifyY(RegId result_reg_id, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id) {
   auto qubit = getQubitByQubitId(qubit_id);
   auto trash_qubit = getQubitByQubitId(trash_qubit_id);
   if (qubit == nullptr) return;
   if (trash_qubit == nullptr) return;
-  bool result = callback->purifyY(qubit, trash_qubit);
-  setRegVal(result_reg_id, result);
+  int result = callback->purifyY(qubit, trash_qubit);
+  auto val = getRegVal(result_reg_id);
+  val |= (result << bitset_index);
+  setRegVal(result_reg_id, val);
 }
 
 bool Runtime::isQubitLocked(IQubitRecord* const qubit) { return callback->isQubitLocked(qubit); }

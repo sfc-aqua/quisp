@@ -1,6 +1,7 @@
 #pragma once
-#include <modules/QNIC.h>
 #include <nlohmann/json.hpp>
+
+#include "modules/QNIC.h"
 
 using quisp::modules::QNIC_type;
 using json = nlohmann::json;
@@ -48,8 +49,16 @@ class FidelityConditionClause : public Clause {
   void deserialize_json(json serialized) override;
 };
 
-class WaitConditionClause : public Clause {
+class PurificationCorrelationClause : public Clause {
  public:
+  PurificationCorrelationClause(json serialized) { deserialize_json(serialized); }
+  PurificationCorrelationClause(int partner_address, int shared_rule_tag);
+  const std::string name = "purification_correlation";
+  int shared_rule_tag;
+  json serialize_json() override;
+  void deserialize_json(json serialized) override;
+};
+
 class SwappingCorrectionClause : public Clause {
  public:
   SwappingCorrectionClause(json serialized) { deserialize_json(serialized); }

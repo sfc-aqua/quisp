@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include <cstddef>
+#include <deque>
 #include <iostream>
 #include <stdexcept>
 #include <tuple>
@@ -72,13 +73,17 @@ class Runtime {
     virtual void gateZ(IQubitRecord*) = 0;
     virtual void gateY(IQubitRecord*) = 0;
     virtual void gateCNOT(IQubitRecord* control_qubit_rec, IQubitRecord* target_qubit_rec) = 0;
-    virtual bool purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
-    virtual bool purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
-    virtual bool purifyY(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual int purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual int purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual int purifyY(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
 
     // Messaging
     virtual void sendLinkTomographyResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, int count,
                                           MeasurementOutcome outcome, int max_count, Time start_time) = 0;
+    // TODO: change to this
+    // virtual void sendTomographyResult(const QNodeAddr partner_addr, const int shared_rule_tag, const int sequence_number, const int measurement_result, const basis) = 0;
+    virtual void sendPurificationResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const int shared_rule_tag, const int sequence_number,
+                                        const int measurement_result, PurType protocol) = 0;
     virtual void sendSwappingResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const QNodeAddr new_partner_addr, const int shared_rule_tag,
                                     const int sequence_number, const int frame_correction) = 0;
     // Debugging
@@ -319,13 +324,13 @@ class Runtime {
   void gateCNOT(QubitId control_qubit_id, QubitId target_qubit_id);
 
   /// @brief perform X purification and store the measurement result
-  void purifyX(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+  void purifyX(RegId result, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id);
 
   /// @brief perform Z purification and store the measurement result
-  void purifyZ(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+  void purifyZ(RegId result, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id);
 
   /// @brief perform Y purification and store the measurement result
-  void purifyY(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+  void purifyY(RegId result, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id);
   //@}
 
   /** @name debugging */

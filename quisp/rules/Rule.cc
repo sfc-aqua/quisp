@@ -1,7 +1,4 @@
 #include "Rule.h"
-#include <omnetpp.h>
-#include "Action.h"
-#include "Condition.h"
 
 namespace quisp::rules {
 
@@ -50,6 +47,9 @@ void Rule::deserialize_json(json serialized) {
     } else if (action_name == "swapping") {
       auto swapping_action = std::make_unique<EntanglementSwapping>(serialized_action);
       setAction(std::move(swapping_action));
+    } else if (action_name == "purification_correlation") {
+      auto wait_purification_action = std::make_unique<PurificationCorrelation>(serialized_action);
+      setAction(std::move(wait_purification_action));
     } else if (action_name == "swapping_correction") {
       auto wait_swapping_action = std::make_unique<SwappingCorrection>(serialized_action);
       setAction(std::move(wait_swapping_action));

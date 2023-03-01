@@ -26,6 +26,19 @@ INSTR(SUB, RegId, RegId, int)
 INSTR(SUB, RegId, RegId, RegId)
 INSTR(INC, RegId)
 INSTR(SET, RegId, int)
+INSTR(BITWISE_AND, RegId /* write */, RegId /* read */, RegId /* read */)
+INSTR(BITWISE_AND, RegId /* write */, RegId /* read */, int /* read */)
+INSTR(BITWISE_OR, RegId /* write */, RegId /* read */, RegId /* read */)
+INSTR(BITWISE_OR, RegId /* write */, RegId /* read */, int /* read */)
+INSTR(BITWISE_XOR, RegId /* write */, RegId /* read */, RegId /* read */)
+INSTR(BITWISE_XOR, RegId /* write */, RegId /* read */, int /* read */)
+// in place operation
+INSTR(BITWISE_AND, RegId /* write */, RegId /* read */)  // in-place operation: first_reg = first_reg | second_reg (bitwise and)
+INSTR(BITWISE_AND, RegId /* write */, int /* read */)  //  in-place operation: first_reg = first_reg | int (bitwise and)
+INSTR(BITWISE_OR, RegId /* write */, RegId /* read */)  //  in-place operation: first_reg = first_reg | second_reg (bitwise or)
+INSTR(BITWISE_OR, RegId /* write */, int /* read */)  //  in-place operation: first_reg = first_reg | int (bitwise or)
+INSTR(BITWISE_XOR, RegId /* write */, RegId /* read */)  //  in-place operation: first_reg = first_reg | second_reg (bitwise xor)
+INSTR(BITWISE_XOR, RegId /* write */, int /* read */)  //  in-place operation: first_reg = first_reg | int (bitwise xor)
 
 // control flow
 INSTR(BEQ, Label, RegId, RegId)  // branch if the reg values are same
@@ -64,6 +77,11 @@ INSTR(GATE_X, QubitId)
 INSTR(GATE_Z, QubitId)
 INSTR(GATE_Y, QubitId)
 INSTR(GATE_CNOT, QubitId, QubitId)
+// circuit operations
+INSTR(PURIFY_X, RegId /* measurement_result */, int, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
+INSTR(PURIFY_Z, RegId /* measurement_result */, int, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
+INSTR(PURIFY_Y, RegId /* measurement_result */, int, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
+
 // resource management operations
 // instructions we would want later: crucial for entanglement pumping, banding, and multipartite states
 // INSTR(SET_NAME, QubitId, {new_name: string | RegId }) // when using partner as name is not enough
@@ -81,6 +99,7 @@ INSTR(DELETE_MESSAGE, RegId /* read: sequence number */)  // delete all messages
 
 // send classical messages
 INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int, Time)  // partner addr, current count reg_id, outcome key, max_count, start_time
+INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* measurement_result encoded in int */, RegId /* sequence_number */, PurType)
 INSTR(SEND_SWAPPING_RESULT, QNodeAddr /* receipient */, RegId /* pauli_op */, QNodeAddr /* new partner*/, RegId /* sequence_number */)
 
 INSTR_LAST(NOP, None)

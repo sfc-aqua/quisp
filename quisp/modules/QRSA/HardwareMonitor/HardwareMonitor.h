@@ -1,6 +1,4 @@
 /** \file HardwareMonitor.h
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/03/19
  *
  *  \brief HardwareMonitor
  */
@@ -8,11 +6,10 @@
 
 #include "IHardwareMonitor.h"
 
-#include <modules/QNIC/StationaryQubit/StationaryQubit.h>
-#include <rules/Action.h>
-#include <rules/Rule.h>
-#include <utils/ComponentProvider.h>
 #include <complex>
+
+#include "rules/Rule.h"
+#include "utils/ComponentProvider.h"
 
 namespace quisp::modules {
 
@@ -92,10 +89,10 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
 
   std::unique_ptr<quisp::rules::Rule> constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address, const QNIC_type qnic_type,
-                                                          const int qnic_index, const int rule_id, const int shared_tag) const;
+                                                          const int qnic_index, const int send_tag) const;
 
-  // virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
-  // simtime_t tomography_time;
+  std::unique_ptr<quisp::rules::Rule> constructCorrelationCheckRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address, const QNIC_type qnic_type,
+                                                          const int qnic_index, const int receive_tag) const;
 };
 
 Define_Module(HardwareMonitor);
