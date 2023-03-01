@@ -28,6 +28,7 @@ OP(BLT)  // branch if less than
 OP(BGE)  // branch if greater or equal
 OP(BRANCH_IF_LOCKED)  // branch if the given qubit is locked
 OP(BRANCH_IF_QUBIT_FOUND)  // branch if the qubit found after GET_QUBIT
+OP(BRANCH_IF_MESSAGE_FOUND) // branch if GET_MESSAGE flag is set
 
 // memory
 OP(LOAD)
@@ -38,6 +39,7 @@ OP(LOAD_RIGHT_OP)
 
 // basic op
 OP(GET_QUBIT)
+OP(GET_QUBIT_BY_SEQ_NO)
 OP(SET)
 OP(MEASURE_RANDOM)
 OP(MEASURE)
@@ -51,10 +53,20 @@ OP(PURIFY_X)
 OP(PURIFY_Y)
 OP(PURIFY_Z)
 
+// resource management
+OP(SET_PARTNER)
+OP(PROMOTE)
+
 // send classical messages
 OP(SEND_LINK_TOMOGRAPHY_RESULT)
 OP(SEND_PURIFICATION_RESULT)
 OP(SEND_SWAPPING_RESULT)
+
+// messages
+OP(GET_MESSAGE)
+OP(DELETE_MESSAGE)
+OP(COUNT_MESSAGE)
+OP(GET_MESSAGE_SEQ)
 
 OP_LAST(NOP)
 #endif

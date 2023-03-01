@@ -2,9 +2,10 @@
 #include <map>
 #include <utility>
 
-#include <messages/classical_messages.h>
-#include <rules/RuleSet.h>
 #include <nlohmann/json.hpp>
+
+#include "messages/classical_messages.h"
+#include "rules/RuleSet.h"
 
 namespace quisp::modules::ruleset_gen {
 
@@ -24,14 +25,14 @@ class RuleSetGenerator {
   /**
    * @brief generate rules for each node in the path.
    *
-   * @param rules_map
-   * @param path
-   * @param rev_path
-   * @param swapping_partners_table
-   * @param num_measure
+   * @param left_node_index  index in the path from initiator to responder
+   * @param right_node_index index in the path from initiator to responder
+   * @param rules_map        store rules for each node <node_address, vector<Rules>>
+   * @param path             store address from initiator to responder
+   * @param shared_rule_tag
    */
-  void generateSimpleSwappingRuleSets(std::map<int, std::vector<std::unique_ptr<rules::Rule>>>& rules_map, std::vector<int>& path, std::vector<int>& rev_path,
-                                      std::map<int, std::pair<int, int>>& swapping_partners_table, int num_measure);
+  void generateReverseSwapAtHalfRuleSets(int left_node_index, int right_node_index, std::map<int, std::vector<std::unique_ptr<rules::Rule>>>& rules_map, std::vector<int>& path,
+                                         int& shared_rule_tag);
 
  protected:
   /**
@@ -43,37 +44,15 @@ class RuleSetGenerator {
   std::vector<int> collectPath(messages::ConnectionSetupRequest* req);
 
   /**
-   * @brief collect swapper and partners from the given path information
-   *
-   * @param path
-   * @param divisions
-   * @param hop_count
-   * @return std::map<int, std::pair<int, int>> swapper addr -> {left partner addr, right partner addr}
-   */
-  std::map<int, std::pair<int, int>> collectSwappingPartners(std::vector<int>& path, int divisions, int hop_count);
-
-  /**
-   * Treat subpath [i:...] of length l
-   * @param path Nodes on the connection setup path
-   * @param i Left of the subpath to consider
-   * @param l Length of the subpath
-   * @param link_left Left part of the list of "links"
-   * @param link_right Right part
-   * @param swapper Swappers to create those links (might be -1 for real links)
-   * @param fill_start [0:fill_start[ is already filled
-   **/
-  int fillPathDivision(std::vector<int>& path, int i, int l, std::vector<int>& link_left, std::vector<int>& link_right, std::vector<int>& swapper, int fill_start);
-
-  /**
    * @brief create tomography rule
    *
    * @param partner_address
    * @param owner_address
    * @param num_measure
-   * @param shared_tag
+   * @param shared_rule_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> tomographyRule(int partner_address, int owner_address, int num_measure, int shared_tag);
+  std::unique_ptr<rules::Rule> tomographyRule(int partner_address, int owner_address, int num_measure, int shared_rule_tag);
 
   /**
    * @brief create purification rule
@@ -89,10 +68,19 @@ class RuleSetGenerator {
    * @brief create entanglement swapping rule
    *
    * @param partner_address
-   * @param shared_tag
+   * @param shared_rule_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> swapRule(std::pair<int, int> partner_address, int shared_tag);
+  std::unique_ptr<rules::Rule> swapRule(std::pair<int, int> partner_address, int shared_rule_tag);
+
+  /**
+   * @brief create rule that waits for the swapping correction/notification from swapper node
+   *
+   * @param swapper_address
+   * @param shared_rule_tag
+   * @return std::unique_ptr<rules::Rule>
+   */
+  std::unique_ptr<rules::Rule> swapCorrectionRule(int swapper_address, int shared_rule_tag);
 
   int responder_addr;
 };

@@ -83,7 +83,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void handleMessage(cMessage *msg) override;
   void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &, bool from_self);
-  void handleSwappingResult(const SwappingResultData &data);
+  void handleSwappingResult(messages::SwappingResult *swapping_result);
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);

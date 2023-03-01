@@ -81,10 +81,11 @@ void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAd
 }
 
 void InstructionVisitor::operator()(const INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_& instruction) {
-  auto [left_partner, left_op_id, right_partner, right_op_id] = instruction.args;
-  auto& rs = runtime->ruleset;
-  auto& rule = rs.rules.at(runtime->rule_id);
-  runtime->callback->sendSwappingResults(rs.id, rule, left_partner, runtime->getRegVal(left_op_id), right_partner, runtime->getRegVal(right_op_id));
+  auto [partner, pauli_op_reg, new_partner, sequence_number_reg] = instruction.args;
+  int pauli_op = runtime->getRegVal(pauli_op_reg);
+  int sequence_number = runtime->getRegVal(sequence_number_reg);
+  auto ruleset_id = runtime->ruleset.id;
+  runtime->callback->sendSwappingResult(ruleset_id, partner, new_partner, runtime->send_tag, sequence_number, pauli_op);
 }
 
 void InstructionVisitor::operator()(const INSTR_MEASURE_RANDOM_MemoryKey_QubitId_& instruction) {
@@ -95,6 +96,16 @@ void InstructionVisitor::operator()(const INSTR_MEASURE_RANDOM_MemoryKey_QubitId
 void InstructionVisitor::operator()(const INSTR_MEASURE_MemoryKey_QubitId_Basis_& instruction) {
   auto [memory_key, qubit_id, basis] = instruction.args;
   runtime->measureQubit(qubit_id, memory_key, basis);
+}
+
+void InstructionVisitor::operator()(const INSTR_MEASURE_RegId_QubitId_Basis_& instruction) {
+  auto [reg, qubit_id, basis] = instruction.args;
+  runtime->measureQubit(qubit_id, reg, basis);
+}
+
+void InstructionVisitor::operator()(const INSTR_MEASURE_RegId_int_QubitId_Basis_& instruction) {
+  auto [reg, bit_index, qubit, basis] = instruction.args;
+  runtime->measureQubit(qubit, reg, bit_index, basis);
 }
 
 void InstructionVisitor::operator()(const INSTR_GATE_X_QubitId_& instruction) {
@@ -184,6 +195,13 @@ void InstructionVisitor::operator()(const INSTR_STORE_MemoryKey_int_& instructio
 void InstructionVisitor::operator()(const INSTR_BRANCH_IF_QUBIT_FOUND_Label_& instruction) {
   auto [label] = instruction.args;
   if (runtime->qubit_found) {
+    runtime->jumpTo(label);
+  }
+}
+
+void InstructionVisitor::operator()(const INSTR_BRANCH_IF_MESSAGE_FOUND_Label_& instruction) {
+  auto [label] = instruction.args;
+  if (runtime->message_found) {
     runtime->jumpTo(label);
   }
 }
@@ -319,6 +337,121 @@ void InstructionVisitor::operator()(const INSTR_GET_QUBIT_RegId_QNodeAddr_RegId_
   }
   runtime->qubit_found = true;
   runtime->setQubit(qubit_ref, qubit_id);
+}
+
+void InstructionVisitor::operator()(const INSTR_GET_QUBIT_BY_SEQ_NO_RegId_QNodeAddr_RegId_& instruction) {
+  auto [qubit_id_reg, partner_addr, sequence_number_reg] = instruction.args;
+  auto qubit_id = runtime->getRegVal(qubit_id_reg);
+  auto sequence_number = runtime->getRegVal(sequence_number_reg);
+  auto* qubit_ref = runtime->getQubitBySequenceNumber(partner_addr, runtime->rule_id, sequence_number);
+  if (qubit_ref == nullptr) {
+    runtime->qubit_found = false;
+    return;
+  }
+  runtime->qubit_found = true;
+  runtime->setQubit(qubit_ref, qubit_id);
+}
+
+void InstructionVisitor::operator()(const INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_& instruction) {
+  auto [qubit_id, partner_addr, sequence_number_reg] = instruction.args;
+  auto sequence_number = runtime->getRegVal(sequence_number_reg);
+  auto* qubit_ref = runtime->getQubitBySequenceNumber(partner_addr, runtime->rule_id, sequence_number);
+  if (qubit_ref == nullptr) {
+    runtime->qubit_found = false;
+    return;
+  }
+  runtime->qubit_found = true;
+  runtime->setQubit(qubit_ref, qubit_id);
+}
+
+void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_& instruction) {
+  auto [qubit_id] = instruction.args;
+  auto* qubit_rec = runtime->getQubitByQubitId(qubit_id);
+  runtime->promoteQubit(qubit_rec);
+}
+
+void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_RegId_& instruction) {
+  auto [qubit_id, new_partner_addr_reg] = instruction.args;
+  auto* qubit_rec = runtime->getQubitByQubitId(qubit_id);
+  auto new_partner_addr = QNodeAddr(runtime->getRegVal(new_partner_addr_reg));
+  runtime->promoteQubitWithNewPartner(qubit_rec, new_partner_addr);
+}
+
+void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_SEQ_RegId_RegId_& instruction) {
+  auto [message_index_reg_id, sequence_number_reg_id] = instruction.args;
+  auto message_index = runtime->getRegVal(message_index_reg_id);
+  auto& rule_messages = runtime->messages[{runtime->rule_id}];
+  if (message_index >= rule_messages.size()) {
+    runtime->message_found = false;
+    return;
+  }
+  runtime->message_found = true;
+  auto sequence_number = rule_messages[message_index][0];
+  runtime->setRegVal(sequence_number_reg_id, sequence_number);
+}
+
+void InstructionVisitor::operator()(const INSTR_COUNT_MESSAGE_RegId_RegId_& instruction) {
+  auto [sequence_number_reg_id, return_reg_id] = instruction.args;
+  auto sequence_number = runtime->getRegVal(sequence_number_reg_id);
+  auto& rule_messages = runtime->messages[{runtime->rule_id}];
+  int count = 0;
+  for (auto& message : rule_messages) {
+    if (message[0] == sequence_number) {
+      count++;
+    }
+  }
+  runtime->setRegVal(return_reg_id, count);
+}
+
+void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_& instruction) {
+  auto [sequence_number_reg_id, message_index, content_reg_id_1] = instruction.args;
+  auto sequence_number = runtime->getRegVal(sequence_number_reg_id);
+  auto& rule_messages = runtime->messages[{runtime->rule_id}];
+
+  int i = 0;
+  bool message_found = false;
+  for (auto& message : rule_messages) {
+    if (message[0] != sequence_number) continue;
+    if (i == message_index && message.size() >= 2) {
+      runtime->message_found = true;
+      runtime->setRegVal(content_reg_id_1, message[1]);
+      return;
+    }
+    i++;
+  }
+}
+
+void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_RegId_& instruction) {
+  auto [sequence_number_reg_id, message_index, content_reg_id_1, content_reg_id_2] = instruction.args;
+  auto sequence_number = runtime->getRegVal(sequence_number_reg_id);
+  auto& rule_messages = runtime->messages[{runtime->rule_id}];
+
+  int i = 0;
+  runtime->message_found = false;
+  for (auto& message : rule_messages) {
+    if (message[0] != sequence_number) continue;
+    if (i == message_index && message.size() >= 3) {
+      runtime->message_found = true;
+      runtime->setRegVal(content_reg_id_1, message[1]);
+      runtime->setRegVal(content_reg_id_2, message[2]);
+      return;
+    }
+    i++;
+  }
+}
+
+void InstructionVisitor::operator()(const INSTR_DELETE_MESSAGE_RegId_& instruction) {
+  auto [seq_no_reg] = instruction.args;
+  auto sequence_number = runtime->getRegVal(seq_no_reg);
+  auto& rule_messages = runtime->messages[{runtime->rule_id}];
+
+  for (auto it = rule_messages.begin(); it != rule_messages.end();) {
+    if (it->at(0) == sequence_number) {
+      it = rule_messages.erase(it);
+    } else {
+      it++;
+    }
+  }
 }
 
 }  // namespace quisp::runtime

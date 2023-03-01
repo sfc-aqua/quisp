@@ -5,11 +5,11 @@
 
 namespace quisp::rules {
 
-Rule::Rule(int partner_address, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) { qnic_interfaces.push_back({partner_address}); };
+Rule::Rule(int partner_address, int send_tag, int receive_tag) : send_tag(send_tag), receive_tag(receive_tag) { qnic_interfaces.push_back({partner_address}); };
 
-Rule::Rule(std::vector<int> partner_address, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) {
-  for (int i = 0; i < partner_address.size(); i++) {
-    qnic_interfaces.push_back({partner_address.at(i)});
+Rule::Rule(std::vector<int> partner_address, int send_tag, int receive_tag) : send_tag(send_tag), receive_tag(receive_tag) {
+  for (int addr : partner_address) {
+    qnic_interfaces.push_back({addr});
   }
 }
 
@@ -17,21 +17,12 @@ void Rule::setCondition(std::unique_ptr<Condition> cond) { condition = std::move
 
 void Rule::setAction(std::unique_ptr<Action> act) { action = std::move(act); }
 
-void Rule::setNextRule(int next_rule_id) {
-  if (to != -1) {
-    throw omnetpp::cRuntimeError("next_rule_id has already been set");
-  } else {
-    to = next_rule_id;
-  }
-}
-
 json Rule::serialize_json() {
   json rule_json;
-  rule_json["rule_id"] = rule_id;
-  rule_json["next_rule_id"] = to;
   rule_json["name"] = name;
   rule_json["interface"] = qnic_interfaces;
-  rule_json["shared_tag"] = shared_tag;
+  rule_json["send_tag"] = send_tag;
+  rule_json["receive_tag"] = receive_tag;
   if (condition != nullptr) {
     rule_json["condition"] = condition->serialize_json();
   }
@@ -43,11 +34,10 @@ json Rule::serialize_json() {
 
 void Rule::deserialize_json(json serialized) {
   // deserialize rule meta data
-  serialized["rule_id"].get_to(rule_id);
-  serialized["next_rule_id"].get_to(to);
   serialized["name"].get_to(name);
   serialized["interface"].get_to(qnic_interfaces);
-  serialized["shared_tag"].get_to(shared_tag);
+  serialized["send_tag"].get_to(send_tag);
+  serialized["receive_tag"].get_to(receive_tag);
 
   // deserialize actions
   if (serialized["action"] != nullptr) {  // action found
@@ -60,9 +50,9 @@ void Rule::deserialize_json(json serialized) {
     } else if (action_name == "swapping") {
       auto swapping_action = std::make_unique<EntanglementSwapping>(serialized_action);
       setAction(std::move(swapping_action));
-    } else if (action_name == "wait") {
-      auto wait_action = std::make_unique<Wait>(serialized_action);
-      setAction(std::move(wait_action));
+    } else if (action_name == "swapping_correction") {
+      auto wait_swapping_action = std::make_unique<SwappingCorrection>(serialized_action);
+      setAction(std::move(wait_swapping_action));
     } else if (action_name == "tomography") {
       auto tomography_action = std::make_unique<Tomography>(serialized_action);
       setAction(std::move(tomography_action));

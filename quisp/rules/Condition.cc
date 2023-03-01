@@ -28,8 +28,8 @@ void Condition::deserialize_json(json serialized) {
       } else if (clause_type == "fidelity") {
         auto fidelity = std::make_unique<FidelityConditionClause>(clause);
         clauses.push_back(std::move(fidelity));
-      } else if (clause_type == "wait") {
-        auto wait = std::make_unique<WaitConditionClause>(clause);
+      } else if (clause_type == "swapping_correction") {
+        auto wait = std::make_unique<SwappingCorrectionClause>(clause);
         clauses.push_back(std::move(wait));
       } else {
         throw omnetpp::cRuntimeError("No matching clause found");

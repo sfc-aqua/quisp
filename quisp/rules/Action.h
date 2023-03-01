@@ -68,16 +68,20 @@ class Purification : public Action {
 class EntanglementSwapping : public Action {
  public:
   EntanglementSwapping(json serialized) { deserialize_json(serialized); }  // for deserialization
-  EntanglementSwapping(std::vector<int> partner_addr);
+  EntanglementSwapping(std::vector<int> partner_addr, int shared_rule_tag);
   std::vector<QnicInterface> remote_qnic_interfaces;
+  int shared_rule_tag;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };
 
 class Wait : public Action {
  public:
-  Wait(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Wait(int swapper_addr);
+class SwappingCorrection : public Action {
+ public:
+  SwappingCorrection(json serialized) { deserialize_json(serialized); }  // for deserialization
+  SwappingCorrection(int swapper_addr, int shared_rule_tag);
+  int shared_rule_tag;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

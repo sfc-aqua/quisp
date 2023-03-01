@@ -3,14 +3,15 @@
 namespace quisp::rules {
 
 Action::Action(int partner_addr) {
+  partner_address = partner_addr;
   QnicInterface qnic_interface{partner_addr};
-  qnic_interfaces.push_back(qnic_interface);
+  qnic_interfaces.emplace_back(qnic_interface);
 };
 
 Action::Action(std::vector<int> partner_addr) {
   for (int i = 0; i < partner_addr.size(); i++) {
     QnicInterface qnic_interface{partner_addr.at(i)};
-    qnic_interfaces.push_back(qnic_interface);
+    qnic_interfaces.emplace_back(qnic_interface);
   }
 }
 
@@ -33,7 +34,7 @@ void Purification::deserialize_json(json serialized) {
   }
 }
 
-EntanglementSwapping::EntanglementSwapping(std::vector<int> partner_addr) : Action(partner_addr) {
+EntanglementSwapping::EntanglementSwapping(std::vector<int> partner_addr, int shared_rule_tag) : Action(partner_addr), shared_rule_tag(shared_rule_tag) {
   for (int i = 0; i < partner_addr.size(); i++) {
     QnicInterface remote_qnic_interface{partner_addr.at(i)};
     remote_qnic_interfaces.push_back(remote_qnic_interface);
@@ -45,6 +46,7 @@ json EntanglementSwapping::serialize_json() {
   swapping_json["type"] = "swapping";
   swapping_json["options"]["interface"] = qnic_interfaces;
   swapping_json["options"]["remote_interface"] = remote_qnic_interfaces;
+  swapping_json["options"]["shared_rule_tag"] = shared_rule_tag;
   return swapping_json;
 }
 
@@ -54,23 +56,27 @@ void EntanglementSwapping::deserialize_json(json serialized) {
     // get options one by one
     options["interface"].get_to(qnic_interfaces);
     options["remote_interface"].get_to(remote_qnic_interfaces);
+    options["shared_rule_tag"].get_to(shared_rule_tag);
   }
 }
 
 Wait::Wait(int swapper_addr) : Action(swapper_addr) {}
 
-json Wait::serialize_json() {
+SwappingCorrection::SwappingCorrection(int swapper_addr, int shared_rule_tag) : Action(swapper_addr), shared_rule_tag(shared_rule_tag) {}
+
+json SwappingCorrection::serialize_json() {
   json wait_json;
-  wait_json["type"] = "wait";
+  wait_json["type"] = "swapping_correction";
   wait_json["options"]["interface"] = qnic_interfaces;
+  wait_json["options"]["shared_rule_tag"] = shared_rule_tag;
   return wait_json;
 }
 
-void Wait::deserialize_json(json serialized) {
+void SwappingCorrection::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
-    // get options one by one
     options["interface"].get_to(qnic_interfaces);
+    options["shared_rule_tag"].get_to(shared_rule_tag);
   }
 }
 

@@ -15,6 +15,12 @@ Runtime::Runtime(const Runtime& rt) : Runtime() {
   callback = rt.callback;
   rule_id = rt.rule_id;
   qubits = rt.qubits;
+  resource_counter = rt.resource_counter;
+  sequence_number_to_qubit = rt.sequence_number_to_qubit;
+  qubit_to_sequence_number = rt.qubit_to_sequence_number;
+  shared_tag_to_rule_id = rt.shared_tag_to_rule_id;
+  rule_id_to_shared_tag = rt.rule_id_to_shared_tag;
+  messages = rt.messages;
   memory = rt.memory;
   ruleset = rt.ruleset;
   partners = rt.partners;
@@ -30,6 +36,12 @@ Runtime& Runtime::operator=(Runtime&& rt) {
   callback = rt.callback;
   rule_id = rt.rule_id;
   qubits = std::move(rt.qubits);
+  resource_counter = std::move(rt.resource_counter);
+  sequence_number_to_qubit = std::move(rt.sequence_number_to_qubit);
+  qubit_to_sequence_number = std::move(rt.qubit_to_sequence_number);
+  shared_tag_to_rule_id = std::move(rt.shared_tag_to_rule_id);
+  rule_id_to_shared_tag = std::move(rt.rule_id_to_shared_tag);
+  messages = std::move(rt.messages);
   memory = std::move(rt.memory);
   ruleset = std::move(rt.ruleset);
   partners = std::move(rt.partners);
@@ -48,6 +60,8 @@ void Runtime::exec() {
   }
   for (auto& rule : ruleset.rules) {
     rule_id = rule.id;
+    send_tag = rule.send_tag;
+    receive_tag = rule.receive_tag;
     debugging = rule.debugging || ruleset.debugging;
     while (true) {
       if (debugging) {
@@ -104,6 +118,7 @@ void Runtime::cleanup() {
   named_qubits.clear();
   should_exit = false;
   qubit_found = false;
+  message_found = false;
   return_code = ReturnCode::NONE;
 }
 
@@ -115,32 +130,46 @@ void Runtime::assignRuleSet(const RuleSet& rs) {
   partners = ruleset.partners;
 }
 
+void Runtime::assignMessageToRuleSet(int shared_rule_tag, MessageRecord& msg_content) {
+  // Currently using for loops with assumption that messages deque size is small, if it is large bimap might be better. need further investigation.
+  for (auto& rule : ruleset.rules) {
+    if (rule.receive_tag == shared_rule_tag) {
+      messages[rule.id].emplace_back(msg_content);
+      return;
+    }
+  }
+}
+
 void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record) {
   auto it = ruleset.partner_initial_rule_table.find(partner_addr);
   assert(it != ruleset.partner_initial_rule_table.end());
-  qubits.emplace(std::make_pair(partner_addr, it->second), qubit_record);
+  auto rule_id = it->second;
+  auto sequence_number = ++resource_counter[{partner_addr, rule_id}];
+  qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record);
+  sequence_number_to_qubit[{partner_addr, rule_id, sequence_number}] = qubit_record;
+  qubit_to_sequence_number[qubit_record] = {partner_addr, rule_id, sequence_number};
 }
 
-QubitResources::iterator Runtime::findQubit(int target_rule_id, int shared_tag, int action_index) {
-  runtime::QubitResources::iterator qubit_key;
+QubitResources::iterator Runtime::findQubit(IQubitRecord* qubit_record) {
   for (auto it = qubits.begin(); it != qubits.end(); it++) {
-    auto& [addr, current_rule_id] = it->first;
-    if (current_rule_id != target_rule_id) continue;
-    if (callback->getActionIndex(it->second) == action_index) {
+    if (it->second == qubit_record) {
       return it;
     }
   }
-  throw cRuntimeError("Qubit not found: (rule_id: %d, shared_tag: %d, action_index: %d)", target_rule_id, shared_tag, action_index);
+  throw cRuntimeError("Qubit not found: from the given QubitRecord");
 }
 
-void Runtime::promoteQubit(QubitResources::iterator iter) {
-  auto [partner_addr, current_rule_id] = iter->first;
+void Runtime::promoteQubit(IQubitRecord* qubit) {
+  auto [partner_addr, current_rule_id, sequence_number] = qubit_to_sequence_number[qubit];
   auto it = ruleset.next_rule_table.find({partner_addr, current_rule_id});
   assert(it != ruleset.next_rule_table.end());
   auto next_rule_id = it->second;
-  auto* qubit = iter->second;
-  qubits.erase(iter);
+  auto next_rule_sequence_number = ++resource_counter[{partner_addr, next_rule_id}];
+  qubits.erase(findQubit(qubit));
   qubits.emplace(std::make_pair(partner_addr, next_rule_id), qubit);
+  sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit]);
+  sequence_number_to_qubit[{partner_addr, next_rule_id, next_rule_sequence_number}] = qubit;
+  qubit_to_sequence_number[qubit] = {partner_addr, next_rule_id, next_rule_sequence_number};
 }
 void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr new_partner_addr) {
   QubitResources::iterator qubit_iter;
@@ -152,14 +181,26 @@ void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr n
       break;
     }
   }
+  auto [partner_addr, current_rule_id, sequence_number] = qubit_to_sequence_number[qubit_record];
   assert(found);
   qubits.erase(qubit_iter);
   auto it = ruleset.partner_initial_rule_table.find(new_partner_addr);
   assert(it != ruleset.partner_initial_rule_table.end());
   auto next_rule_id = it->second;
+  auto next_rule_sequence_number = ++resource_counter[{new_partner_addr, next_rule_id}];
   qubits.emplace(std::make_pair(new_partner_addr, next_rule_id), qubit_record);
+  sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit_record]);
+  sequence_number_to_qubit[{new_partner_addr, next_rule_id, next_rule_sequence_number}] = qubit_record;
+  qubit_to_sequence_number[qubit_record] = {new_partner_addr, next_rule_id, next_rule_sequence_number};
+  std::cout << "promote from " << partner_addr << " to " << new_partner_addr << " seq_no " << next_rule_sequence_number << '\n';
 }
-void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) { qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record); }
+void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) {
+  qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record);
+  auto sequence_number = ++resource_counter[{partner_addr, rule_id}];
+  sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit_record]);
+  sequence_number_to_qubit[{partner_addr, rule_id, sequence_number}] = qubit_record;
+  qubit_to_sequence_number[qubit_record] = {partner_addr, rule_id, sequence_number};
+}
 const Register& Runtime::getReg(RegId reg_id) const { return registers[(int)reg_id]; }
 int32_t Runtime::getRegVal(RegId reg_id) const { return registers[(int)reg_id].value; }
 void Runtime::setRegVal(RegId reg_id, int32_t val) { registers[(int)reg_id].value = val; }
@@ -177,6 +218,13 @@ IQubitRecord* Runtime::getQubitByPartnerAddr(QNodeAddr partner_addr, int index) 
     }
   }
   return nullptr;
+}
+
+IQubitRecord* Runtime::getQubitBySequenceNumber(QNodeAddr partner_addr, RuleId rule_id, SequenceNumber sequence_number) {
+  if (sequence_number_to_qubit.find({partner_addr, rule_id, sequence_number}) == sequence_number_to_qubit.end()) {
+    return nullptr;
+  }
+  return sequence_number_to_qubit[{partner_addr, rule_id, sequence_number}];
 }
 
 IQubitRecord* Runtime::getQubitByQubitId(QubitId id) const {
@@ -228,6 +276,53 @@ void Runtime::measureQubit(QubitId qubit_id, MemoryKey memory_key, Basis basis) 
     return;
   }
   std::runtime_error("measure qubit with the specified basis is not implemented yet");
+}
+
+void Runtime::measureQubit(QubitId qubit_id, RegId reg, Basis basis) {
+  auto qubit_ref = getQubitByQubitId(qubit_id);
+  if (qubit_ref == nullptr) {
+    return;
+  }
+  if (basis == Basis::RANDOM) {
+    auto outcome = callback->measureQubitRandomly(qubit_ref);
+    setRegVal(reg, outcome.outcome_is_plus ? 0 : 1);
+    return;
+  }
+  if (basis == Basis::X) {
+    auto outcome = callback->measureQubitX(qubit_ref);
+    setRegVal(reg, outcome.outcome_is_plus ? 0 : 1);
+    return;
+  }
+  if (basis == Basis::Z) {
+    auto outcome = callback->measureQubitZ(qubit_ref);
+    setRegVal(reg, outcome.outcome_is_plus ? 0 : 1);
+    return;
+  }
+  std::runtime_error("measure qubit with the specified basis is not implemented yet");
+}
+
+void Runtime::measureQubit(QubitId qubit_id, RegId reg, int bitset_index, Basis basis) {
+  auto qubit_ref = getQubitByQubitId(qubit_id);
+  if (qubit_ref == nullptr) {
+    return;
+  }
+  MeasurementOutcome outcome;
+  if (basis == Basis::RANDOM) {
+    outcome = callback->measureQubitRandomly(qubit_ref);
+  } else if (basis == Basis::X) {
+    outcome = callback->measureQubitX(qubit_ref);
+  } else if (basis == Basis::Z) {
+    outcome = callback->measureQubitZ(qubit_ref);
+  } else {
+    std::runtime_error("measure qubit with the specified basis is not implemented yet");
+  }
+  if (outcome.outcome_is_plus) {
+    return;
+  } else {
+    auto val = getRegVal(reg);
+    val |= (1 << bitset_index);
+    setRegVal(reg, val);
+  }
 }
 
 void Runtime::freeQubit(QubitId qubit_id) {

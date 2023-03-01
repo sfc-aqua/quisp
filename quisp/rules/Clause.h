@@ -50,9 +50,12 @@ class FidelityConditionClause : public Clause {
 
 class WaitConditionClause : public Clause {
  public:
-  WaitConditionClause(json serialized) { deserialize_json(serialized); }
-  WaitConditionClause(int swapper_addr);
-  const std::string name = "wait";
+class SwappingCorrectionClause : public Clause {
+ public:
+  SwappingCorrectionClause(json serialized) { deserialize_json(serialized); }
+  SwappingCorrectionClause(int swapper_address, int shared_rule_tag);
+  const std::string name = "swapping_correction";
+  int shared_rule_tag;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };
