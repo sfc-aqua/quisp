@@ -129,7 +129,7 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   auto *msg = app->toRouterGate->messages.at(0);
   ASSERT_NE(msg, nullptr);
   auto *pkt = dynamic_cast<ConnectionSetupRequest *>(msg);
-  ASSERT_EQ(pkt->getApplication_id(), 1);
+  ASSERT_EQ(pkt->getApplicationId(), 1);
   ASSERT_EQ(pkt->getActual_srcAddr(), 123);
   ASSERT_EQ(pkt->getActual_destAddr(), mock_qnode2->address);
   ASSERT_EQ(pkt->getSrcAddr(), 123);

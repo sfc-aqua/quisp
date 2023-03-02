@@ -33,7 +33,7 @@ class JsonLoggerTest : public testing::Test {
 
 TEST_F(JsonLoggerTest, ConnSetupTest) {
   auto* req = new ConnectionSetupRequest();
-  req->setApplication_id(1);
+  req->setApplicationId(1);
   req->setActual_destAddr(1);
   req->setActual_srcAddr(2);
   req->setNum_measure(5);
@@ -49,7 +49,7 @@ TEST_F(JsonLoggerTest, ConnSetupTest) {
 
 TEST_F(JsonLoggerTest, ConnSetupRespTest) {
   auto* res = new ConnectionSetupResponse();
-  res->setApplication_id(1);
+  res->setApplicationId(1);
   res->setActual_destAddr(1);
   res->setActual_srcAddr(2);
   logger->setQNodeAddress(7);
@@ -63,7 +63,7 @@ TEST_F(JsonLoggerTest, ConnSetupRespTest) {
 
 TEST_F(JsonLoggerTest, ConnRejectTest) {
   auto* rej = new RejectConnectionSetupRequest();
-  rej->setApplication_id(1);
+  rej->setApplicationId(1);
   rej->setActual_destAddr(1);
   rej->setActual_srcAddr(2);
   logger->setQNodeAddress(7);

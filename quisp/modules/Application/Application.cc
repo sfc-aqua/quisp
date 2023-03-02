@@ -53,7 +53,7 @@ void Application::initialize() {
  */
 ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources) {
   ConnectionSetupRequest *pk = new ConnectionSetupRequest("ConnSetupRequest");
-  pk->setApplication_id(id);
+  pk->setApplicationId(id);
   pk->setActual_srcAddr(my_address);
   pk->setActual_destAddr(dest_addr);
   pk->setDestAddr(my_address);

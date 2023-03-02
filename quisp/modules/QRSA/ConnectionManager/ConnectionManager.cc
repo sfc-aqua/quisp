@@ -198,13 +198,13 @@ void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) 
 }
 
 void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
-  int application_id = req->getApplication_id();
+  int application_id = req->getApplicationId();
   int hop_count = req->getStack_of_QNodeIndexesArraySize();
   std::vector<int> path;
   for (int i = 0; i < hop_count; i++) {
     int destination_address = req->getStack_of_QNodeIndexes(i);
     RejectConnectionSetupRequest *packet = new RejectConnectionSetupRequest("RejectConnSetup");
-    packet->setApplication_id(application_id);
+    packet->setApplicationId(application_id);
     packet->setKind(6);
     packet->setDestAddr(destination_address);
     packet->setSrcAddr(my_address);
@@ -230,7 +230,7 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
  * @endverbatim
  */
 void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
-  int application_id = req->getApplication_id();
+  int application_id = req->getApplicationId();
   int prev_hop_addr = req->getSrcAddr();
 
   // qnic toward to the previous node
@@ -251,7 +251,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
     ConnectionSetupResponse *pkt = new ConnectionSetupResponse("ConnectionSetupResponse");
-    pkt->setApplication_id(application_id);
+    pkt->setApplicationId(application_id);
     pkt->setRuleSet(rs);
     pkt->setSrcAddr(my_address);
     pkt->setDestAddr(owner_address);
@@ -272,7 +272,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
  * \returns nothing
  **/
 void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
-  int application_id = req->getApplication_id();
+  int application_id = req->getApplicationId();
   int responder_addr = req->getActual_destAddr();
   int prev_hop_addr = req->getSrcAddr();
   int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(responder_addr);
@@ -299,7 +299,7 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
   int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
 
-  req->setApplication_id(application_id);
+  req->setApplicationId(application_id);
   req->setDestAddr(outbound_info->neighbor_address);
   req->setSrcAddr(my_address);
   req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
