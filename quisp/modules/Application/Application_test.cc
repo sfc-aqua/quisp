@@ -28,6 +28,8 @@ class AppTestTarget : public quisp::modules::Application {
   using quisp::modules::Application::getParentModule;
   using quisp::modules::Application::initialize;
   using quisp::modules::Application::par;
+  using quisp::modules::Application::id;
+
   cGate *gate(const char *gatename, int index = -1) override {
     if (strcmp(gatename, "toRouter") != 0) {
       throw cRuntimeError("unknown gate called");
@@ -41,7 +43,6 @@ class AppTestTarget : public quisp::modules::Application {
   }
   virtual ~AppTestTarget() { EVCB.gateDeleted(toRouterGate); }
   std::unordered_map<int, int> getEndNodeWeightMap() { return this->end_node_weight_map; }
-  int getId() { return this->id; }
   int getAddress() { return this->my_address; }
   bool isInitiator() { return this->is_initiator; }
 
@@ -55,7 +56,7 @@ TEST(AppTest, Init_IsNotInitiator) {
 
   sim->registerComponent(app);
   app->callInitialize();
-  ASSERT_EQ(app->getId(), 1);
+  ASSERT_EQ(app->id, 1);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 0);
 }
@@ -72,7 +73,7 @@ TEST(AppTest, Init_IsInitiator) {
   sim->registerComponent(app);
   app->callInitialize();
 
-  ASSERT_EQ(app->getId(), 1);
+  ASSERT_EQ(app->id, 1);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 1);
   ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());
@@ -93,7 +94,7 @@ TEST(AppTest, Init_WeightMap_Generation) {
   sim->registerComponent(app);
   app->callInitialize();
 
-  ASSERT_EQ(app->getId(), 1);
+  ASSERT_EQ(app->id, 1);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 3);
   ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());
@@ -119,7 +120,7 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   sim->registerComponent(app);
   app->callInitialize();
 
-  ASSERT_EQ(app->getId(), 1);
+  ASSERT_EQ(app->id, 1);
   ASSERT_EQ(app->getAddress(), 123);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 2);
 
@@ -212,7 +213,7 @@ TEST(AppTest, Specifying_Valid_Addresses_As_Recipients) {
   sim->registerComponent(app);
   app->callInitialize();
 
-  ASSERT_EQ(app->getId(), 1);
+  ASSERT_EQ(app->id, 1);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 2);  // self and 456
   ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());
