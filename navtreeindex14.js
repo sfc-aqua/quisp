@@ -1,5 +1,7 @@
 var NAVTREEINDEX14 =
 {
+"runtime_2types_8h.html#a6e58b21e3cb7c2c046f713ab7cd5b738":[19,0,0,5,18,21],
+"runtime_2types_8h.html#a7fd085e1cc0a3f3da6e729c61b06901b":[19,0,0,5,18,24],
 "runtime_2types_8h.html#a81b653e0ef389f2474ca7b868e2cb14f":[19,0,0,5,18,18],
 "runtime_2types_8h.html#a85ecfb49269fa9da29372fb074addb33":[19,0,0,5,18,7],
 "runtime_2types_8h.html#a8aecbdadfbfba7509e9c6c0c4683caab":[19,0,0,5,18,27],
@@ -247,7 +249,5 @@ var NAVTREEINDEX14 =
 "structquisp_1_1modules_1_1link__cost.html#a54aed6f107d46f3ea44e054340d4505f":[17,0,1,2,28,1],
 "structquisp_1_1modules_1_1link__cost.html#a54aed6f107d46f3ea44e054340d4505f":[18,0,0,2,27,1],
 "structquisp_1_1modules_1_1link__cost.html#ac8d33547f897defb8b79f5afb9e5ba66":[17,0,1,2,28,0],
-"structquisp_1_1modules_1_1link__cost.html#ac8d33547f897defb8b79f5afb9e5ba66":[18,0,0,2,27,0],
-"structquisp_1_1modules_1_1output__count.html":[17,0,1,2,30],
-"structquisp_1_1modules_1_1output__count.html":[18,0,0,2,29]
+"structquisp_1_1modules_1_1link__cost.html#ac8d33547f897defb8b79f5afb9e5ba66":[18,0,0,2,27,0]
 };
