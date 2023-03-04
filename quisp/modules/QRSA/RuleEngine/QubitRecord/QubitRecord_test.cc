@@ -1,11 +1,11 @@
-#include <gtest/gtest.h>
-#include <modules/Logger/DisabledLogger.h>
-#include <modules/QNIC.h>
-#include <test_utils/TestUtils.h>
-#include <utils/ComponentProvider.h>
-
 #include "QubitRecord.h"
 
+#include <gtest/gtest.h>
+
+#include "modules/Logger/DisabledLogger.h"
+#include "modules/QNIC.h"
+#include "test_utils/TestUtils.h"
+#include "utils/ComponentProvider.h"
 namespace {
 using namespace quisp_test;
 using namespace quisp::modules::Logger;
@@ -18,7 +18,6 @@ using quisp::utils::ComponentProvider;
 
 class QubitRecord : public quisp::modules::qubit_record::QubitRecord {
  public:
-  using quisp::modules::qubit_record::QubitRecord::applied_rule_ids;
   using quisp::modules::qubit_record::QubitRecord::is_allocated;
   using quisp::modules::qubit_record::QubitRecord::is_busy;
   using quisp::modules::qubit_record::QubitRecord::qnic_index;
@@ -66,19 +65,4 @@ TEST_F(QubitRecordTest, SetAllocated) {
   EXPECT_THROW(record.setAllocated(true), omnetpp::cRuntimeError);
 }
 
-TEST_F(QubitRecordTest, AppliedRules) {
-  EXPECT_EQ(0, record.applied_rule_ids.size());
-  EXPECT_FALSE(record.isRuleApplied(1));
-  record.markRuleApplied(11);
-  EXPECT_EQ(1, record.applied_rule_ids.size());
-  EXPECT_FALSE(record.isRuleApplied(1));
-  EXPECT_TRUE(record.isRuleApplied(11));
-  record.markRuleApplied(12);
-  record.markRuleApplied(13);
-  record.markRuleApplied(14);
-  record.markRuleApplied(15);
-  EXPECT_EQ(5, record.applied_rule_ids.size());
-  record.clearAppliedRules();
-  EXPECT_EQ(0, record.applied_rule_ids.size());
-}
 }  // namespace

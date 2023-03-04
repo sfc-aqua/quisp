@@ -1,7 +1,8 @@
 #pragma once
-#include <modules/QNIC.h>
-#include <modules/QUBIT.h>
 #include <nlohmann/json.hpp>
+
+#include "modules/QNIC.h"
+#include "modules/QUBIT.h"
 
 using nlohmann::json;
 using quisp::modules::QNIC_type;
@@ -51,7 +52,7 @@ class Action {
   Action(std::vector<int> partner_addr);
   virtual ~Action() {}
   std::vector<QnicInterface> qnic_interfaces;
-
+  int partner_address;
   virtual json serialize_json() = 0;
   virtual void deserialize_json(json serialized) = 0;
 };
@@ -59,8 +60,9 @@ class Action {
 class Purification : public Action {
  public:
   Purification(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Purification(PurType purification_type, int partner_addr);
+  Purification(PurType purification_type, int partner_addr, int shared_rule_tag);
   PurType purification_type;
+  int shared_rule_tag;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };
@@ -68,16 +70,27 @@ class Purification : public Action {
 class EntanglementSwapping : public Action {
  public:
   EntanglementSwapping(json serialized) { deserialize_json(serialized); }  // for deserialization
-  EntanglementSwapping(std::vector<int> partner_addr);
+  EntanglementSwapping(std::vector<int> partner_addr, int shared_rule_tag);
   std::vector<QnicInterface> remote_qnic_interfaces;
+  int shared_rule_tag;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };
 
-class Wait : public Action {
+class PurificationCorrelation : public Action {
  public:
-  Wait(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Wait(int swapper_addr);
+  PurificationCorrelation(json serialized) { deserialize_json(serialized); }  // for deserialization
+  PurificationCorrelation(int partner_addr, int shared_rule_tag);
+  int shared_rule_tag;
+  json serialize_json() override;
+  void deserialize_json(json serialized) override;
+};
+
+class SwappingCorrection : public Action {
+ public:
+  SwappingCorrection(json serialized) { deserialize_json(serialized); }  // for deserialization
+  SwappingCorrection(int swapper_addr, int shared_rule_tag);
+  int shared_rule_tag;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

@@ -1,9 +1,10 @@
-#include <omnetpp.h>
-#include <memory>
+#include "RuleSet.h"
+
 #include <random>
 #include <string>
 
-#include "RuleSet.h"
+#include <omnetpp.h>
+
 #include "RuleSetConverter/RuleSetConverter.h"
 
 using json = nlohmann::json;
@@ -12,9 +13,6 @@ namespace quisp::rules {
 RuleSet::RuleSet(unsigned long ruleset_id, int owner_address) : ruleset_id(ruleset_id), owner_addr(owner_address) {}
 
 Rule *RuleSet::addRule(std::unique_ptr<Rule> rule) {
-  rule->rule_id = current_rule_id;
-  current_rule_id++;
-  rule->parent_ruleset_id = ruleset_id;
   Rule *raw_ptr = rule.get();
   rules.push_back(std::move(rule));
   return raw_ptr;

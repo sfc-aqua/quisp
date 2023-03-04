@@ -1,14 +1,12 @@
 /** \file RealTimeController.h
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/03/19
  *
  *  \brief RealTimeController
  */
 #ifndef QUISP_MODULES_REALTIMECONTROLLER_H_
 #define QUISP_MODULES_REALTIMECONTROLLER_H_
 
-#include <utils/ComponentProvider.h>
 #include "IRealTimeController.h"
+#include "utils/ComponentProvider.h"
 
 namespace quisp {
 namespace modules {
@@ -33,6 +31,7 @@ class RealTimeController : public IRealTimeController {
 
   void applyXGate(qrsa::IQubitRecord* const qubit_record) override;
   void applyZGate(qrsa::IQubitRecord* const qubit_record) override;
+  void applyYGate(qrsa::IQubitRecord* const qubit_record) override;
   utils::ComponentProvider provider;
 };
 

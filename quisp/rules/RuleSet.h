@@ -1,10 +1,10 @@
 #pragma once
 #include <memory>
+
 #include <nlohmann/json.hpp>
 
-#include <runtime/RuleSet.h>
-
 #include "Rule.h"
+#include "runtime/RuleSet.h"
 
 using json = nlohmann::json;
 namespace quisp::rules {
@@ -19,7 +19,6 @@ class RuleSet {
 
   unsigned long ruleset_id;  ///< `ruleset_id` is used for identifying connection
   int owner_addr;  ///< Address of RuleSet owner
-  int current_rule_id = 0;
   std::vector<std::unique_ptr<Rule>> rules;
 
   Rule *addRule(std::unique_ptr<Rule> rule);

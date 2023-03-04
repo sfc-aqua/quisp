@@ -6,13 +6,11 @@ packet DeleteThisModule{}
 
 packet GenerateTraffic{}
 
-packet ConditionNotSatisfied{}
-
 packet EmitPhotonRequest extends Header
 {
     int qubit_index @setter(setQubitIndex) @getter(getQubitIndex);
     int qnic_index  @setter(setQnicIndex) @getter(getQnicIndex);
-    QNIC_type qnic_type   @setter(setQnicType)   @getter(getQnicType);
+    QNIC_type qnic_type  @setter(setQnicType)   @getter(getQnicType);
     simtime_t interval_between_photons @setter(setIntervalBetweenPhotons) @getter(getIntervalBetweenPhotons);
     bool is_first @getter(isFirst) @setter(setFirst);
     bool is_last  @getter(isLast)  @setter(setLast);

@@ -65,6 +65,18 @@ void RuleSet::collectPartners(const RuleId rule_id, const InstructionTypes& inst
     if (!std::binary_search(rule_ids.begin(), rule_ids.end(), rule_id)) {
       rule_ids.push_back(rule_id);
     }
+  } else if (std::holds_alternative<INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_>(instr)) {
+    auto [_qubit_id, partner_addr, _seq_no] = std::get<INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_>(instr).args;
+    partners.insert(partner_addr);
+
+    if (partner_rules.find(partner_addr) == partner_rules.end()) {
+      partner_rules.insert({partner_addr, {}});
+    }
+    auto& rule_ids = partner_rules.at(partner_addr);
+    // if the rule_id doesn't exist, add it
+    if (!std::binary_search(rule_ids.begin(), rule_ids.end(), rule_id)) {
+      rule_ids.push_back(rule_id);
+    }
   }
 }
 
