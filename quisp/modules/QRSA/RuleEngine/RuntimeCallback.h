@@ -11,6 +11,7 @@
 
 #include "RuleEngine.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
+#include "modules/QRSA/RuleEngine/QubitRecord/IQubitRecord.h"
 
 namespace quisp::modules::runtime_callback {
 
@@ -37,6 +38,11 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     return MeasurementOutcome{.basis = 'Z', .outcome_is_plus = qubit->measureZ() == types::EigenvalueResult::PLUS_ONE};
   }
 
+  MeasurementOutcome measureQubitY(IQubitRecord *qubit_rec) override {
+    auto qubit = provider.getStationaryQubit(qubit_rec);
+    return MeasurementOutcome{.basis = 'Y', .outcome_is_plus = qubit->measureY() == types::EigenvalueResult::PLUS_ONE};
+  }
+
   void gateX(IQubitRecord *qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     assert(qubit != nullptr);
@@ -49,6 +55,12 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     qubit->gateZ();
   }
 
+  void gateY(IQubitRecord *qubit_rec) override {
+    auto *qubit = provider.getStationaryQubit(qubit_rec);
+    assert(qubit != nullptr);
+    qubit->gateY();
+  }
+
   void gateCNOT(IQubitRecord *control_qubit_rec, IQubitRecord *target_qubit_rec) override {
     auto *control_qubit = provider.getStationaryQubit(control_qubit_rec);
     auto *target_qubit = provider.getStationaryQubit(target_qubit_rec);
@@ -57,25 +69,25 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     control_qubit->gateCNOT(target_qubit);
   }
 
-  bool purifyX(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
+  int purifyX(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
     assert(qubit != nullptr);
     assert(trash_qubit != nullptr);
     qubit->gateCNOT(trash_qubit);
-    return trash_qubit->measureZ() == types::EigenvalueResult::PLUS_ONE;
+    return trash_qubit->measureZ() == types::EigenvalueResult::PLUS_ONE ? 0 : 1;
   }
 
-  bool purifyZ(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
+  int purifyZ(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
     assert(qubit != nullptr);
     assert(trash_qubit != nullptr);
     trash_qubit->gateCNOT(qubit);
-    return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE;
+    return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE ? 0 : 1;
   }
 
-  bool purifyY(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
+  int purifyY(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
     assert(qubit != nullptr);
@@ -85,7 +97,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     qubit->gateSdg();
     trash_qubit->gateCNOT(qubit);
     qubit->gateS();
-    return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE;
+    return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE ? 0 : 1;
   }
 
   void sendLinkTomographyResult(const unsigned long ruleset_id, const runtime::Rule &rule, const int action_index, const runtime::QNodeAddr partner_addr, int count,
@@ -112,112 +124,35 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     rule_engine->send(pk_for_self, "RouterPort$o");
   }
 
-  void sendSinglePurificationResult(const unsigned long ruleset_id, const runtime::Rule &rule, const int action_index, const QNodeAddr partner_addr, bool result,
-                                    int pur_type) override {
+  void sendPurificationResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const int shared_rule_tag, const int sequence_number, const int measurement_result,
+                              PurType protocol) override {
     auto *pkt = new PurificationResult{"PurificationResult"};
     pkt->setSrcAddr(rule_engine->parentAddress);
     pkt->setDestAddr(partner_addr.val);
     pkt->setKind(7);
-    pkt->setAction_index(action_index);
-    pkt->setRule_id(rule.id);
-    pkt->setRuleset_id(ruleset_id);
-    pkt->setShared_tag(rule.shared_tag);
-    pkt->setOutput_is_plus(result);
-    pkt->setPurType(pur_type);
+    pkt->setRulesetId(ruleset_id);
+    pkt->setSharedRuleTag(shared_rule_tag);
+    pkt->setSequenceNumber(sequence_number);
+    pkt->setMeasurementResult(measurement_result);
+    pkt->setProtocol(protocol);
     auto *pk_for_self = pkt->dup();
     pk_for_self->setDestAddr(rule_engine->parentAddress);
     rule_engine->send(pkt, "RouterPort$o");
     rule_engine->send(pk_for_self, "RouterPort$o");
   }
 
-  void sendDoublePurificationResult(const unsigned long ruleset_id, const runtime::Rule &rule, const int action_index, const QNodeAddr partner_addr, bool result_z, bool result_x,
-                                    int pur_type) override {
-    auto *pkt = new DoublePurificationResult{"DoublePurificationResult"};
+  void sendSwappingResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const QNodeAddr new_partner_addr, const int shared_rule_tag, const int sequence_number,
+                          const int frame_correction) override {
+    SwappingResult *pkt = new SwappingResult("SwappingResult");
     pkt->setSrcAddr(rule_engine->parentAddress);
     pkt->setDestAddr(partner_addr.val);
-    pkt->setKind(7);
-    pkt->setAction_index(action_index);
-    pkt->setRule_id(rule.id);
-    pkt->setRuleset_id(ruleset_id);
-    pkt->setShared_tag(rule.shared_tag);
-    pkt->setXOutput_is_plus(result_x);
-    pkt->setZOutput_is_plus(result_z);
-    pkt->setPurType(pur_type);
-    auto *pk_for_self = pkt->dup();
-    pk_for_self->setDestAddr(rule_engine->parentAddress);
+    pkt->setRulesetId(ruleset_id);
+    pkt->setSharedRuleTag(shared_rule_tag);
+    pkt->setSequenceNumber(sequence_number);
+    pkt->setKind(5);  // cyan
+    pkt->setCorrectionFrame(frame_correction);
+    pkt->setNewPartner(new_partner_addr.val);
     rule_engine->send(pkt, "RouterPort$o");
-    rule_engine->send(pk_for_self, "RouterPort$o");
-  }
-
-  void sendTriplePurificationResult(const unsigned long ruleset_id, const runtime::Rule &rule, const int action_index, const QNodeAddr partner_addr, bool result_z, bool result_x,
-                                    bool result_ds, int pur_type) override {
-    auto *pkt = new DS_DoublePurificationSecondResult{"DS_DoublePurificationSecondResult"};
-    pkt->setSrcAddr(rule_engine->parentAddress);
-    pkt->setDestAddr(partner_addr.val);
-    pkt->setKind(7);
-    pkt->setAction_index(action_index);
-    pkt->setRule_id(rule.id);
-    pkt->setRuleset_id(ruleset_id);
-    pkt->setShared_tag(rule.shared_tag);
-    pkt->setXOutput_is_plus(result_x);
-    pkt->setZOutput_is_plus(result_z);
-    pkt->setDS_Output_is_plus(result_ds);
-    pkt->setPurType(pur_type);
-    auto *pk_for_self = pkt->dup();
-    pk_for_self->setDestAddr(rule_engine->parentAddress);
-    rule_engine->send(pkt, "RouterPort$o");
-    rule_engine->send(pk_for_self, "RouterPort$o");
-  }
-
-  void sendQuadruplePurificationResult(const unsigned long ruleset_id, const runtime::Rule &rule, const int action_index, const QNodeAddr partner_addr, bool result_z,
-                                       bool result_x, bool result_ds_z, bool result_ds_x, int pur_type) override {
-    auto *pkt = new DS_DoublePurificationResult{"DS_DoublePurificationResult"};
-    pkt->setSrcAddr(rule_engine->parentAddress);
-    pkt->setDestAddr(partner_addr.val);
-    pkt->setKind(7);
-    pkt->setAction_index(action_index);
-    pkt->setRule_id(rule.id);
-    pkt->setRuleset_id(ruleset_id);
-    pkt->setShared_tag(rule.shared_tag);
-    pkt->setXOutput_is_plus(result_x);
-    pkt->setZOutput_is_plus(result_z);
-    pkt->setDS_ZOutput_is_plus(result_ds_z);
-    pkt->setDS_XOutput_is_plus(result_ds_x);
-    pkt->setPurType(pur_type);
-    auto *pk_for_self = pkt->dup();
-    pk_for_self->setDestAddr(rule_engine->parentAddress);
-    rule_engine->send(pkt, "RouterPort$o");
-    rule_engine->send(pk_for_self, "RouterPort$o");
-  }
-
-  void sendSwappingResults(const unsigned long ruleset_id, const runtime::Rule &rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr,
-                           int right_op) override {
-    auto src_addr = rule_engine->parentAddress;
-
-    SwappingResult *pkt_for_left = new SwappingResult("SwappingResult(Left)");
-    pkt_for_left->setRuleSet_id(ruleset_id);
-    pkt_for_left->setRule_id(rule.id);
-    pkt_for_left->setShared_tag(rule.shared_tag);
-    pkt_for_left->setKind(5);  // cyan
-    pkt_for_left->setSrcAddr(src_addr);
-
-    SwappingResult *pkt_for_right = pkt_for_left->dup();
-    pkt_for_right->setName("SwappingResult(Right)");
-
-    // packet for left node
-    pkt_for_left->setDestAddr(left_partner_addr.val);
-    pkt_for_left->setOperation_type(left_op);
-    pkt_for_left->setNew_partner(right_partner_addr.val);
-    pkt_for_left->setMeasured_qubit_index(left_qubit_index);
-
-    // packet for right node
-    pkt_for_right->setDestAddr(right_partner_addr.val);
-    pkt_for_right->setOperation_type(right_op);
-    pkt_for_right->setNew_partner(left_partner_addr.val);
-    pkt_for_right->setMeasured_qubit_index(right_qubit_index);
-
-    rule_engine->send(pkt_for_left, "RouterPort$o");
-    rule_engine->send(pkt_for_right, "RouterPort$o");
   }
 
   void freeAndResetQubit(IQubitRecord *qubit) override {

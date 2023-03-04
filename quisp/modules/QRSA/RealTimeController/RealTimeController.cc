@@ -1,14 +1,10 @@
 /** \file RealTimeController.cc
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/03/19
  *
  *  \brief RealTimeController
  */
 #include "RealTimeController.h"
-#include <utils/ComponentProvider.h>
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 Define_Module(RealTimeController);
 
@@ -43,5 +39,8 @@ void RealTimeController::applyZGate(qrsa::IQubitRecord *const qubit_record) {
   auto *qubit = provider.getStationaryQubit(qubit_record);
   qubit->gateZ();
 }
-}  // namespace modules
-}  // namespace quisp
+void RealTimeController::applyYGate(qrsa::IQubitRecord *const qubit_record) {
+  auto *qubit = provider.getStationaryQubit(qubit_record);
+  qubit->gateY();
+}
+}  // namespace quisp::modules

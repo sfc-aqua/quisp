@@ -14,8 +14,8 @@ namespace quisp::messages;
 
 packet BSMTimingNotification extends Header
 {
-    double first_photon_emit_time @setter(setFirstPhotonEmitTime) @getter(getFirstPhotonEmitTime);
-    double interval;
+    simtime_t first_photon_emit_time @setter(setFirstPhotonEmitTime) @getter(getFirstPhotonEmitTime);
+    simtime_t interval  @setter(setInterval)  @getter(getInterval);
     QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
     int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
 }

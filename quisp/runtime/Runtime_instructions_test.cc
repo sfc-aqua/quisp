@@ -1,10 +1,11 @@
 #include <gtest/gtest.h>
-#include <modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h>
 #include <cstddef>
 #include <sstream>
+
 #include "Runtime.h"
 #include "modules/QNIC.h"
 #include "modules/QRSA/QRSA.h"
+#include "modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h"
 #include "runtime/types.h"
 #include "test.h"
 
