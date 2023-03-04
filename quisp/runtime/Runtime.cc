@@ -384,7 +384,7 @@ void Runtime::purifyZ(RegId result_reg_id, int bitset_index, QubitId qubit_id, Q
   auto trash_qubit = getQubitByQubitId(trash_qubit_id);
   if (qubit == nullptr) return;
   if (trash_qubit == nullptr) return;
-  int result = callback->purifyZ(qubit, trash_qubit) ? 1 : 0;
+  int result = callback->purifyZ(qubit, trash_qubit);
   auto val = getRegVal(result_reg_id);
   val |= (result << bitset_index);
   setRegVal(result_reg_id, val);
