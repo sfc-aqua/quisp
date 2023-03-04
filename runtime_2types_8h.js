@@ -7,14 +7,17 @@ var runtime_2types_8h =
     [ "IQubitRecord", "runtime_2types_8h.html#a953019cdd6e768eeff1c6c1f68d92d0a", null ],
     [ "LabelMap", "runtime_2types_8h.html#a20aebb1c7bbd99c0cf78fdb160163483", null ],
     [ "MeasurementOutcome", "runtime_2types_8h.html#ae7425dfd46aad2a6c02ca61ae0140cf4", null ],
+    [ "MessageRecord", "runtime_2types_8h.html#a85ecfb49269fa9da29372fb074addb33", null ],
     [ "None", "runtime_2types_8h.html#ab81d221407ab14480e6661777f8f23bd", null ],
     [ "PurType", "runtime_2types_8h.html#ac32d2f170825dfbdf51cafc838b4666d", null ],
     [ "RuleId", "runtime_2types_8h.html#a07053e5e0fc67af04aa6620794d4fe5a", null ],
+    [ "SequenceNumber", "runtime_2types_8h.html#aa2ef2cd3ac6818db9c7d3c95f0613b19", null ],
     [ "String", "runtime_2types_8h.html#ac1737391d417280e4ce9d08d4d4e02b4", null ],
     [ "Time", "runtime_2types_8h.html#aa66f871ed2555b08c4bfd3c164d63711", null ],
     [ "Basis", "runtime_2types_8h.html#a27006afddc56aedab6041bcb072ef2c5", [
       [ "Z", "runtime_2types_8h.html#a27006afddc56aedab6041bcb072ef2c5a21c2e59531c8710156d34a3c30ac81d5", null ],
       [ "X", "runtime_2types_8h.html#a27006afddc56aedab6041bcb072ef2c5a02129bb861061d1a052c592e2dc6b383", null ],
+      [ "Y", "runtime_2types_8h.html#a27006afddc56aedab6041bcb072ef2c5a57cec4137b614c87cb4e24a3d003a3e0", null ],
       [ "RANDOM", "runtime_2types_8h.html#a27006afddc56aedab6041bcb072ef2c5a170e02e86972c2be8559884cc3c12254", null ]
     ] ],
     [ "RegId", "runtime_2types_8h.html#a4af986369354532b95ee1afe7aa78af9", [

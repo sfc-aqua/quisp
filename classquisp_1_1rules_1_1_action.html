@@ -103,11 +103,12 @@ Inheritance diagram for quisp::rules::Action:</div>
 <div class="dyncontent">
 <div class="center"><img src="classquisp_1_1rules_1_1_action__inherit__graph.png" border="0" usemap="#aquisp_1_1rules_1_1_action_inherit__map" alt="Inheritance graph"/></div>
 <map name="aquisp_1_1rules_1_1_action_inherit__map" id="aquisp_1_1rules_1_1_action_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,95,136,121"/>
-<area shape="rect" href="classquisp_1_1rules_1_1_entanglement_swapping.html" title=" " alt="" coords="184,5,356,45"/>
-<area shape="rect" href="classquisp_1_1rules_1_1_purification.html" title=" " alt="" coords="191,70,349,95"/>
-<area shape="rect" href="classquisp_1_1rules_1_1_tomography.html" title=" " alt="" coords="188,119,352,145"/>
-<area shape="rect" href="classquisp_1_1rules_1_1_wait.html" title=" " alt="" coords="211,169,329,194"/>
+<area shape="rect" title=" " alt="" coords="5,127,136,153"/>
+<area shape="rect" href="classquisp_1_1rules_1_1_entanglement_swapping.html" title=" " alt="" coords="203,5,375,45"/>
+<area shape="rect" href="classquisp_1_1rules_1_1_purification.html" title=" " alt="" coords="210,70,367,95"/>
+<area shape="rect" href="classquisp_1_1rules_1_1_purification_correlation.html" title=" " alt="" coords="210,120,367,160"/>
+<area shape="rect" href="classquisp_1_1rules_1_1_swapping_correction.html" title=" " alt="" coords="184,185,393,210"/>
+<area shape="rect" href="classquisp_1_1rules_1_1_tomography.html" title=" " alt="" coords="207,234,371,259"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -130,6 +131,8 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ab79adb79e7c4db0be5ce0644b0d6cedf"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structquisp_1_1rules_1_1_qnic_interface.html">QnicInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1rules_1_1_action.html#ab79adb79e7c4db0be5ce0644b0d6cedf">qnic_interfaces</a></td></tr>
 <tr class="separator:ab79adb79e7c4db0be5ce0644b0d6cedf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4fa603b46c4b36feabc2db2fe7fd49a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1rules_1_1_action.html#ab4fa603b46c4b36feabc2db2fe7fd49a">partner_address</a></td></tr>
+<tr class="separator:ab4fa603b46c4b36feabc2db2fe7fd49a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a80c6a356aa72092117eef5a18d856cd5" name="a80c6a356aa72092117eef5a18d856cd5"></a>
@@ -243,7 +246,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classquisp_1_1rules_1_1_purification.html#a3c899503475bdd50a6b3b9be3d4d13f3">quisp::rules::Purification</a>, <a class="el" href="classquisp_1_1rules_1_1_entanglement_swapping.html#a370db93bbb95920c66c439d1c8800191">quisp::rules::EntanglementSwapping</a>, <a class="el" href="classquisp_1_1rules_1_1_wait.html#a5f06b43ebe1852b4db0fcb03dd0423eb">quisp::rules::Wait</a>, and <a class="el" href="classquisp_1_1rules_1_1_tomography.html#a647d3990c2e945169bbe105a2cbfc175">quisp::rules::Tomography</a>.</p>
+<p>Implemented in <a class="el" href="classquisp_1_1rules_1_1_purification.html#a3c899503475bdd50a6b3b9be3d4d13f3">quisp::rules::Purification</a>, <a class="el" href="classquisp_1_1rules_1_1_entanglement_swapping.html#a370db93bbb95920c66c439d1c8800191">quisp::rules::EntanglementSwapping</a>, <a class="el" href="classquisp_1_1rules_1_1_purification_correlation.html#a85e681ff40d41c66a63637846c78ee8a">quisp::rules::PurificationCorrelation</a>, <a class="el" href="classquisp_1_1rules_1_1_swapping_correction.html#a308b787026768d4a6642d72ca63ba983">quisp::rules::SwappingCorrection</a>, and <a class="el" href="classquisp_1_1rules_1_1_tomography.html#a647d3990c2e945169bbe105a2cbfc175">quisp::rules::Tomography</a>.</p>
 
 </div>
 </div>
@@ -270,11 +273,25 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classquisp_1_1rules_1_1_purification.html#a5031060628133335f78c30a2668cc841">quisp::rules::Purification</a>, <a class="el" href="classquisp_1_1rules_1_1_entanglement_swapping.html#a7894e50ab49e868d6148567ea7587c4a">quisp::rules::EntanglementSwapping</a>, <a class="el" href="classquisp_1_1rules_1_1_wait.html#ab38e47217e4d1db59e46396da1025f0e">quisp::rules::Wait</a>, and <a class="el" href="classquisp_1_1rules_1_1_tomography.html#a4bc6d564bf36e21dc685015ccedf278c">quisp::rules::Tomography</a>.</p>
+<p>Implemented in <a class="el" href="classquisp_1_1rules_1_1_purification.html#a5031060628133335f78c30a2668cc841">quisp::rules::Purification</a>, <a class="el" href="classquisp_1_1rules_1_1_entanglement_swapping.html#a7894e50ab49e868d6148567ea7587c4a">quisp::rules::EntanglementSwapping</a>, <a class="el" href="classquisp_1_1rules_1_1_purification_correlation.html#aecb3486fe38dc0f08b18dcd76eb04e20">quisp::rules::PurificationCorrelation</a>, <a class="el" href="classquisp_1_1rules_1_1_swapping_correction.html#a506c619be7d0f9e5234a9a9e52ecb637">quisp::rules::SwappingCorrection</a>, and <a class="el" href="classquisp_1_1rules_1_1_tomography.html#a4bc6d564bf36e21dc685015ccedf278c">quisp::rules::Tomography</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="ab4fa603b46c4b36feabc2db2fe7fd49a" name="ab4fa603b46c4b36feabc2db2fe7fd49a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4fa603b46c4b36feabc2db2fe7fd49a">&#9670;&#160;</a></span>partner_address</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int quisp::rules::Action::partner_address</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab79adb79e7c4db0be5ce0644b0d6cedf" name="ab79adb79e7c4db0be5ce0644b0d6cedf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab79adb79e7c4db0be5ce0644b0d6cedf">&#9670;&#160;</a></span>qnic_interfaces</h2>
 

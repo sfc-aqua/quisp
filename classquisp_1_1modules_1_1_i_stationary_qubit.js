@@ -8,6 +8,7 @@ var classquisp_1_1modules_1_1_i_stationary_qubit =
     [ "gateS", "classquisp_1_1modules_1_1_i_stationary_qubit.html#ad716e4cf448cd24263c12a914479bcaf", null ],
     [ "gateSdg", "classquisp_1_1modules_1_1_i_stationary_qubit.html#abd00995e5608896aaf8c944498c606ad", null ],
     [ "gateX", "classquisp_1_1modules_1_1_i_stationary_qubit.html#ab3ebf12a1748943a2ba03312089af2a3", null ],
+    [ "gateY", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a5309239a5be081d038d9c8457677f515", null ],
     [ "gateZ", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a7df148bda88a639932a9bbe0a2746c35", null ],
     [ "getBackendQubitRef", "classquisp_1_1modules_1_1_i_stationary_qubit.html#ae2a8a2fa514fcd1c5b851542a3c77f16", null ],
     [ "isLocked", "classquisp_1_1modules_1_1_i_stationary_qubit.html#ab02198568a3884cb11857186e638aca4", null ],

@@ -10,7 +10,6 @@ var namespacequisp_1_1modules =
       [ "QubitIndex", "namespacequisp_1_1modules_1_1common.html#ae40fc279e2dc158039aa95bb2ad5e007", null ]
     ] ],
     [ "Logger", "namespacequisp_1_1modules_1_1_logger.html", "namespacequisp_1_1modules_1_1_logger" ],
-    [ "pur_result_table", "namespacequisp_1_1modules_1_1pur__result__table.html", "namespacequisp_1_1modules_1_1pur__result__table" ],
     [ "qnic_record", "namespacequisp_1_1modules_1_1qnic__record.html", "namespacequisp_1_1modules_1_1qnic__record" ],
     [ "qnic_store", "namespacequisp_1_1modules_1_1qnic__store.html", "namespacequisp_1_1modules_1_1qnic__store" ],
     [ "qrsa", "namespacequisp_1_1modules_1_1qrsa.html", "namespacequisp_1_1modules_1_1qrsa" ],

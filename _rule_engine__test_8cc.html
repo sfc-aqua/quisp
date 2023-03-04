@@ -92,91 +92,91 @@ $(document).ready(function(){initNavTree('_rule_engine__test_8cc.html',''); init
   <div class="headertitle"><div class="title">RuleEngine_test.cc File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;gmock/gmock.h&gt;</code><br />
+<div class="textblock"><code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;utility&gt;</code><br />
+<code>#include &lt;gmock/gmock.h&gt;</code><br />
 <code>#include &lt;gtest/gtest.h&gt;</code><br />
 <code>#include &lt;omnetpp.h&gt;</code><br />
-<code>#include &lt;<a class="el" href="_test_utils_8h_source.html">test_utils/TestUtils.h</a>&gt;</code><br />
-<code>#include &lt;memory&gt;</code><br />
-<code>#include &lt;utility&gt;</code><br />
 <code>#include &quot;<a class="el" href="_bell_pair_store_8h_source.html">BellPairStore/BellPairStore.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_i_rule_engine_8h_source.html">IRuleEngine.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_qubit_record_8h_source.html">QubitRecord/QubitRecord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_rule_engine_8h_source.html">RuleEngine.h</a>&quot;</code><br />
+<code>#include &quot;messages/purification_messages_m.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="_disabled_logger_8h_source.html">modules/Logger/DisabledLogger.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_q_n_i_c_8h_source.html">modules/QNIC.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_i_stationary_qubit_8h_source.html">modules/QNIC/StationaryQubit/IStationaryQubit.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_i_hardware_monitor_8h_source.html">modules/QRSA/HardwareMonitor/IHardwareMonitor.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_q_r_s_a_8h_source.html">modules/QRSA/QRSA.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_i_real_time_controller_8h_source.html">modules/QRSA/RealTimeController/IRealTimeController.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_routing_daemon_8h_source.html">modules/QRSA/RoutingDaemon/RoutingDaemon.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_action_8h_source.html">rules/Action.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_rule_8h_source.html">rules/Rule.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="rules_2_rule_set_8h_source.html">rules/RuleSet.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="runtime_2_rule_set_8h_source.html">runtime/RuleSet.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_runtime_8h_source.html">runtime/Runtime.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="opcode_8h_source.html">runtime/opcode.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="runtime_2test_8h_source.html">runtime/test.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="runtime_2types_8h_source.html">runtime/types.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_test_utils_8h_source.html">test_utils/TestUtils.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_util_functions_8h_source.html">test_utils/UtilFunctions.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_mock_hardware_monitor_8h_source.html">test_utils/mock_modules/MockHardwareMonitor.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_mock_real_time_controller_8h_source.html">test_utils/mock_modules/MockRealTimeController.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_mock_routing_daemon_8h_source.html">test_utils/mock_modules/MockRoutingDaemon.h</a>&quot;</code><br />
-<code>#include &lt;messages/purification_messages_m.h&gt;</code><br />
-<code>#include &lt;<a class="el" href="_disabled_logger_8h_source.html">modules/Logger/DisabledLogger.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="_q_n_i_c_8h_source.html">modules/QNIC.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="_i_stationary_qubit_8h_source.html">modules/QNIC/StationaryQubit/IStationaryQubit.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="_i_hardware_monitor_8h_source.html">modules/QRSA/HardwareMonitor/IHardwareMonitor.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="_q_r_s_a_8h_source.html">modules/QRSA/QRSA.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="_i_real_time_controller_8h_source.html">modules/QRSA/RealTimeController/IRealTimeController.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="_routing_daemon_8h_source.html">modules/QRSA/RoutingDaemon/RoutingDaemon.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="_action_8h_source.html">rules/Action.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="rules_2_rule_set_8h_source.html">rules/RuleSet.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="runtime_2_rule_set_8h_source.html">runtime/RuleSet.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="_runtime_8h_source.html">runtime/Runtime.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="opcode_8h_source.html">runtime/opcode.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="runtime_2test_8h_source.html">runtime/test.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="runtime_2types_8h_source.html">runtime/types.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for RuleEngine_test.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="_rule_engine__test_8cc__incl.png" border="0" usemap="#aquisp_2modules_2_q_r_s_a_2_rule_engine_2_rule_engine__test_8cc" alt=""/></div>
 <map name="aquisp_2modules_2_q_r_s_a_2_rule_engine_2_rule_engine__test_8cc" id="aquisp_2modules_2_q_r_s_a_2_rule_engine_2_rule_engine__test_8cc">
-<area shape="rect" title=" " alt="" coords="2979,5,3139,60"/>
-<area shape="rect" title=" " alt="" coords="1608,526,1723,551"/>
-<area shape="rect" title=" " alt="" coords="4726,115,4821,141"/>
-<area shape="rect" title=" " alt="" coords="1053,856,1136,881"/>
-<area shape="rect" href="_test_utils_8h.html" title=" " alt="" coords="830,357,973,383"/>
-<area shape="rect" title=" " alt="" coords="27,526,79,551"/>
-<area shape="rect" href="_q_n_i_c_8h.html" title="QNIC." alt="" coords="2030,775,2149,801"/>
-<area shape="rect" href="_i_stationary_qubit_8h.html" title=" " alt="" coords="2947,768,3149,808"/>
-<area shape="rect" href="_i_real_time_controller_8h.html" title=" " alt="" coords="2368,519,2595,559"/>
-<area shape="rect" href="_q_r_s_a_8h.html" title=" " alt="" coords="2637,607,2800,632"/>
-<area shape="rect" title=" " alt="" coords="3863,775,3931,801"/>
-<area shape="rect" href="_util_functions_8h.html" title=" " alt="" coords="872,526,981,551"/>
-<area shape="rect" href="_mock_hardware_monitor_8h.html" title=" " alt="" coords="1452,431,1655,471"/>
-<area shape="rect" href="_i_hardware_monitor_8h.html" title=" " alt="" coords="3207,519,3422,559"/>
-<area shape="rect" href="_bell_pair_store_8h.html" title=" " alt="" coords="2152,519,2344,559"/>
-<area shape="rect" href="_mock_real_time_controller_8h.html" title=" " alt="" coords="2241,431,2442,471"/>
-<area shape="rect" href="_mock_routing_daemon_8h.html" title=" " alt="" coords="1974,431,2165,471"/>
-<area shape="rect" href="_i_rule_engine_8h.html" title=" " alt="" coords="4347,203,4448,229"/>
-<area shape="rect" href="_qubit_record_8h.html" title=" " alt="" coords="3003,526,3183,551"/>
-<area shape="rect" href="_rule_engine_8h.html" title="RuleEngine." alt="" coords="3339,115,3437,141"/>
-<area shape="rect" href="rules_2_rule_set_8h.html" title=" " alt="" coords="4254,284,4365,309"/>
-<area shape="rect" href="runtime_2_rule_set_8h.html" title=" " alt="" coords="3952,357,4077,383"/>
-<area shape="rect" href="opcode_8h.html" title=" " alt="" coords="4104,438,4179,463"/>
-<area shape="rect" href="runtime_2types_8h.html" title="this file contains the definitions of all the user&#45;defined types widely used alongside the runtime::R..." alt="" coords="3985,526,4047,551"/>
-<area shape="rect" href="_rule_8h.html" title="Rule." alt="" coords="4364,357,4423,383"/>
-<area shape="rect" href="_action_8h.html" title=" " alt="" coords="3539,438,3608,463"/>
-<area shape="rect" href="_runtime_8h.html" title=" " alt="" coords="3851,284,3978,309"/>
-<area shape="rect" title=" " alt="" coords="4845,108,4993,148"/>
-<area shape="rect" href="_disabled_logger_8h.html" title=" " alt="" coords="2399,284,2617,309"/>
-<area shape="rect" href="_routing_daemon_8h.html" title=" " alt="" coords="2517,431,2725,471"/>
-<area shape="rect" href="runtime_2test_8h.html" title="test utilities for Runtime. You can include this file for unit testing." alt="" coords="4120,203,4221,229"/>
-<area shape="rect" href="_access_private_8h.html" title=" " alt="" coords="43,438,160,463"/>
-<area shape="rect" href="_gate_8h.html" title=" " alt="" coords="334,687,394,713"/>
-<area shape="rect" href="_module_type_8h.html" title=" " alt="" coords="1183,526,1286,551"/>
-<area shape="rect" href="_q_node_8h.html" title=" " alt="" coords="554,687,627,713"/>
-<area shape="rect" href="_simulation_8h.html" title=" " alt="" coords="964,607,1057,632"/>
-<area shape="rect" href="_static_env_8h.html" title=" " alt="" coords="555,607,643,632"/>
-<area shape="rect" href="_test_component_provider_strategy_8h.html" title=" " alt="" coords="1730,438,1950,463"/>
-<area shape="rect" href="_mock_backend_qubit_8h.html" title=" " alt="" coords="1013,431,1217,471"/>
-<area shape="rect" href="_mock_quantum_backend_8h.html" title=" " alt="" coords="489,431,695,471"/>
-<area shape="rect" href="_mock_q_nic_store_8h.html" title=" " alt="" coords="719,438,937,463"/>
-<area shape="rect" href="_mock_qubit_8h.html" title=" " alt="" coords="1241,438,1428,463"/>
-<area shape="rect" href="_i_logger_8h.html" title=" " alt="" coords="2253,607,2427,632"/>
-<area shape="rect" href="_i_qubit_record_8h.html" title=" " alt="" coords="2967,680,3129,720"/>
-<area shape="rect" href="_i_routing_daemon_8h.html" title=" " alt="" coords="2669,519,2877,559"/>
-<area shape="rect" title=" " alt="" coords="3734,438,3845,463"/>
-<area shape="rect" title=" " alt="" coords="3869,438,3928,463"/>
-<area shape="rect" href="classical__messages_8h.html" title=" " alt="" coords="3553,196,3690,236"/>
-<area shape="rect" href="_logger_base_8h.html" title=" " alt="" coords="3113,284,3311,309"/>
-<area shape="rect" href="_runtime_manager_8h.html" title=" " alt="" coords="3766,203,3943,229"/>
+<area shape="rect" title=" " alt="" coords="1831,5,1991,60"/>
+<area shape="rect" title=" " alt="" coords="625,775,693,801"/>
+<area shape="rect" title=" " alt="" coords="3431,115,3483,141"/>
+<area shape="rect" title=" " alt="" coords="2648,291,2763,317"/>
+<area shape="rect" title=" " alt="" coords="3507,115,3602,141"/>
+<area shape="rect" title=" " alt="" coords="2343,856,2425,881"/>
+<area shape="rect" href="_bell_pair_store_8h.html" title=" " alt="" coords="1742,533,1930,559"/>
+<area shape="rect" href="_q_n_i_c_8h.html" title="QNIC." alt="" coords="1762,775,1881,801"/>
+<area shape="rect" href="_i_stationary_qubit_8h.html" title=" " alt="" coords="801,768,1002,808"/>
+<area shape="rect" href="_q_r_s_a_8h.html" title=" " alt="" coords="1249,607,1412,632"/>
+<area shape="rect" href="_i_rule_engine_8h.html" title=" " alt="" coords="3153,203,3255,229"/>
+<area shape="rect" href="_qubit_record_8h.html" title=" " alt="" coords="1750,607,1930,632"/>
+<area shape="rect" href="_rule_engine_8h.html" title="RuleEngine." alt="" coords="1505,115,1602,141"/>
+<area shape="rect" href="_i_hardware_monitor_8h.html" title=" " alt="" coords="1898,284,2113,324"/>
+<area shape="rect" href="_i_real_time_controller_8h.html" title=" " alt="" coords="1177,372,1404,412"/>
+<area shape="rect" href="rules_2_rule_set_8h.html" title=" " alt="" coords="205,291,315,317"/>
+<area shape="rect" href="_rule_8h.html" title="Rule." alt="" coords="509,607,568,632"/>
+<area shape="rect" href="_action_8h.html" title=" " alt="" coords="928,687,997,713"/>
+<area shape="rect" href="runtime_2_rule_set_8h.html" title=" " alt="" coords="499,379,624,405"/>
+<area shape="rect" href="opcode_8h.html" title=" " alt="" coords="612,460,687,485"/>
+<area shape="rect" href="runtime_2types_8h.html" title="this file contains the definitions of all the user&#45;defined types widely used alongside the runtime::R..." alt="" coords="829,533,891,559"/>
+<area shape="rect" href="_runtime_8h.html" title=" " alt="" coords="649,291,775,317"/>
+<area shape="rect" title=" " alt="" coords="3626,108,3774,148"/>
+<area shape="rect" href="_disabled_logger_8h.html" title=" " alt="" coords="2572,379,2791,405"/>
+<area shape="rect" href="_routing_daemon_8h.html" title=" " alt="" coords="2049,196,2257,236"/>
+<area shape="rect" href="runtime_2test_8h.html" title="test utilities for Runtime. You can include this file for unit testing." alt="" coords="951,203,1052,229"/>
+<area shape="rect" href="_test_utils_8h.html" title=" " alt="" coords="2661,115,2803,141"/>
+<area shape="rect" href="_util_functions_8h.html" title=" " alt="" coords="3221,291,3331,317"/>
+<area shape="rect" href="_mock_hardware_monitor_8h.html" title=" " alt="" coords="2825,196,3028,236"/>
+<area shape="rect" href="_mock_real_time_controller_8h.html" title=" " alt="" coords="2282,196,2483,236"/>
+<area shape="rect" href="_mock_routing_daemon_8h.html" title=" " alt="" coords="2610,196,2801,236"/>
+<area shape="rect" href="_i_logger_8h.html" title=" " alt="" coords="1859,687,2032,713"/>
+<area shape="rect" title=" " alt="" coords="325,856,456,881"/>
+<area shape="rect" title=" " alt="" coords="753,856,885,881"/>
+<area shape="rect" href="_backends_8h.html" title=" " alt="" coords="909,856,1059,881"/>
+<area shape="rect" title=" " alt="" coords="1084,856,1175,881"/>
+<area shape="rect" title=" " alt="" coords="624,856,728,881"/>
+<area shape="rect" href="_i_qubit_record_8h.html" title=" " alt="" coords="1228,680,1391,720"/>
+<area shape="rect" title=" " alt="" coords="711,460,822,485"/>
+<area shape="rect" title=" " alt="" coords="196,775,255,801"/>
+<area shape="rect" href="_i_q_nic_store_8h.html" title=" " alt="" coords="1453,533,1616,559"/>
+<area shape="rect" href="classical__messages_8h.html" title=" " alt="" coords="1431,196,1569,236"/>
+<area shape="rect" href="_logger_base_8h.html" title=" " alt="" coords="1597,460,1795,485"/>
+<area shape="rect" href="_component_provider_8h.html" title=" " alt="" coords="1254,533,1429,559"/>
+<area shape="rect" href="_i_routing_daemon_8h.html" title=" " alt="" coords="2137,284,2345,324"/>
+<area shape="rect" href="_runtime_manager_8h.html" title=" " alt="" coords="749,203,926,229"/>
+<area shape="rect" title=" " alt="" coords="2157,379,2331,405"/>
+<area shape="rect" title=" " alt="" coords="561,687,621,713"/>
+<area shape="rect" href="_condition_8h.html" title=" " alt="" coords="347,687,434,713"/>
+<area shape="rect" href="modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="1026,775,1153,801"/>
 </map>
 </div>
 </div></div><!-- contents -->

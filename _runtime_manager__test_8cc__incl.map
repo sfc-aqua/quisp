@@ -1,52 +1,52 @@
 <map id="quisp/runtime/RuntimeManager_test.cc" name="quisp/runtime/RuntimeManager_test.cc">
-<area shape="rect" id="node1" title=" " alt="" coords="306,5,509,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,93,100,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="2072,1032,2140,1057"/>
-<area shape="rect" id="node4" href="$runtime_2_rule_set_8h.html" title=" " alt="" coords="328,240,407,265"/>
-<area shape="rect" id="node13" href="$runtime_2types_8h.html" title="this file contains the definitions of all the user&#45;defined types widely used alongside the runtime::R..." alt="" coords="335,387,397,412"/>
-<area shape="rect" id="node43" href="$_runtime_manager_8h.html" title=" " alt="" coords="593,93,723,119"/>
-<area shape="rect" id="node49" href="$runtime_2test_8h.html" title="test utilities for Runtime. You can include this file for unit testing." alt="" coords="420,93,475,119"/>
-<area shape="rect" id="node5" title=" " alt="" coords="281,1105,336,1131"/>
-<area shape="rect" id="node6" title=" " alt="" coords="135,863,245,889"/>
-<area shape="rect" id="node7" title=" " alt="" coords="378,313,437,339"/>
-<area shape="rect" id="node8" href="$opcode_8h.html" title=" " alt="" coords="653,313,727,339"/>
-<area shape="rect" id="node9" title=" " alt="" coords="473,387,542,412"/>
-<area shape="rect" id="node10" title=" " alt="" coords="697,387,747,412"/>
-<area shape="rect" id="node11" title=" " alt="" coords="771,387,833,412"/>
-<area shape="rect" id="node12" href="$macro__utils_8h.html" title=" " alt="" coords="1006,387,1105,412"/>
-<area shape="rect" id="node41" href="$def__opcodes_8h.html" title="this file contains a list of macros defining the opcodes used in the IR. These opcodes are used in de..." alt="" coords="566,387,673,412"/>
-<area shape="rect" id="node42" href="$def__instructions_8h.html" title=" " alt="" coords="857,387,981,412"/>
-<area shape="rect" id="node14" title=" " alt="" coords="473,951,605,977"/>
-<area shape="rect" id="node15" title=" " alt="" coords="2380,1105,2445,1131"/>
-<area shape="rect" id="node16" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="1820,621,2021,661"/>
-<area shape="rect" id="node37" href="$_q_r_s_a_8h.html" title=" " alt="" coords="2015,460,2178,485"/>
-<area shape="rect" id="node17" title=" " alt="" coords="1317,709,1449,735"/>
-<area shape="rect" id="node18" href="$_backends_8h.html" title=" " alt="" coords="1473,709,1624,735"/>
-<area shape="rect" id="node31" title=" " alt="" coords="1863,951,1967,977"/>
-<area shape="rect" id="node36" title=" " alt="" coords="1817,1032,1907,1057"/>
-<area shape="rect" id="node19" href="$backends_2_graph_state_2_backend_8h.html" title=" " alt="" coords="1328,783,1481,808"/>
-<area shape="rect" id="node22" href="$_i_configuration_8h.html" title=" " alt="" coords="372,1032,555,1057"/>
-<area shape="rect" id="node23" href="$_i_quantum_backend_8h.html" title=" " alt="" coords="853,951,1063,977"/>
-<area shape="rect" id="node25" href="$_i_qubit_id_8h.html" title=" " alt="" coords="1573,1032,1652,1057"/>
-<area shape="rect" id="node27" href="$_i_qubit_8h.html" title=" " alt="" coords="1701,951,1839,977"/>
-<area shape="rect" id="node34" href="$_qubit_configuration_8h.html" title=" " alt="" coords="629,951,828,977"/>
-<area shape="rect" id="node20" title=" " alt="" coords="1802,863,1885,889"/>
-<area shape="rect" id="node21" title=" " alt="" coords="1303,863,1360,889"/>
-<area shape="rect" id="node29" href="$_i_random_number_generator_8h.html" title=" " alt="" coords="1384,856,1575,896"/>
-<area shape="rect" id="node30" href="$backends_2_graph_state_2_q_u_b_i_t_8h.html" title=" " alt="" coords="1216,863,1279,889"/>
-<area shape="rect" id="node24" title=" " alt="" coords="887,1032,1029,1057"/>
-<area shape="rect" id="node26" title=" " alt="" coords="1573,1105,1652,1131"/>
-<area shape="rect" id="node28" title=" " alt="" coords="2231,1032,2309,1057"/>
-<area shape="rect" id="node32" title=" " alt="" coords="1087,944,1255,984"/>
-<area shape="rect" id="node33" title=" " alt="" coords="1280,951,1436,977"/>
-<area shape="rect" id="node35" href="$backends_2_graph_state_2types_8h.html" title=" " alt="" coords="1512,951,1575,977"/>
-<area shape="rect" id="node38" href="$_i_qubit_record_8h.html" title=" " alt="" coords="1957,533,2119,573"/>
-<area shape="rect" id="node39" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="2197,629,2316,654"/>
-<area shape="rect" id="node40" title=" " alt="" coords="2194,709,2325,735"/>
-<area shape="rect" id="node44" href="$_runtime_8h.html" title=" " alt="" coords="693,167,773,192"/>
-<area shape="rect" id="node45" title=" " alt="" coords="1059,240,1124,265"/>
-<area shape="rect" id="node46" title=" " alt="" coords="1093,313,1165,339"/>
-<area shape="rect" id="node47" href="$_instruction_visitor_8h.html" title=" " alt="" coords="853,240,983,265"/>
-<area shape="rect" id="node48" href="$_value_8h.html" title=" " alt="" coords="512,313,577,339"/>
-<area shape="rect" id="node50" title=" " alt="" coords="405,167,519,192"/>
+<area shape="rect" id="node1" title=" " alt="" coords="671,5,873,45"/>
+<area shape="rect" id="node2" title=" " alt="" coords="233,93,327,119"/>
+<area shape="rect" id="node3" title=" " alt="" coords="1895,1032,1963,1057"/>
+<area shape="rect" id="node4" href="$runtime_2_rule_set_8h.html" title=" " alt="" coords="626,240,705,265"/>
+<area shape="rect" id="node13" href="$runtime_2types_8h.html" title="this file contains the definitions of all the user&#45;defined types widely used alongside the runtime::R..." alt="" coords="874,387,937,412"/>
+<area shape="rect" id="node43" href="$_runtime_manager_8h.html" title=" " alt="" coords="932,93,1063,119"/>
+<area shape="rect" id="node49" href="$runtime_2test_8h.html" title="test utilities for Runtime. You can include this file for unit testing." alt="" coords="814,93,869,119"/>
+<area shape="rect" id="node5" title=" " alt="" coords="321,1105,375,1131"/>
+<area shape="rect" id="node6" title=" " alt="" coords="43,863,154,889"/>
+<area shape="rect" id="node7" title=" " alt="" coords="697,313,756,339"/>
+<area shape="rect" id="node8" href="$opcode_8h.html" title=" " alt="" coords="1220,313,1295,339"/>
+<area shape="rect" id="node9" title=" " alt="" coords="1060,387,1129,412"/>
+<area shape="rect" id="node10" title=" " alt="" coords="985,387,1036,412"/>
+<area shape="rect" id="node11" title=" " alt="" coords="1484,387,1545,412"/>
+<area shape="rect" id="node12" href="$macro__utils_8h.html" title=" " alt="" coords="1569,387,1668,412"/>
+<area shape="rect" id="node41" href="$def__opcodes_8h.html" title="this file contains a list of macros defining the opcodes used in the IR. These opcodes are used in de..." alt="" coords="1204,387,1311,412"/>
+<area shape="rect" id="node42" href="$def__instructions_8h.html" title=" " alt="" coords="1335,387,1459,412"/>
+<area shape="rect" id="node14" title=" " alt="" coords="174,951,306,977"/>
+<area shape="rect" id="node15" title=" " alt="" coords="2014,1105,2079,1131"/>
+<area shape="rect" id="node16" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="799,621,1001,661"/>
+<area shape="rect" id="node37" href="$_q_r_s_a_8h.html" title=" " alt="" coords="1380,460,1543,485"/>
+<area shape="rect" id="node17" title=" " alt="" coords="818,709,950,735"/>
+<area shape="rect" id="node18" href="$_backends_8h.html" title=" " alt="" coords="974,709,1125,735"/>
+<area shape="rect" id="node31" title=" " alt="" coords="381,951,485,977"/>
+<area shape="rect" id="node36" title=" " alt="" coords="263,1032,353,1057"/>
+<area shape="rect" id="node19" href="$backends_2_graph_state_2_backend_8h.html" title=" " alt="" coords="1221,783,1374,808"/>
+<area shape="rect" id="node22" href="$_i_configuration_8h.html" title=" " alt="" coords="518,1032,701,1057"/>
+<area shape="rect" id="node23" href="$_i_quantum_backend_8h.html" title=" " alt="" coords="1295,951,1505,977"/>
+<area shape="rect" id="node25" href="$_i_qubit_id_8h.html" title=" " alt="" coords="1503,1032,1582,1057"/>
+<area shape="rect" id="node27" href="$_i_qubit_8h.html" title=" " alt="" coords="1631,951,1769,977"/>
+<area shape="rect" id="node34" href="$_qubit_configuration_8h.html" title=" " alt="" coords="510,951,709,977"/>
+<area shape="rect" id="node20" title=" " alt="" coords="1553,863,1636,889"/>
+<area shape="rect" id="node21" title=" " alt="" coords="1661,863,1718,889"/>
+<area shape="rect" id="node29" href="$_i_random_number_generator_8h.html" title=" " alt="" coords="1135,856,1326,896"/>
+<area shape="rect" id="node30" href="$backends_2_graph_state_2_q_u_b_i_t_8h.html" title=" " alt="" coords="909,863,971,889"/>
+<area shape="rect" id="node24" title=" " alt="" coords="1329,1032,1471,1057"/>
+<area shape="rect" id="node26" title=" " alt="" coords="1503,1105,1582,1131"/>
+<area shape="rect" id="node28" title=" " alt="" coords="2085,1032,2163,1057"/>
+<area shape="rect" id="node32" title=" " alt="" coords="820,944,988,984"/>
+<area shape="rect" id="node33" title=" " alt="" coords="1013,951,1169,977"/>
+<area shape="rect" id="node35" href="$backends_2_graph_state_2types_8h.html" title=" " alt="" coords="733,951,795,977"/>
+<area shape="rect" id="node38" href="$_i_qubit_record_8h.html" title=" " alt="" coords="1360,533,1523,573"/>
+<area shape="rect" id="node39" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="1497,629,1615,654"/>
+<area shape="rect" id="node40" title=" " alt="" coords="1487,709,1617,735"/>
+<area shape="rect" id="node44" href="$_runtime_8h.html" title=" " alt="" coords="996,167,1076,192"/>
+<area shape="rect" id="node45" title=" " alt="" coords="831,240,897,265"/>
+<area shape="rect" id="node46" title=" " alt="" coords="1073,313,1145,339"/>
+<area shape="rect" id="node47" href="$_instruction_visitor_8h.html" title=" " alt="" coords="1124,240,1255,265"/>
+<area shape="rect" id="node48" href="$_value_8h.html" title=" " alt="" coords="874,313,939,339"/>
+<area shape="rect" id="node50" title=" " alt="" coords="831,167,945,192"/>
 </map>

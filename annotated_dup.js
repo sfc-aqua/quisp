@@ -40,10 +40,6 @@ var annotated_dup =
           [ "LoggerBase", "classquisp_1_1modules_1_1_logger_1_1_logger_base.html", "classquisp_1_1modules_1_1_logger_1_1_logger_base" ],
           [ "LoggerModule", "classquisp_1_1modules_1_1_logger_1_1_logger_module.html", "classquisp_1_1modules_1_1_logger_1_1_logger_module" ]
         ] ],
-        [ "pur_result_table", "namespacequisp_1_1modules_1_1pur__result__table.html", [
-          [ "PurificationResultData", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data" ],
-          [ "PurificationResultKey", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_key.html", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_key" ]
-        ] ],
         [ "qnic_record", "namespacequisp_1_1modules_1_1qnic__record.html", [
           [ "IQNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record" ],
           [ "QNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record" ]
@@ -121,12 +117,14 @@ var annotated_dup =
         [ "FidelityConditionClause", "classquisp_1_1rules_1_1_fidelity_condition_clause.html", "classquisp_1_1rules_1_1_fidelity_condition_clause" ],
         [ "MeasureCountConditionClause", "classquisp_1_1rules_1_1_measure_count_condition_clause.html", "classquisp_1_1rules_1_1_measure_count_condition_clause" ],
         [ "Purification", "classquisp_1_1rules_1_1_purification.html", "classquisp_1_1rules_1_1_purification" ],
+        [ "PurificationCorrelation", "classquisp_1_1rules_1_1_purification_correlation.html", "classquisp_1_1rules_1_1_purification_correlation" ],
+        [ "PurificationCorrelationClause", "classquisp_1_1rules_1_1_purification_correlation_clause.html", "classquisp_1_1rules_1_1_purification_correlation_clause" ],
         [ "QnicInterface", "structquisp_1_1rules_1_1_qnic_interface.html", "structquisp_1_1rules_1_1_qnic_interface" ],
         [ "Rule", "classquisp_1_1rules_1_1_rule.html", "classquisp_1_1rules_1_1_rule" ],
         [ "RuleSet", "classquisp_1_1rules_1_1_rule_set.html", "classquisp_1_1rules_1_1_rule_set" ],
-        [ "Tomography", "classquisp_1_1rules_1_1_tomography.html", "classquisp_1_1rules_1_1_tomography" ],
-        [ "Wait", "classquisp_1_1rules_1_1_wait.html", "classquisp_1_1rules_1_1_wait" ],
-        [ "WaitConditionClause", "classquisp_1_1rules_1_1_wait_condition_clause.html", "classquisp_1_1rules_1_1_wait_condition_clause" ]
+        [ "SwappingCorrection", "classquisp_1_1rules_1_1_swapping_correction.html", "classquisp_1_1rules_1_1_swapping_correction" ],
+        [ "SwappingCorrectionClause", "classquisp_1_1rules_1_1_swapping_correction_clause.html", "classquisp_1_1rules_1_1_swapping_correction_clause" ],
+        [ "Tomography", "classquisp_1_1rules_1_1_tomography.html", "classquisp_1_1rules_1_1_tomography" ]
       ] ],
       [ "runtime", "namespacequisp_1_1runtime.html", [
         [ "Instruction", "structquisp_1_1runtime_1_1_instruction.html", "structquisp_1_1runtime_1_1_instruction" ],

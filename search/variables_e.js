@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['offset_5ftime_5ffor_5ffirst_5fphoton_0',['offset_time_for_first_photon',['../classquisp_1_1modules_1_1_b_s_a_controller.html#ab891a5a609ab92714b67b3d892febce0',1,'quisp::modules::BSAController']]],
+  ['offset_5ftime_5ffor_5ffirst_5fphoton_0',['offset_time_for_first_photon',['../classquisp_1_1modules_1_1_b_s_a_controller.html#a67f3c16f725ab38eade4c876c4da475a',1,'quisp::modules::BSAController']]],
   ['opcode_1',['opcode',['../structquisp_1_1runtime_1_1_instruction.html#a533f893de89516d2bcfb81735a459b00',1,'quisp::runtime::Instruction']]],
   ['opcodes_2',['opcodes',['../classquisp_1_1runtime_1_1_program.html#ae66148500d9e74404a8fdc6feda8e4c7',1,'quisp::runtime::Program']]],
   ['operation_5ftype_3',['operation_type',['../structquisp_1_1modules_1_1_swapping_result_data.html#aba3090d2242c8e4bf6c15c367d6d2d40',1,'quisp::modules::SwappingResultData']]],

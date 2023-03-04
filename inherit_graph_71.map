@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$unionquisp_1_1runtime_1_1_value_union.html" title="actual memory value that can hold multiple types of values." alt="" coords="5,5,180,31"/>
+<area shape="rect" id="node1" href="$classquisp_1_1utils_1_1_i_component_provider_strategy.html" title=" " alt="" coords="5,37,164,77"/>
+<area shape="rect" id="node2" href="$classquisp_1_1utils_1_1_default_component_provider_strategy.html" title=" " alt="" coords="222,5,418,45"/>
+<area shape="rect" id="node3" href="$classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html" title=" " alt="" coords="212,69,428,109"/>
 </map>

@@ -94,62 +94,66 @@ $(document).ready(function(){initNavTree('_rule_set_generator_8cc.html',''); ini
   <div class="headertitle"><div class="title">RuleSetGenerator.cc File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_rule_set_generator_8h_source.html">RuleSetGenerator.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;memory&gt;</code><br />
+<code>#include &quot;<a class="el" href="_rule_set_generator_8h_source.html">RuleSetGenerator.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_action_8h_source.html">rules/Action.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_clause_8h_source.html">rules/Clause.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_rule_8h_source.html">rules/Rule.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for RuleSetGenerator.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="_rule_set_generator_8cc__incl.png" border="0" usemap="#aquisp_2modules_2_q_r_s_a_2_connection_manager_2_rule_set_generator_8cc" alt=""/></div>
 <map name="aquisp_2modules_2_q_r_s_a_2_connection_manager_2_rule_set_generator_8cc" id="aquisp_2modules_2_q_r_s_a_2_connection_manager_2_rule_set_generator_8cc">
-<area shape="rect" title=" " alt="" coords="830,5,1021,60"/>
-<area shape="rect" href="_rule_set_generator_8h.html" title=" " alt="" coords="858,108,993,133"/>
-<area shape="rect" title=" " alt="" coords="710,189,757,214"/>
-<area shape="rect" title=" " alt="" coords="781,189,833,214"/>
-<area shape="rect" href="classical__messages_8h.html" title=" " alt="" coords="857,181,994,221"/>
-<area shape="rect" href="rules_2_rule_set_8h.html" title=" " alt="" coords="1534,189,1645,214"/>
-<area shape="rect" title=" " alt="" coords="1677,753,1808,779"/>
-<area shape="rect" title=" " alt="" coords="416,277,584,302"/>
-<area shape="rect" title=" " alt="" coords="609,277,791,302"/>
-<area shape="rect" title=" " alt="" coords="816,277,1035,302"/>
-<area shape="rect" title=" " alt="" coords="1059,269,1221,309"/>
-<area shape="rect" title=" " alt="" coords="1246,277,1450,302"/>
-<area shape="rect" title=" " alt="" coords="5,277,184,302"/>
-<area shape="rect" title=" " alt="" coords="208,277,392,302"/>
-<area shape="rect" title=" " alt="" coords="2277,973,2345,999"/>
-<area shape="rect" href="runtime_2_rule_set_8h.html" title=" " alt="" coords="2876,277,3001,302"/>
-<area shape="rect" href="_rule_8h.html" title="Rule." alt="" coords="1807,357,1865,383"/>
-<area shape="rect" title=" " alt="" coords="3319,1047,3374,1072"/>
-<area shape="rect" title=" " alt="" coords="3173,900,3283,925"/>
-<area shape="rect" title=" " alt="" coords="1875,585,1933,610"/>
-<area shape="rect" href="opcode_8h.html" title=" " alt="" coords="2829,357,2904,383"/>
-<area shape="rect" href="runtime_2types_8h.html" title="this file contains the definitions of all the user&#45;defined types widely used alongside the runtime::R..." alt="" coords="3047,431,3110,456"/>
-<area shape="rect" title=" " alt="" coords="2953,431,3023,456"/>
-<area shape="rect" title=" " alt="" coords="2391,431,2441,456"/>
-<area shape="rect" title=" " alt="" coords="2465,431,2527,456"/>
-<area shape="rect" href="macro__utils_8h.html" title=" " alt="" coords="2551,431,2649,456"/>
-<area shape="rect" href="def__opcodes_8h.html" title="this file contains a list of macros defining the opcodes used in the IR. These opcodes are used in de..." alt="" coords="2673,431,2780,456"/>
-<area shape="rect" href="def__instructions_8h.html" title=" " alt="" coords="2805,431,2929,456"/>
-<area shape="rect" title=" " alt="" coords="2854,504,2986,529"/>
-<area shape="rect" title=" " alt="" coords="3010,504,3075,529"/>
-<area shape="rect" href="_i_stationary_qubit_8h.html" title=" " alt="" coords="2614,665,2815,705"/>
-<area shape="rect" href="_q_r_s_a_8h.html" title=" " alt="" coords="2368,504,2531,529"/>
-<area shape="rect" title=" " alt="" coords="2510,753,2642,779"/>
-<area shape="rect" href="_backends_8h.html" title=" " alt="" coords="2910,753,3061,779"/>
-<area shape="rect" title=" " alt="" coords="2667,753,2757,779"/>
-<area shape="rect" title=" " alt="" coords="2781,753,2885,779"/>
-<area shape="rect" href="backends_2_graph_state_2_backend_8h.html" title=" " alt="" coords="2762,827,2915,852"/>
-<area shape="rect" href="_i_configuration_8h.html" title=" " alt="" coords="2906,973,3089,999"/>
-<area shape="rect" href="_i_quantum_backend_8h.html" title=" " alt="" coords="2399,900,2609,925"/>
-<area shape="rect" href="_i_qubit_8h.html" title=" " alt="" coords="2633,900,2772,925"/>
-<area shape="rect" href="_qubit_configuration_8h.html" title=" " alt="" coords="2898,900,3097,925"/>
-<area shape="rect" title=" " alt="" coords="2180,900,2263,925"/>
-<area shape="rect" href="_i_qubit_record_8h.html" title=" " alt="" coords="2304,577,2467,617"/>
-<area shape="rect" href="_q_n_i_c_8h.html" title="QNIC." alt="" coords="2059,673,2178,698"/>
-<area shape="rect" title=" " alt="" coords="1738,431,1798,456"/>
-<area shape="rect" href="_action_8h.html" title=" " alt="" coords="2059,431,2128,456"/>
-<area shape="rect" href="_condition_8h.html" title=" " alt="" coords="1771,504,1858,529"/>
-<area shape="rect" href="modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="2110,504,2237,529"/>
-<area shape="rect" href="_stationary_qubit_8h.html" title="StationaryQubit." alt="" coords="2542,577,2743,617"/>
-<area shape="rect" href="_clause_8h.html" title=" " alt="" coords="1779,585,1851,610"/>
+<area shape="rect" title=" " alt="" coords="2106,5,2297,60"/>
+<area shape="rect" title=" " alt="" coords="2039,973,2107,999"/>
+<area shape="rect" href="_rule_set_generator_8h.html" title=" " alt="" coords="2029,108,2163,133"/>
+<area shape="rect" href="_rule_8h.html" title="Rule." alt="" coords="2129,277,2188,302"/>
+<area shape="rect" href="_action_8h.html" title=" " alt="" coords="1833,357,1903,383"/>
+<area shape="rect" href="_clause_8h.html" title=" " alt="" coords="2161,673,2233,698"/>
+<area shape="rect" title=" " alt="" coords="2041,189,2087,214"/>
+<area shape="rect" title=" " alt="" coords="2111,189,2163,214"/>
+<area shape="rect" title=" " alt="" coords="2132,827,2263,852"/>
+<area shape="rect" href="classical__messages_8h.html" title=" " alt="" coords="2779,181,2917,221"/>
+<area shape="rect" href="rules_2_rule_set_8h.html" title=" " alt="" coords="1906,189,2017,214"/>
+<area shape="rect" title=" " alt="" coords="3489,277,3657,302"/>
+<area shape="rect" title=" " alt="" coords="2213,277,2395,302"/>
+<area shape="rect" title=" " alt="" coords="2420,277,2639,302"/>
+<area shape="rect" title=" " alt="" coords="2663,269,2825,309"/>
+<area shape="rect" title=" " alt="" coords="2850,277,3054,302"/>
+<area shape="rect" title=" " alt="" coords="3079,277,3257,302"/>
+<area shape="rect" title=" " alt="" coords="3281,277,3465,302"/>
+<area shape="rect" href="runtime_2_rule_set_8h.html" title=" " alt="" coords="513,431,639,456"/>
+<area shape="rect" title=" " alt="" coords="1737,900,1820,925"/>
+<area shape="rect" title=" " alt="" coords="2181,357,2241,383"/>
+<area shape="rect" href="_condition_8h.html" title=" " alt="" coords="2227,592,2314,617"/>
+<area shape="rect" href="_q_n_i_c_8h.html" title="QNIC." alt="" coords="1779,753,1898,779"/>
+<area shape="rect" href="modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="1674,431,1801,456"/>
+<area shape="rect" href="_stationary_qubit_8h.html" title="StationaryQubit." alt="" coords="1225,504,1426,544"/>
+<area shape="rect" title=" " alt="" coords="1571,753,1703,779"/>
+<area shape="rect" href="_backends_8h.html" title=" " alt="" coords="1163,753,1314,779"/>
+<area shape="rect" href="_i_quantum_backend_8h.html" title=" " alt="" coords="1140,900,1351,925"/>
+<area shape="rect" href="common__types_8h.html" title=" " alt="" coords="915,673,1088,698"/>
+<area shape="rect" href="_component_provider_8h.html" title=" " alt="" coords="1313,592,1487,617"/>
+<area shape="rect" href="_i_stationary_qubit_8h.html" title=" " alt="" coords="1265,665,1466,705"/>
+<area shape="rect" href="_qubit_id_8h.html" title=" " alt="" coords="1213,592,1288,617"/>
+<area shape="rect" href="backends_2_graph_state_2_backend_8h.html" title=" " alt="" coords="1294,827,1447,852"/>
+<area shape="rect" href="_i_configuration_8h.html" title=" " alt="" coords="925,973,1107,999"/>
+<area shape="rect" href="_i_qubit_8h.html" title=" " alt="" coords="1476,900,1615,925"/>
+<area shape="rect" href="_qubit_configuration_8h.html" title=" " alt="" coords="917,900,1115,925"/>
+<area shape="rect" title=" " alt="" coords="782,900,893,925"/>
+<area shape="rect" title=" " alt="" coords="290,1047,345,1072"/>
+<area shape="rect" title=" " alt="" coords="492,753,543,779"/>
+<area shape="rect" href="_q_r_s_a_8h.html" title=" " alt="" coords="1491,673,1653,698"/>
+<area shape="rect" title=" " alt="" coords="1977,673,2036,698"/>
+<area shape="rect" href="opcode_8h.html" title=" " alt="" coords="461,511,536,537"/>
+<area shape="rect" href="runtime_2types_8h.html" title="this file contains the definitions of all the user&#45;defined types widely used alongside the runtime::R..." alt="" coords="777,592,839,617"/>
+<area shape="rect" title=" " alt="" coords="144,592,213,617"/>
+<area shape="rect" title=" " alt="" coords="237,592,299,617"/>
+<area shape="rect" href="macro__utils_8h.html" title=" " alt="" coords="323,592,421,617"/>
+<area shape="rect" href="def__opcodes_8h.html" title="this file contains a list of macros defining the opcodes used in the IR. These opcodes are used in de..." alt="" coords="445,592,552,617"/>
+<area shape="rect" href="def__instructions_8h.html" title=" " alt="" coords="577,592,701,617"/>
+<area shape="rect" title=" " alt="" coords="618,673,750,698"/>
+<area shape="rect" title=" " alt="" coords="774,673,839,698"/>
 </map>
 </div>
 </div><table class="memberdecls">

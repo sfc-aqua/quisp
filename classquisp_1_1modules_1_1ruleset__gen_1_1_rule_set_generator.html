@@ -107,29 +107,30 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af9273ced5ba7f1f4881deba45b30d930"><td class="memItemLeft" align="right" valign="top">std::map&lt; int, nlohmann::json &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#af9273ced5ba7f1f4881deba45b30d930">generateRuleSets</a> (messages::ConnectionSetupRequest *req, unsigned long ruleset_id)</td></tr>
 <tr class="memdesc:af9273ced5ba7f1f4881deba45b30d930"><td class="mdescLeft">&#160;</td><td class="mdescRight">generate RuleSets for the given connection setup request.  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#af9273ced5ba7f1f4881deba45b30d930">More...</a><br /></td></tr>
 <tr class="separator:af9273ced5ba7f1f4881deba45b30d930"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15a64febe1c242fa9aaf82f9fb73bedc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a15a64febe1c242fa9aaf82f9fb73bedc">generateSimpleSwappingRuleSets</a> (std::map&lt; int, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt; &gt; &gt; &amp;rules_map, std::vector&lt; int &gt; &amp;path, std::vector&lt; int &gt; &amp;rev_path, std::map&lt; int, std::pair&lt; int, int &gt; &gt; &amp;swapping_partners_table, int num_measure)</td></tr>
-<tr class="memdesc:a15a64febe1c242fa9aaf82f9fb73bedc"><td class="mdescLeft">&#160;</td><td class="mdescRight">generate rules for each node in the path.  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a15a64febe1c242fa9aaf82f9fb73bedc">More...</a><br /></td></tr>
-<tr class="separator:a15a64febe1c242fa9aaf82f9fb73bedc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66366acce4eab6b2a9ff071449a9e8e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a66366acce4eab6b2a9ff071449a9e8e0">generateReverseSwapAtHalfRuleSets</a> (int left_node_index, int right_node_index, std::map&lt; int, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt; &gt; &gt; &amp;rules_map, std::vector&lt; int &gt; &amp;path, int &amp;shared_rule_tag)</td></tr>
+<tr class="memdesc:a66366acce4eab6b2a9ff071449a9e8e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">generate rules for each node in the path.  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a66366acce4eab6b2a9ff071449a9e8e0">More...</a><br /></td></tr>
+<tr class="separator:a66366acce4eab6b2a9ff071449a9e8e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a961754c06d4bb59833546f21dbd0b402"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a961754c06d4bb59833546f21dbd0b402">collectPath</a> (messages::ConnectionSetupRequest *req)</td></tr>
 <tr class="memdesc:a961754c06d4bb59833546f21dbd0b402"><td class="mdescLeft">&#160;</td><td class="mdescRight">collect path infomation from initiator to responder  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a961754c06d4bb59833546f21dbd0b402">More...</a><br /></td></tr>
 <tr class="separator:a961754c06d4bb59833546f21dbd0b402"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68d57e0d5a883d9b086e1721e9c8faf8"><td class="memItemLeft" align="right" valign="top">std::map&lt; int, std::pair&lt; int, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a68d57e0d5a883d9b086e1721e9c8faf8">collectSwappingPartners</a> (std::vector&lt; int &gt; &amp;path, int divisions, int hop_count)</td></tr>
-<tr class="memdesc:a68d57e0d5a883d9b086e1721e9c8faf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">collect swapper and partners from the given path information  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a68d57e0d5a883d9b086e1721e9c8faf8">More...</a><br /></td></tr>
-<tr class="separator:a68d57e0d5a883d9b086e1721e9c8faf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9fddef8a10eec70cfce5147108ccaea"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#aa9fddef8a10eec70cfce5147108ccaea">fillPathDivision</a> (std::vector&lt; int &gt; &amp;path, int i, int l, std::vector&lt; int &gt; &amp;link_left, std::vector&lt; int &gt; &amp;link_right, std::vector&lt; int &gt; &amp;swapper, int fill_start)</td></tr>
-<tr class="separator:aa9fddef8a10eec70cfce5147108ccaea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae460283f78bb799e05f4d39b4560ed8c"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#ae460283f78bb799e05f4d39b4560ed8c">tomographyRule</a> (int partner_address, int owner_address, int num_measure, int shared_tag)</td></tr>
-<tr class="memdesc:ae460283f78bb799e05f4d39b4560ed8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">create tomography rule  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#ae460283f78bb799e05f4d39b4560ed8c">More...</a><br /></td></tr>
-<tr class="separator:ae460283f78bb799e05f4d39b4560ed8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70aa9f1d520abf619d23155fd334a1c7"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a70aa9f1d520abf619d23155fd334a1c7">purifyRule</a> (int partner_address, <a class="el" href="namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066d">rules::PurType</a> purification_type, int shared_tag)</td></tr>
-<tr class="memdesc:a70aa9f1d520abf619d23155fd334a1c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">create purification rule  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a70aa9f1d520abf619d23155fd334a1c7">More...</a><br /></td></tr>
-<tr class="separator:a70aa9f1d520abf619d23155fd334a1c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03c8ba075e2328e3a069303139774bb1"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a03c8ba075e2328e3a069303139774bb1">swapRule</a> (std::pair&lt; int, int &gt; partner_address, int shared_tag)</td></tr>
-<tr class="memdesc:a03c8ba075e2328e3a069303139774bb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">create entanglement swapping rule  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a03c8ba075e2328e3a069303139774bb1">More...</a><br /></td></tr>
-<tr class="separator:a03c8ba075e2328e3a069303139774bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecca69d647e98787b0823d4b91b42033"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#aecca69d647e98787b0823d4b91b42033">tomographyRule</a> (int partner_address, int owner_address, int num_measure, int shared_rule_tag)</td></tr>
+<tr class="memdesc:aecca69d647e98787b0823d4b91b42033"><td class="mdescLeft">&#160;</td><td class="mdescRight">create tomography rule  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#aecca69d647e98787b0823d4b91b42033">More...</a><br /></td></tr>
+<tr class="separator:aecca69d647e98787b0823d4b91b42033"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae264b6fdc118f647caeca1e544bec74d"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#ae264b6fdc118f647caeca1e544bec74d">purifyRule</a> (int partner_address, <a class="el" href="namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066d">rules::PurType</a> purification_type, int shared_rule_tag)</td></tr>
+<tr class="memdesc:ae264b6fdc118f647caeca1e544bec74d"><td class="mdescLeft">&#160;</td><td class="mdescRight">create purification rule  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#ae264b6fdc118f647caeca1e544bec74d">More...</a><br /></td></tr>
+<tr class="separator:ae264b6fdc118f647caeca1e544bec74d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cf5bcef91471336e170e3f194f85f57"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a9cf5bcef91471336e170e3f194f85f57">purificationCorrelationRule</a> (int partner_address, <a class="el" href="namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066d">rules::PurType</a> purification_protocol, int shared_rule_tag)</td></tr>
+<tr class="memdesc:a9cf5bcef91471336e170e3f194f85f57"><td class="mdescLeft">&#160;</td><td class="mdescRight">create rule that waits for purification measurement result and check for its correlation  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a9cf5bcef91471336e170e3f194f85f57">More...</a><br /></td></tr>
+<tr class="separator:a9cf5bcef91471336e170e3f194f85f57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10a6cc5dd22db5aede7ab16ce26230fc"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a10a6cc5dd22db5aede7ab16ce26230fc">swapRule</a> (std::pair&lt; int, int &gt; partner_address, int shared_rule_tag)</td></tr>
+<tr class="memdesc:a10a6cc5dd22db5aede7ab16ce26230fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">create entanglement swapping rule  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a10a6cc5dd22db5aede7ab16ce26230fc">More...</a><br /></td></tr>
+<tr class="separator:a10a6cc5dd22db5aede7ab16ce26230fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3088e02b111a93e57eb7748071dbdc45"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a3088e02b111a93e57eb7748071dbdc45">swapCorrectionRule</a> (int swapper_address, int shared_rule_tag)</td></tr>
+<tr class="memdesc:a3088e02b111a93e57eb7748071dbdc45"><td class="mdescLeft">&#160;</td><td class="mdescRight">create rule that waits for the swapping correction/notification from swapper node  <a href="classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a3088e02b111a93e57eb7748071dbdc45">More...</a><br /></td></tr>
+<tr class="separator:a3088e02b111a93e57eb7748071dbdc45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -199,32 +200,41 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a68d57e0d5a883d9b086e1721e9c8faf8" name="a68d57e0d5a883d9b086e1721e9c8faf8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68d57e0d5a883d9b086e1721e9c8faf8">&#9670;&#160;</a></span>collectSwappingPartners()</h2>
+<a id="a66366acce4eab6b2a9ff071449a9e8e0" name="a66366acce4eab6b2a9ff071449a9e8e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66366acce4eab6b2a9ff071449a9e8e0">&#9670;&#160;</a></span>generateReverseSwapAtHalfRuleSets()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt; int, std::pair&lt; int, int &gt; &gt; quisp::modules::ruleset_gen::RuleSetGenerator::collectSwappingPartners </td>
+          <td class="memname">void quisp::modules::ruleset_gen::RuleSetGenerator::generateReverseSwapAtHalfRuleSets </td>
           <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>left_node_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>right_node_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::map&lt; int, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt; &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rules_map</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">std::vector&lt; int &gt; &amp;&#160;</td>
           <td class="paramname"><em>path</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>divisions</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>hop_count</em>&#160;</td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>shared_rule_tag</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -232,109 +242,16 @@ Protected Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>collect swapper and partners from the given path information </p>
+<p>generate rules for each node in the path. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td></td></tr>
-    <tr><td class="paramname">divisions</td><td></td></tr>
-    <tr><td class="paramname">hop_count</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>std::map&lt;int, std::pair&lt;int, int&gt;&gt; swapper addr -&gt; {left partner addr, right partner addr} </dd></dl>
-<p >recognize partner. (which node is left partner, right partner) Currently, we choose every other node in the path to do swapping in the first round. In the examples below, the number in parentheses is the round of swapping, and designates which nodes are swapping. If the number of hops is a power of two, we get something like </p><pre class="fragment">/// node1 --- node2(1) --- node3 --- node4(1) --- node5
-/// node1 ---------------- node3 ---------------- node5
-/// node1 ---------------- node3(2) ------------- node5
-/// node1 --------------------------------------- node5
-/// </pre><p> If the number of hops is not a power of two, at some stage the number of hops will become become odd as we proceed, forcing us to decide which to do first. In this version of the code, we just give priority starting from the left (start of our list) </p><pre class="fragment">/// node1 --- node2(1) --- node3 --- node4(1) --- node5 --- node6
-/// node1 ---------------- node3 ---------------- node5 --- node6
-/// node1 ---------------- node3(2) ------------- node5 --- node6
-/// node1 --------------------------------------- node5 --- node6
-/// node1 ------------------------------------ node5(3) --- node6
-/// node1 ------------------------------------------------- node6
-/// </pre><p> todo hypothetically, with no purification, all of the intermediate nodes could swap asynchronously and essentially simultaneously. In fact, that's probably what we want, to minimize decoherence. But, the condition clause will have to be extended in order to support "when part of this connection" rather than "when entangled with this node" and you have to be careful of not creating the wrong result by accident.</p>
-
-</div>
-</div>
-<a id="aa9fddef8a10eec70cfce5147108ccaea" name="aa9fddef8a10eec70cfce5147108ccaea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9fddef8a10eec70cfce5147108ccaea">&#9670;&#160;</a></span>fillPathDivision()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::ruleset_gen::RuleSetGenerator::fillPathDivision </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>path</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>i</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>l</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::vector&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>link_left</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::vector&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>link_right</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::vector&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>swapper</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>fill_start</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p >Treat subpath [i:...] of length l </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">path</td><td>Nodes on the connection setup path </td></tr>
-    <tr><td class="paramname">i</td><td>Left of the subpath to consider </td></tr>
-    <tr><td class="paramname">l</td><td>Length of the subpath </td></tr>
-    <tr><td class="paramname">link_left</td><td>Left part of the list of "links" </td></tr>
-    <tr><td class="paramname">link_right</td><td>Right part </td></tr>
-    <tr><td class="paramname">swapper</td><td>Swappers to create those links (might be -1 for real links) </td></tr>
-    <tr><td class="paramname">fill_start</td><td>[0:fill_start[ is already filled </td></tr>
+    <tr><td class="paramname">left_node_index</td><td>index in the path from initiator to responder </td></tr>
+    <tr><td class="paramname">right_node_index</td><td>index in the path from initiator to responder </td></tr>
+    <tr><td class="paramname">rules_map</td><td>store rules for each node &lt;node_address, vector&lt;Rules&gt;&gt; </td></tr>
+    <tr><td class="paramname">path</td><td>store address from initiator to responder </td></tr>
+    <tr><td class="paramname">shared_rule_tag</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -379,41 +296,32 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a15a64febe1c242fa9aaf82f9fb73bedc" name="a15a64febe1c242fa9aaf82f9fb73bedc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15a64febe1c242fa9aaf82f9fb73bedc">&#9670;&#160;</a></span>generateSimpleSwappingRuleSets()</h2>
+<a id="a9cf5bcef91471336e170e3f194f85f57" name="a9cf5bcef91471336e170e3f194f85f57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cf5bcef91471336e170e3f194f85f57">&#9670;&#160;</a></span>purificationCorrelationRule()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void quisp::modules::ruleset_gen::RuleSetGenerator::generateSimpleSwappingRuleSets </td>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">Rule</a> &gt; quisp::modules::ruleset_gen::RuleSetGenerator::purificationCorrelationRule </td>
           <td>(</td>
-          <td class="paramtype">std::map&lt; int, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">rules::Rule</a> &gt; &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>rules_map</em>, </td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>partner_address</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>path</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::vector&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>rev_path</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::map&lt; int, std::pair&lt; int, int &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>swapping_partners_table</em>, </td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066d">rules::PurType</a>&#160;</td>
+          <td class="paramname"><em>purification_protocol</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>num_measure</em>&#160;</td>
+          <td class="paramname"><em>shared_rule_tag</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -421,24 +329,28 @@ Protected Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>generate rules for each node in the path. </p>
+<p>create rule that waits for purification measurement result and check for its correlation </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">rules_map</td><td></td></tr>
-    <tr><td class="paramname">path</td><td></td></tr>
-    <tr><td class="paramname">rev_path</td><td></td></tr>
-    <tr><td class="paramname">swapping_partners_table</td><td></td></tr>
-    <tr><td class="paramname">num_measure</td><td></td></tr>
+    <tr><td class="paramname">partner_address</td><td></td></tr>
+    <tr><td class="paramname">purification_protocol</td><td></td></tr>
+    <tr><td class="paramname">shared_rule_tag</td><td></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>std::unique_ptr&lt;rules::Rule&gt; </dd></dl>
 
 </div>
 </div>
-<a id="a70aa9f1d520abf619d23155fd334a1c7" name="a70aa9f1d520abf619d23155fd334a1c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a70aa9f1d520abf619d23155fd334a1c7">&#9670;&#160;</a></span>purifyRule()</h2>
+<a id="ae264b6fdc118f647caeca1e544bec74d" name="ae264b6fdc118f647caeca1e544bec74d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae264b6fdc118f647caeca1e544bec74d">&#9670;&#160;</a></span>purifyRule()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -462,7 +374,7 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>shared_tag</em>&#160;</td>
+          <td class="paramname"><em>shared_rule_tag</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -482,7 +394,7 @@ Protected Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">partner_address</td><td></td></tr>
     <tr><td class="paramname">purification_type</td><td></td></tr>
-    <tr><td class="paramname">shared_tag</td><td></td></tr>
+    <tr><td class="paramname">shared_rule_tag</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -490,8 +402,54 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a03c8ba075e2328e3a069303139774bb1" name="a03c8ba075e2328e3a069303139774bb1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03c8ba075e2328e3a069303139774bb1">&#9670;&#160;</a></span>swapRule()</h2>
+<a id="a3088e02b111a93e57eb7748071dbdc45" name="a3088e02b111a93e57eb7748071dbdc45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3088e02b111a93e57eb7748071dbdc45">&#9670;&#160;</a></span>swapCorrectionRule()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">Rule</a> &gt; quisp::modules::ruleset_gen::RuleSetGenerator::swapCorrectionRule </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>swapper_address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>shared_rule_tag</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>create rule that waits for the swapping correction/notification from swapper node </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">swapper_address</td><td></td></tr>
+    <tr><td class="paramname">shared_rule_tag</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::unique_ptr&lt;rules::Rule&gt; </dd></dl>
+
+</div>
+</div>
+<a id="a10a6cc5dd22db5aede7ab16ce26230fc" name="a10a6cc5dd22db5aede7ab16ce26230fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10a6cc5dd22db5aede7ab16ce26230fc">&#9670;&#160;</a></span>swapRule()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -509,7 +467,7 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>shared_tag</em>&#160;</td>
+          <td class="paramname"><em>shared_rule_tag</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -528,7 +486,7 @@ Protected Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">partner_address</td><td></td></tr>
-    <tr><td class="paramname">shared_tag</td><td></td></tr>
+    <tr><td class="paramname">shared_rule_tag</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -536,8 +494,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae460283f78bb799e05f4d39b4560ed8c" name="ae460283f78bb799e05f4d39b4560ed8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae460283f78bb799e05f4d39b4560ed8c">&#9670;&#160;</a></span>tomographyRule()</h2>
+<a id="aecca69d647e98787b0823d4b91b42033" name="aecca69d647e98787b0823d4b91b42033"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecca69d647e98787b0823d4b91b42033">&#9670;&#160;</a></span>tomographyRule()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -567,7 +525,7 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>shared_tag</em>&#160;</td>
+          <td class="paramname"><em>shared_rule_tag</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -588,7 +546,7 @@ Protected Attributes</h2></td></tr>
     <tr><td class="paramname">partner_address</td><td></td></tr>
     <tr><td class="paramname">owner_address</td><td></td></tr>
     <tr><td class="paramname">num_measure</td><td></td></tr>
-    <tr><td class="paramname">shared_tag</td><td></td></tr>
+    <tr><td class="paramname">shared_rule_tag</td><td></td></tr>
   </table>
   </dd>
 </dl>

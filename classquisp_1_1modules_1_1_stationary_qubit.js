@@ -8,6 +8,7 @@ var classquisp_1_1modules_1_1_stationary_qubit =
     [ "gateS", "classquisp_1_1modules_1_1_stationary_qubit.html#a4c4609dd8ad75dcbc3b1ab03ec10d98c", null ],
     [ "gateSdg", "classquisp_1_1modules_1_1_stationary_qubit.html#a6c61dbbdbb9e0385378d04b1779de69d", null ],
     [ "gateX", "classquisp_1_1modules_1_1_stationary_qubit.html#aff58eda945e591d5d93aed992a58a9a7", null ],
+    [ "gateY", "classquisp_1_1modules_1_1_stationary_qubit.html#ab8491043c04a8ba891266cc3fb67d52f", null ],
     [ "gateZ", "classquisp_1_1modules_1_1_stationary_qubit.html#a0b42d8026a6f521b0e579994a8fd9011", null ],
     [ "generateEntangledPhoton", "classquisp_1_1modules_1_1_stationary_qubit.html#abac0e675564ffe3e5f727542e6c23bb3", null ],
     [ "getBackendQubitRef", "classquisp_1_1modules_1_1_stationary_qubit.html#aff8f7e94926d3ce7d73de59e2c1f9e42", null ],

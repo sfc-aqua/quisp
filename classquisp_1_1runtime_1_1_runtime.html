@@ -147,15 +147,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af4b7ec1424dcf3d65bc4483879e1f778"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#af4b7ec1424dcf3d65bc4483879e1f778">execInstruction</a> (const <a class="el" href="namespacequisp_1_1runtime.html#a3ca0235adcdf503333f54cc7b2a98ef1">InstructionTypes</a> &amp;op)</td></tr>
 <tr class="memdesc:af4b7ec1424dcf3d65bc4483879e1f778"><td class="mdescLeft">&#160;</td><td class="mdescRight">execute the one <a class="el" href="structquisp_1_1runtime_1_1_instruction.html" title="This class represents IR (intermediate representation) instruction. Program consists of Instructions.">Instruction</a>  <a href="classquisp_1_1runtime_1_1_runtime.html#af4b7ec1424dcf3d65bc4483879e1f778">More...</a><br /></td></tr>
 <tr class="separator:af4b7ec1424dcf3d65bc4483879e1f778"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cd842507dd26b245eeced940413afff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a4cd842507dd26b245eeced940413afff">assignMessageToRuleSet</a> (int shared_rule_tag, <a class="el" href="namespacequisp_1_1runtime.html#a85ecfb49269fa9da29372fb074addb33">MessageRecord</a> &amp;msg_content)</td></tr>
+<tr class="memdesc:a4cd842507dd26b245eeced940413afff"><td class="mdescLeft">&#160;</td><td class="mdescRight">assign the message to the rule  <a href="classquisp_1_1runtime_1_1_runtime.html#a4cd842507dd26b245eeced940413afff">More...</a><br /></td></tr>
+<tr class="separator:a4cd842507dd26b245eeced940413afff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2b50aa21d5ba81e38d4c1f116b83cd0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ac2b50aa21d5ba81e38d4c1f116b83cd0">assignQubitToRuleSet</a> (<a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a> partner_addr, <a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *qubit_record)</td></tr>
 <tr class="memdesc:ac2b50aa21d5ba81e38d4c1f116b83cd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">assign the entangled qubit to the <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet.">RuleSet</a>. The <a class="el" href="classquisp_1_1runtime_1_1_runtime.html" title="Runtime class is responsible for executing the given RuleSet and the states&#39; management.">Runtime</a> assign it to the first rule and the <a class="el" href="classquisp_1_1runtime_1_1_rule.html" title="The Runtime executable Rule in a RuleSet.">Rule</a> can use the qubit.  <a href="classquisp_1_1runtime_1_1_runtime.html#ac2b50aa21d5ba81e38d4c1f116b83cd0">More...</a><br /></td></tr>
 <tr class="separator:ac2b50aa21d5ba81e38d4c1f116b83cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a498b5dad108ac5d80c6b69a7ce907642"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a498b5dad108ac5d80c6b69a7ce907642">assignQubitToRule</a> (<a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a> partner_addr, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a> <a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ab399412a280837d814ec626e501e685f">rule_id</a>, <a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *qubit_record)</td></tr>
 <tr class="memdesc:a498b5dad108ac5d80c6b69a7ce907642"><td class="mdescLeft">&#160;</td><td class="mdescRight">assign the entangled qubit to the rule  <a href="classquisp_1_1runtime_1_1_runtime.html#a498b5dad108ac5d80c6b69a7ce907642">More...</a><br /></td></tr>
 <tr class="separator:a498b5dad108ac5d80c6b69a7ce907642"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae527b19e714ed2b4b26e995550dcf1df"><td class="memItemLeft" align="right" valign="top">QubitResources::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ae527b19e714ed2b4b26e995550dcf1df">findQubit</a> (int <a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ab399412a280837d814ec626e501e685f">rule_id</a>, int shared_tag, int action_index)</td></tr>
-<tr class="memdesc:ae527b19e714ed2b4b26e995550dcf1df"><td class="mdescLeft">&#160;</td><td class="mdescRight">find the qubit that has the action_index and allocated in the rule_id, shared_tag;  <a href="classquisp_1_1runtime_1_1_runtime.html#ae527b19e714ed2b4b26e995550dcf1df">More...</a><br /></td></tr>
-<tr class="separator:ae527b19e714ed2b4b26e995550dcf1df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93fb8bac81aa6871bd63588342d41b5b"><td class="memItemLeft" align="right" valign="top">QubitResources::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a93fb8bac81aa6871bd63588342d41b5b">findQubit</a> (<a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *)</td></tr>
+<tr class="memdesc:a93fb8bac81aa6871bd63588342d41b5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">find the qubit iterator that match with this rule_id and sequence_number  <a href="classquisp_1_1runtime_1_1_runtime.html#a93fb8bac81aa6871bd63588342d41b5b">More...</a><br /></td></tr>
+<tr class="separator:a93fb8bac81aa6871bd63588342d41b5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">register operations</div></td></tr>
 <tr class="memitem:ad7e03df20a87b22d83863bdca866314c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structquisp_1_1runtime_1_1_register.html">Register</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ad7e03df20a87b22d83863bdca866314c">getReg</a> (<a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a> reg_id) const</td></tr>
 <tr class="memdesc:ad7e03df20a87b22d83863bdca866314c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="structquisp_1_1runtime_1_1_register.html">Register</a> in <a class="el" href="classquisp_1_1runtime_1_1_runtime.html#aaad312edf64a272b92976d4b4a829e84">registers</a> by RegId.  <a href="classquisp_1_1runtime_1_1_runtime.html#ad7e03df20a87b22d83863bdca866314c">More...</a><br /></td></tr>
@@ -183,6 +186,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af03a93c6389557bd021f50c5c92c097f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#af03a93c6389557bd021f50c5c92c097f">isQubitLocked</a> (<a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *const)</td></tr>
 <tr class="memdesc:af03a93c6389557bd021f50c5c92c097f"><td class="mdescLeft">&#160;</td><td class="mdescRight">check the qubit is locked or not. Purification uses the lock state in a qubit.  <a href="classquisp_1_1runtime_1_1_runtime.html#af03a93c6389557bd021f50c5c92c097f">More...</a><br /></td></tr>
 <tr class="separator:af03a93c6389557bd021f50c5c92c097f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4eb3b5815322015b9cd56bd5b0dc7ca0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a4eb3b5815322015b9cd56bd5b0dc7ca0">getQubitBySequenceNumber</a> (<a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a>, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>, <a class="el" href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">SequenceNumber</a>)</td></tr>
+<tr class="memdesc:a4eb3b5815322015b9cd56bd5b0dc7ca0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the qubit record by sequence number.  <a href="classquisp_1_1runtime_1_1_runtime.html#a4eb3b5815322015b9cd56bd5b0dc7ca0">More...</a><br /></td></tr>
+<tr class="separator:a4eb3b5815322015b9cd56bd5b0dc7ca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8835737b8a7c18750af37c92a7f210d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a8835737b8a7c18750af37c92a7f210d6">getQubitByPartnerAddr</a> (<a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a>, int index)</td></tr>
 <tr class="memdesc:a8835737b8a7c18750af37c92a7f210d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the qubit record by partner's <a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html" title="internal class to describe QNode&#39;s address.">QNodeAddr</a>.  <a href="classquisp_1_1runtime_1_1_runtime.html#a8835737b8a7c18750af37c92a7f210d6">More...</a><br /></td></tr>
 <tr class="separator:a8835737b8a7c18750af37c92a7f210d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,9 +198,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab81248760e924ef763c87a09b89e2db5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ab81248760e924ef763c87a09b89e2db5">setQubit</a> (<a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *qubit_record, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> qubit_id)</td></tr>
 <tr class="memdesc:ab81248760e924ef763c87a09b89e2db5"><td class="mdescLeft">&#160;</td><td class="mdescRight">bind the assigned Qubit to the given qubit id to use it in a <a class="el" href="classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program.">Program</a>.  <a href="classquisp_1_1runtime_1_1_runtime.html#ab81248760e924ef763c87a09b89e2db5">More...</a><br /></td></tr>
 <tr class="separator:ab81248760e924ef763c87a09b89e2db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2eee6108b491277eb9e9c61d244c9577"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a2eee6108b491277eb9e9c61d244c9577">promoteQubit</a> (QubitResources::iterator it)</td></tr>
-<tr class="memdesc:a2eee6108b491277eb9e9c61d244c9577"><td class="mdescLeft">&#160;</td><td class="mdescRight">promote the qubit to the next rule.  <a href="classquisp_1_1runtime_1_1_runtime.html#a2eee6108b491277eb9e9c61d244c9577">More...</a><br /></td></tr>
-<tr class="separator:a2eee6108b491277eb9e9c61d244c9577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ab14b986a1dc37dddf8891b86c12c21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a1ab14b986a1dc37dddf8891b86c12c21">promoteQubit</a> (<a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *qubit_record)</td></tr>
+<tr class="memdesc:a1ab14b986a1dc37dddf8891b86c12c21"><td class="mdescLeft">&#160;</td><td class="mdescRight">promote the qubit to the next rule.  <a href="classquisp_1_1runtime_1_1_runtime.html#a1ab14b986a1dc37dddf8891b86c12c21">More...</a><br /></td></tr>
+<tr class="separator:a1ab14b986a1dc37dddf8891b86c12c21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed2ee34b1cef1e860800bba735f395ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#aed2ee34b1cef1e860800bba735f395ac">promoteQubitWithNewPartner</a> (<a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *qubit_record, <a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a> new_partner_addr)</td></tr>
 <tr class="memdesc:aed2ee34b1cef1e860800bba735f395ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">promote the qubit that has new entangled partner.  <a href="classquisp_1_1runtime_1_1_runtime.html#aed2ee34b1cef1e860800bba735f395ac">More...</a><br /></td></tr>
 <tr class="separator:aed2ee34b1cef1e860800bba735f395ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,6 +208,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6066b2a2c62c04c4607b75b2856908e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a6066b2a2c62c04c4607b75b2856908e5">measureQubit</a> (<a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> qubit_id, <a class="el" href="structquisp_1_1runtime_1_1_memory_key.html">MemoryKey</a> result_key, <a class="el" href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5">Basis</a> basis)</td></tr>
 <tr class="memdesc:a6066b2a2c62c04c4607b75b2856908e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">measure qubit with the given basis and store the result to the memory.  <a href="classquisp_1_1runtime_1_1_runtime.html#a6066b2a2c62c04c4607b75b2856908e5">More...</a><br /></td></tr>
 <tr class="separator:a6066b2a2c62c04c4607b75b2856908e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad546e9b5dcb97bfade47e6ebcc68b78d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ad546e9b5dcb97bfade47e6ebcc68b78d">measureQubit</a> (<a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> qubit_id, <a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a> result_reg, <a class="el" href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5">Basis</a> basis)</td></tr>
+<tr class="memdesc:ad546e9b5dcb97bfade47e6ebcc68b78d"><td class="mdescLeft">&#160;</td><td class="mdescRight">measure qubit with given basis and put result into register  <a href="classquisp_1_1runtime_1_1_runtime.html#ad546e9b5dcb97bfade47e6ebcc68b78d">More...</a><br /></td></tr>
+<tr class="separator:ad546e9b5dcb97bfade47e6ebcc68b78d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec05b5afd74a5875630e08e370a484f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#aec05b5afd74a5875630e08e370a484f9">measureQubit</a> (<a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> qubit_id, <a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a> result_reg, int bitset_index, <a class="el" href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5">Basis</a> basis)</td></tr>
+<tr class="memdesc:aec05b5afd74a5875630e08e370a484f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">measure qubit with given basis and put result into register  <a href="classquisp_1_1runtime_1_1_runtime.html#aec05b5afd74a5875630e08e370a484f9">More...</a><br /></td></tr>
+<tr class="separator:aec05b5afd74a5875630e08e370a484f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af723224404234fc76cc0d85203a73590"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#af723224404234fc76cc0d85203a73590">freeQubit</a> (<a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a>)</td></tr>
 <tr class="memdesc:af723224404234fc76cc0d85203a73590"><td class="mdescLeft">&#160;</td><td class="mdescRight">free qubit and release it from the <a class="el" href="classquisp_1_1runtime_1_1_rule.html" title="The Runtime executable Rule in a RuleSet.">Rule</a> and the <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet.">RuleSet</a>  <a href="classquisp_1_1runtime_1_1_runtime.html#af723224404234fc76cc0d85203a73590">More...</a><br /></td></tr>
 <tr class="separator:af723224404234fc76cc0d85203a73590"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -211,18 +223,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2df93d4fa4b8fa26cefac80f2e9cf1cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a2df93d4fa4b8fa26cefac80f2e9cf1cc">gateZ</a> (<a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a>)</td></tr>
 <tr class="memdesc:a2df93d4fa4b8fa26cefac80f2e9cf1cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">apply Z gate  <a href="classquisp_1_1runtime_1_1_runtime.html#a2df93d4fa4b8fa26cefac80f2e9cf1cc">More...</a><br /></td></tr>
 <tr class="separator:a2df93d4fa4b8fa26cefac80f2e9cf1cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3040b7cb18242304a7fab47fbc4fe36"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ac3040b7cb18242304a7fab47fbc4fe36">gateY</a> (<a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a>)</td></tr>
+<tr class="memdesc:ac3040b7cb18242304a7fab47fbc4fe36"><td class="mdescLeft">&#160;</td><td class="mdescRight">apply Y gate  <a href="classquisp_1_1runtime_1_1_runtime.html#ac3040b7cb18242304a7fab47fbc4fe36">More...</a><br /></td></tr>
+<tr class="separator:ac3040b7cb18242304a7fab47fbc4fe36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bf720fd6b404a992f84182d4ae961f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a4bf720fd6b404a992f84182d4ae961f5">gateCNOT</a> (<a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> control_qubit_id, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> target_qubit_id)</td></tr>
 <tr class="memdesc:a4bf720fd6b404a992f84182d4ae961f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">apply CNOT gate  <a href="classquisp_1_1runtime_1_1_runtime.html#a4bf720fd6b404a992f84182d4ae961f5">More...</a><br /></td></tr>
 <tr class="separator:a4bf720fd6b404a992f84182d4ae961f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b50821ac5ac6d0ec1e1626f4ebf6fac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a1b50821ac5ac6d0ec1e1626f4ebf6fac">purifyX</a> (<a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a> result, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> qubit_id, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> trash_qubit_id)</td></tr>
-<tr class="memdesc:a1b50821ac5ac6d0ec1e1626f4ebf6fac"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform X purification and store the measurement result  <a href="classquisp_1_1runtime_1_1_runtime.html#a1b50821ac5ac6d0ec1e1626f4ebf6fac">More...</a><br /></td></tr>
-<tr class="separator:a1b50821ac5ac6d0ec1e1626f4ebf6fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac641cd1e14c360000ce66fd2833475eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ac641cd1e14c360000ce66fd2833475eb">purifyZ</a> (<a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a> result, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> qubit_id, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> trash_qubit_id)</td></tr>
-<tr class="memdesc:ac641cd1e14c360000ce66fd2833475eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform Z purification and store the measurement result  <a href="classquisp_1_1runtime_1_1_runtime.html#ac641cd1e14c360000ce66fd2833475eb">More...</a><br /></td></tr>
-<tr class="separator:ac641cd1e14c360000ce66fd2833475eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41777d9fc085ba5f02494e6c52dd3360"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a41777d9fc085ba5f02494e6c52dd3360">purifyY</a> (<a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a> result, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> qubit_id, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> trash_qubit_id)</td></tr>
-<tr class="memdesc:a41777d9fc085ba5f02494e6c52dd3360"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform Y purification and store the measurement result  <a href="classquisp_1_1runtime_1_1_runtime.html#a41777d9fc085ba5f02494e6c52dd3360">More...</a><br /></td></tr>
-<tr class="separator:a41777d9fc085ba5f02494e6c52dd3360"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49e5176ec84c6392203c24603d6b1d6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a49e5176ec84c6392203c24603d6b1d6a">purifyX</a> (<a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a> result, int bitset_index, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> qubit_id, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> trash_qubit_id)</td></tr>
+<tr class="memdesc:a49e5176ec84c6392203c24603d6b1d6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform X purification and store the measurement result  <a href="classquisp_1_1runtime_1_1_runtime.html#a49e5176ec84c6392203c24603d6b1d6a">More...</a><br /></td></tr>
+<tr class="separator:a49e5176ec84c6392203c24603d6b1d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf9c81edaafd4e5b5e9de76e95f7dca0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#aaf9c81edaafd4e5b5e9de76e95f7dca0">purifyZ</a> (<a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a> result, int bitset_index, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> qubit_id, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> trash_qubit_id)</td></tr>
+<tr class="memdesc:aaf9c81edaafd4e5b5e9de76e95f7dca0"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform Z purification and store the measurement result  <a href="classquisp_1_1runtime_1_1_runtime.html#aaf9c81edaafd4e5b5e9de76e95f7dca0">More...</a><br /></td></tr>
+<tr class="separator:aaf9c81edaafd4e5b5e9de76e95f7dca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a084f2ebb22bab6fb97c42305aeb23ba8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a084f2ebb22bab6fb97c42305aeb23ba8">purifyY</a> (<a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a> result, int bitset_index, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> qubit_id, <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a> trash_qubit_id)</td></tr>
+<tr class="memdesc:a084f2ebb22bab6fb97c42305aeb23ba8"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform Y purification and store the measurement result  <a href="classquisp_1_1runtime_1_1_runtime.html#a084f2ebb22bab6fb97c42305aeb23ba8">More...</a><br /></td></tr>
+<tr class="separator:a084f2ebb22bab6fb97c42305aeb23ba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">debugging</div></td></tr>
 <tr class="memitem:aeab7a72099cee5c39a5c559a7c068bab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#aeab7a72099cee5c39a5c559a7c068bab">debugRuntimeState</a> ()</td></tr>
 <tr class="separator:aeab7a72099cee5c39a5c559a7c068bab"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -242,8 +257,14 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ab97e7c70fcd5ec118e95d5f3f560802d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">states</div></td></tr>
 <tr class="memitem:ab399412a280837d814ec626e501e685f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ab399412a280837d814ec626e501e685f">rule_id</a> = -1</td></tr>
-<tr class="memdesc:ab399412a280837d814ec626e501e685f"><td class="mdescLeft">&#160;</td><td class="mdescRight">current evaluating rule id  <a href="classquisp_1_1runtime_1_1_runtime.html#ab399412a280837d814ec626e501e685f">More...</a><br /></td></tr>
+<tr class="memdesc:ab399412a280837d814ec626e501e685f"><td class="mdescLeft">&#160;</td><td class="mdescRight">currently evaluating rule id  <a href="classquisp_1_1runtime_1_1_runtime.html#ab399412a280837d814ec626e501e685f">More...</a><br /></td></tr>
 <tr class="separator:ab399412a280837d814ec626e501e685f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9056edb29ca513368811443ab4a9cbfc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a9056edb29ca513368811443ab4a9cbfc">send_tag</a> = -1</td></tr>
+<tr class="memdesc:a9056edb29ca513368811443ab4a9cbfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">currently evaluating send/receive tag of this rule id (if it is defined)  <a href="classquisp_1_1runtime_1_1_runtime.html#a9056edb29ca513368811443ab4a9cbfc">More...</a><br /></td></tr>
+<tr class="separator:a9056edb29ca513368811443ab4a9cbfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a468d6d4b02234cba6d8f6409d52c1a03"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a468d6d4b02234cba6d8f6409d52c1a03">receive_tag</a> = -1</td></tr>
+<tr class="memdesc:a468d6d4b02234cba6d8f6409d52c1a03"><td class="mdescLeft">&#160;</td><td class="mdescRight">currently evaluating rule id  <a href="classquisp_1_1runtime_1_1_runtime.html#a468d6d4b02234cba6d8f6409d52c1a03">More...</a><br /></td></tr>
+<tr class="separator:a468d6d4b02234cba6d8f6409d52c1a03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a314bb9c405511dff475e5b2c15d57e"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a1a314bb9c405511dff475e5b2c15d57e">pc</a> = 0</td></tr>
 <tr class="memdesc:a1a314bb9c405511dff475e5b2c15d57e"><td class="mdescLeft">&#160;</td><td class="mdescRight">program counter for <a class="el" href="classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program.">Program</a> execution.  <a href="classquisp_1_1runtime_1_1_runtime.html#a1a314bb9c405511dff475e5b2c15d57e">More...</a><br /></td></tr>
 <tr class="separator:a1a314bb9c405511dff475e5b2c15d57e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -253,6 +274,24 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ae1fd2e274d02d9391e3c295ccc7a38bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1runtime.html#a30c8180919b26edab48097494bafc239">QubitResources</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ae1fd2e274d02d9391e3c295ccc7a38bb">qubits</a></td></tr>
 <tr class="memdesc:ae1fd2e274d02d9391e3c295ccc7a38bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">This stores the entangled qubits that are assigned to the ruleset.  <a href="classquisp_1_1runtime_1_1_runtime.html#ae1fd2e274d02d9391e3c295ccc7a38bb">More...</a><br /></td></tr>
 <tr class="separator:ae1fd2e274d02d9391e3c295ccc7a38bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a023babcb87f28de8a9a0801da18cf5f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1runtime.html#adcf4ef619a02a77cfa25edff265c9378">MessageResources</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a023babcb87f28de8a9a0801da18cf5f1">messages</a></td></tr>
+<tr class="memdesc:a023babcb87f28de8a9a0801da18cf5f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">currently evaluating rule id  <a href="classquisp_1_1runtime_1_1_runtime.html#a023babcb87f28de8a9a0801da18cf5f1">More...</a><br /></td></tr>
+<tr class="separator:a023babcb87f28de8a9a0801da18cf5f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e9d67e40ab061cb4463febcbbdb969b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1runtime.html#af01ff277b2e2a9857efa7fbe064145ad">QubitResourcesWithSequenceNumbers</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a3e9d67e40ab061cb4463febcbbdb969b">sequence_number_to_qubit</a></td></tr>
+<tr class="memdesc:a3e9d67e40ab061cb4463febcbbdb969b"><td class="mdescLeft">&#160;</td><td class="mdescRight">currently evaluating rule id  <a href="classquisp_1_1runtime_1_1_runtime.html#a3e9d67e40ab061cb4463febcbbdb969b">More...</a><br /></td></tr>
+<tr class="separator:a3e9d67e40ab061cb4463febcbbdb969b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a4a326b16171f98a957863e7ac22849"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1runtime.html#a2aee4d03c941cd0e563cc64846c06b91">SequenceNumberTracker</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a7a4a326b16171f98a957863e7ac22849">qubit_to_sequence_number</a></td></tr>
+<tr class="memdesc:a7a4a326b16171f98a957863e7ac22849"><td class="mdescLeft">&#160;</td><td class="mdescRight">currently evaluating rule id  <a href="classquisp_1_1runtime_1_1_runtime.html#a7a4a326b16171f98a957863e7ac22849">More...</a><br /></td></tr>
+<tr class="separator:a7a4a326b16171f98a957863e7ac22849"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48586c28f26f1c0b1af34846009091b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1runtime.html#a8777b193f2965186fc8423fcae7c33fe">SequenceNumberCounter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a48586c28f26f1c0b1af34846009091b1">resource_counter</a></td></tr>
+<tr class="memdesc:a48586c28f26f1c0b1af34846009091b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">This stores the latest sequence no. of resource assigned to the Stage/Rule.  <a href="classquisp_1_1runtime_1_1_runtime.html#a48586c28f26f1c0b1af34846009091b1">More...</a><br /></td></tr>
+<tr class="separator:a48586c28f26f1c0b1af34846009091b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae56a2678a89120c5d1a515ea0bf5b94e"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ae56a2678a89120c5d1a515ea0bf5b94e">shared_tag_to_rule_id</a></td></tr>
+<tr class="memdesc:ae56a2678a89120c5d1a515ea0bf5b94e"><td class="mdescLeft">&#160;</td><td class="mdescRight">[shared_rule_tag] =&gt; [rule_id]  <a href="classquisp_1_1runtime_1_1_runtime.html#ae56a2678a89120c5d1a515ea0bf5b94e">More...</a><br /></td></tr>
+<tr class="separator:ae56a2678a89120c5d1a515ea0bf5b94e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a861c6b49e24065e5038f28b4eb6682ef"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a861c6b49e24065e5038f28b4eb6682ef">rule_id_to_shared_tag</a></td></tr>
+<tr class="memdesc:a861c6b49e24065e5038f28b4eb6682ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">currently evaluating rule id  <a href="classquisp_1_1runtime_1_1_runtime.html#a861c6b49e24065e5038f28b4eb6682ef">More...</a><br /></td></tr>
+<tr class="separator:a861c6b49e24065e5038f28b4eb6682ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a048f6598ec90a024cf0558d66c07c18c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1runtime.html#a5b5f4e76c5e6e7b0fc3857a7baa35df2">QubitNameMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a048f6598ec90a024cf0558d66c07c18c">named_qubits</a></td></tr>
 <tr class="memdesc:a048f6598ec90a024cf0558d66c07c18c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This contains a map for a <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html" title="describes Qubit id in a Program. This is like a local variable name in a runtime::Program....">QubitId</a> and a qubit.  <a href="classquisp_1_1runtime_1_1_runtime.html#a048f6598ec90a024cf0558d66c07c18c">More...</a><br /></td></tr>
 <tr class="separator:a048f6598ec90a024cf0558d66c07c18c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -281,6 +320,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a068c5d46badef28e7c8d41eaad9bb517"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a068c5d46badef28e7c8d41eaad9bb517">qubit_found</a> = false</td></tr>
 <tr class="memdesc:a068c5d46badef28e7c8d41eaad9bb517"><td class="mdescLeft">&#160;</td><td class="mdescRight">The GET_QUBIT instruction sets this flag. if it's true, the GET_QUBIT instruction successfully found the qubit. if not, the instruction cannot find qubit.  <a href="classquisp_1_1runtime_1_1_runtime.html#a068c5d46badef28e7c8d41eaad9bb517">More...</a><br /></td></tr>
 <tr class="separator:a068c5d46badef28e7c8d41eaad9bb517"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2792dad74fc5600fa9dd1e20a58195dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a2792dad74fc5600fa9dd1e20a58195dd">message_found</a> = false</td></tr>
+<tr class="memdesc:a2792dad74fc5600fa9dd1e20a58195dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The GET_MESSAGE instruction sets this flag. if it's true, the GET_MESSAGE instruction successfully found the corresponding message. if not, the instruction cannot find a message meant for this <a class="el" href="classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program.">Program</a>.  <a href="classquisp_1_1runtime_1_1_runtime.html#a2792dad74fc5600fa9dd1e20a58195dd">More...</a><br /></td></tr>
+<tr class="separator:a2792dad74fc5600fa9dd1e20a58195dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf1073dadcf9d16e2f5c33e172e6d3ad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#aaf1073dadcf9d16e2f5c33e172e6d3ad">debugging</a> = false</td></tr>
 <tr class="memdesc:aaf1073dadcf9d16e2f5c33e172e6d3ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">if the flag is true, show debug information during <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet.">RuleSet</a> execution.  <a href="classquisp_1_1runtime_1_1_runtime.html#aaf1073dadcf9d16e2f5c33e172e6d3ad">More...</a><br /></td></tr>
 <tr class="separator:aaf1073dadcf9d16e2f5c33e172e6d3ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -369,6 +411,44 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4cd842507dd26b245eeced940413afff" name="a4cd842507dd26b245eeced940413afff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cd842507dd26b245eeced940413afff">&#9670;&#160;</a></span>assignMessageToRuleSet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::runtime::Runtime::assignMessageToRuleSet </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>shared_rule_tag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a85ecfb49269fa9da29372fb074addb33">MessageRecord</a> &amp;&#160;</td>
+          <td class="paramname"><em>msg_content</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>assign the message to the rule </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">partner_addr</td><td>the entangled partner QNode address for the qubit. </td></tr>
+    <tr><td class="paramname">rule_id</td><td>the rule id to assign the qubit </td></tr>
+    <tr><td class="paramname">msg</td><td>the content of the message (e.g., purification [measurement_result, sequence_number, pur_type], swapping [frame_correction, sequence_number]) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a498b5dad108ac5d80c6b69a7ce907642" name="a498b5dad108ac5d80c6b69a7ce907642"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a498b5dad108ac5d80c6b69a7ce907642">&#9670;&#160;</a></span>assignQubitToRule()</h2>
 
@@ -599,8 +679,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae527b19e714ed2b4b26e995550dcf1df" name="ae527b19e714ed2b4b26e995550dcf1df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae527b19e714ed2b4b26e995550dcf1df">&#9670;&#160;</a></span>findQubit()</h2>
+<a id="a93fb8bac81aa6871bd63588342d41b5b" name="a93fb8bac81aa6871bd63588342d41b5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93fb8bac81aa6871bd63588342d41b5b">&#9670;&#160;</a></span>findQubit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -608,30 +688,14 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">QubitResources::iterator quisp::runtime::Runtime::findQubit </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>rule_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *&#160;</td>
+          <td class="paramname"><em>qubit_record</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>shared_tag</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>action_index</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>find the qubit that has the action_index and allocated in the rule_id, shared_tag; </p>
+<p>find the qubit iterator that match with this rule_id and sequence_number </p>
 
 </div>
 </div>
@@ -702,6 +766,26 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>apply X gate </p>
+
+</div>
+</div>
+<a id="ac3040b7cb18242304a7fab47fbc4fe36" name="ac3040b7cb18242304a7fab47fbc4fe36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3040b7cb18242304a7fab47fbc4fe36">&#9670;&#160;</a></span>gateY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::runtime::Runtime::gateY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a>&#160;</td>
+          <td class="paramname"><em>qubit_id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>apply Y gate </p>
 
 </div>
 </div>
@@ -783,6 +867,51 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">qubit_id</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>IQubitRecord* </dd></dl>
+
+</div>
+</div>
+<a id="a4eb3b5815322015b9cd56bd5b0dc7ca0" name="a4eb3b5815322015b9cd56bd5b0dc7ca0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4eb3b5815322015b9cd56bd5b0dc7ca0">&#9670;&#160;</a></span>getQubitBySequenceNumber()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> * quisp::runtime::Runtime::getQubitBySequenceNumber </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a>&#160;</td>
+          <td class="paramname"><em>partner_addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>&#160;</td>
+          <td class="paramname"><em>rule_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">SequenceNumber</a>&#160;</td>
+          <td class="paramname"><em>sequence_number</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the qubit record by sequence number. </p>
+<p >This method finds a qubit record with the associated sequence number. If the <a class="el" href="classquisp_1_1runtime_1_1_runtime.html" title="Runtime class is responsible for executing the given RuleSet and the states&#39; management.">Runtime</a> cannot find the qubit, this returns nullptr. Reminder, sequence number is the order in which the qubit is assisgned to the <a class="el" href="classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program.">Program</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">partner_address</td><td></td></tr>
+    <tr><td class="paramname">rule_id</td><td></td></tr>
+    <tr><td class="paramname">sequence_number</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -958,7 +1087,7 @@ false the qubit is not locked </dd></dl>
 </div>
 </div>
 <a id="a6066b2a2c62c04c4607b75b2856908e5" name="a6066b2a2c62c04c4607b75b2856908e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6066b2a2c62c04c4607b75b2856908e5">&#9670;&#160;</a></span>measureQubit()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6066b2a2c62c04c4607b75b2856908e5">&#9670;&#160;</a></span>measureQubit() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1001,6 +1130,100 @@ false the qubit is not locked </dd></dl>
 
 </div>
 </div>
+<a id="ad546e9b5dcb97bfade47e6ebcc68b78d" name="ad546e9b5dcb97bfade47e6ebcc68b78d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad546e9b5dcb97bfade47e6ebcc68b78d">&#9670;&#160;</a></span>measureQubit() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::runtime::Runtime::measureQubit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a>&#160;</td>
+          <td class="paramname"><em>qubit_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a>&#160;</td>
+          <td class="paramname"><em>result_reg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5">Basis</a>&#160;</td>
+          <td class="paramname"><em>basis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>measure qubit with given basis and put result into register </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">qubit_id</td><td>qubit to measure </td></tr>
+    <tr><td class="paramname">result_reg</td><td>register to put result into </td></tr>
+    <tr><td class="paramname">basis</td><td>measurement basis </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aec05b5afd74a5875630e08e370a484f9" name="aec05b5afd74a5875630e08e370a484f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec05b5afd74a5875630e08e370a484f9">&#9670;&#160;</a></span>measureQubit() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::runtime::Runtime::measureQubit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a>&#160;</td>
+          <td class="paramname"><em>qubit_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a>&#160;</td>
+          <td class="paramname"><em>result_reg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bitset_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5">Basis</a>&#160;</td>
+          <td class="paramname"><em>basis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>measure qubit with given basis and put result into register </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">qubit_id</td><td>qubit to measure </td></tr>
+    <tr><td class="paramname">result_reg</td><td>register to put result into </td></tr>
+    <tr><td class="paramname">basis</td><td>measurement basis </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ad8a179ae2ee0214938a1d95bef87fed6" name="ad8a179ae2ee0214938a1d95bef87fed6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad8a179ae2ee0214938a1d95bef87fed6">&#9670;&#160;</a></span>operator=()</h2>
 
@@ -1019,8 +1242,8 @@ false the qubit is not locked </dd></dl>
 
 </div>
 </div>
-<a id="a2eee6108b491277eb9e9c61d244c9577" name="a2eee6108b491277eb9e9c61d244c9577"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2eee6108b491277eb9e9c61d244c9577">&#9670;&#160;</a></span>promoteQubit()</h2>
+<a id="a1ab14b986a1dc37dddf8891b86c12c21" name="a1ab14b986a1dc37dddf8891b86c12c21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ab14b986a1dc37dddf8891b86c12c21">&#9670;&#160;</a></span>promoteQubit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1028,8 +1251,8 @@ false the qubit is not locked </dd></dl>
         <tr>
           <td class="memname">void quisp::runtime::Runtime::promoteQubit </td>
           <td>(</td>
-          <td class="paramtype">QubitResources::iterator&#160;</td>
-          <td class="paramname"><em>it</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *&#160;</td>
+          <td class="paramname"><em>qubit_record</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1039,7 +1262,7 @@ false the qubit is not locked </dd></dl>
 <p >the next rule id is automatically derived by the Programs in the <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet.">RuleSet</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">it</td><td>iterator to specify the qubit </td></tr>
+    <tr><td class="paramname">qubit_record</td><td>the entangled qubit's record already assigned to the <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet.">RuleSet</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -1084,8 +1307,8 @@ false the qubit is not locked </dd></dl>
 
 </div>
 </div>
-<a id="a1b50821ac5ac6d0ec1e1626f4ebf6fac" name="a1b50821ac5ac6d0ec1e1626f4ebf6fac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b50821ac5ac6d0ec1e1626f4ebf6fac">&#9670;&#160;</a></span>purifyX()</h2>
+<a id="a49e5176ec84c6392203c24603d6b1d6a" name="a49e5176ec84c6392203c24603d6b1d6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49e5176ec84c6392203c24603d6b1d6a">&#9670;&#160;</a></span>purifyX()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1095,6 +1318,12 @@ false the qubit is not locked </dd></dl>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a>&#160;</td>
           <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bitset_index</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1120,8 +1349,8 @@ false the qubit is not locked </dd></dl>
 
 </div>
 </div>
-<a id="a41777d9fc085ba5f02494e6c52dd3360" name="a41777d9fc085ba5f02494e6c52dd3360"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41777d9fc085ba5f02494e6c52dd3360">&#9670;&#160;</a></span>purifyY()</h2>
+<a id="a084f2ebb22bab6fb97c42305aeb23ba8" name="a084f2ebb22bab6fb97c42305aeb23ba8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a084f2ebb22bab6fb97c42305aeb23ba8">&#9670;&#160;</a></span>purifyY()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1131,6 +1360,12 @@ false the qubit is not locked </dd></dl>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a>&#160;</td>
           <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bitset_index</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1156,8 +1391,8 @@ false the qubit is not locked </dd></dl>
 
 </div>
 </div>
-<a id="ac641cd1e14c360000ce66fd2833475eb" name="ac641cd1e14c360000ce66fd2833475eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac641cd1e14c360000ce66fd2833475eb">&#9670;&#160;</a></span>purifyZ()</h2>
+<a id="aaf9c81edaafd4e5b5e9de76e95f7dca0" name="aaf9c81edaafd4e5b5e9de76e95f7dca0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf9c81edaafd4e5b5e9de76e95f7dca0">&#9670;&#160;</a></span>purifyZ()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1167,6 +1402,12 @@ false the qubit is not locked </dd></dl>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a>&#160;</td>
           <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bitset_index</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1371,6 +1612,38 @@ false the qubit is not locked </dd></dl>
 
 </div>
 </div>
+<a id="a2792dad74fc5600fa9dd1e20a58195dd" name="a2792dad74fc5600fa9dd1e20a58195dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2792dad74fc5600fa9dd1e20a58195dd">&#9670;&#160;</a></span>message_found</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool quisp::runtime::Runtime::message_found = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The GET_MESSAGE instruction sets this flag. if it's true, the GET_MESSAGE instruction successfully found the corresponding message. if not, the instruction cannot find a message meant for this <a class="el" href="classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program.">Program</a>. </p>
+
+</div>
+</div>
+<a id="a023babcb87f28de8a9a0801da18cf5f1" name="a023babcb87f28de8a9a0801da18cf5f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a023babcb87f28de8a9a0801da18cf5f1">&#9670;&#160;</a></span>messages</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacequisp_1_1runtime.html#adcf4ef619a02a77cfa25edff265c9378">MessageResources</a> quisp::runtime::Runtime::messages</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>currently evaluating rule id </p>
+
+</div>
+</div>
 <a id="a048f6598ec90a024cf0558d66c07c18c" name="a048f6598ec90a024cf0558d66c07c18c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a048f6598ec90a024cf0558d66c07c18c">&#9670;&#160;</a></span>named_qubits</h2>
 
@@ -1437,6 +1710,22 @@ false the qubit is not locked </dd></dl>
 
 </div>
 </div>
+<a id="a7a4a326b16171f98a957863e7ac22849" name="a7a4a326b16171f98a957863e7ac22849"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a4a326b16171f98a957863e7ac22849">&#9670;&#160;</a></span>qubit_to_sequence_number</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacequisp_1_1runtime.html#a2aee4d03c941cd0e563cc64846c06b91">SequenceNumberTracker</a> quisp::runtime::Runtime::qubit_to_sequence_number</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>currently evaluating rule id </p>
+
+</div>
+</div>
 <a id="ae1fd2e274d02d9391e3c295ccc7a38bb" name="ae1fd2e274d02d9391e3c295ccc7a38bb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae1fd2e274d02d9391e3c295ccc7a38bb">&#9670;&#160;</a></span>qubits</h2>
 
@@ -1454,6 +1743,22 @@ false the qubit is not locked </dd></dl>
 
 </div>
 </div>
+<a id="a468d6d4b02234cba6d8f6409d52c1a03" name="a468d6d4b02234cba6d8f6409d52c1a03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a468d6d4b02234cba6d8f6409d52c1a03">&#9670;&#160;</a></span>receive_tag</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int quisp::runtime::Runtime::receive_tag = -1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>currently evaluating rule id </p>
+
+</div>
+</div>
 <a id="aaad312edf64a272b92976d4b4a829e84" name="aaad312edf64a272b92976d4b4a829e84"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaad312edf64a272b92976d4b4a829e84">&#9670;&#160;</a></span>registers</h2>
 
@@ -1468,6 +1773,22 @@ false the qubit is not locked </dd></dl>
 
 <p>Registers are temporary memory for <a class="el" href="classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program.">Program</a> execution. </p>
 <p >Before each <a class="el" href="classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program.">Program</a> execution, <a class="el" href="classquisp_1_1runtime_1_1_runtime.html" title="Runtime class is responsible for executing the given RuleSet and the states&#39; management.">Runtime</a> initializes these registers with 0. </p>
+
+</div>
+</div>
+<a id="a48586c28f26f1c0b1af34846009091b1" name="a48586c28f26f1c0b1af34846009091b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48586c28f26f1c0b1af34846009091b1">&#9670;&#160;</a></span>resource_counter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacequisp_1_1runtime.html#a8777b193f2965186fc8423fcae7c33fe">SequenceNumberCounter</a> quisp::runtime::Runtime::resource_counter</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This stores the latest sequence no. of resource assigned to the Stage/Rule. </p>
 
 </div>
 </div>
@@ -1500,7 +1821,23 @@ false the qubit is not locked </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p>current evaluating rule id </p>
+<p>currently evaluating rule id </p>
+
+</div>
+</div>
+<a id="a861c6b49e24065e5038f28b4eb6682ef" name="a861c6b49e24065e5038f28b4eb6682ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a861c6b49e24065e5038f28b4eb6682ef">&#9670;&#160;</a></span>rule_id_to_shared_tag</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unordered_map&lt;<a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>, int&gt; quisp::runtime::Runtime::rule_id_to_shared_tag</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>currently evaluating rule id </p>
 
 </div>
 </div>
@@ -1518,6 +1855,54 @@ false the qubit is not locked </dd></dl>
 
 <p>The assigned <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet.">RuleSet</a> for this <a class="el" href="classquisp_1_1runtime_1_1_runtime.html" title="Runtime class is responsible for executing the given RuleSet and the states&#39; management.">Runtime</a> instance. </p>
 <p >One <a class="el" href="classquisp_1_1runtime_1_1_runtime.html" title="Runtime class is responsible for executing the given RuleSet and the states&#39; management.">Runtime</a> has only one <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet.">RuleSet</a> to process and is never re-used for another <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet.">RuleSet</a>. </p>
+
+</div>
+</div>
+<a id="a9056edb29ca513368811443ab4a9cbfc" name="a9056edb29ca513368811443ab4a9cbfc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9056edb29ca513368811443ab4a9cbfc">&#9670;&#160;</a></span>send_tag</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int quisp::runtime::Runtime::send_tag = -1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>currently evaluating send/receive tag of this rule id (if it is defined) </p>
+
+</div>
+</div>
+<a id="a3e9d67e40ab061cb4463febcbbdb969b" name="a3e9d67e40ab061cb4463febcbbdb969b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e9d67e40ab061cb4463febcbbdb969b">&#9670;&#160;</a></span>sequence_number_to_qubit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacequisp_1_1runtime.html#af01ff277b2e2a9857efa7fbe064145ad">QubitResourcesWithSequenceNumbers</a> quisp::runtime::Runtime::sequence_number_to_qubit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>currently evaluating rule id </p>
+
+</div>
+</div>
+<a id="ae56a2678a89120c5d1a515ea0bf5b94e" name="ae56a2678a89120c5d1a515ea0bf5b94e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae56a2678a89120c5d1a515ea0bf5b94e">&#9670;&#160;</a></span>shared_tag_to_rule_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unordered_map&lt;int, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>&gt; quisp::runtime::Runtime::shared_tag_to_rule_id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>[shared_rule_tag] =&gt; [rule_id] </p>
 
 </div>
 </div>

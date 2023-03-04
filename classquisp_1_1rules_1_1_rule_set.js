@@ -7,7 +7,6 @@ var classquisp_1_1rules_1_1_rule_set =
     [ "createUniqueId", "classquisp_1_1rules_1_1_rule_set.html#a355c1ddc850cbcc4aa13a89d744e3f4c", null ],
     [ "deserialize_json", "classquisp_1_1rules_1_1_rule_set.html#a52524d58b627101b85a43dd5595a5799", null ],
     [ "serialize_json", "classquisp_1_1rules_1_1_rule_set.html#aa62a1df1bd5155a3de6df0f2e0be1176", null ],
-    [ "current_rule_id", "classquisp_1_1rules_1_1_rule_set.html#ae2e1c3e954f8ebdc643a4f703ffb5a16", null ],
     [ "owner_addr", "classquisp_1_1rules_1_1_rule_set.html#ae18a70f6c3e3ada85bef41bac6528341", null ],
     [ "rules", "classquisp_1_1rules_1_1_rule_set.html#acf746a5c26315ce5a0e85fb654478594", null ],
     [ "ruleset_id", "classquisp_1_1rules_1_1_rule_set.html#acba668b2acb6d95d109858935584cb76", null ]

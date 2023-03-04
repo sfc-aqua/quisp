@@ -9,5 +9,6 @@ var searchData=
   ['qubitid_6',['QubitId',['../namespacequisp_1_1modules_1_1common.html#a27af03ae81214bcb4d435892ffb722a2',1,'quisp::modules::common']]],
   ['qubitindex_7',['QubitIndex',['../namespacequisp_1_1modules_1_1common.html#ae40fc279e2dc158039aa95bb2ad5e007',1,'quisp::modules::common']]],
   ['qubitnamemap_8',['QubitNameMap',['../namespacequisp_1_1runtime.html#a5b5f4e76c5e6e7b0fc3857a7baa35df2',1,'quisp::runtime']]],
-  ['qubitresources_9',['QubitResources',['../namespacequisp_1_1runtime.html#a30c8180919b26edab48097494bafc239',1,'quisp::runtime']]]
+  ['qubitresources_9',['QubitResources',['../namespacequisp_1_1runtime.html#a30c8180919b26edab48097494bafc239',1,'quisp::runtime']]],
+  ['qubitresourceswithsequencenumbers_10',['QubitResourcesWithSequenceNumbers',['../namespacequisp_1_1runtime.html#af01ff277b2e2a9857efa7fbe064145ad',1,'quisp::runtime']]]
 ];

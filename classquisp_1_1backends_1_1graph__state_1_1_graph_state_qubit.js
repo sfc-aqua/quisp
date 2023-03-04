@@ -17,6 +17,7 @@ var classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit =
     [ "gateS", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a8779984b424352e57524d0defc31a6ab", null ],
     [ "gateSdg", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#ad717035b418ba37598f39faa0890408a", null ],
     [ "gateX", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#ae70a187681955cf7214babff512d5f05", null ],
+    [ "gateY", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#abf77ac0d55b9b25c7ee8b0df9c0b9c78", null ],
     [ "gateZ", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#af6e6b86470e7cedd3e138937d030b789", null ],
     [ "getId", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a9f00a620c523bd891f39b751a3d58bd6", null ],
     [ "graphMeasureZ", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#af21254b263d7df1a1a263f84b22a3d43", null ],

@@ -1,7 +1,7 @@
 <map id="quisp/test_utils/Logger.h" name="quisp/test_utils/Logger.h">
-<area shape="rect" id="node1" title=" " alt="" coords="2787,5,2951,31"/>
-<area shape="rect" id="node2" href="$_test_component_provider_strategy_8h.html" title=" " alt="" coords="2765,79,2972,119"/>
-<area shape="rect" id="node3" href="$_test_utils_8h.html" title=" " alt="" coords="2780,167,2957,192"/>
+<area shape="rect" id="node1" title=" " alt="" coords="2691,5,2855,31"/>
+<area shape="rect" id="node2" href="$_test_component_provider_strategy_8h.html" title=" " alt="" coords="2669,79,2876,119"/>
+<area shape="rect" id="node3" href="$_test_utils_8h.html" title=" " alt="" coords="2684,167,2861,192"/>
 <area shape="rect" id="node4" href="$_gs__multi__qubit__test_8cc.html" title=" " alt="" coords="5,247,188,287"/>
 <area shape="rect" id="node5" href="$_gs__qubit__internal__graph__test_8cc.html" title=" " alt="" coords="212,240,395,295"/>
 <area shape="rect" id="node6" href="$_gs__single__qubit__test_8cc.html" title=" " alt="" coords="419,247,601,287"/>
@@ -26,8 +26,7 @@
 <area shape="rect" id="node25" href="$_clause__serialize__test_8cc.html" title=" " alt="" coords="4129,247,4259,287"/>
 <area shape="rect" id="node26" href="$_condition__execution__test_8cc.html" title=" " alt="" coords="4283,247,4425,287"/>
 <area shape="rect" id="node27" href="$_condition__test_8cc.html" title=" " alt="" coords="4449,247,4592,287"/>
-<area shape="rect" id="node28" href="$_rule_set_converter__test_8cc.html" title=" " alt="" coords="4616,247,4807,287"/>
-<area shape="rect" id="node29" href="$rules_2_rule_set__test_8cc.html" title=" " alt="" coords="4831,247,4965,287"/>
-<area shape="rect" id="node30" href="$_rule__test_8cc.html" title=" " alt="" coords="4989,255,5151,280"/>
-<area shape="rect" id="node31" href="$unit__test__main_8cc.html" title=" " alt="" coords="5175,255,5333,280"/>
+<area shape="rect" id="node28" href="$rules_2_rule_set__test_8cc.html" title=" " alt="" coords="4616,247,4751,287"/>
+<area shape="rect" id="node29" href="$_rule__test_8cc.html" title=" " alt="" coords="4775,255,4936,280"/>
+<area shape="rect" id="node30" href="$unit__test__main_8cc.html" title=" " alt="" coords="4960,255,5119,280"/>
 </map>

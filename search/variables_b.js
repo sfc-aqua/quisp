@@ -6,7 +6,7 @@ var searchData=
   ['left_5fpartner_3',['left_partner',['../struct_swapping_config.html#a6d0af9a2181b964bc3d00a47994b0ac8',1,'SwappingConfig']]],
   ['left_5fqnic_4',['left_qnic',['../classquisp_1_1modules_1_1_b_s_a_controller.html#a0eb94267173e2d19fa52638a61de6695',1,'quisp::modules::BSAController']]],
   ['left_5fqubit_5findex_5',['left_qubit_index',['../structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback.html#abf8cf632d8a432a81c89a8f3fc8df332',1,'quisp::modules::runtime_callback::RuntimeCallback']]],
-  ['left_5ftravel_5ftime_6',['left_travel_time',['../classquisp_1_1modules_1_1_b_s_a_controller.html#a6a1c0977c5276ff38347320131ef208f',1,'quisp::modules::BSAController']]],
+  ['left_5ftravel_5ftime_6',['left_travel_time',['../classquisp_1_1modules_1_1_b_s_a_controller.html#a9b751f37c7e5bdcdac840166f3cc6c65',1,'quisp::modules::BSAController']]],
   ['link_5fcost_7',['link_cost',['../structquisp_1_1modules_1_1_interface_info.html#a5e71e0ef116f3129f74b34a9ff0659f9',1,'quisp::modules::InterfaceInfo']]],
   ['locked_8',['locked',['../classquisp_1_1modules_1_1_stationary_qubit.html#ac3182ca1d7ea586bc9079b373414b338',1,'quisp::modules::StationaryQubit']]],
   ['locked_5frule_5fid_9',['locked_rule_id',['../classquisp_1_1modules_1_1_stationary_qubit.html#ac136bb29e7a0aad3b6c994e0c51d0eea',1,'quisp::modules::StationaryQubit']]],

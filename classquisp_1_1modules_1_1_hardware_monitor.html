@@ -191,8 +191,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a65fd493d6af01b0f1a703a61473db7dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18a07055653367c6f2120d21acf81b1f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html#a18a07055653367c6f2120d21acf81b1f">writeToFile_Topology_with_LinkCost</a> (int qnic_id, double <a class="el" href="structquisp_1_1modules_1_1link__cost.html">link_cost</a>, double fidelity, double bellpair_per_sec)</td></tr>
 <tr class="separator:a18a07055653367c6f2120d21acf81b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e8238c4e0a12b30d483f8ea3a08a0ed"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">quisp::rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html#a8e8238c4e0a12b30d483f8ea3a08a0ed">constructPurifyRule</a> (const std::string &amp;rule_name, const <a class="el" href="namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066d">rules::PurType</a> pur_type, const int partner_address, const <a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">QNIC_type</a> qnic_type, const int qnic_index, const int rule_id, const int shared_tag) const</td></tr>
-<tr class="separator:a8e8238c4e0a12b30d483f8ea3a08a0ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41ac30d94c79c7157624778c237b2ae5"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">quisp::rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html#a41ac30d94c79c7157624778c237b2ae5">constructPurifyRule</a> (const std::string &amp;rule_name, const <a class="el" href="namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066d">rules::PurType</a> pur_type, const int partner_address, const <a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">QNIC_type</a> qnic_type, const int qnic_index, const int send_tag) const</td></tr>
+<tr class="separator:a41ac30d94c79c7157624778c237b2ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06f6e920fa8a6e66ebacdbeecc035fae"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">quisp::rules::Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html#a06f6e920fa8a6e66ebacdbeecc035fae">constructCorrelationCheckRule</a> (const std::string &amp;rule_name, const <a class="el" href="namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066d">rules::PurType</a> pur_type, const int partner_address, const <a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">QNIC_type</a> qnic_type, const int qnic_index, const int receive_tag) const</td></tr>
+<tr class="separator:a06f6e920fa8a6e66ebacdbeecc035fae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -289,8 +291,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8e8238c4e0a12b30d483f8ea3a08a0ed" name="a8e8238c4e0a12b30d483f8ea3a08a0ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e8238c4e0a12b30d483f8ea3a08a0ed">&#9670;&#160;</a></span>constructPurifyRule()</h2>
+<a id="a06f6e920fa8a6e66ebacdbeecc035fae" name="a06f6e920fa8a6e66ebacdbeecc035fae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06f6e920fa8a6e66ebacdbeecc035fae">&#9670;&#160;</a></span>constructCorrelationCheckRule()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -299,7 +301,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">quisp::rules::Rule</a> &gt; quisp::modules::HardwareMonitor::constructPurifyRule </td>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">Rule</a> &gt; quisp::modules::HardwareMonitor::constructCorrelationCheckRule </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>rule_name</em>, </td>
@@ -332,13 +334,67 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>rule_id</em>, </td>
+          <td class="paramname"><em>receive_tag</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a41ac30d94c79c7157624778c237b2ae5" name="a41ac30d94c79c7157624778c237b2ae5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41ac30d94c79c7157624778c237b2ae5">&#9670;&#160;</a></span>constructPurifyRule()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule.html">Rule</a> &gt; quisp::modules::HardwareMonitor::constructPurifyRule </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>rule_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066d">rules::PurType</a>&#160;</td>
+          <td class="paramname"><em>pur_type</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>shared_tag</em>&#160;</td>
+          <td class="paramname"><em>partner_address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">QNIC_type</a>&#160;</td>
+          <td class="paramname"><em>qnic_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>qnic_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>send_tag</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

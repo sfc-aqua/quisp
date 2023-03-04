@@ -3,8 +3,9 @@ var hierarchy =
     [ "quisp::rules::Action", "classquisp_1_1rules_1_1_action.html", [
       [ "quisp::rules::EntanglementSwapping", "classquisp_1_1rules_1_1_entanglement_swapping.html", null ],
       [ "quisp::rules::Purification", "classquisp_1_1rules_1_1_purification.html", null ],
-      [ "quisp::rules::Tomography", "classquisp_1_1rules_1_1_tomography.html", null ],
-      [ "quisp::rules::Wait", "classquisp_1_1rules_1_1_wait.html", null ]
+      [ "quisp::rules::PurificationCorrelation", "classquisp_1_1rules_1_1_purification_correlation.html", null ],
+      [ "quisp::rules::SwappingCorrection", "classquisp_1_1rules_1_1_swapping_correction.html", null ],
+      [ "quisp::rules::Tomography", "classquisp_1_1rules_1_1_tomography.html", null ]
     ] ],
     [ "quisp::modules::BellPairStore", "classquisp_1_1modules_1_1_bell_pair_store.html", null ],
     [ "quisp::physical::types::BSAClickResult", "structquisp_1_1physical_1_1types_1_1_b_s_a_click_result.html", null ],
@@ -26,7 +27,8 @@ var hierarchy =
       [ "quisp::rules::EnoughResourceConditionClause", "classquisp_1_1rules_1_1_enough_resource_condition_clause.html", null ],
       [ "quisp::rules::FidelityConditionClause", "classquisp_1_1rules_1_1_fidelity_condition_clause.html", null ],
       [ "quisp::rules::MeasureCountConditionClause", "classquisp_1_1rules_1_1_measure_count_condition_clause.html", null ],
-      [ "quisp::rules::WaitConditionClause", "classquisp_1_1rules_1_1_wait_condition_clause.html", null ]
+      [ "quisp::rules::PurificationCorrelationClause", "classquisp_1_1rules_1_1_purification_correlation_clause.html", null ],
+      [ "quisp::rules::SwappingCorrectionClause", "classquisp_1_1rules_1_1_swapping_correction_clause.html", null ]
     ] ],
     [ "omnetpp::cModule", null, [
       [ "quisp_test::qnode::TestQNode", "classquisp__test_1_1qnode_1_1_test_q_node.html", null ]
@@ -152,8 +154,6 @@ var hierarchy =
     [ "PhotonRecord", "struct_photon_record.html", null ],
     [ "quisp::backends::abstract::IQubitId::Pred", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_pred.html", null ],
     [ "quisp::runtime::Program", "classquisp_1_1runtime_1_1_program.html", null ],
-    [ "quisp::modules::pur_result_table::PurificationResultData", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html", null ],
-    [ "quisp::modules::pur_result_table::PurificationResultKey", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_key.html", null ],
     [ "quisp::modules::QNIC_id", "structquisp_1_1modules_1_1_q_n_i_c__id.html", [
       [ "quisp::modules::QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", null ]
     ] ],

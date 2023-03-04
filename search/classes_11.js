@@ -7,5 +7,7 @@ var searchData=
   ['stationaryqubit_4',['StationaryQubit',['../classquisp_1_1modules_1_1_stationary_qubit.html',1,'quisp::modules']]],
   ['stationaryqubitconfiguration_5',['StationaryQubitConfiguration',['../classquisp_1_1backends_1_1_stationary_qubit_configuration.html',1,'quisp::backends']]],
   ['swappingconfig_6',['SwappingConfig',['../struct_swapping_config.html',1,'']]],
-  ['swappingresultdata_7',['SwappingResultData',['../structquisp_1_1modules_1_1_swapping_result_data.html',1,'quisp::modules']]]
+  ['swappingcorrection_7',['SwappingCorrection',['../classquisp_1_1rules_1_1_swapping_correction.html',1,'quisp::rules']]],
+  ['swappingcorrectionclause_8',['SwappingCorrectionClause',['../classquisp_1_1rules_1_1_swapping_correction_clause.html',1,'quisp::rules']]],
+  ['swappingresultdata_9',['SwappingResultData',['../structquisp_1_1modules_1_1_swapping_result_data.html',1,'quisp::modules']]]
 ];

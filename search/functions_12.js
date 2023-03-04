@@ -13,7 +13,7 @@ var searchData=
   ['toggleedge_10',['toggleEdge',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a45498e6307ff9eaa3068325fac54aa7b',1,'quisp::backends::graph_state::GraphStateQubit']]],
   ['tologgertype_11',['toLoggerType',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#abfcb140ea82ad4928b2cf400c6bfc3d3',1,'quisp::modules::Logger::LoggerModule']]],
   ['tomography_12',['Tomography',['../classquisp_1_1rules_1_1_tomography.html#aba41ab4f8e84a698944567ead4fcbc52',1,'quisp::rules::Tomography::Tomography(json serialized)'],['../classquisp_1_1rules_1_1_tomography.html#a54933574480882693d8aef7573c66613',1,'quisp::rules::Tomography::Tomography(int num_measurement, int owner_addr, int partner_addr)']]],
-  ['tomographyrule_13',['tomographyRule',['../classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#ae460283f78bb799e05f4d39b4560ed8c',1,'quisp::modules::ruleset_gen::RuleSetGenerator']]],
+  ['tomographyrule_13',['tomographyRule',['../classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#aecca69d647e98787b0823d4b91b42033',1,'quisp::modules::ruleset_gen::RuleSetGenerator']]],
   ['tostring_14',['toString',['../classquisp_1_1modules_1_1_bell_pair_store.html#ad65976daa037643d9c57a02212b05892',1,'quisp::modules::BellPairStore::toString()'],['../structquisp_1_1runtime_1_1_instruction.html#ae0dc0466c7ccfd3587d673d13a9095c4',1,'quisp::runtime::Instruction::toString() const']]],
   ['tostringargs_15',['toStringArgs',['../structquisp_1_1runtime_1_1_instruction.html#a59e037edc7634995e3f36fe6e359ff73',1,'quisp::runtime::Instruction']]],
   ['trimquotes_16',['trimQuotes',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#a9be662e22f2bae542a890308fdede9a5',1,'quisp::modules::Logger::LoggerModule']]],

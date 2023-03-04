@@ -150,7 +150,19 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:a3ca0235adcdf503333f54cc7b2a98ef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">a variant that is capable of storing all instructions  <a href="namespacequisp_1_1runtime.html#a3ca0235adcdf503333f54cc7b2a98ef1">More...</a><br /></td></tr>
 <tr class="separator:a3ca0235adcdf503333f54cc7b2a98ef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30c8180919b26edab48097494bafc239"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#a30c8180919b26edab48097494bafc239">QubitResources</a> = std::multimap&lt; std::pair&lt; <a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a>, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a> &gt;, <a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> * &gt;</td></tr>
+<tr class="memdesc:a30c8180919b26edab48097494bafc239"><td class="mdescLeft">&#160;</td><td class="mdescRight">(partner's qnode addr, assigned RuleId) =&gt; [local half of the bell pair qubit record]  <a href="namespacequisp_1_1runtime.html#a30c8180919b26edab48097494bafc239">More...</a><br /></td></tr>
 <tr class="separator:a30c8180919b26edab48097494bafc239"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af01ff277b2e2a9857efa7fbe064145ad"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#af01ff277b2e2a9857efa7fbe064145ad">QubitResourcesWithSequenceNumbers</a> = std::map&lt; std::tuple&lt; <a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a>, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>, <a class="el" href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">SequenceNumber</a> &gt;, <a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> * &gt;</td></tr>
+<tr class="memdesc:af01ff277b2e2a9857efa7fbe064145ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">(partner's qnode addr, assigned RuleId, sequence number) =&gt; [local half of the stationary bell pair qubit record]  <a href="namespacequisp_1_1runtime.html#af01ff277b2e2a9857efa7fbe064145ad">More...</a><br /></td></tr>
+<tr class="separator:af01ff277b2e2a9857efa7fbe064145ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2aee4d03c941cd0e563cc64846c06b91"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#a2aee4d03c941cd0e563cc64846c06b91">SequenceNumberTracker</a> = std::map&lt; <a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *, std::tuple&lt; <a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a>, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>, <a class="el" href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">SequenceNumber</a> &gt; &gt;</td></tr>
+<tr class="separator:a2aee4d03c941cd0e563cc64846c06b91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8777b193f2965186fc8423fcae7c33fe"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#a8777b193f2965186fc8423fcae7c33fe">SequenceNumberCounter</a> = std::map&lt; std::pair&lt; <a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a>, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a> &gt;, <a class="el" href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">SequenceNumber</a> &gt;</td></tr>
+<tr class="memdesc:a8777b193f2965186fc8423fcae7c33fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceId needs to be increment each time a qubit of certain properties (same &lt;QNodeAddr&gt;) is added to the <a class="el" href="classquisp_1_1runtime_1_1_rule.html" title="The Runtime executable Rule in a RuleSet.">Rule</a>.  <a href="namespacequisp_1_1runtime.html#a8777b193f2965186fc8423fcae7c33fe">More...</a><br /></td></tr>
+<tr class="separator:a8777b193f2965186fc8423fcae7c33fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcf4ef619a02a77cfa25edff265c9378"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#adcf4ef619a02a77cfa25edff265c9378">MessageResources</a> = std::map&lt; <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>, std::deque&lt; <a class="el" href="namespacequisp_1_1runtime.html#a85ecfb49269fa9da29372fb074addb33">MessageRecord</a> &gt; &gt;</td></tr>
+<tr class="memdesc:adcf4ef619a02a77cfa25edff265c9378"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store messages for each rule for decision making mainly used for WaitRules (e.g., purification, Pauli Frame correction).  <a href="namespacequisp_1_1runtime.html#adcf4ef619a02a77cfa25edff265c9378">More...</a><br /></td></tr>
+<tr class="separator:adcf4ef619a02a77cfa25edff265c9378"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b5f4e76c5e6e7b0fc3857a7baa35df2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#a5b5f4e76c5e6e7b0fc3857a7baa35df2">QubitNameMap</a> = std::unordered_map&lt; <a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html">QubitId</a>, <a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> * &gt;</td></tr>
 <tr class="memdesc:a5b5f4e76c5e6e7b0fc3857a7baa35df2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structquisp_1_1runtime_1_1_qubit_id.html" title="describes Qubit id in a Program. This is like a local variable name in a runtime::Program....">QubitId</a> and qubit record map. This is initialized in before each <a class="el" href="classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program.">Program</a> execution.  <a href="namespacequisp_1_1runtime.html#a5b5f4e76c5e6e7b0fc3857a7baa35df2">More...</a><br /></td></tr>
 <tr class="separator:a5b5f4e76c5e6e7b0fc3857a7baa35df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,6 +171,12 @@ Typedefs</h2></td></tr>
 <tr class="separator:a83426325f358c6d138f0f6adabbba45b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07053e5e0fc67af04aa6620794d4fe5a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a> = int</td></tr>
 <tr class="separator:a07053e5e0fc67af04aa6620794d4fe5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2ef2cd3ac6818db9c7d3c95f0613b19"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">SequenceNumber</a> = unsigned long</td></tr>
+<tr class="memdesc:aa2ef2cd3ac6818db9c7d3c95f0613b19"><td class="mdescLeft">&#160;</td><td class="mdescRight">describes the order which Qubit is assigned to a Stage/Rule. This allows us to make assumptions that the same resource will be used in the same order across multiple nodes.  <a href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">More...</a><br /></td></tr>
+<tr class="separator:aa2ef2cd3ac6818db9c7d3c95f0613b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85ecfb49269fa9da29372fb074addb33"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#a85ecfb49269fa9da29372fb074addb33">MessageRecord</a> = std::vector&lt; int32_t &gt;</td></tr>
+<tr class="memdesc:a85ecfb49269fa9da29372fb074addb33"><td class="mdescLeft">&#160;</td><td class="mdescRight">describes message received that takes part in decision making of <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet.">RuleSet</a>.  <a href="namespacequisp_1_1runtime.html#a85ecfb49269fa9da29372fb074addb33">More...</a><br /></td></tr>
+<tr class="separator:a85ecfb49269fa9da29372fb074addb33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1737391d417280e4ce9d08d4d4e02b4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#ac1737391d417280e4ce9d08d4d4e02b4">String</a> = std::string</td></tr>
 <tr class="separator:ac1737391d417280e4ce9d08d4d4e02b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a953019cdd6e768eeff1c6c1f68d92d0a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> = <a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">quisp::modules::qrsa::IQubitRecord</a></td></tr>
@@ -206,6 +224,7 @@ Enumerations</h2></td></tr>
 <tr class="separator:ae2ae5b8cff907336aa60cd237a49c02f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27006afddc56aedab6041bcb072ef2c5"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5">Basis</a> : int { <a class="el" href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5a21c2e59531c8710156d34a3c30ac81d5">Z</a>
 , <a class="el" href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5a02129bb861061d1a052c592e2dc6b383">X</a>
+, <a class="el" href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5a57cec4137b614c87cb4e24a3d003a3e0">Y</a>
 , <a class="el" href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5a170e02e86972c2be8559884cc3c12254">RANDOM</a>
  }</td></tr>
 <tr class="memdesc:a27006afddc56aedab6041bcb072ef2c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">basis for measurement instruction in a Program.  <a href="namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5">More...</a><br /></td></tr>
@@ -331,6 +350,39 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a85ecfb49269fa9da29372fb074addb33" name="a85ecfb49269fa9da29372fb074addb33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85ecfb49269fa9da29372fb074addb33">&#9670;&#160;</a></span>MessageRecord</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacequisp_1_1runtime.html#a85ecfb49269fa9da29372fb074addb33">quisp::runtime::MessageRecord</a> = typedef std::vector&lt;int32_t&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>describes message received that takes part in decision making of <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet.">RuleSet</a>. </p>
+<p >first index [0], always contain the sequence number. </p>
+
+</div>
+</div>
+<a id="adcf4ef619a02a77cfa25edff265c9378" name="adcf4ef619a02a77cfa25edff265c9378"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcf4ef619a02a77cfa25edff265c9378">&#9670;&#160;</a></span>MessageResources</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacequisp_1_1runtime.html#adcf4ef619a02a77cfa25edff265c9378">quisp::runtime::MessageResources</a> = typedef std::map&lt;<a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>, std::deque&lt;<a class="el" href="namespacequisp_1_1runtime.html#a85ecfb49269fa9da29372fb074addb33">MessageRecord</a>&gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Store messages for each rule for decision making mainly used for WaitRules (e.g., purification, Pauli Frame correction). </p>
+
+</div>
+</div>
 <a id="ab81d221407ab14480e6661777f8f23bd" name="ab81d221407ab14480e6661777f8f23bd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab81d221407ab14480e6661777f8f23bd">&#9670;&#160;</a></span>None</h2>
 
@@ -389,6 +441,24 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>(partner's qnode addr, assigned RuleId) =&gt; [local half of the bell pair qubit record] </p>
+
+</div>
+</div>
+<a id="af01ff277b2e2a9857efa7fbe064145ad" name="af01ff277b2e2a9857efa7fbe064145ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af01ff277b2e2a9857efa7fbe064145ad">&#9670;&#160;</a></span>QubitResourcesWithSequenceNumbers</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacequisp_1_1runtime.html#af01ff277b2e2a9857efa7fbe064145ad">quisp::runtime::QubitResourcesWithSequenceNumbers</a> = typedef std::map&lt;std::tuple&lt;<a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a>, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>, <a class="el" href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">SequenceNumber</a>&gt;, <a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a>*&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>(partner's qnode addr, assigned RuleId, sequence number) =&gt; [local half of the stationary bell pair qubit record] </p>
+
 </div>
 </div>
 <a id="a07053e5e0fc67af04aa6620794d4fe5a" name="a07053e5e0fc67af04aa6620794d4fe5a"></a>
@@ -399,6 +469,52 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">quisp::runtime::RuleId</a> = typedef int</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa2ef2cd3ac6818db9c7d3c95f0613b19" name="aa2ef2cd3ac6818db9c7d3c95f0613b19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2ef2cd3ac6818db9c7d3c95f0613b19">&#9670;&#160;</a></span>SequenceNumber</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">quisp::runtime::SequenceNumber</a> = typedef unsigned long</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>describes the order which Qubit is assigned to a Stage/Rule. This allows us to make assumptions that the same resource will be used in the same order across multiple nodes. </p>
+
+</div>
+</div>
+<a id="a8777b193f2965186fc8423fcae7c33fe" name="a8777b193f2965186fc8423fcae7c33fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8777b193f2965186fc8423fcae7c33fe">&#9670;&#160;</a></span>SequenceNumberCounter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacequisp_1_1runtime.html#a8777b193f2965186fc8423fcae7c33fe">quisp::runtime::SequenceNumberCounter</a> = typedef std::map&lt;std::pair&lt;<a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a>, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>&gt;, <a class="el" href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">SequenceNumber</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ResourceId needs to be increment each time a qubit of certain properties (same &lt;QNodeAddr&gt;) is added to the <a class="el" href="classquisp_1_1runtime_1_1_rule.html" title="The Runtime executable Rule in a RuleSet.">Rule</a>. </p>
+
+</div>
+</div>
+<a id="a2aee4d03c941cd0e563cc64846c06b91" name="a2aee4d03c941cd0e563cc64846c06b91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2aee4d03c941cd0e563cc64846c06b91">&#9670;&#160;</a></span>SequenceNumberTracker</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacequisp_1_1runtime.html#a2aee4d03c941cd0e563cc64846c06b91">quisp::runtime::SequenceNumberTracker</a> = typedef std::map&lt;<a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a>*, std::tuple&lt;<a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a>, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a>, <a class="el" href="namespacequisp_1_1runtime.html#aa2ef2cd3ac6818db9c7d3c95f0613b19">SequenceNumber</a>&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -460,6 +576,7 @@ Variables</h2></td></tr>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a27006afddc56aedab6041bcb072ef2c5a21c2e59531c8710156d34a3c30ac81d5" name="a27006afddc56aedab6041bcb072ef2c5a21c2e59531c8710156d34a3c30ac81d5"></a>Z&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a27006afddc56aedab6041bcb072ef2c5a02129bb861061d1a052c592e2dc6b383" name="a27006afddc56aedab6041bcb072ef2c5a02129bb861061d1a052c592e2dc6b383"></a>X&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a27006afddc56aedab6041bcb072ef2c5a57cec4137b614c87cb4e24a3d003a3e0" name="a27006afddc56aedab6041bcb072ef2c5a57cec4137b614c87cb4e24a3d003a3e0"></a>Y&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a27006afddc56aedab6041bcb072ef2c5a170e02e86972c2be8559884cc3c12254" name="a27006afddc56aedab6041bcb072ef2c5a170e02e86972c2be8559884cc3c12254"></a>RANDOM&#160;</td><td class="fielddoc"></td></tr>
 </table>
 

@@ -1,6 +1,7 @@
 var classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller =
 [
     [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html#a49d2ea6eac343b13b4615321a24f5621", null ],
+    [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html#ae536b6ee8a7ae9556e5cc7059201063e", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html#a65966b46c9d660175364656a84e635f5", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html#afccbd2ac4bc4d3a8341f4cacf7cfe0ce", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html#a5be7d8ecad8798625b670284fcd47645", null ],

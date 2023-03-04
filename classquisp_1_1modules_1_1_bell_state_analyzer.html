@@ -129,6 +129,8 @@ Collaboration diagram for quisp::modules::BellStateAnalyzer:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad1f59c9092f6eb2c1cac899b13017fe6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ad1f59c9092f6eb2c1cac899b13017fe6">BellStateAnalyzer</a> ()</td></tr>
 <tr class="separator:ad1f59c9092f6eb2c1cac899b13017fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a394f818467bb521c81b105da44ca8900"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a394f818467bb521c81b105da44ca8900">resetState</a> ()</td></tr>
+<tr class="separator:a394f818467bb521c81b105da44ca8900"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -148,7 +150,7 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:ad9f072eda21276df575cb9af72478f5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa67283d70ced07695d80b21dc6015ec2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#aa67283d70ced07695d80b21dc6015ec2">processPhotonRecords</a> ()</td></tr>
 <tr class="separator:aa67283d70ced07695d80b21dc6015ec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82d17f363e7e5f99d57b1e14f95fd569"><td class="memItemLeft" align="right" valign="top">BSAClickResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a82d17f363e7e5f99d57b1e14f95fd569">processIndistinguishPhotons</a> (<a class="el" href="struct_photon_record.html">PhotonRecord</a> &amp;left_photon, <a class="el" href="struct_photon_record.html">PhotonRecord</a> &amp;right_photon)</td></tr>
+<tr class="memitem:a82d17f363e7e5f99d57b1e14f95fd569"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structquisp_1_1physical_1_1types_1_1_b_s_a_click_result.html">physical::types::BSAClickResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a82d17f363e7e5f99d57b1e14f95fd569">processIndistinguishPhotons</a> (<a class="el" href="struct_photon_record.html">PhotonRecord</a> &amp;left_photon, <a class="el" href="struct_photon_record.html">PhotonRecord</a> &amp;right_photon)</td></tr>
 <tr class="separator:a82d17f363e7e5f99d57b1e14f95fd569"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04f6ff313fc04500aa9376017888dc27"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a04f6ff313fc04500aa9376017888dc27">measureSuccessfully</a> (<a class="el" href="struct_photon_record.html">PhotonRecord</a> &amp;left_photon, <a class="el" href="struct_photon_record.html">PhotonRecord</a> &amp;right_photon, bool is_psi_plus)</td></tr>
 <tr class="separator:a04f6ff313fc04500aa9376017888dc27"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,16 +165,14 @@ Private Attributes</h2></td></tr>
 <tr class="separator:af11b34478c2e35954193933e7bca3859"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0414482dc5b1d486e7e0a8aa8c10a4b1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a0414482dc5b1d486e7e0a8aa8c10a4b1">detection_efficiency</a></td></tr>
 <tr class="separator:a0414482dc5b1d486e7e0a8aa8c10a4b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2d2d35aa55599b7a972b1a1e3aff991"><td class="memItemLeft" align="right" valign="top">simtime_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ad2d2d35aa55599b7a972b1a1e3aff991">indistinguishability_window</a></td></tr>
-<tr class="separator:ad2d2d35aa55599b7a972b1a1e3aff991"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae86101a0b52f5a5a44a53a8fe007653a"><td class="memItemLeft" align="right" valign="top">omnetpp::simtime_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ae86101a0b52f5a5a44a53a8fe007653a">indistinguishability_window</a></td></tr>
+<tr class="separator:ae86101a0b52f5a5a44a53a8fe007653a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2797e126f76785b8e9efe4d0b98759c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_bell_state_analyzer_8h.html#a613fdd4a3be14072fc6240ab6d8cf0ce">BSAState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ac2797e126f76785b8e9efe4d0b98759c">state</a></td></tr>
 <tr class="separator:ac2797e126f76785b8e9efe4d0b98759c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad651747d1155077271cf0d172b69f8b4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="struct_photon_record.html">PhotonRecord</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ad651747d1155077271cf0d172b69f8b4">first_port_records</a></td></tr>
 <tr class="separator:ad651747d1155077271cf0d172b69f8b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addb8ee654154d5bb74d90ed99d743cfc"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="struct_photon_record.html">PhotonRecord</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#addb8ee654154d5bb74d90ed99d743cfc">second_port_records</a></td></tr>
 <tr class="separator:addb8ee654154d5bb74d90ed99d743cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad543d91fdc8e3f302cf20512f61b6066"><td class="memItemLeft" align="right" valign="top">std::vector&lt; BSAClickResult &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ad543d91fdc8e3f302cf20512f61b6066">click_results</a></td></tr>
-<tr class="separator:ad543d91fdc8e3f302cf20512f61b6066"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3eec9a03df986c0a877511bba7b69d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html">utils::ComponentProvider</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ab3eec9a03df986c0a877511bba7b69d2">provider</a></td></tr>
 <tr class="separator:ab3eec9a03df986c0a877511bba7b69d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a378b9ed4c72a7978dcf082b045b362bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html">backends::IQuantumBackend</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a378b9ed4c72a7978dcf082b045b362bc">backend</a></td></tr>
@@ -395,7 +395,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BSAClickResult quisp::modules::BellStateAnalyzer::processIndistinguishPhotons </td>
+          <td class="memname"><a class="el" href="structquisp_1_1physical_1_1types_1_1_b_s_a_click_result.html">BSAClickResult</a> quisp::modules::BellStateAnalyzer::processIndistinguishPhotons </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_photon_record.html">PhotonRecord</a> &amp;&#160;</td>
           <td class="paramname"><em>left_photon</em>, </td>
@@ -446,6 +446,23 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a394f818467bb521c81b105da44ca8900" name="a394f818467bb521c81b105da44ca8900"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a394f818467bb521c81b105da44ca8900">&#9670;&#160;</a></span>resetState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::modules::BellStateAnalyzer::resetState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9a5df4e3a2eae971e8992168939d36f6" name="a9a5df4e3a2eae971e8992168939d36f6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9a5df4e3a2eae971e8992168939d36f6">&#9670;&#160;</a></span>validateProperties()</h2>
 
@@ -483,28 +500,6 @@ Private Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html">backends::IQuantumBackend</a>* quisp::modules::BellStateAnalyzer::backend</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad543d91fdc8e3f302cf20512f61b6066" name="ad543d91fdc8e3f302cf20512f61b6066"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad543d91fdc8e3f302cf20512f61b6066">&#9670;&#160;</a></span>click_results</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;BSAClickResult&gt; quisp::modules::BellStateAnalyzer::click_results</td>
         </tr>
       </table>
   </td>
@@ -604,8 +599,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad2d2d35aa55599b7a972b1a1e3aff991" name="ad2d2d35aa55599b7a972b1a1e3aff991"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2d2d35aa55599b7a972b1a1e3aff991">&#9670;&#160;</a></span>indistinguishability_window</h2>
+<a id="ae86101a0b52f5a5a44a53a8fe007653a" name="ae86101a0b52f5a5a44a53a8fe007653a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae86101a0b52f5a5a44a53a8fe007653a">&#9670;&#160;</a></span>indistinguishability_window</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -614,7 +609,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">simtime_t quisp::modules::BellStateAnalyzer::indistinguishability_window</td>
+          <td class="memname">omnetpp::simtime_t quisp::modules::BellStateAnalyzer::indistinguishability_window</td>
         </tr>
       </table>
   </td>

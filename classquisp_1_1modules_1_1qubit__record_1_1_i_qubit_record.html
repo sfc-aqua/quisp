@@ -139,12 +139,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad71cf36b67ac7219f1d09395eb8648e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aa2630829a47f4bc88698f469583878"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">QNIC_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a6aa2630829a47f4bc88698f469583878">getQNicType</a> () const =0</td></tr>
 <tr class="separator:a6aa2630829a47f4bc88698f469583878"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46e56d368849e5f91a0ebca542d4da63"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a46e56d368849e5f91a0ebca542d4da63">isRuleApplied</a> (unsigned long rule_id) const =0</td></tr>
-<tr class="separator:a46e56d368849e5f91a0ebca542d4da63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47dac1e8476ef4df873518e33dc39986"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a47dac1e8476ef4df873518e33dc39986">markRuleApplied</a> (unsigned long rule_id)=0</td></tr>
-<tr class="separator:a47dac1e8476ef4df873518e33dc39986"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6393d84280584423c59cd262fc00480e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a6393d84280584423c59cd262fc00480e">clearAppliedRules</a> ()=0</td></tr>
-<tr class="separator:a6393d84280584423c59cd262fc00480e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -181,33 +175,6 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6393d84280584423c59cd262fc00480e" name="a6393d84280584423c59cd262fc00480e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6393d84280584423c59cd262fc00480e">&#9670;&#160;</a></span>clearAppliedRules()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void quisp::modules::qubit_record::IQubitRecord::clearAppliedRules </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#aeb035fd573ff023636c327c2e7383d56">quisp::modules::qubit_record::QubitRecord</a>.</p>
-
-</div>
-</div>
 <a id="ad71cf36b67ac7219f1d09395eb8648e2" name="ad71cf36b67ac7219f1d09395eb8648e2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad71cf36b67ac7219f1d09395eb8648e2">&#9670;&#160;</a></span>getQNicIndex()</h2>
 
@@ -340,62 +307,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#a1c459832e822b99283189e772095622f">quisp::modules::qubit_record::QubitRecord</a>.</p>
-
-</div>
-</div>
-<a id="a46e56d368849e5f91a0ebca542d4da63" name="a46e56d368849e5f91a0ebca542d4da63"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46e56d368849e5f91a0ebca542d4da63">&#9670;&#160;</a></span>isRuleApplied()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool quisp::modules::qubit_record::IQubitRecord::isRuleApplied </td>
-          <td>(</td>
-          <td class="paramtype">unsigned long&#160;</td>
-          <td class="paramname"><em>rule_id</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#a30f3e85009d02a6234297b86c68fbdd6">quisp::modules::qubit_record::QubitRecord</a>.</p>
-
-</div>
-</div>
-<a id="a47dac1e8476ef4df873518e33dc39986" name="a47dac1e8476ef4df873518e33dc39986"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47dac1e8476ef4df873518e33dc39986">&#9670;&#160;</a></span>markRuleApplied()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void quisp::modules::qubit_record::IQubitRecord::markRuleApplied </td>
-          <td>(</td>
-          <td class="paramtype">unsigned long&#160;</td>
-          <td class="paramname"><em>rule_id</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#a622d5fa0925f7ea49ff75b0e3733dfcb">quisp::modules::qubit_record::QubitRecord</a>.</p>
 
 </div>
 </div>

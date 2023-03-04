@@ -1,7 +1,6 @@
 var dir_607e03074be51546ec84fd283147701d =
 [
     [ "BellPairStore", "dir_9a8c22f97633aad8c2d516bdbc582e9a.html", "dir_9a8c22f97633aad8c2d516bdbc582e9a" ],
-    [ "PurificationResultTable", "dir_594ec57dfa57bc99429106f37b71a802.html", "dir_594ec57dfa57bc99429106f37b71a802" ],
     [ "QNicRecord", "dir_f50702ceef2bd7c8eb12ef54d61eb01e.html", "dir_f50702ceef2bd7c8eb12ef54d61eb01e" ],
     [ "QNicStore", "dir_0737a94b3c04dc31d2e7e4368b167492.html", "dir_0737a94b3c04dc31d2e7e4368b167492" ],
     [ "QubitRecord", "dir_9dbb117c042938f7c79acf41fc7a8be0.html", "dir_9dbb117c042938f7c79acf41fc7a8be0" ],

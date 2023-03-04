@@ -1,6 +1,6 @@
 <map id="quisp/test_utils/TestComponentProviderStrategy.h" name="quisp/test_utils/TestComponentProviderStrategy.h">
-<area shape="rect" id="node1" title=" " alt="" coords="2765,5,2972,45"/>
-<area shape="rect" id="node2" href="$_test_utils_8h.html" title=" " alt="" coords="2780,93,2957,119"/>
+<area shape="rect" id="node1" title=" " alt="" coords="2669,5,2876,45"/>
+<area shape="rect" id="node2" href="$_test_utils_8h.html" title=" " alt="" coords="2684,93,2861,119"/>
 <area shape="rect" id="node3" href="$_gs__multi__qubit__test_8cc.html" title=" " alt="" coords="5,174,188,214"/>
 <area shape="rect" id="node4" href="$_gs__qubit__internal__graph__test_8cc.html" title=" " alt="" coords="212,167,395,221"/>
 <area shape="rect" id="node5" href="$_gs__single__qubit__test_8cc.html" title=" " alt="" coords="419,174,601,214"/>
@@ -25,8 +25,7 @@
 <area shape="rect" id="node24" href="$_clause__serialize__test_8cc.html" title=" " alt="" coords="4129,174,4259,214"/>
 <area shape="rect" id="node25" href="$_condition__execution__test_8cc.html" title=" " alt="" coords="4283,174,4425,214"/>
 <area shape="rect" id="node26" href="$_condition__test_8cc.html" title=" " alt="" coords="4449,174,4592,214"/>
-<area shape="rect" id="node27" href="$_rule_set_converter__test_8cc.html" title=" " alt="" coords="4616,174,4807,214"/>
-<area shape="rect" id="node28" href="$rules_2_rule_set__test_8cc.html" title=" " alt="" coords="4831,174,4965,214"/>
-<area shape="rect" id="node29" href="$_rule__test_8cc.html" title=" " alt="" coords="4989,181,5151,207"/>
-<area shape="rect" id="node30" href="$unit__test__main_8cc.html" title=" " alt="" coords="5175,181,5333,207"/>
+<area shape="rect" id="node27" href="$rules_2_rule_set__test_8cc.html" title=" " alt="" coords="4616,174,4751,214"/>
+<area shape="rect" id="node28" href="$_rule__test_8cc.html" title=" " alt="" coords="4775,181,4936,207"/>
+<area shape="rect" id="node29" href="$unit__test__main_8cc.html" title=" " alt="" coords="4960,181,5119,207"/>
 </map>

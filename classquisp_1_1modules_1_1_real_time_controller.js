@@ -2,6 +2,7 @@ var classquisp_1_1modules_1_1_real_time_controller =
 [
     [ "RealTimeController", "classquisp_1_1modules_1_1_real_time_controller.html#a94685c5ee25bdf67dd261187c1beea56", null ],
     [ "applyXGate", "classquisp_1_1modules_1_1_real_time_controller.html#ae2f26b93b218622fe5cf312df1d3fc6b", null ],
+    [ "applyYGate", "classquisp_1_1modules_1_1_real_time_controller.html#a0e8f64e1d137876c79e30c63c351ede0", null ],
     [ "applyZGate", "classquisp_1_1modules_1_1_real_time_controller.html#a9dd0f6c9e1f136d053c01ff00529b7a9", null ],
     [ "EmitPhoton", "classquisp_1_1modules_1_1_real_time_controller.html#a9b336c0f7d0c893bbac1f19bb400b9d2", null ],
     [ "handleMessage", "classquisp_1_1modules_1_1_real_time_controller.html#a497940d13d0f2e22b15f5a69314ba2fa", null ],

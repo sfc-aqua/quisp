@@ -4,7 +4,8 @@ var _action_8h =
     [ "quisp::rules::Action", "classquisp_1_1rules_1_1_action.html", "classquisp_1_1rules_1_1_action" ],
     [ "quisp::rules::Purification", "classquisp_1_1rules_1_1_purification.html", "classquisp_1_1rules_1_1_purification" ],
     [ "quisp::rules::EntanglementSwapping", "classquisp_1_1rules_1_1_entanglement_swapping.html", "classquisp_1_1rules_1_1_entanglement_swapping" ],
-    [ "quisp::rules::Wait", "classquisp_1_1rules_1_1_wait.html", "classquisp_1_1rules_1_1_wait" ],
+    [ "quisp::rules::PurificationCorrelation", "classquisp_1_1rules_1_1_purification_correlation.html", "classquisp_1_1rules_1_1_purification_correlation" ],
+    [ "quisp::rules::SwappingCorrection", "classquisp_1_1rules_1_1_swapping_correction.html", "classquisp_1_1rules_1_1_swapping_correction" ],
     [ "quisp::rules::Tomography", "classquisp_1_1rules_1_1_tomography.html", "classquisp_1_1rules_1_1_tomography" ],
     [ "PurType", "_action_8h.html#a5693ea435ef2194a383d996d838b066d", [
       [ "INVALID", "_action_8h.html#a5693ea435ef2194a383d996d838b066da99370beed01a4f675d525ca0a62b4a7e", null ],

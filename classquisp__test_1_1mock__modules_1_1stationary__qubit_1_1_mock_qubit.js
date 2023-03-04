@@ -15,6 +15,7 @@ var classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit =
     [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#ace158ddc5883bd2c78d8aab1210887db", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a05a939072befa232f4d3f9294ab6fa63", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a24836096d28663d019a8a368163d7f72", null ],
+    [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a203cfb1b232cf7f6067b0509320ca083", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a044110daabca465601139e24d7d13b8d", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#abf29a3a54f861f016ebb372d64de8644", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a3c0876823b44fd0e08358dde5983051f", null ],
