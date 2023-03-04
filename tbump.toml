@@ -1,12 +1,7 @@
-# Uncomment this if your project is hosted on GitHub:
-# github_url = "https://github.com/<user or organization>/<project>/"
+github_url = "https://github.com/sfc-aqua/quisp/"
 
 [version]
 current = "0.2.1"
-
-# Example of a semver regexp.
-# Make sure this matches current_version before
-# using tbump
 regex = '''
   (?P<major>\d+)
   \.
