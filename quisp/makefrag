@@ -1,4 +1,4 @@
-QUISP_VERSION=0.2.1
+QUISP_VERSION=0.3.0
 CXXFLAGS = -std=c++17
 
 OBJS := $(filter-out test_util/% %_test.o,$(OBJS))
