@@ -2,18 +2,14 @@
  *
  *  \brief BellStateAnalyzer
  */
-#include <omnetpp.h>
-#include <stdexcept>
-#include <vector>
-
 #include "BellStateAnalyzer.h"
-#include "PhotonicQubit_m.h"
-#include "backends/interfaces/IQubit.h"
-#include "messages/BSA_ipc_messages_m.h"
-#include "modules/PhysicalConnection/BSA/types.h"
+
+#include <omnetpp/cexception.h>
+#include <vector>
 
 using namespace omnetpp;
 using namespace quisp::messages;
+using namespace quisp::physical::types;
 
 namespace quisp::modules {
 
@@ -55,11 +51,24 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     return;
   }
   // clang-format on
-
-  // TODO: add timeout when one side sends photon while the other don't
-  if (state == BSAState::Idle) {  // must be first photon
-    state = BSAState::Accepting;
-    send(new CancelBSMTimeOutMsg(), "to_bsa_controller");
+  if (photon.is_first) {
+    if (state == BSAState::Idle && photon.from_port == PortNumber::First) {
+      state = BSAState::FirstPortArrive;
+    } else if (state == BSAState::Idle && photon.from_port == PortNumber::Second) {
+      state = BSAState::SecondPortArrive;
+    } else if (state == BSAState::FirstPortArrive && photon.from_port == PortNumber::Second) {
+      state = BSAState::Accepting;
+      send(new CancelBSMTimeOutMsg(), "to_bsa_controller");
+    } else if (state == BSAState::SecondPortArrive && photon.from_port == PortNumber::First) {
+      state = BSAState::Accepting;
+      send(new CancelBSMTimeOutMsg(), "to_bsa_controller");
+    } else if (state == BSAState::AcceptingFirstPort && photon.from_port == PortNumber::First) {
+      send(new CancelBSMTimeOutMsg(), "to_bsa_controller");
+    } else if (state == BSAState::AcceptingSecondPort && photon.from_port == PortNumber::Second) {
+      send(new CancelBSMTimeOutMsg(), "to_bsa_controller");
+    } else {
+      throw cRuntimeError("This should not happen; BSA state isn't set correctly.");
+    }
   }
 
   if (photon.from_port == PortNumber::First)
@@ -71,7 +80,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     return;
   }
 
-  if (state != BSAState::Accepting) {  // must be last photon
+  if (state == BSAState::AcceptingFirstPort || state == BSAState::AcceptingSecondPort) {  // must be last photon
     state = BSAState::Idle;
     processPhotonRecords();
     return;
@@ -143,6 +152,12 @@ BSAClickResult BellStateAnalyzer::processIndistinguishPhotons(PhotonRecord &p, P
   discardPhoton(p);
   discardPhoton(q);
   return {.success = false, .correction_operation = PauliOperator::I};
+}
+
+void BellStateAnalyzer::resetState() {
+  state = BSAState::Idle;
+  first_port_records.clear();
+  second_port_records.clear();
 }
 
 void BellStateAnalyzer::validateProperties() {

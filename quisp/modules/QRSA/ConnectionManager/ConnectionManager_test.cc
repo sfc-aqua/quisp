@@ -1,14 +1,16 @@
 #include "ConnectionManager.h"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <messages/classical_messages.h>
-#include <modules/QNIC.h>
-#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
-#include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
 #include <omnetpp.h>
-#include <rules/Action.h>
-#include <test_utils/TestUtils.h>
 #include <nlohmann/json.hpp>
+
+#include "messages/classical_messages.h"
+#include "modules/QNIC.h"
+#include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
+#include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
+#include "rules/Action.h"
+#include "test_utils/TestUtils.h"
 
 using json = nlohmann::json;
 namespace {
@@ -89,7 +91,8 @@ TEST(ConnectionManagerTest, parsePurType) {
 
   auto pur_type = connection_manager->parsePurType("SINGLE_X");
   EXPECT_EQ(pur_type, PurType::SINGLE_X);
-
+  pur_type = connection_manager->parsePurType("SINGLE_Y");
+  EXPECT_EQ(pur_type, PurType::SINGLE_Y);
   pur_type = connection_manager->parsePurType("SINGLE_Z");
   EXPECT_EQ(pur_type, PurType::SINGLE_Z);
   pur_type = connection_manager->parsePurType("DOUBLE");
@@ -152,49 +155,91 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor2->getDestAddr(), 2);
     auto ruleset = packetFor2->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset["rules"].size(), 1);
+    EXPECT_EQ(ruleset["rules"].size(), 2);
     auto expected_ruleset = R"({
-	"num_rules": 1,
-	"owner_address": 2,
-	"rules": [ {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 5
-				}],
-				"num_measure": 0,
-				"owner_address": 2
-			},
-			"type": "tomography"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}, {
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_measure": 0
-				},
-				"type": "measure_count"
-			}]
-		},
-		"interface": [{
-			"partner_address": 5
-		}],
-    	"shared_tag": 2,
-		"name": "",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}],
-	"ruleset_id": 1234
+  "num_rules": 2,
+  "owner_address": 2,
+  "rules": [
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 3
+            }
+          ],
+          "shared_rule_tag": 1
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 3
+              },
+              "shared_rule_tag": 1
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 3
+        }
+      ],
+      "name": "swapping correction from 3",
+      "receive_tag": 1,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 5
+            }
+          ],
+          "num_measure": 0,
+          "owner_address": 2
+        },
+        "type": "tomography"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 5
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          },
+          {
+            "options": {
+              "interface": {
+                "partner_address": 5
+              },
+              "num_measure": 0
+            },
+            "type": "measure_count"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 5
+        }
+      ],
+      "name": "tomography with address 5",
+      "receive_tag": 3,
+      "send_tag": 3
+    }
+  ],
+  "ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
@@ -206,49 +251,105 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor3->getDestAddr(), 3);
     auto ruleset = packetFor3->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset["rules"].size(), 1);
+    EXPECT_EQ(ruleset["rules"].size(), 2);
 
     auto expected_ruleset = R"({
-	"num_rules": 1,
-	"owner_address": 3,
-	"rules": [{
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 2
-				}, {
-					"partner_address": 5
-				}],
-				"remote_interface": [{
-					"partner_address": 2
-				}, {
-					"partner_address": 5
-				}]
-			},
-			"type": "swapping"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": { "partner_address": 2 },
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}, {
-				"options": {
-					"interface": { "partner_address": 5 },
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{ "partner_address": 2 }, { "partner_address": 5 }],
-    	"shared_tag": 1,
-		"name": "",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}],
-	"ruleset_id": 1234
+  "num_rules": 2,
+  "owner_address": 3,
+  "rules": [
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 4
+            }
+          ],
+          "shared_rule_tag": 2
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 4
+              },
+              "shared_rule_tag": 2
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 4
+        }
+      ],
+      "name": "swapping correction from 4",
+      "receive_tag": 2,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 2
+            },
+            {
+              "partner_address": 5
+            }
+          ],
+          "remote_interface": [
+            {
+              "partner_address": 2
+            },
+            {
+              "partner_address": 5
+            }
+          ],
+          "shared_rule_tag": 1
+        },
+        "type": "swapping"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 2
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          },
+          {
+            "options": {
+              "interface": {
+                "partner_address": 5
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 2
+        },
+        {
+          "partner_address": 5
+        }
+      ],
+      "name": "swap between 2 and 5",
+      "receive_tag": -1,
+      "send_tag": 1
+    }
+  ],
+  "ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
@@ -264,54 +365,68 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
     // rule3 (id: 2): swapping with [3, 5], next to -1
     auto expected_ruleset = R"({
-	"num_rules": 1,
-	"owner_address": 4,
-	"rules": [{
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 3
-				}, {
-					"partner_address": 5
-				}],
-				"remote_interface": [{
-					"partner_address": 3
-				}, {
-					"partner_address": 5
-				}]
-			},
-			"type": "swapping"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 3
-					},
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}, {
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 3
-		}, {
-			"partner_address": 5
-		}],
-    	"shared_tag": 0,
-		"name": "",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}],
-	"ruleset_id": 1234
+  "num_rules": 1,
+  "owner_address": 4,
+  "rules": [
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 3
+            },
+            {
+              "partner_address": 5
+            }
+          ],
+          "remote_interface": [
+            {
+              "partner_address": 3
+            },
+            {
+              "partner_address": 5
+            }
+          ],
+          "shared_rule_tag": 2
+        },
+        "type": "swapping"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 3
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          },
+          {
+            "options": {
+              "interface": {
+                "partner_address": 5
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 3
+        },
+        {
+          "partner_address": 5
+        }
+      ],
+      "name": "swap between 3 and 5",
+      "receive_tag": -1,
+      "send_tag": 2
+    }
+  ],
+  "ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
@@ -323,51 +438,127 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor5->getDestAddr(), 5);
     auto ruleset = packetFor5->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset["rules"].size(), 1);
+    EXPECT_EQ(ruleset["rules"].size(), 3);
 
     // rule6 (id: 5): tomography with 1, to (id: -1)
     auto expected_ruleset = R"({
-	"num_rules": 1,
-	"owner_address": 5,
-	"rules": [{
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 2
-				}],
-				"num_measure": 0,
-				"owner_address": 5
-			},
-			"type": "tomography"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 2
-					},
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}, {
-				"options": {
-					"interface": {
-						"partner_address": 2
-					},
-					"num_measure": 0
-				},
-				"type": "measure_count"
-			}]
-		},
-		"interface": [{
-			"partner_address": 2
-		}],
-    	"shared_tag": 2,
-		"name": "",
-		"next_rule_id": -1,
-		"rule_id": 0 
-	}],
-	"ruleset_id": 1234
+  "num_rules": 3,
+  "owner_address": 5,
+  "rules": [
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 4
+            }
+          ],
+          "shared_rule_tag": 2
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 4
+              },
+              "shared_rule_tag": 2
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 4
+        }
+      ],
+      "name": "swapping correction from 4",
+      "receive_tag": 2,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 3
+            }
+          ],
+          "shared_rule_tag": 1
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 3
+              },
+              "shared_rule_tag": 1
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 3
+        }
+      ],
+      "name": "swapping correction from 3",
+      "receive_tag": 1,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 2
+            }
+          ],
+          "num_measure": 0,
+          "owner_address": 5
+        },
+        "type": "tomography"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 2
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          },
+          {
+            "options": {
+              "interface": {
+                "partner_address": 2
+              },
+              "num_measure": 0
+            },
+            "type": "measure_count"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 2
+        }
+      ],
+      "name": "tomography with address 2",
+      "receive_tag": 3,
+      "send_tag": 3
+    }
+  ],
+  "ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }

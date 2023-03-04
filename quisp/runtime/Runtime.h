@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include <cstddef>
+#include <deque>
 #include <iostream>
 #include <stdexcept>
 #include <tuple>
@@ -21,8 +22,18 @@ struct Register {
   int32_t value = 0;
 };
 
-// (partner's qnode addr, assigned RuleId) => [local half of the bell pair qubit record]
+/// @brief (partner's qnode addr, assigned RuleId) => [local half of the bell pair qubit record]
 using QubitResources = std::multimap<std::pair<QNodeAddr, RuleId>, IQubitRecord*>;
+
+/// @brief (partner's qnode addr, assigned RuleId, sequence number) => [local half of the stationary bell pair qubit record]
+using QubitResourcesWithSequenceNumbers = std::map<std::tuple<QNodeAddr, RuleId, SequenceNumber>, IQubitRecord*>;
+using SequenceNumberTracker = std::map<IQubitRecord*, std::tuple<QNodeAddr, RuleId, SequenceNumber>>;
+
+/// @brief ResourceId needs to be increment each time a qubit of certain properties (same <QNodeAddr>) is added to the Rule.
+using SequenceNumberCounter = std::map<std::pair<QNodeAddr, RuleId>, SequenceNumber>;
+
+/// @brief Store messages for each rule for decision making mainly used for WaitRules (e.g., purification, Pauli Frame correction).
+using MessageResources = std::map<RuleId, std::deque<MessageRecord>>;
 
 /// @brief QubitId and qubit record map. This is initialized in before each Program execution
 using QubitNameMap = std::unordered_map<QubitId, IQubitRecord*>;
@@ -57,27 +68,24 @@ class Runtime {
     virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
     virtual MeasurementOutcome measureQubitX(IQubitRecord*) = 0;
     virtual MeasurementOutcome measureQubitZ(IQubitRecord*) = 0;
+    virtual MeasurementOutcome measureQubitY(IQubitRecord*) = 0;
     virtual void gateX(IQubitRecord*) = 0;
     virtual void gateZ(IQubitRecord*) = 0;
+    virtual void gateY(IQubitRecord*) = 0;
     virtual void gateCNOT(IQubitRecord* control_qubit_rec, IQubitRecord* target_qubit_rec) = 0;
-    virtual bool purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
-    virtual bool purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
-    virtual bool purifyY(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual int purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual int purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual int purifyY(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
 
     // Messaging
     virtual void sendLinkTomographyResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, int count,
                                           MeasurementOutcome outcome, int max_count, Time start_time) = 0;
-    virtual void sendSinglePurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result,
-                                              PurType pur_type) = 0;
-    virtual void sendDoublePurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result_z, bool result_x,
-                                              PurType pur_type) = 0;
-    virtual void sendTriplePurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result_z, bool result_x,
-                                              bool result_ds, PurType pur_type) = 0;
-    virtual void sendQuadruplePurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result_z,
-                                                 bool result_x, bool result_ds_z, bool result_ds_x, PurType pur_type) = 0;
-    virtual void sendSwappingResults(const unsigned long ruleset_id, const Rule& rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr,
-                                     int right_op) = 0;
-
+    // TODO: change to this
+    // virtual void sendTomographyResult(const QNodeAddr partner_addr, const int shared_rule_tag, const int sequence_number, const int measurement_result, const basis) = 0;
+    virtual void sendPurificationResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const int shared_rule_tag, const int sequence_number,
+                                        const int measurement_result, PurType protocol) = 0;
+    virtual void sendSwappingResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const QNodeAddr new_partner_addr, const int shared_rule_tag,
+                                    const int sequence_number, const int frame_correction) = 0;
     // Debugging
     virtual std::string getNodeInfo() { return ""; };
   };
@@ -105,6 +113,15 @@ class Runtime {
   void execInstruction(const InstructionTypes& op);
 
   /**
+   * @brief assign the message to the rule
+   *
+   * @param partner_addr the entangled partner QNode address for the qubit.
+   * @param rule_id the rule id to assign the qubit
+   * @param msg the content of the message (e.g., purification [measurement_result, sequence_number, pur_type], swapping [frame_correction, sequence_number])
+   */
+  void assignMessageToRuleSet(int shared_rule_tag, MessageRecord& msg_content);
+
+  /**
    * @brief assign the entangled qubit to the RuleSet. The Runtime assign it to
    * the first rule and the Rule can use the qubit.
    *
@@ -122,8 +139,8 @@ class Runtime {
    */
   void assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record);
 
-  /// @brief find the qubit that has the action_index and allocated in the rule_id, shared_tag;
-  QubitResources::iterator findQubit(int rule_id, int shared_tag, int action_index);
+  /// @brief find the qubit iterator that match with this rule_id and sequence_number
+  QubitResources::iterator findQubit(IQubitRecord*);
 
   /** @name register operations */
   //@{
@@ -201,6 +218,19 @@ class Runtime {
   bool isQubitLocked(IQubitRecord* const);
 
   /**
+   * @brief Get the qubit record by sequence number
+   *
+   * This method finds a qubit record with the associated sequence number.
+   * If the Runtime cannot find the qubit, this returns nullptr.
+   * Reminder, sequence number is the order in which the qubit is assisgned to the Program.
+   * @param partner_address
+   * @param rule_id
+   * @param sequence_number
+   * @return IQubitRecord*
+   */
+  IQubitRecord* getQubitBySequenceNumber(QNodeAddr, RuleId, SequenceNumber);
+
+  /**
    * @brief Get the qubit record by partner's QNodeAddr
    *
    * This method finds an index-th qubit record entangled with the partner from
@@ -235,9 +265,9 @@ class Runtime {
    *
    * the next rule id is automatically derived by the Programs in the RuleSet.
    *
-   * @param it iterator to specify the qubit
+   * @param qubit_record the entangled qubit's record already assigned to the RuleSet
    */
-  void promoteQubit(QubitResources::iterator it);
+  void promoteQubit(IQubitRecord* qubit_record);
 
   /**
    * @brief promote the qubit that has new entangled partner.
@@ -261,6 +291,22 @@ class Runtime {
    * @param basis the measurement result
    */
   void measureQubit(QubitId qubit_id, MemoryKey result_key, Basis basis);
+  /**
+   * @brief measure qubit with given basis and put result into register
+   *
+   * @param qubit_id qubit to measure
+   * @param result_reg register to put result into
+   * @param basis measurement basis
+   */
+  void measureQubit(QubitId qubit_id, RegId result_reg, Basis basis);
+  /**
+   * @brief measure qubit with given basis and put result into register
+   *
+   * @param qubit_id qubit to measure
+   * @param result_reg register to put result into
+   * @param basis measurement basis
+   */
+  void measureQubit(QubitId qubit_id, RegId result_reg, int bitset_index, Basis basis);
 
   /// @brief free qubit and release it from the Rule and the RuleSet
   void freeQubit(QubitId);
@@ -271,17 +317,20 @@ class Runtime {
   /// @brief apply Z gate
   void gateZ(QubitId);
 
+  /// @brief apply Y gate
+  void gateY(QubitId);
+
   /// @brief apply CNOT gate
   void gateCNOT(QubitId control_qubit_id, QubitId target_qubit_id);
 
   /// @brief perform X purification and store the measurement result
-  void purifyX(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+  void purifyX(RegId result, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id);
 
   /// @brief perform Z purification and store the measurement result
-  void purifyZ(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+  void purifyZ(RegId result, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id);
 
   /// @brief perform Y purification and store the measurement result
-  void purifyY(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+  void purifyY(RegId result, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id);
   //@}
 
   /** @name debugging */
@@ -302,8 +351,12 @@ class Runtime {
 
   /** @name states */
   //@{
-  /// @brief current evaluating rule id
+  /// @brief currently evaluating rule id
   RuleId rule_id = -1;
+
+  /// @brief currently evaluating send/receive tag of this rule id (if it is defined)
+  int send_tag = -1;
+  int receive_tag = -1;
 
   /**
    * @brief program counter for Program execution.
@@ -329,6 +382,21 @@ class Runtime {
    * to erase the record and insert a new key with a new entangled partner.
    */
   QubitResources qubits;
+
+  MessageResources messages;
+
+  QubitResourcesWithSequenceNumbers sequence_number_to_qubit;
+  SequenceNumberTracker qubit_to_sequence_number;
+  /**
+   * @brief This stores the latest sequence no. of resource assigned to the Stage/Rule.
+   */
+  SequenceNumberCounter resource_counter;
+
+  /**
+   * @brief [shared_rule_tag] => [rule_id]
+   */
+  std::unordered_map<int, RuleId> shared_tag_to_rule_id;
+  std::unordered_map<RuleId, int> rule_id_to_shared_tag;
 
   /**
    * @brief This contains a map for a QubitId and a qubit.
@@ -401,6 +469,13 @@ class Runtime {
    * find qubit.
    */
   bool qubit_found = false;
+
+  /**
+   * @brief The GET_MESSAGE instruction sets this flag. if it's true, the GET_MESSAGE
+   * instruction successfully found the corresponding message. if not, the instruction cannot
+   * find a message meant for this Program.
+   */
+  bool message_found = false;
 
   /**
    * @brief if the flag is true, show debug information during RuleSet execution.

@@ -87,10 +87,7 @@ TEST_F(RuntimeManagerTest, Iterate) {
 
 TEST_F(RuntimeManagerTest, Exec) {
   Rule rule{
-      "",
-      0,
-      cond_passed_once,
-      checker,
+      "", -1, -1, cond_passed_once, checker,
   };
   RuleSet rs1{"", {rule}, empty};
   rs1.id = 1;
@@ -119,10 +116,7 @@ TEST_F(RuntimeManagerTest, Exec) {
 TEST_F(RuntimeManagerTest, ExecAndTerminated) {
   Program terminator{"terminator", {INSTR_RET_ReturnCode_{{ReturnCode::RS_TERMINATED}}}};
   Rule rule{
-      "",
-      0,
-      cond_passed_once,
-      checker,
+      "", -1, -1, cond_passed_once, checker,
   };
   RuleSet rs1{"rs1", {rule}, empty};
   rs1.id = 1;

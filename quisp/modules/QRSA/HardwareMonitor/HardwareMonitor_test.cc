@@ -1,13 +1,15 @@
-#include "HardwareMonitor.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
-#include <test_utils/TestUtils.h>
+#include <omnetpp/csimulation.h>
+
+#include "HardwareMonitor.h"
+
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
-#include "omnetpp/csimulation.h"
+#include "test_utils/TestUtils.h"
 
 namespace {
 

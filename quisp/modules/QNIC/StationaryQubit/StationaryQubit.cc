@@ -135,9 +135,11 @@ EigenvalueResult StationaryQubit::measureZ() { return qubit_ref->measureZ(); }
 
 void StationaryQubit::gateHadamard() { qubit_ref->gateH(); }
 
+void StationaryQubit::gateX() { qubit_ref->gateX(); }
+
 void StationaryQubit::gateZ() { qubit_ref->gateZ(); }
 
-void StationaryQubit::gateX() { qubit_ref->gateX(); }
+void StationaryQubit::gateY() { qubit_ref->gateY(); }
 
 void StationaryQubit::gateS() { qubit_ref->gateS(); }
 
