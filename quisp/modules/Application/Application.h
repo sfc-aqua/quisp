@@ -30,7 +30,7 @@ class Application : public IApplication, public Logger::LoggerBase {
   cMessage *generateTrafficMsg;
 
  protected:
-  int id; /*!< Application id */
+  int id; /*!< Application id, which can be used if a user tried to simulate multiple applications on a single network */
   int my_address;
   bool is_initiator;
 
