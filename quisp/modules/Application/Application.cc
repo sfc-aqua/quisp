@@ -32,7 +32,7 @@ void Application::initialize() {
     scheduleAt(simTime(), msg);
     return;
   }
-
+  id = 0;
   my_address = provider.getQNode()->par("address");
   is_initiator = provider.getQNode()->par("is_initiator");
 
