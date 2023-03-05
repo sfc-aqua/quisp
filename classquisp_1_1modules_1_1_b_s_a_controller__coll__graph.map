@@ -1,9 +1,9 @@
 <map id="quisp::modules::BSAController" name="quisp::modules::BSAController">
-<area shape="rect" id="node1" title="This module takes the click event from BSA, compile the result and report back to QNode that sent the..." alt="" coords="637,101,833,127"/>
-<area shape="rect" id="node2" title=" " alt="" coords="51,15,162,40"/>
-<area shape="rect" id="node6" href="$classquisp_1_1modules_1_1_bell_state_analyzer.html" title="BellStateAnalyzer." alt="" coords="365,94,532,134"/>
-<area shape="rect" id="node3" href="$structquisp_1_1modules_1_1_q_n_i_c__id.html" title=" " alt="" coords="367,44,531,69"/>
-<area shape="rect" id="node4" title=" " alt="" coords="67,263,146,288"/>
-<area shape="rect" id="node5" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="5,327,208,352"/>
-<area shape="rect" id="node7" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="23,94,191,134"/>
+<area shape="rect" id="node1" title="This module takes the click event from BSA, compile the result and report back to QNode that sent the..." alt="" coords="667,103,863,128"/>
+<area shape="rect" id="node2" title=" " alt="" coords="51,5,162,31"/>
+<area shape="rect" id="node6" href="$classquisp_1_1modules_1_1_bell_state_analyzer.html" title="BellStateAnalyzer." alt="" coords="380,95,547,135"/>
+<area shape="rect" id="node3" href="$structquisp_1_1modules_1_1_b_s_a_controller_1_1_q_nic_info.html" title=" " alt="" coords="365,31,561,71"/>
+<area shape="rect" id="node4" title=" " alt="" coords="67,264,146,289"/>
+<area shape="rect" id="node5" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="5,328,208,353"/>
+<area shape="rect" id="node7" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="23,95,191,135"/>
 </map>

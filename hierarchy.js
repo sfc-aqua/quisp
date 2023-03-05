@@ -158,6 +158,7 @@ var hierarchy =
       [ "quisp::modules::QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", null ]
     ] ],
     [ "quisp::modules::QNIC_pair_info", "structquisp_1_1modules_1_1_q_n_i_c__pair__info.html", null ],
+    [ "quisp::modules::BSAController::QNicInfo", "structquisp_1_1modules_1_1_b_s_a_controller_1_1_q_nic_info.html", null ],
     [ "quisp::rules::QnicInterface", "structquisp_1_1rules_1_1_qnic_interface.html", null ],
     [ "quisp_test::strategy::QNicSpec", "structquisp__test_1_1strategy_1_1_q_nic_spec.html", null ],
     [ "quisp::runtime::QNodeAddr", "structquisp_1_1runtime_1_1_q_node_addr.html", null ],

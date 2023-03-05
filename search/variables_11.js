@@ -12,7 +12,7 @@ var searchData=
   ['responder_5faddr_9',['responder_addr',['../classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a0b7b5b88b8306f8a7ba394ca549c4bfc',1,'quisp::modules::ruleset_gen::RuleSetGenerator']]],
   ['return_5fcode_10',['return_code',['../classquisp_1_1runtime_1_1_runtime.html#a22da0df0f5a7eb4fe49a722c68c557fa',1,'quisp::runtime::Runtime']]],
   ['right_5fpartner_11',['right_partner',['../struct_swapping_config.html#a9bfd92faa1ca0c3218eb89dbe0221b27',1,'SwappingConfig']]],
-  ['right_5fqnic_12',['right_qnic',['../classquisp_1_1modules_1_1_b_s_a_controller.html#a6dc3346924580703c1d9ac250b7002a3',1,'quisp::modules::BSAController']]],
+  ['right_5fqnic_12',['right_qnic',['../classquisp_1_1modules_1_1_b_s_a_controller.html#aeb3be587f7fdc529aa80420b96eb3234',1,'quisp::modules::BSAController']]],
   ['right_5fqubit_5findex_13',['right_qubit_index',['../structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback.html#ae83ef4c21a83f78d144448f2860f594e',1,'quisp::modules::runtime_callback::RuntimeCallback']]],
   ['right_5ftravel_5ftime_14',['right_travel_time',['../classquisp_1_1modules_1_1_b_s_a_controller.html#a0f0351814a4e5123cb33445d969298cf',1,'quisp::modules::BSAController']]],
   ['rng_15',['rng',['../classquisp__test_1_1env_1_1_static_env.html#ad93c904776a819d9d7df5430377d6bb7',1,'quisp_test::env::StaticEnv::rng()'],['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#ac25b40dd325156b14c2ba2a1bdfd3a9f',1,'quisp::backends::graph_state::GraphStateBackend::rng()']]],
