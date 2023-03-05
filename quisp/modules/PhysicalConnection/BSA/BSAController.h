@@ -42,7 +42,7 @@ class BSAController : public cSimpleModule {
   struct QNicInfo {
     QNIC_type type;
     int index;
-    int parent_node_addr;
+    QNodeAddr parent_node_addr;
   };
 
  public:
