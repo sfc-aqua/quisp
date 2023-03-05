@@ -82,9 +82,9 @@ var annotated_dup =
         [ "IRoutingDaemon", "classquisp_1_1modules_1_1_i_routing_daemon.html", "classquisp_1_1modules_1_1_i_routing_daemon" ],
         [ "IRuleEngine", "classquisp_1_1modules_1_1_i_rule_engine.html", "classquisp_1_1modules_1_1_i_rule_engine" ],
         [ "IStationaryQubit", "classquisp_1_1modules_1_1_i_stationary_qubit.html", "classquisp_1_1modules_1_1_i_stationary_qubit" ],
-        [ "link_cost", "structquisp_1_1modules_1_1link__cost.html", "structquisp_1_1modules_1_1link__cost" ],
+        [ "LinkCost", "structquisp_1_1modules_1_1_link_cost.html", "structquisp_1_1modules_1_1_link_cost" ],
         [ "NeighborInfo", "structquisp_1_1modules_1_1_neighbor_info.html", "structquisp_1_1modules_1_1_neighbor_info" ],
-        [ "output_count", "structquisp_1_1modules_1_1output__count.html", "structquisp_1_1modules_1_1output__count" ],
+        [ "OutputCount", "structquisp_1_1modules_1_1_output_count.html", "structquisp_1_1modules_1_1_output_count" ],
         [ "PhotonicSwitch", "classquisp_1_1modules_1_1_photonic_switch.html", "classquisp_1_1modules_1_1_photonic_switch" ],
         [ "QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", "structquisp_1_1modules_1_1_q_n_i_c" ],
         [ "QNIC_id", "structquisp_1_1modules_1_1_q_n_i_c__id.html", "structquisp_1_1modules_1_1_q_n_i_c__id" ],
@@ -98,7 +98,7 @@ var annotated_dup =
         [ "SPDC_Controller", "classquisp_1_1modules_1_1_s_p_d_c___controller.html", "classquisp_1_1modules_1_1_s_p_d_c___controller" ],
         [ "StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", "classquisp_1_1modules_1_1_stationary_qubit" ],
         [ "SwappingResultData", "structquisp_1_1modules_1_1_swapping_result_data.html", "structquisp_1_1modules_1_1_swapping_result_data" ],
-        [ "tomography_outcome", "structquisp_1_1modules_1_1tomography__outcome.html", "structquisp_1_1modules_1_1tomography__outcome" ]
+        [ "TomographyOutcome", "structquisp_1_1modules_1_1_tomography_outcome.html", "structquisp_1_1modules_1_1_tomography_outcome" ]
       ] ],
       [ "physical", "namespacequisp_1_1physical.html", [
         [ "types", "namespacequisp_1_1physical_1_1types.html", [

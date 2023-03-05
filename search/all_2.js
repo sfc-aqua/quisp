@@ -13,7 +13,7 @@ var searchData=
   ['beginsend_10',['beginSend',['../classquisp__test_1_1env_1_1_static_env.html#a008746fe7e84e5e82367a56606e4a045',1,'quisp_test::env::StaticEnv']]],
   ['bell_20state_20analyzer_11',['Bell State Analyzer',['../md_quisp_modules__physical_connection__b_s_a__r_e_a_d_m_e.html',1,'']]],
   ['bell_5fpair_5fstore_12',['bell_pair_store',['../classquisp_1_1modules_1_1_rule_engine.html#a97f9ebd7ebbbb9ebf5464bc9d7acd204',1,'quisp::modules::RuleEngine']]],
-  ['bellpair_5fper_5fsec_13',['Bellpair_per_sec',['../structquisp_1_1modules_1_1link__cost.html#ac8d33547f897defb8b79f5afb9e5ba66',1,'quisp::modules::link_cost']]],
+  ['bellpair_5fper_5fsec_13',['Bellpair_per_sec',['../structquisp_1_1modules_1_1_link_cost.html#ac198ac546fb002b0a7a762f8404e352c',1,'quisp::modules::LinkCost']]],
   ['bellpairstore_14',['BellPairStore',['../classquisp_1_1modules_1_1_bell_pair_store.html#a492be383709670385a78323311199efa',1,'quisp::modules::BellPairStore::BellPairStore()'],['../classquisp_1_1modules_1_1_bell_pair_store.html',1,'quisp::modules::BellPairStore']]],
   ['bellpairstore_2ecc_15',['BellPairStore.cc',['../_bell_pair_store_8cc.html',1,'']]],
   ['bellpairstore_2eh_16',['BellPairStore.h',['../_bell_pair_store_8h.html',1,'']]],

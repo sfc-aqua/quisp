@@ -97,20 +97,19 @@ $(document).ready(function(){initNavTree('_i_hardware_monitor_8h.html',''); init
   <div class="headertitle"><div class="title">IHardwareMonitor.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;memory&gt;</code><br />
-<code>#include &quot;<a class="el" href="_q_n_i_c_8h_source.html">modules/QNIC.h</a>&quot;</code><br />
-<code>#include &quot;omnetpp/csimplemodule.h&quot;</code><br />
+<div class="textblock"><code>#include &lt;omnetpp.h&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;<a class="el" href="_q_n_i_c_8h_source.html">modules/QNIC.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for IHardwareMonitor.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="_i_hardware_monitor_8h__incl.png" border="0" usemap="#aquisp_2modules_2_q_r_s_a_2_hardware_monitor_2_i_hardware_monitor_8h" alt=""/></div>
 <map name="aquisp_2modules_2_q_r_s_a_2_hardware_monitor_2_i_hardware_monitor_8h" id="aquisp_2modules_2_q_r_s_a_2_hardware_monitor_2_i_hardware_monitor_8h">
-<area shape="rect" title=" " alt="" coords="62,5,251,60"/>
-<area shape="rect" title=" " alt="" coords="5,108,73,133"/>
-<area shape="rect" href="_q_n_i_c_8h.html" title="QNIC." alt="" coords="97,108,216,133"/>
-<area shape="rect" title=" " alt="" coords="241,108,414,133"/>
-<area shape="rect" title=" " alt="" coords="50,181,133,207"/>
-<area shape="rect" title=" " alt="" coords="157,181,287,207"/>
+<area shape="rect" title=" " alt="" coords="5,5,195,60"/>
+<area shape="rect" title=" " alt="" coords="16,181,99,207"/>
+<area shape="rect" title=" " alt="" coords="66,108,134,133"/>
+<area shape="rect" href="_q_n_i_c_8h.html" title="QNIC." alt="" coords="158,108,277,133"/>
+<area shape="rect" title=" " alt="" coords="152,181,283,207"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -181,11 +180,11 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structquisp_1_1modules_1_1_connection_setup_info.html">quisp::modules::ConnectionSetupInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structquisp_1_1modules_1_1tomography__outcome.html">quisp::modules::tomography_outcome</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structquisp_1_1modules_1_1_tomography_outcome.html">quisp::modules::TomographyOutcome</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structquisp_1_1modules_1_1output__count.html">quisp::modules::output_count</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structquisp_1_1modules_1_1_output_count.html">quisp::modules::OutputCount</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structquisp_1_1modules_1_1link__cost.html">quisp::modules::link_cost</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structquisp_1_1modules_1_1_link_cost.html">quisp::modules::LinkCost</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_hardware_monitor.html">quisp::modules::IHardwareMonitor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -199,14 +198,14 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:aa8221402c1bbaa72e7188e116ef1193b"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; int, InterfaceInfo &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#aa8221402c1bbaa72e7188e116ef1193b">quisp::modules::NeighborTable</a></td></tr>
-<tr class="separator:aa8221402c1bbaa72e7188e116ef1193b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47b510b280e1ac42bcf95908dc72facb"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; int, std::map&lt; std::string, output_count &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#a47b510b280e1ac42bcf95908dc72facb">quisp::modules::raw_data</a></td></tr>
-<tr class="separator:a47b510b280e1ac42bcf95908dc72facb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3ccf887db6fb13ad8cb3dd947247a4b"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; int, link_cost &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#af3ccf887db6fb13ad8cb3dd947247a4b">quisp::modules::LinkCostMap</a></td></tr>
-<tr class="separator:af3ccf887db6fb13ad8cb3dd947247a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2defc0c764ef7e29d546e4c3368248e1"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; int, std::map&lt; int, tomography_outcome &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#a2defc0c764ef7e29d546e4c3368248e1">quisp::modules::TomographyOutcomeTable</a></td></tr>
-<tr class="separator:a2defc0c764ef7e29d546e4c3368248e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae159a44d0d352eedf04023e6f6e15387"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#ae159a44d0d352eedf04023e6f6e15387">quisp::modules::NeighborTable</a> = std::map&lt; int, InterfaceInfo &gt;</td></tr>
+<tr class="separator:ae159a44d0d352eedf04023e6f6e15387"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab731abd52206390b81eeb978834e4821"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#ab731abd52206390b81eeb978834e4821">quisp::modules::RawData</a> = std::map&lt; int, std::map&lt; std::string, OutputCount &gt; &gt;</td></tr>
+<tr class="separator:ab731abd52206390b81eeb978834e4821"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3fc707706237e7c775286065d9d131e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#af3fc707706237e7c775286065d9d131e">quisp::modules::LinkCostMap</a> = std::map&lt; int, LinkCost &gt;</td></tr>
+<tr class="separator:af3fc707706237e7c775286065d9d131e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5ce0d988a17bbaa92eb0d15d7e9dd55"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#aa5ce0d988a17bbaa92eb0d15d7e9dd55">quisp::modules::TomographyOutcomeTable</a> = std::map&lt; int, std::map&lt; int, TomographyOutcome &gt; &gt;</td></tr>
+<tr class="separator:aa5ce0d988a17bbaa92eb0d15d7e9dd55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

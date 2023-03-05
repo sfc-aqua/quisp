@@ -136,7 +136,7 @@ var hierarchy =
       [ "quisp_test::key_value::TestKeyValue", "classquisp__test_1_1key__value_1_1_test_key_value.html", null ]
     ] ],
     [ "quisp::runtime::Label", "structquisp_1_1runtime_1_1_label.html", null ],
-    [ "quisp::modules::link_cost", "structquisp_1_1modules_1_1link__cost.html", null ],
+    [ "quisp::modules::LinkCost", "structquisp_1_1modules_1_1_link_cost.html", null ],
     [ "quisp::modules::qrsa::LocalQubitRef", "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html", null ],
     [ "quisp::modules::Logger::LoggerBase", "classquisp_1_1modules_1_1_logger_1_1_logger_base.html", [
       [ "quisp::modules::Application", "classquisp_1_1modules_1_1_application.html", null ],
@@ -150,7 +150,7 @@ var hierarchy =
     [ "quisp::runtime::MemoryValue", "classquisp_1_1runtime_1_1_memory_value.html", null ],
     [ "quisp::modules::NeighborInfo", "structquisp_1_1modules_1_1_neighbor_info.html", null ],
     [ "quisp::runtime::Op< I >", "structquisp_1_1runtime_1_1_op.html", null ],
-    [ "quisp::modules::output_count", "structquisp_1_1modules_1_1output__count.html", null ],
+    [ "quisp::modules::OutputCount", "structquisp_1_1modules_1_1_output_count.html", null ],
     [ "PhotonRecord", "struct_photon_record.html", null ],
     [ "quisp::backends::abstract::IQubitId::Pred", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_pred.html", null ],
     [ "quisp::runtime::Program", "classquisp_1_1runtime_1_1_program.html", null ],
@@ -177,7 +177,7 @@ var hierarchy =
     [ "quisp::modules::HardwareMonitor::SingleQubitError", "structquisp_1_1modules_1_1_hardware_monitor_1_1_single_qubit_error.html", null ],
     [ "SwappingConfig", "struct_swapping_config.html", null ],
     [ "quisp::modules::SwappingResultData", "structquisp_1_1modules_1_1_swapping_result_data.html", null ],
-    [ "quisp::modules::tomography_outcome", "structquisp_1_1modules_1_1tomography__outcome.html", null ],
+    [ "quisp::modules::TomographyOutcome", "structquisp_1_1modules_1_1_tomography_outcome.html", null ],
     [ "quisp::backends::graph_state::types::TwoQubitGateErrorModel", "structquisp_1_1backends_1_1graph__state_1_1types_1_1_two_qubit_gate_error_model.html", null ],
     [ "quisp::runtime::ValueUnion", "unionquisp_1_1runtime_1_1_value_union.html", null ],
     [ "cSimpleModule", null, [

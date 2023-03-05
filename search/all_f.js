@@ -19,7 +19,7 @@ var searchData=
   ['originalrouter_16',['OriginalRouter',['../_router__test_8cc.html#ace0443cf5bf8157067478c147d866be4',1,'Router_test.cc']]],
   ['outcome_17',['outcome',['../classquisp_1_1runtime_1_1_memory_value.html#aee719fc08f02e7c3ab4b61b97f4c4d77',1,'quisp::runtime::MemoryValue::outcome()'],['../unionquisp_1_1runtime_1_1_value_union.html#a219671aa5fc62efdc4bcfb99311ac52d',1,'quisp::runtime::ValueUnion::outcome()']]],
   ['outcome_5fis_5fplus_18',['outcome_is_plus',['../structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html#acf0f14731f0fb53531035e8321b5aea8',1,'quisp::backends::abstract::MeasurementOutcome']]],
-  ['output_5fcount_19',['output_count',['../structquisp_1_1modules_1_1output__count.html',1,'quisp::modules']]],
+  ['outputcount_19',['OutputCount',['../structquisp_1_1modules_1_1_output_count.html',1,'quisp::modules']]],
   ['owner_5faddr_20',['owner_addr',['../classquisp_1_1runtime_1_1_rule_set.html#afaa0e97728c299085e26529ff9ad1e37',1,'quisp::runtime::RuleSet::owner_addr()'],['../classquisp_1_1rules_1_1_rule_set.html#ae18a70f6c3e3ada85bef41bac6528341',1,'quisp::rules::RuleSet::owner_addr()']]],
   ['owner_5faddress_21',['owner_address',['../classquisp_1_1rules_1_1_tomography.html#ad7113f5186c11e2d52bc0dede3b2a9c1',1,'quisp::rules::Tomography']]]
 ];
