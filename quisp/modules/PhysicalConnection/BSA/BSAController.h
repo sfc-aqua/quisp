@@ -37,6 +37,13 @@ namespace quisp::modules {
  *  how many photons will arrive, when the first one will arrive, and what the iterval is.
  */
 class BSAController : public cSimpleModule {
+ private:
+  struct QNicInfo {
+    QNIC_type type;
+    int index;
+    int parent_node_addr;
+  };
+
  public:
   BSAController();
   ~BSAController();
@@ -56,13 +63,13 @@ class BSAController : public cSimpleModule {
   simtime_t calculateOffsetTimeFromDistance();
   simtime_t getTravelTimeFromPort(int port);
   double getExternalDistanceFromPort(int port);
-  QNIC_id getExternalQNICInfoFromPort(int port);
+  QNicInfo getExternalQNICInfoFromPort(int port);
   void sendMeasurementResults(BatchClickEvent* msg);
 
   // information for communications
   int address;
-  QNIC_id left_qnic;
-  QNIC_id right_qnic;
+  QNicInfo left_qnic;
+  QNicInfo right_qnic;
   simtime_t left_travel_time;
   simtime_t right_travel_time;
 
