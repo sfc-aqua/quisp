@@ -20,6 +20,9 @@ test: run-unit-test run-module-test run-sim-test
 exe: makefile-exe
 	$(MAKE) -C quisp -j$(NPROC)
 
+exe-debug: makefile-exe
+	$(MAKE) -C quisp -j$(NPROC) MODE=debug
+
 lib: makefile-lib
 	$(MAKE) -C quisp -j$(NPROC)
 
