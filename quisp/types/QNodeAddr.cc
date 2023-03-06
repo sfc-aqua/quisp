@@ -37,11 +37,6 @@ int QNodeAddr::toInt() {
 
 QNodeAddr QNodeAddr::fromInt(int val) { return QNodeAddr{val >> 16, val & 0xFF}; }
 
-std::ostream& operator<<(std::ostream& stream, const QNodeAddr& addr) {
-  stream << std::to_string(addr.network_addr) << "." << std::to_string(addr.host_addr);
-  return stream;
-}
-
 void to_json(nlohmann::json& j, const QNodeAddr& addr) {
   auto s = std::to_string(addr.network_addr) + "." + std::to_string(addr.host_addr);
   j = s;
@@ -66,5 +61,9 @@ std::string to_string(const quisp::types::QNodeAddr& addr) {
   std::stringstream ss;
   ss << addr;
   return ss.str();
+}
+std::ostream& operator<<(std::ostream& stream, const quisp::types::QNodeAddr& addr) {
+  stream << std::to_string(addr.network_addr) << "." << std::to_string(addr.host_addr);
+  return stream;
 }
 }  // namespace std

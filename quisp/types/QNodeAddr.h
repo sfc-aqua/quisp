@@ -33,8 +33,6 @@ struct QNodeAddr {
   static QNodeAddr fromInt(int);
 };
 
-std::ostream& operator<<(std::ostream& stream, const quisp::types::QNodeAddr& addr);
-
 void to_json(nlohmann::json& j, const QNodeAddr& addr);
 void from_json(const nlohmann::json& j, QNodeAddr& addr);
 }  // namespace quisp::types
@@ -52,4 +50,6 @@ struct ::std::hash<quisp::types::QNodeAddr> {
 };
 
 std::string to_string(const quisp::types::QNodeAddr& addr);
+
+std::ostream& operator<<(std::ostream& os, const quisp::types::QNodeAddr& addr);
 }  // namespace std
