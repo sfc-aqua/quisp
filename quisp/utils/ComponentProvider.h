@@ -2,12 +2,11 @@
 
 #include <omnetpp.h>
 
-#include <modules/Logger/LoggerModule.h>
-#include <modules/QRSA/QRSA.h>
-#include <modules/common_types.h>
-
 #include "DefaultComponentProviderStrategy.h"
 #include "IComponentProviderStrategy.h"
+#include "modules/Logger/LoggerModule.h"
+#include "modules/QRSA/QRSA.h"
+#include "modules/common_types.h"
 #include "utils.h"
 
 namespace quisp::utils {

@@ -1,11 +1,10 @@
-#ifndef QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_
-#define QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_
+#pragma once
 
 #include <memory>
+
 #include "utils.h"
 
-namespace quisp {
-namespace utils {
+namespace quisp::utils {
 
 class IComponentProviderStrategy {
  public:
@@ -28,7 +27,4 @@ class IComponentProviderStrategy {
   virtual ILogger *getLogger() = 0;
 };
 
-}  // namespace utils
-}  // namespace quisp
-
-#endif /* QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_ */
+}  // namespace quisp::utils

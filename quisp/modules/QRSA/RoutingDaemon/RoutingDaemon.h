@@ -8,9 +8,9 @@
 #pragma once
 
 #include "IRoutingDaemon.h"
-#include "utils/ComponentProvider.h"
 
 #include "modules/QNIC.h"
+#include "utils/ComponentProvider.h"
 
 /** \class RoutingDaemon RoutingDaemon.cc
  *
