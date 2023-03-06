@@ -28,5 +28,41 @@
             ],
             "cwd": "${workspaceFolder}/quisp"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "GUI Internetworking Simulation",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/internetworking.ini",
+                "-u",
+                "Qtenv",
+                "-c",
+                "Entanglement_Swapping_TwoNetwork_MIM_7_Nodes"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Internetworking Simulation",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/internetworking.ini",
+                "-u",
+                "Cmdenv",
+                "-c",
+                "Entanglement_Swapping_TwoNetwork_MIM_7_Nodes"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
     ],
 }
