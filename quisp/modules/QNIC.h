@@ -43,10 +43,7 @@ struct QNIC {
   cModule* pointer = nullptr;
 };
 
-struct QNIC_pair_info {
-  QNIC fst;
-  QNIC snd;
-};
+using QNicPairInfo = std::pair<QNIC, QNIC>;
 }  // namespace quisp::modules
 
 namespace std {

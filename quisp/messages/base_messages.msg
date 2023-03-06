@@ -4,7 +4,7 @@ cplusplus  {{
     #include <rules/RuleSet.h>
     #include <nlohmann/json.hpp>
     using quisp::rules::RuleSet;
-    using quisp::modules::QNIC_pair_info;
+    using quisp::modules::QNicPairInfo;
     using nlohmann::json;
 }}
 
@@ -13,7 +13,7 @@ class QNIC_type {
     @opaque;
 };
 
-class QNIC_pair_info {
+class QNicPairInfo {
     @existingClass;
     @opaque;
 };

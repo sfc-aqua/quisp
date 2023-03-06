@@ -308,7 +308,7 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   req->setStack_of_linkCosts(num_accumulated_costs, outbound_info->quantum_link_cost);
   req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
 
-  QNIC_pair_info pair_info = {.fst = inbound_info->qnic, .snd = outbound_info->qnic};
+  QNicPairInfo pair_info{inbound_info->qnic, outbound_info->qnic};
   req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
   reserveQnic(inbound_info->qnic.address);
@@ -420,7 +420,7 @@ void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
   req->setStack_of_linkCosts(num_accumulated_costs, outbound_info->quantum_link_cost);
   req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
 
-  QNIC_pair_info pair_info = {.fst = inbound_info->qnic, .snd = outbound_info->qnic};
+  QNicPairInfo pair_info{inbound_info->qnic, outbound_info->qnic};
   req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
   auto &request_queue = connection_setup_buffer[outbound_qnic_address];
