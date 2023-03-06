@@ -113,7 +113,7 @@ void Application::createEndNodeWeightMap() {
 
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cModule *endnodeModule = topo->getNode(i)->getModule();
-    auto address = QNodeAddr{endnodeModule->par("address").str().c_str()};
+    auto address = QNodeAddr{endnodeModule->par("address").stringValue()};
     int weight = endnodeModule->par("mass").intValue();
 
     temp_end_node_weight_map[address] = weight;
