@@ -31,6 +31,14 @@ cModule *DefaultComponentProviderStrategy::getNode() {
 }
 
 QNodeAddr DefaultComponentProviderStrategy::getNodeAddr() { return QNodeAddr{getNode()->par("address").stringValue()}; }
+std::vector<QNodeAddr> DefaultComponentProviderStrategy::getAvailableAddresses() {
+  auto addr_list = ((cValueArray *)(getNode()->par("available_addresses").objectValue()))->asStringVector();
+  std::vector<QNodeAddr> addresses = {};
+  for (auto &s : addr_list) {
+    addresses.push_back(QNodeAddr{s.c_str()});
+  }
+  return addresses;
+}
 
 cModule *DefaultComponentProviderStrategy::getNeighborNode(cModule *qnic) {
   if (qnic == nullptr) throw cRuntimeError("failed to get neighbor node. given qnic is nullptr");

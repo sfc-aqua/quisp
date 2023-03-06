@@ -11,6 +11,7 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   cModule *getNode() override;
   cModule *getNeighborNode(cModule *qnic) override;
   QNodeAddr getNodeAddr() override;
+  std::vector<QNodeAddr> getAvailableAddresses() override;
   bool isQNodeType(const cModuleType *const type) override;
   bool isBSANodeType(const cModuleType *const type) override;
   bool isSPDCNodeType(const cModuleType *const type) override;

@@ -19,6 +19,11 @@ QNodeAddr ComponentProvider::getNodeAddr() {
   return strategy->getNodeAddr();
 }
 
+std::vector<QNodeAddr> ComponentProvider::getAvailableAddresses() {
+  ensureStrategy();
+  return strategy->getAvailableAddresses();
+}
+
 cModule *ComponentProvider::getNeighborNode(cModule *qnic) {
   ensureStrategy();
   return strategy->getNeighborNode(qnic);

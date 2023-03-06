@@ -27,6 +27,7 @@ class ComponentProvider {
   cModule *getQNode();
   cModule *getNode();
   QNodeAddr getNodeAddr();
+  std::vector<QNodeAddr> getAvailableAddresses();
   cModule *getNeighborNode(cModule *qnic);
   bool isQNodeType(const cModuleType *const type);
   bool isBSANodeType(const cModuleType *const type);
