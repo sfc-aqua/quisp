@@ -58,6 +58,9 @@ var annotated_dup =
           [ "IQubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record" ],
           [ "QubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record" ]
         ] ],
+        [ "routing_daemon", "namespacequisp_1_1modules_1_1routing__daemon.html", [
+          [ "RoutingDaemon", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon" ]
+        ] ],
         [ "ruleset_gen", "namespacequisp_1_1modules_1_1ruleset__gen.html", [
           [ "RuleSetGenerator", "classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html", "classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator" ]
         ] ],
@@ -87,13 +90,10 @@ var annotated_dup =
         [ "OutputCount", "structquisp_1_1modules_1_1_output_count.html", "structquisp_1_1modules_1_1_output_count" ],
         [ "PhotonicSwitch", "classquisp_1_1modules_1_1_photonic_switch.html", "classquisp_1_1modules_1_1_photonic_switch" ],
         [ "QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", "structquisp_1_1modules_1_1_q_n_i_c" ],
-        [ "QNIC_id", "structquisp_1_1modules_1_1_q_n_i_c__id.html", "structquisp_1_1modules_1_1_q_n_i_c__id" ],
-        [ "QNIC_pair_info", "structquisp_1_1modules_1_1_q_n_i_c__pair__info.html", "structquisp_1_1modules_1_1_q_n_i_c__pair__info" ],
         [ "QubitAddr_cons", "structquisp_1_1modules_1_1_qubit_addr__cons.html", "structquisp_1_1modules_1_1_qubit_addr__cons" ],
         [ "Queue", "classquisp_1_1modules_1_1_queue.html", "classquisp_1_1modules_1_1_queue" ],
         [ "RealTimeController", "classquisp_1_1modules_1_1_real_time_controller.html", "classquisp_1_1modules_1_1_real_time_controller" ],
         [ "Router", "classquisp_1_1modules_1_1_router.html", "classquisp_1_1modules_1_1_router" ],
-        [ "RoutingDaemon", "classquisp_1_1modules_1_1_routing_daemon.html", "classquisp_1_1modules_1_1_routing_daemon" ],
         [ "RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", "classquisp_1_1modules_1_1_rule_engine" ],
         [ "SPDC_Controller", "classquisp_1_1modules_1_1_s_p_d_c___controller.html", "classquisp_1_1modules_1_1_s_p_d_c___controller" ],
         [ "StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", "classquisp_1_1modules_1_1_stationary_qubit" ],

@@ -27,7 +27,7 @@ var searchData=
   ['quisp_5ftest_24',['quisp_test',['../namespacequisp__test.html',1,'']]],
   ['realtime_5fcontroller_25',['realtime_controller',['../namespacequisp__test_1_1mock__modules_1_1realtime__controller.html',1,'quisp_test::mock_modules']]],
   ['rng_26',['rng',['../namespacequisp_1_1modules_1_1backend_1_1rng.html',1,'quisp::modules::backend::rng'],['../namespacequisp__test_1_1rng.html',1,'quisp_test::rng']]],
-  ['routing_5fdaemon_27',['routing_daemon',['../namespacequisp__test_1_1mock__modules_1_1routing__daemon.html',1,'quisp_test::mock_modules']]],
+  ['routing_5fdaemon_27',['routing_daemon',['../namespacequisp_1_1modules_1_1routing__daemon.html',1,'quisp::modules::routing_daemon'],['../namespacequisp__test_1_1mock__modules_1_1routing__daemon.html',1,'quisp_test::mock_modules::routing_daemon']]],
   ['rs_5fconverter_28',['rs_converter',['../namespacequisp_1_1rules_1_1rs__converter.html',1,'quisp::rules']]],
   ['rules_29',['rules',['../namespacequisp_1_1rules.html',1,'quisp']]],
   ['ruleset_5fgen_30',['ruleset_gen',['../namespacequisp_1_1modules_1_1ruleset__gen.html',1,'quisp::modules']]],

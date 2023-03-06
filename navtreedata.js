@@ -82,7 +82,6 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", "functions_vars" ],
-        [ "Typedefs", "functions_type.html", null ],
         [ "Enumerator", "functions_eval.html", null ]
       ] ]
     ] ],
@@ -102,21 +101,21 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_access_private_8h.html",
-"_qubit_record_8cc.html",
+"_qubit_record_8h.html",
 "classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#ae4daa60338233721c756d2711f3526f0",
 "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#ae70a187681955cf7214babff512d5f05",
 "classquisp_1_1modules_1_1_connection_manager.html#adef8b3d53759e698cc72bade6df42fb6",
 "classquisp_1_1modules_1_1_logger_1_1_json_logger.html#a1842133979816381d7e072a5608b32e0",
-"classquisp_1_1modules_1_1_s_p_d_c___controller.html#a0feb24804861f849d3c24084305efd44",
-"classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#abbab669c0ce28f75fcc1e8541c4412a1",
-"classquisp_1_1rules_1_1_rule_set.html#a7caa999e8731a58459bcb5091933852a",
-"classquisp_1_1runtime_1_1_runtime.html#ad31621d124f8a8b18a3003f7892bf1f9",
-"classquisp__test_1_1backends_1_1graph__state_1_1_qubit_id.html",
-"classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html#a19ceb04f3911dd3dafa14a9aa540b997",
-"def__opcodes_8h.html",
-"namespacequisp_1_1channels.html",
-"runtime_2types_8h.html#ab36b805a172b0f072dd4e0c5bd1a7ca9",
-"structquisp_1_1modules_1_1_tomography_outcome.html#a366e086473fb83c7c0bb26bd553e4fc6"
+"classquisp_1_1modules_1_1_s_p_d_c___controller.html#aa12e81a38fd434d96247844dce9101d6",
+"classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#a9e07b70045939e618c37482b4a4687da",
+"classquisp_1_1rules_1_1_rule_set.html#aa62a1df1bd5155a3de6df0f2e0be1176",
+"classquisp_1_1runtime_1_1_runtime.html#ad546e9b5dcb97bfade47e6ebcc68b78d",
+"classquisp__test_1_1backends_1_1graph__state_1_1_qubit_id.html#a4b5c9df6f5cf8c37f158b3767a5eb9f5",
+"classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html#a2472b0bc560827db32f21232d23d6d28",
+"dir_00de4095174e1f7689faab21b8d8d25c.html",
+"namespacequisp_1_1modules.html#a031cd4e654a48e3a928246a021cf8b10",
+"runtime_2types_8h.html#ac1737391d417280e4ce9d08d4d4e02b4",
+"structquisp_1_1modules_1_1entangled_photons.html#abb5e301bd2a79d2e1635538f778f5f87"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

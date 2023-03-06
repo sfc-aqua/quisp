@@ -4,6 +4,5 @@ var searchData=
   ['first_5fport_5frecords_1',['first_port_records',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#ad651747d1155077271cf0d172b69f8b4',1,'quisp::modules::BellStateAnalyzer']]],
   ['frame_5fcapacity_2',['frame_capacity',['../classquisp_1_1modules_1_1_queue.html#adb9be531bdab98b13ec98376b1e3d7a2',1,'quisp::modules::Queue']]],
   ['frequency_3',['frequency',['../classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a84ed15971af1f47960ecfca5a3870952',1,'quisp::modules::EntangledPhotonPairSource::frequency()'],['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#a52867c4f5e43fd28d67aea1a8b87209e',1,'quisp::modules::SPDC_Controller::frequency()']]],
-  ['from_5fport_4',['from_port',['../struct_photon_record.html#a68882deb02a029b1466a86e791c9854b',1,'PhotonRecord']]],
-  ['fst_5',['fst',['../structquisp_1_1modules_1_1_q_n_i_c__pair__info.html#a5c3d28bafae9d01c65a4062e8caba37d',1,'quisp::modules::QNIC_pair_info']]]
+  ['from_5fport_4',['from_port',['../struct_photon_record.html#a68882deb02a029b1466a86e791c9854b',1,'PhotonRecord']]]
 ];

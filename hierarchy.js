@@ -154,10 +154,7 @@ var hierarchy =
     [ "PhotonRecord", "struct_photon_record.html", null ],
     [ "quisp::backends::abstract::IQubitId::Pred", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_pred.html", null ],
     [ "quisp::runtime::Program", "classquisp_1_1runtime_1_1_program.html", null ],
-    [ "quisp::modules::QNIC_id", "structquisp_1_1modules_1_1_q_n_i_c__id.html", [
-      [ "quisp::modules::QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", null ]
-    ] ],
-    [ "quisp::modules::QNIC_pair_info", "structquisp_1_1modules_1_1_q_n_i_c__pair__info.html", null ],
+    [ "quisp::modules::QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", null ],
     [ "quisp::modules::BSAController::QNicInfo", "structquisp_1_1modules_1_1_b_s_a_controller_1_1_q_nic_info.html", null ],
     [ "quisp::rules::QnicInterface", "structquisp_1_1rules_1_1_qnic_interface.html", null ],
     [ "quisp_test::strategy::QNicSpec", "structquisp__test_1_1strategy_1_1_q_nic_spec.html", null ],
@@ -184,7 +181,7 @@ var hierarchy =
     [ "cSimpleModule", null, [
       [ "quisp::modules::BSAController", "classquisp_1_1modules_1_1_b_s_a_controller.html", null ],
       [ "quisp::modules::IRoutingDaemon", "classquisp_1_1modules_1_1_i_routing_daemon.html", [
-        [ "quisp::modules::RoutingDaemon", "classquisp_1_1modules_1_1_routing_daemon.html", null ],
+        [ "quisp::modules::routing_daemon::RoutingDaemon", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html", null ],
         [ "quisp_test::mock_modules::routing_daemon::MockRoutingDaemon", "classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html", null ]
       ] ]
     ] ],

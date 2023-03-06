@@ -26,5 +26,5 @@ var searchData=
   ['my_5fbasis_23',['my_basis',['../structquisp_1_1modules_1_1_tomography_outcome.html#a1fa2c8a6c6b80a5d11f574a29a4f079e',1,'quisp::modules::TomographyOutcome']]],
   ['my_5fgod_5fclean_24',['my_GOD_clean',['../structquisp_1_1modules_1_1_tomography_outcome.html#a8ec49878488b8b3956ccbb77f8dbd3cc',1,'quisp::modules::TomographyOutcome']]],
   ['my_5foutput_5fis_5fplus_25',['my_output_is_plus',['../structquisp_1_1modules_1_1_tomography_outcome.html#a366e086473fb83c7c0bb26bd553e4fc6',1,'quisp::modules::TomographyOutcome']]],
-  ['myaddress_26',['myAddress',['../classquisp_1_1modules_1_1_real_time_controller.html#abcb0ba9ac8f97c30d33183101b1e7a3f',1,'quisp::modules::RealTimeController::myAddress()'],['../classquisp_1_1modules_1_1_routing_daemon.html#a95afebf0bbf8325404b4dfd3fa599298',1,'quisp::modules::RoutingDaemon::myAddress()']]]
+  ['myaddress_26',['myAddress',['../classquisp_1_1modules_1_1_real_time_controller.html#abcb0ba9ac8f97c30d33183101b1e7a3f',1,'quisp::modules::RealTimeController::myAddress()'],['../classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a844eade71050e4899d1fc09c8d38a7fa',1,'quisp::modules::routing_daemon::RoutingDaemon::myAddress()']]]
 ];

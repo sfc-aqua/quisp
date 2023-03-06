@@ -48,5 +48,5 @@ var searchData=
   ['number_5fof_5fqnics_5fall_45',['number_of_qnics_all',['../classquisp_1_1modules_1_1_rule_engine.html#ad606da4daa1a3b5d0a11bf03247ab566',1,'quisp::modules::RuleEngine']]],
   ['number_5fof_5fqnics_5fr_46',['number_of_qnics_r',['../classquisp_1_1modules_1_1_rule_engine.html#ae7722d67261ac8f6cc217b3093ab1bab',1,'quisp::modules::RuleEngine']]],
   ['number_5fof_5fqnics_5frp_47',['number_of_qnics_rp',['../classquisp_1_1modules_1_1_rule_engine.html#a11d7c63c880d1e63029b858ec207202b',1,'quisp::modules::RuleEngine']]],
-  ['numinitstages_48',['numInitStages',['../classquisp_1_1modules_1_1_routing_daemon.html#a2d715d69b36061b44315b35499b3779f',1,'quisp::modules::RoutingDaemon::numInitStages()'],['../classquisp_1_1modules_1_1_hardware_monitor.html#a0515172a6f2583e6e52bf72f84ac16d0',1,'quisp::modules::HardwareMonitor::numInitStages()']]]
+  ['numinitstages_48',['numInitStages',['../classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a02dde95558d89c4b09c2299f3808fb2f',1,'quisp::modules::routing_daemon::RoutingDaemon::numInitStages()'],['../classquisp_1_1modules_1_1_hardware_monitor.html#a0515172a6f2583e6e52bf72f84ac16d0',1,'quisp::modules::HardwareMonitor::numInitStages()']]]
 ];
