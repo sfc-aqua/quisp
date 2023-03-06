@@ -421,7 +421,7 @@ void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_& instruction) {
 void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_RegId_& instruction) {
   auto [qubit_id, new_partner_addr_reg] = instruction.args;
   auto* qubit_rec = runtime->getQubitByQubitId(qubit_id);
-  auto new_partner_addr = QNodeAddr(runtime->getRegVal(new_partner_addr_reg));
+  auto new_partner_addr = QNodeAddr::fromInt(runtime->getRegVal(new_partner_addr_reg));
   runtime->promoteQubitWithNewPartner(qubit_rec, new_partner_addr);
 }
 

@@ -203,7 +203,7 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   auto sequence_number = result->getSequenceNumber();
   auto correction_frame = result->getCorrectionFrame();
   auto new_partner_addr = result->getNewPartner();
-  std::vector<int> message_content = {sequence_number, correction_frame, new_partner_addr.to_int()};
+  std::vector<int> message_content = {sequence_number, correction_frame, new_partner_addr.toInt()};
   auto runtime = runtimes.findById(ruleset_id);
   if (runtime == nullptr) return;
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
