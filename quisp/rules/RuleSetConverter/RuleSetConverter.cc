@@ -678,7 +678,103 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
         INSTR_STORE_MemoryKey_RegId_{{seq_no_key, seq_no}},
     };
     return Program{program_name, opcodes};
-  };
+  }
+
+  if (pur_type == rules::PurType::STEANE) {
+    /*
+      qubitId: qubit, trash_qubit_1, trash_qubit_2, trash_qubit_3, trash_qubit_4, trash_qubit_5, trash_qubit_6;
+      Reg: result, seq_no // the sequence number of the qubit in the next rule
+    START:
+      SET seq_no 1 // sequence_number starts at 1
+      LOAD seq_no "sent_purification_message_{shared_rule}" // if it has not been set the value stays as is
+      GET_QUBIT qubit partner_addr 0
+      GET_QUBIT trash_qubit_1 partner_addr 1
+      GET_QUBIT trash_qubit_2 partner_addr 2
+      GET_QUBIT trash_qubit_3 partner_addr 3
+      GET_QUBIT trash_qubit_4 partner_addr 4
+      GET_QUBIT trash_qubit_5 partner_addr 5
+      GET_QUBIT trash_qubit_6 partner_addr 6
+      CNOT trash_qubit_3 trash_qubit_5
+      CNOT trash_qubit_3 trash_qubit_6
+      CNOT trash_qubit_3 qubit
+      CNOT qubit trash_qubit_4
+      CNOT trash_qubit_2 trash_qubit_6
+      CNOT trash_qubit_2 qubit
+      CNOT trash_qubit_1 trash_qubit_4
+      CNOT trash_qubit_1 trash_qubit_5
+      CNOT trash_qubit_1 trash_qubit_6
+      CNOT qubit trash_qubit_5
+      MEASURE result 0 trash_qubit_1 X
+      MEASURE result 1 trash_qubit_2 X
+      MEASURE result 2 trash_qubit_3 X
+      MEASURE result 3 trash_qubit_4 Z
+      MEASURE result 4 trash_qubit_5 Z
+      MEASURE result 5 trash_qubit_6 Z
+      PROMOTE_QUBIT qubit
+      FREE_QUBIT trash_qubit_1
+      FREE_QUBIT trash_qubit_2
+      FREE_QUBIT trash_qubit_3
+      FREE_QUBIT trash_qubit_4
+      FREE_QUBIT trash_qubit_5
+      FREE_QUBIT trash_qubit_6
+      SEND_PURIFICATION_RESULT partner_addr result seq_no
+      INC seq_no
+      STORE "sent_purificaiton_message_{shared_rule}" seq_no
+    */
+    QubitId qubit{0};
+    QubitId trash_qubit_1{1};
+    QubitId trash_qubit_2{2};
+    QubitId trash_qubit_3{3};
+    QubitId trash_qubit_4{4};
+    QubitId trash_qubit_5{5};
+    QubitId trash_qubit_6{6};
+    RegId measure_result = RegId::REG0;
+    RegId seq_no = RegId::REG1;
+
+    auto &interface = act->qnic_interfaces.at(0);
+    QNodeAddr partner_addr{interface.partner_addr};
+    MemoryKey seq_no_key{"sent_purification_message_" + std::to_string(act->shared_rule_tag)};
+
+    std::string program_name = "Steane purification";
+
+    return Program{program_name, {
+      INSTR_SET_RegId_int_{{seq_no, 1}},
+      INSTR_LOAD_RegId_MemoryKey_{{seq_no, seq_no_key}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_1, partner_addr, 1}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_2, partner_addr, 2}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_3, partner_addr, 3}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_4, partner_addr, 4}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_5, partner_addr, 5}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_6, partner_addr, 6}},
+      INSTR_GATE_CNOT_QubitId_QubitId_{{trash_qubit_3, trash_qubit_5}},
+      INSTR_GATE_CNOT_QubitId_QubitId_{{trash_qubit_3, trash_qubit_6}},
+      INSTR_GATE_CNOT_QubitId_QubitId_{{trash_qubit_3, qubit}},
+      INSTR_GATE_CNOT_QubitId_QubitId_{{qubit, trash_qubit_4}},
+      INSTR_GATE_CNOT_QubitId_QubitId_{{trash_qubit_2, trash_qubit_6}},
+      INSTR_GATE_CNOT_QubitId_QubitId_{{trash_qubit_2, qubit}},
+      INSTR_GATE_CNOT_QubitId_QubitId_{{trash_qubit_1, trash_qubit_4}},
+      INSTR_GATE_CNOT_QubitId_QubitId_{{trash_qubit_1, trash_qubit_5}},
+      INSTR_GATE_CNOT_QubitId_QubitId_{{trash_qubit_1, trash_qubit_6}},
+      INSTR_GATE_CNOT_QubitId_QubitId_{{qubit, trash_qubit_5}},
+      INSTR_MEASURE_RegId_int_QubitId_Basis_{{measure_result, 0, trash_qubit_1, Basis::X}},
+      INSTR_MEASURE_RegId_int_QubitId_Basis_{{measure_result, 1, trash_qubit_2, Basis::X}},
+      INSTR_MEASURE_RegId_int_QubitId_Basis_{{measure_result, 2, trash_qubit_3, Basis::X}},
+      INSTR_MEASURE_RegId_int_QubitId_Basis_{{measure_result, 3, trash_qubit_4, Basis::Z}},
+      INSTR_MEASURE_RegId_int_QubitId_Basis_{{measure_result, 4, trash_qubit_5, Basis::Z}},
+      INSTR_MEASURE_RegId_int_QubitId_Basis_{{measure_result, 5, trash_qubit_6, Basis::Z}},
+      INSTR_PROMOTE_QubitId_{{qubit}},
+      INSTR_FREE_QUBIT_QubitId_{{trash_qubit_1}},
+      INSTR_FREE_QUBIT_QubitId_{{trash_qubit_2}},
+      INSTR_FREE_QUBIT_QubitId_{{trash_qubit_3}},
+      INSTR_FREE_QUBIT_QubitId_{{trash_qubit_4}},
+      INSTR_FREE_QUBIT_QubitId_{{trash_qubit_5}},
+      INSTR_FREE_QUBIT_QubitId_{{trash_qubit_6}},
+      INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_PurType_{{partner_addr, measure_result, seq_no, pur_type}},
+      INSTR_INC_RegId_{seq_no},
+      INSTR_STORE_MemoryKey_RegId_{{seq_no_key, seq_no}},
+      }};
+  }
 
   std::cout << const_cast<Purification *>(act)->serialize_json() << std::endl;
   throw std::runtime_error("pur not implemented");

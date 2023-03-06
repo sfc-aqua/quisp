@@ -111,6 +111,8 @@ TEST(ConnectionManagerTest, parsePurType) {
   EXPECT_EQ(pur_type, PurType::DSDA_SECOND);
   pur_type = connection_manager->parsePurType("DSDA_SECOND_INV");
   EXPECT_EQ(pur_type, PurType::DSDA_SECOND_INV);
+  pur_type = connection_manager->parsePurType("STEANE");
+  EXPECT_EQ(pur_type, PurType::STEANE);
   // unknown purification name
   pur_type = connection_manager->parsePurType("DSDA_SECOND_INV_T");
   EXPECT_EQ(pur_type, PurType::INVALID);

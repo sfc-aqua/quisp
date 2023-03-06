@@ -922,6 +922,21 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_X, partner_address, qnic_type, qnic_index, shared_tag++));
         }
       }
+    } else if (purification_type == 5557) {
+      /// # Purification_type 5557: #
+      /// - name: Steane decoder
+      /// - rounds: 1
+      /// - input Bell pairs per round: 7
+      /// - total Bell pairs: 7
+      /// - circuit: Figure. 9 in https://dx.doi.org/10.1088/1367-2630/18/8/083015
+      /// - scheduling: none
+      /// ## description: ##
+      /// One round of Steane decoder purification
+      rule_name = "Steane decoder purificaiton with: " + std::to_string(partner_address);
+      auto rule = constructPurifyRule(rule_name, PurType::STEANE, partner_address, qnic_type, qnic_index, shared_tag);
+      tomography_RuleSet->addRule(std::move(rule));
+      tomography_RuleSet->addRule(constructCorrelationCheckRule("purification correlation check", PurType::STEANE, partner_address, qnic_type, qnic_index, shared_tag++));
+      
     } else if ((X_Purification && !Z_Purification) || (!X_Purification && Z_Purification)) {  // X or Z purification. Out-dated syntax.
       /// # Purification_type default: #
       /// - name: Boolean-driven (obsolete)
@@ -1012,6 +1027,9 @@ std::unique_ptr<Rule> HardwareMonitor::constructPurifyRule(const std::string &ru
     case PurType::DSDA_SECOND:
     case PurType::DSDA_SECOND_INV:
       required_qubits = 4;
+      break;
+    case PurType::STEANE:
+      required_qubits = 7;
       break;
     case PurType::INVALID:
     default:

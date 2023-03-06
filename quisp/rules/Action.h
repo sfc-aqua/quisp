@@ -25,6 +25,7 @@ enum PurType : int {
   DSDA_INV,  ///< Inverse Double Selection and Dual Action for both X and Z errors
   DSDA_SECOND,  ///< Different type of Double Selection and Dual Action for both X and Z errors
   DSDA_SECOND_INV,  ///< Different type of Inverse Double Selection and Dual Action for both X and Z errors
+  STEANE, ///< Custom seven qubit purificaiton method
 };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
@@ -40,6 +41,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
                                           {DSDA_INV, "DSDA_INV"},
                                           {DSDA_SECOND, "DSDA_SECOND"},
                                           {DSDA_SECOND_INV, "DSDA_SECOND_INV"},
+                                          {STEANE, "STEANE"},
                                       })
 
 inline void to_json(json& j, const QnicInterface& qi) { j = json{{"partner_address", qi.partner_addr}}; }
