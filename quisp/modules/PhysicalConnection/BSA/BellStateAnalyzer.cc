@@ -207,8 +207,8 @@ void BellStateAnalyzer::measureSuccessfully(PhotonRecord &p, PhotonRecord &q, bo
 }
 
 void BellStateAnalyzer::finish() {
-  std::cout << "BSA Statistics (raw):\n";
-  std::cout << "    " << no_error_count << ' ' << x_error_count << ' ' << y_error_count << ' ' << z_error_count << '\n';
+  // std::cout << "BSA Statistics (raw):\n";
+  // std::cout << "    " << no_error_count << ' ' << x_error_count << ' ' << y_error_count << ' ' << z_error_count << '\n';
 }
 
 void BellStateAnalyzer::discardPhoton(PhotonRecord &photon) { photon.qubit_ref->noiselessMeasureZ(); };

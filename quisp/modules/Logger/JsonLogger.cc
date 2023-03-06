@@ -29,10 +29,10 @@ void JsonLogger::logPacket(const std::string& event_type, omnetpp::cMessage cons
 }
 
 void JsonLogger::logQubitState(quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_busy, bool is_allocated) {
-  auto current_time = omnetpp::simTime();
-  _logger->info(
-      "\"simtime\": {}, \"event_type\": \"QubitStateChange\", \"address\": \"{}\", \"qnic_type\": {}, \"qnic_index\": {}, \"qubit_index\": {}, \"busy\": {}, \"allocated\": {}",
-      current_time, qnode_address, qnic_type, qnic_index, qubit_index, is_busy, is_allocated);
+  // auto current_time = omnetpp::simTime();
+  // _logger->info(
+  // "\"simtime\": {}, \"event_type\": \"QubitStateChange\", \"address\": \"{}\", \"qnic_type\": {}, \"qnic_index\": {}, \"qubit_index\": {}, \"busy\": {}, \"allocated\": {}",
+  // current_time, qnode_address, qnic_type, qnic_index, qubit_index, is_busy, is_allocated);
 }
 
 std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
