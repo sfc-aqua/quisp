@@ -19,11 +19,14 @@ class Router : public omnetpp::cSimpleModule {
  protected:
   virtual void initialize() override;
   virtual void handleMessage(omnetpp::cMessage *msg) override;
+  void handlePacketForThisNode(omnetpp::cMessage *msg);
 
   utils::ComponentProvider provider;
 
   types::QNodeAddr my_address;
   RoutingTable routing_table;
+
+  std::map<int, int> gate_network_map;
 };
 
 Define_Module(Router);

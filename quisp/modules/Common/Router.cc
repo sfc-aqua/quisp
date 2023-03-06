@@ -48,6 +48,14 @@ void Router::initialize() {
     }
   }
 
+  auto *node = topo->getNodeFor(provider.getNode());
+  auto num_links = node->getNumOutLinks();
+  for (int i = 0; i < num_links; i++) {
+    auto *link = node->getLinkOut(i);
+    auto *mod = link->getRemoteNode()->getModule();
+    std::cout << mod ->getFullName() << std::endl;
+  }
+
   // Traverse through all the destinations from the thisNode
   for (int i = 0; i < topo->getNumNodes(); i++) {
     // skip the node that is running this specific router app
@@ -94,66 +102,10 @@ void Router::handleMessage(cMessage *msg) {
   Header *pk = check_and_cast<Header *>(msg);
 
   auto dest_addr = pk->getDestAddr();
-  int who_are_you = pk->getKind();
 
   // If destination is this node: Path selection
-  if (dest_addr == my_address && who_are_you == 1) {
-    send(pk, "toApp");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<BSMTimingNotification *>(msg)) {  // Timing for BSM
-    bubble("Timing Notifier from BSA (stand-alone or internal) received");
-    send(pk, "rePort$o");  // send to Application locally
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<EPPStimingNotifier *>(msg)) {  // Timing for BSM
-    bubble("Timing Notifier from EPPS received");
-    send(pk, "rePort$o");  // send to Application locally
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<ConnectionSetupRequest *>(msg)) {
-    bubble("Connection setup request received");
-    send(pk, "cmPort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<ConnectionSetupResponse *>(msg)) {
-    bubble("Connection setup response received");
-    send(pk, "cmPort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<RejectConnectionSetupRequest *>(msg)) {
-    bubble("Reject connection setup response received");
-    send(pk, "cmPort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<InternalRuleSetForwarding *>(msg)) {
-    bubble("Internal RuleSet Forwarding packet received");
-    send(pk, "rePort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
-    bubble("Internal RuleSet Forwarding Application packet received");
-    send(pk, "rePort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<SwappingResult *>(msg)) {
-    bubble("Swapping Result packet received");
-    send(pk, "rePort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkTomographyRequest *>(msg)) {
-    bubble("Link tomography request received");
-    send(pk, "hmPort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkTomographyAck *>(msg)) {
-    bubble("Link tomography ack received");
-    send(pk, "hmPort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkTomographyRuleSet *>(msg)) {
-    bubble("Link tomography rule set received");
-    send(pk, "rePort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkTomographyResult *>(msg)) {
-    bubble("Link tomography result received");
-    send(pk, "hmPort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<PurificationResult *>(msg)) {
-    bubble("Purification result received");
-    send(pk, "rePort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<StopEmitting *>(msg)) {
-    send(pk, "rePort$o");
+  if (dest_addr == my_address) {
+    handlePacketForThisNode(msg);
     return;
   }
 
@@ -171,4 +123,79 @@ void Router::handleMessage(cMessage *msg) {
   send(pk, "toQueue", out_gate_index);
 }
 
+void Router::handlePacketForThisNode(omnetpp::cMessage *msg) {
+  if (msg->getKind() == 1) {
+    send(msg, "toApp");
+    return;
+  }
+  if (dynamic_cast<BSMTimingNotification *>(msg)) {  // Timing for BSM
+    bubble("Timing Notifier from BSA (stand-alone or internal) received");
+    send(msg, "rePort$o");  // send to Application locally
+    return;
+  }
+  if (dynamic_cast<EPPStimingNotifier *>(msg)) {  // Timing for BSM
+    bubble("Timing Notifier from EPPS received");
+    send(msg, "rePort$o");  // send to Application locally
+    return;
+  }
+  if (dynamic_cast<ConnectionSetupRequest *>(msg)) {
+    bubble("Connection setup request received");
+    send(msg, "cmPort$o");
+    return;
+  }
+  if (dynamic_cast<ConnectionSetupResponse *>(msg)) {
+    bubble("Connection setup response received");
+    send(msg, "cmPort$o");
+    return;
+  }
+  if (dynamic_cast<RejectConnectionSetupRequest *>(msg)) {
+    bubble("Reject connection setup response received");
+    send(msg, "cmPort$o");
+    return;
+  }
+  if (dynamic_cast<InternalRuleSetForwarding *>(msg)) {
+    bubble("Internal RuleSet Forwarding packet received");
+    send(msg, "rePort$o");
+    return;
+  }
+  if (dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
+    bubble("Internal RuleSet Forwarding Application packet received");
+    send(msg, "rePort$o");
+    return;
+  }
+  if (dynamic_cast<SwappingResult *>(msg)) {
+    bubble("Swapping Result packet received");
+    send(msg, "rePort$o");
+    return;
+  }
+  if (dynamic_cast<LinkTomographyRequest *>(msg)) {
+    bubble("Link tomography request received");
+    send(msg, "hmPort$o");
+    return;
+  }
+  if (dynamic_cast<LinkTomographyAck *>(msg)) {
+    bubble("Link tomography ack received");
+    send(msg, "hmPort$o");
+    return;
+  }
+  if (dynamic_cast<LinkTomographyRuleSet *>(msg)) {
+    bubble("Link tomography rule set received");
+    send(msg, "rePort$o");
+    return;
+  }
+  if (dynamic_cast<LinkTomographyResult *>(msg)) {
+    bubble("Link tomography result received");
+    send(msg, "hmPort$o");
+    return;
+  }
+  if (dynamic_cast<PurificationResult *>(msg)) {
+    bubble("Purification result received");
+    send(msg, "rePort$o");
+    return;
+  }
+  if (dynamic_cast<StopEmitting *>(msg)) {
+    send(msg, "rePort$o");
+    return;
+  }
+}
 }  // namespace quisp::modules
