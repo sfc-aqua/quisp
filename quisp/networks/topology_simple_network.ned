@@ -72,28 +72,28 @@ network three_node_MIM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=56,202");
         }
         EndNode2: QNode {
-            address = 5;
+            address = "0.5";
             node_type = "EndNode";
             @display("i=COMP;p=473,202");
         }
         Repeater: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=264,203");
         }
         BSA1: BSANode {
-            address = 2;
+            address = "0.2";
             node_type = "BSA";
             @dispaly("p=42,150");
             @display("p=158,86");
         }
         BSA2: BSANode {
-            address = 4;
+            address = "0.4";
             node_type = "BSA";
             @dispaly("p=42,150");
             @display("p=371,86");
@@ -119,17 +119,17 @@ network three_node_MM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=56,202");
         }
         EndNode2: QNode {
-            address = 5;
+            address = "0.5";
             node_type = "EndNode";
             @display("i=COMP;p=473,202");
         }
         Repeater: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=264,203");
         }

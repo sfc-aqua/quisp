@@ -17,17 +17,17 @@ network four_node_MM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=56,202");
         }
         EndNode2: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=473,202");
         }
         Repeater[2]: QNode {
-            address = 3 + index;
+            address = "0." + string(3 + index);
             node_type = "Repeater";
             @display("i=REP1G;p=264,203");
         }
@@ -54,17 +54,17 @@ network five_node_MM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=56,202");
         }
         EndNode2: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=473,202");
         }
         Repeater[3]: QNode {
-            address = 3 + index;
+            address = "0." + string(3 + index);
             node_type = "Repeater";
             @display("i=REP1G;p=264,203");
         }
@@ -91,17 +91,17 @@ network six_node_MM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=56,202");
         }
         EndNode2: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=473,202");
         }
         Repeater[4]: QNode {
-            address = 3 + index;
+            address = "0." + string(3 + index);
             node_type = "Repeater";
             @display("i=REP1G;p=264,203");
         }
@@ -128,17 +128,17 @@ network seven_node_MM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=56,202");
         }
         EndNode2: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=473,202");
         }
         Repeater[5]: QNode {
-            address = 3 + index;
+            address = "0." + string(3 + index);
             node_type = "Repeater";
             @display("i=REP1G;p=264,203");
         }
@@ -165,17 +165,17 @@ network eight_node_MM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=56,202");
         }
         EndNode2: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=473,202");
         }
         Repeater[6]: QNode {
-            address = 3 + index;
+            address = "0." + string(3 + index);
             node_type = "Repeater";
             @display("i=REP1G;p=264,203");
         }
@@ -202,17 +202,17 @@ network nine_node_MM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=56,202");
         }
         EndNode2: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=473,202");
         }
         Repeater[7]: QNode {
-            address = 3 + index;
+            address = "0." + string(3 + index);
             node_type = "Repeater";
             @display("i=REP1G;p=264,203");
         }
@@ -239,17 +239,17 @@ network ten_node_MM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=56,202");
         }
         EndNode2: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=473,202");
         }
         Repeater[8]: QNode {
-            address = 3 + index;
+            address = "0." + string(3 + index);
             node_type = "Repeater";
             @display("i=REP1G;p=264,203");
         }
