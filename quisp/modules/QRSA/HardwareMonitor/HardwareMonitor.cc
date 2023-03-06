@@ -250,7 +250,6 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
 }
 
 void HardwareMonitor::finish() {
-  EV << "Finishing Hardware Monitor\n";
   // file name
   std::string file_name = tomography_output_filename;
   std::string df = "default";

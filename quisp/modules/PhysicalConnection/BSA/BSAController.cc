@@ -15,7 +15,9 @@ BSAController::BSAController() : provider(utils::ComponentProvider{this}) {}
 
 BSAController::~BSAController() { cancelAndDelete(time_out_message); }
 
-void BSAController::finish() { std::cout << "last BSM message that was sent " << last_result_send_time << "\n"; }
+void BSAController::finish() {
+  // std::cout << "last BSM message that was sent " << last_result_send_time << "\n";
+}
 
 void BSAController::initialize() {
   bsa = check_and_cast<BellStateAnalyzer *>(getParentModule()->getSubmodule("bsa"));
