@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include <modules/QNIC.h>
 #include "IRoutingDaemon.h"
+
+#include "modules/QNIC.h"
 
 /** \class RoutingDaemon RoutingDaemon.cc
  *

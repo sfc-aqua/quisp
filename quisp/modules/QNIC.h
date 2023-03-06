@@ -4,11 +4,12 @@
  *
  *  \brief QNIC
  */
-#ifndef QUISP_MODULES_QNIC_H_
-#define QUISP_MODULES_QNIC_H_
+
+#pragma once
 
 #include <omnetpp.h>
 #include <nlohmann/json.hpp>
+
 using namespace omnetpp;
 
 namespace quisp::modules {
@@ -60,5 +61,3 @@ class hash<pair<quisp::modules::QNIC_type, int>> {
   std::size_t operator()(pair<quisp::modules::QNIC_type, int> const& key) const noexcept { return std::hash<int>()((int)key.first * 10000 + key.second); }
 };
 }  // namespace std
-
-#endif  // QUISP_MODULES_QNIC_H_

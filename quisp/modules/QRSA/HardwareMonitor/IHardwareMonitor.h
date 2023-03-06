@@ -3,7 +3,7 @@
 #include <omnetpp.h>
 #include <memory>
 
-#include <modules/QNIC.h>
+#include "modules/QNIC.h"
 
 using namespace omnetpp;
 

@@ -4,8 +4,10 @@
  *  \brief RoutingDaemon
  */
 #include "RoutingDaemon.h"
-#include <messages/classical_messages.h>
+
 #include <vector>
+
+#include "messages/classical_messages.h"
 
 using namespace omnetpp;
 
