@@ -21,7 +21,6 @@ cModule *DefaultComponentProviderStrategy::getNode() {
   cModule *currentModule = self->getParentModule();
   auto *mod_type = currentModule->getModuleType();
   while (mod_type != QNodeType && mod_type != BSAType && mod_type != SPDCType) {
-    std::cout << mod_type->getFullName() << std::endl;
     currentModule = currentModule->getParentModule();
     if (currentModule == nullptr) {
       throw cRuntimeError("Node module not found. Have you changed the type name in ned file?");
