@@ -4,16 +4,14 @@
  *  \brief RoutingDaemon
  */
 #include "RoutingDaemon.h"
-#include <messages/classical_messages.h>
-#include <omnetpp.h>
+
 #include <vector>
+
+#include "messages/classical_messages.h"
 
 using namespace omnetpp;
 
-namespace quisp {
-namespace modules {
-
-Define_Module(RoutingDaemon);
+namespace quisp::modules::routing_daemon {
 
 /**
  *
@@ -133,7 +131,7 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
     cGate *parentModuleGate = this_node->getPath(0)->getLocalGate();
     int destAddr = node->getModule()->par("address");
 
-    qrtable[destAddr] = getQNicInfoOf(parentModuleGate);
+    qrtable[destAddr] = getQNicAddr(parentModuleGate);
 
     if (!strstr(parentModuleGate->getFullName(), "quantum")) {
       error("Quantum routing table referring to classical gates...");
@@ -141,15 +139,9 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
   }
 }
 
-QNIC RoutingDaemon::getQNicInfoOf(const cGate *const module_gate) {
+int RoutingDaemon::getQNicAddr(const cGate *const module_gate) {
   const auto module = module_gate->getPreviousGate()->getOwnerModule();
-  QNIC qnic;
-  qnic.address = module->par("self_qnic_address");
-  qnic.type = (QNIC_type)module->par("self_qnic_type").intValue();
-  qnic.index = module->getIndex();
-  qnic.pointer = module;
-
-  return qnic;
+  return module->par("self_qnic_address").intValue();
 }
 
 /**
@@ -164,7 +156,7 @@ int RoutingDaemon::findQNicAddrByDestAddr(int destAddr) {
     EV << "Quantum: address " << destAddr << " unreachable from this node \n";
     return -1;
   }
-  return it->second.address;
+  return it->second;
 }
 
 int RoutingDaemon::getNumEndNodes() {
@@ -190,5 +182,5 @@ int RoutingDaemon::getNumEndNodes() {
  **/
 void RoutingDaemon::handleMessage(cMessage *msg) {}
 
-}  // namespace modules
-}  // namespace quisp
+Define_Module(RoutingDaemon);
+}  // namespace quisp::modules::routing_daemon

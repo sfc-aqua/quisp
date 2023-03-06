@@ -3,7 +3,7 @@
 #include <omnetpp.h>
 #include <memory>
 
-#include <modules/QNIC.h>
+#include "modules/QNIC.h"
 
 using namespace omnetpp;
 
@@ -24,7 +24,7 @@ struct InterfaceInfo {
 };
 
 struct ConnectionSetupInfo {
-  QNIC_id qnic;
+  QNIC qnic;
   int neighbor_address;
   int quantum_link_cost;
 };

@@ -12,7 +12,7 @@ packet ConnectionSetupRequest extends Header
     int number_of_required_Bellpairs;
     int stack_of_QNodeIndexes[];
     int stack_of_linkCosts[];
-    QNIC_pair_info stack_of_QNICs[];
+    QNicPairInfo stack_of_QNICs[];
 }
 
 packet RejectConnectionSetupRequest extends Header
