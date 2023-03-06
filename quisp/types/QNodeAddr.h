@@ -29,7 +29,8 @@ struct QNodeAddr {
     return true;
   };
 
-  int to_int();
+  int toInt();
+  static QNodeAddr fromInt(int);
 };
 
 std::ostream& operator<<(std::ostream& stream, const quisp::types::QNodeAddr& addr);

@@ -53,4 +53,10 @@ TEST(QNodeAddr, toJson) {
   to_json(j, addr);
   EXPECT_STREQ(j.dump().c_str(), "\"1.4\"");
 }
+
+TEST(QNodeAddr, toInt) {
+  QNodeAddr addr{12, 34};
+  int val = addr.toInt();
+  EXPECT_EQ(QNodeAddr::fromInt(val), addr);
+}
 }  // namespace
