@@ -10,6 +10,7 @@ module QNode
     parameters:
         int buffer_size = default(10);
         string address;
+        object available_addresses = default([]);
         int buffers = default(10); // default is defined as 10 in .ini file but can be changed independently in .ned file
         int mass = default(100);
         bool is_initiator = default(false);

@@ -5,6 +5,7 @@
  */
 #include "Router.h"
 #include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
+#include "types/QNodeAddr.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -31,7 +32,8 @@ void Router::initialize() {
   cTopology::Node *thisNode = topo->getNodeFor(getParentModule());  // The parent node with this specific router
 
   // Initialize channel weights for all existing links.
-  for (int x = 0; x < topo->getNumNodes(); x++) {  // Traverse through all nodes
+  // Traverse through all nodes
+  for (int x = 0; x < topo->getNumNodes(); x++) {
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
     for (int j = 0; j < topo->getNode(x)->getNumOutLinks(); j++) {  // Traverse through all links from a specific node.
       double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");  // Get assigned cost for each channel written in .ned file
@@ -64,6 +66,17 @@ void Router::initialize() {
     cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
     int gateIndex = parentModuleGate->getIndex();
     auto address = QNodeAddr{topo->getNode(i)->getModule()->par("address").stringValue()};
+
+    // if available_addresses parameter set
+    if (topo->getNode(i)->getModule()->findPar("available_addresses") != -1) {
+      auto address_str_list = ((cValueArray *)topo->getNode(i)->getModule()->par("available_addresses").objectValue())->asStringVector();
+      std::vector<QNodeAddr> addresses = {};
+      for (auto &s : address_str_list) {
+        auto addr = QNodeAddr{s.c_str()};
+        addresses.push_back(addr);
+        routing_table[addr] = gateIndex;
+      }
+    }
 
     // Store gate index per destination from this node
     routing_table[address] = gateIndex;
