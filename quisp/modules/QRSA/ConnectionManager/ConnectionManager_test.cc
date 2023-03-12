@@ -46,6 +46,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
   using quisp::modules::ConnectionManager::reserveQnic;
   using quisp::modules::ConnectionManager::respondToRequest;
   using quisp::modules::ConnectionManager::respondToRequest_deprecated;
+  using quisp::modules::ConnectionManager::rula_ruleset_path;
   ConnectionManagerTestTarget(IRoutingDaemon *routing_daemon, IHardwareMonitor *hardware_monitor)
       : quisp::modules::ConnectionManager(), toRouterGate(new TestGate(this, "RouterPort$o")) {
     setParInt(this, "address", 123);
@@ -57,6 +58,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
     setParStr(this, "purification_type_cm", "SINGLE_X");
     setParDouble(this, "threshold_fidelity", 0);
     setParInt(this, "seed_cm", 0);
+    setParStr(this, "rula_ruleset_path", "");
 
     this->provider.setStrategy(std::make_unique<Strategy>(routing_daemon, hardware_monitor));
     setComponentType(new module_type::TestModuleType("test cm"));
@@ -81,6 +83,19 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
 TEST(ConnectionManagerTest, Init) {
   ConnectionManagerTestTarget c;
   ASSERT_EQ(c.par("address").intValue(), 123);
+}
+
+TEST(ConnectionManagerTest, GetRuleSetPath){
+  auto *sim = prepareSimulation();
+  auto *routing_daemon = new MockRoutingDaemon();
+  auto *hardware_monitor = new MockHardwareMonitor();
+  auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
+  sim -> registerComponent(connection_manager);
+  connection_manager -> par("rula_ruleset_path") = "./test1.json ./test2.json";
+
+  connection_manager -> callInitialize();
+  std::vector<std::string> path_list = {"./test1.json", "./test2.json"};
+  EXPECT_EQ(connection_manager -> rula_ruleset_path, path_list);
 }
 
 TEST(ConnectionManagerTest, parsePurType) {

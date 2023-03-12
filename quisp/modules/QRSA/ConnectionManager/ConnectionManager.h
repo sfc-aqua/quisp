@@ -73,6 +73,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   rules::PurType purification_type;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
+  std::vector<std::string> rula_ruleset_path;
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;

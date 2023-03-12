@@ -14,6 +14,8 @@ simple ConnectionManager
         string purification_type_cm = default("SINGLE_X");
         double threshold_fidelity = default(0);
         int seed_cm = default(0);
+        // Prefer to use object if there is easy way to get the parameters from C++ code.
+        string rula_ruleset_path = default("");
 
     gates:
         inout RouterPort;
