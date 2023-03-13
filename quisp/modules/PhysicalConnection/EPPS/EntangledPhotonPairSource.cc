@@ -23,26 +23,16 @@ void EntangledPhotonPairSource::initialize() {
 
 void EntangledPhotonPairSource::handleMessage(cMessage *msg) { send(msg, "to_quantum_port$o", msg->par("gate")); }
 
-PhotonicQubit *EntangledPhotonPairSource::generatePhoton() {
-  Enter_Method("generatePhoton()");
-  auto* photon = new PhotonicQubit("Photon");
-  return photon;
-}
-
-void EntangledPhotonPairSource::entanglePhotons(PhotonicQubit *photon_one, PhotonicQubit *photon_two) {
-  Enter_Method("entanglePhotons()");
-  auto *photon_one_ref = backend->getShortLiveQubit();
-  auto *photon_two_ref = backend->getShortLiveQubit();
+void EntangledPhotonPairSource::emitPhotons() {
+  Enter_Method("emitPhotons()");
+  auto *photon_1 = new PhotonicQubit("Photon_1");
+  auto *photon_2 = new PhotonicQubit("Photon_2");
+  auto *photon_1_ref = backend->getShortLiveQubit();
+  auto *photon_2_ref = backend->getShortLiveQubit();
   photon_one_ref->noiselessH();
   photon_two_ref->noiselessCNOT(photon_one_ref);
   photon_one->setQubit_ref(photon_one_ref);
   photon_two->setQubit_ref(photon_two_ref);
-}
-
-void EntangledPhotonPairSource::emitPhotons() {
-  Enter_Method("emitPhotons()");
-  PhotonicQubit *photon_one = generatePhoton();
-  PhotonicQubit *photon_two = generatePhoton();
   float jitter_timing = normal(0, emission_jittering_standard_deviation);
   float abso = fabs(jitter_timing);
   scheduleAt(simTime() + abso, photon_one);
