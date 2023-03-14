@@ -3,11 +3,12 @@ package modules.PhysicalConnection.EPPS;
 
 simple EPPSController
 {
-    parameters:
-        double initial_notification_timing_buffer @unit(s) = default(0s);
-        string mode = default("active");
-    gates:
-        input from_bsa;
-        input from_router;
-        output to_router;
+parameters:
+    int address;
+    double frequency = default(1);
+    double timing_buffer = default(1);
+gates:
+    input from_router_port;
+    output to_router_port;
+    inout to_epps_port;
 }
