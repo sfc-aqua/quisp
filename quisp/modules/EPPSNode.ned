@@ -5,9 +5,10 @@ import ned.DatarateChannel;
 import ned.DelayChannel;
 import ned.IdealChannel;
 import modules.PhysicalConnection.EPPS.*;
-import modules.Common.*;
+import modules.Common.Router;
+import modules.Common.Queue;
 
-simple EPPSNode
+module EPPSNode
 {
     parameters:
         @display("i=EPPS");
@@ -49,10 +50,10 @@ simple EPPSNode
         }
 
          for i=0..sizeof(quantum_port)-1 {
-            quantum_port[i] <--> PairSource.to_quantum_port++;
+            quantum_port[i] <--> epps.quantum_port++;
         }
 
-        bsa_controller.to_router --> router.fromApp;
-        router.toApp --> bsa_controller.from_router;
-        bsa.to_bsa_controller --> bsa_controller.from_bsa;
+        epps_controller.to_router --> router.fromApp;
+        router.toApp --> epps_controller.from_router;
+        epps_controller.to_epps --> epps.from_epps_controller;
 }
