@@ -29,7 +29,7 @@ class ComponentProvider {
   cModule *getNeighborNode(cModule *qnic);
   bool isQNodeType(const cModuleType *const type);
   bool isBSANodeType(const cModuleType *const type);
-  bool isSPDCNodeType(const cModuleType *const type);
+  bool isEPPSNodeType(const cModuleType *const type);
   IStationaryQubit *getStationaryQubit(modules::qrsa::IQubitRecord *const qubit_record);
   IStationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type);
   cModule *getQNIC(int qnic_index, QNIC_type qnic_type);
