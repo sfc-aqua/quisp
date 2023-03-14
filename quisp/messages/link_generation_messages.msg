@@ -24,7 +24,6 @@ packet EPPStimingNotifier extends Header
 {
     double timing_at;
     double interval;
-    int number_of_qubits;
     int internal_qnic = -1;
 }
 
