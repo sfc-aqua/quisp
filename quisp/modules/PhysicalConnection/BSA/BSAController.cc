@@ -21,20 +21,28 @@ void BSAController::initialize() {
   bsa = check_and_cast<BellStateAnalyzer *>(getParentModule()->getSubmodule("bsa"));
   // if this BSA is internal set left to be self node
   if (strcmp(getParentModule()->getName(), "qnic_r") == 0) {
-    address = provider.getNodeAddr();
-    left_qnic.parent_node_addr = address;
+    address = provider.getQNode()->par("address").intValue();
+    left_qnic.parent_node_addr = provider.getQNode()->par("address").intValue();
     left_qnic.index = getParentModule()->par("self_qnic_index").intValue();
     left_qnic.type = QNIC_R;
   } else {
     address = getParentModule()->par("address").intValue();
     left_qnic = getExternalQNICInfoFromPort(0);
   }
-  time_interval_between_photons = SimTime(1, SIMTIME_S) / SimTime(getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue(), SIMTIME_S);
-  simtime_t first_notification_timer = SimTime(par("initial_notification_timing_buffer").doubleValue());
+  mode = par("mode").stringValue();
+  if(strcmp(mode, "active") == 0) {
+    offset_time_for_first_photon = calculateOffsetTimeFromDistance();
+    time_interval_between_photons = SimTime(1, SIMTIME_S).dbl() / getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
+  } else {
+    wait(pk);
+    offset_time_for_first_photon = pk->timing_at;
+    time_interval_between_photons = pk->interval;
+  }
   right_qnic = getExternalQNICInfoFromPort(1);
-  offset_time_for_first_photon = calculateOffsetTimeFromDistance();
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
+  time_interval_between_photons = SimTime(1, SIMTIME_S).dbl() / getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
+  simtime_t first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
   time_out_count = 0;
   time_out_message = new BSMNotificationTimeout("bsm_notification_timeout");
   scheduleAt(first_notification_timer, time_out_message);
