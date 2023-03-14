@@ -537,7 +537,7 @@ void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double lin
   const cModuleType *const neighbor_node_type = neighbor_node->getModuleType();
   cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
   double dis = channel->par("distance");
-  if (provider.isQNodeType(neighbor_node_type) && provider.isBSANodeType(neighbor_node_type) && provider.isSPDCNodeType(neighbor_node_type)) {
+  if (provider.isQNodeType(neighbor_node_type) && provider.isBSANodeType(neighbor_node_type) && provider.isEPPSNodeType(neighbor_node_type)) {
     error("Module Type not recognized when writing to file...");
   }
 
@@ -1075,7 +1075,7 @@ InterfaceInfo HardwareMonitor::getQnicInterfaceByQnicAddr(int qnic_index, QNIC_t
   // This is false because the channel may only be between the node and BSA.
 
   // Dummy it up. This cost must be the cost based on the neighboring QNode
-  // (excluding SPDC and BSA nodes)
+  // (excluding EPPS and BSA nodes)
   inf.link_cost = 1;
 
   return inf;
@@ -1194,7 +1194,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     return inf;
   }
 
-  if (provider.isSPDCNodeType(type)) {
+  if (provider.isEPPSNodeType(type)) {
     error("TO BE IMPLEMENTED");
   }
 
