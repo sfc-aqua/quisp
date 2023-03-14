@@ -18,6 +18,7 @@ class QNIC_type {
 class QNodeAddr {
     @existingClass;
     @opaque;
+    @toString(.str());
 };
 
 class QNIC_pair_info {

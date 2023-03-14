@@ -11,6 +11,7 @@ struct QNodeAddr {
   QNodeAddr(int network_addr, int host_addr);
   QNodeAddr(char* addr_str);
   QNodeAddr(const char* addr_str);
+  std::string str() const;
   int network_addr = 0;
   int host_addr = -1;
 

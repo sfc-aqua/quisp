@@ -32,7 +32,9 @@ cModule *DefaultComponentProviderStrategy::getNode() {
 
 QNodeAddr DefaultComponentProviderStrategy::getNodeAddr() { return QNodeAddr{getNode()->par("address").stringValue()}; }
 std::vector<QNodeAddr> DefaultComponentProviderStrategy::getAvailableAddresses() {
-  auto addr_list = ((cValueArray *)(getNode()->par("available_addresses").objectValue()))->asStringVector();
+  auto *node = getNode();
+  if (node->findPar("available_addresses") == -1) return {};
+  auto addr_list = ((cValueArray *)(node->par("available_addresses").objectValue()))->asStringVector();
   std::vector<QNodeAddr> addresses = {};
   for (auto &s : addr_list) {
     addresses.push_back(QNodeAddr{s.c_str()});

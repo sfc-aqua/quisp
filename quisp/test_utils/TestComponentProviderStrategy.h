@@ -40,6 +40,7 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   virtual cModule *getNode() override { return nullptr; };
   virtual cModule *getNeighborNode(cModule *qnic) override { return nullptr; };
   virtual QNodeAddr getNodeAddr() override { return QNodeAddr{}; };
+  virtual std::vector<QNodeAddr> getAvailableAddresses() override { return {}; };
   virtual bool isQNodeType(const cModuleType *const type) override { return false; };
   virtual bool isBSANodeType(const cModuleType *const type) override { return false; };
   virtual bool isSPDCNodeType(const cModuleType *const type) override { return false; };

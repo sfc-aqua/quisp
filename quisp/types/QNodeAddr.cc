@@ -29,6 +29,8 @@ QNodeAddr::QNodeAddr(const char* addr_str) {
   host_addr = atoi(p);
 }
 
+std::string QNodeAddr::str() const { return std::to_string(*this); }
+
 int QNodeAddr::toInt() {
   int value = network_addr << 16;
   value |= host_addr;

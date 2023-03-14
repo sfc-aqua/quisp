@@ -147,15 +147,14 @@ void Router::handleMessage(cMessage *msg) {
   // check the header of the received package
   Header *pk = check_and_cast<Header *>(msg);
 
-  auto dest_addr = pk->getDestAddr();
-
   // If destination is this node: Path selection
-  if (dest_addr == my_address) {
+  if (shouldReceive(pk)) {
     handlePacketForThisNode(msg);
     return;
   }
 
   // Check if packet is reachable
+  auto dest_addr = pk->getDestAddr();
   auto it = routing_table.find(dest_addr);
   if (it == routing_table.end()) {
     std::cout << "In Node[" << my_address << "]Address... " << dest_addr << " unreachable, discarding packet " << pk->getName() << endl;
@@ -165,12 +164,32 @@ void Router::handleMessage(cMessage *msg) {
   }
 
   int out_gate_index = (*it).second;
-  auto out_network = gate_network_map.find(out_gate_index);
-  if (out_network != gate_network_map.end()) {
-    // if the packet is going to another network
-  }
+  // detect the packet comes from external network or internal network
+  //
+  // auto *req = dynamic_cast<ConnectionSetupRequest *>(msg);
+  // if (req != nullptr && gate_network_map.size() > 0) {
+  //   auto next_network = gate_network_map.find(out_gate_index);
+  //   assert(next_network != gate_network_map.end());
+  //   if (next_network->second != dest_addr.network_addr) {
+  //     // if the packet is going to another network
+  //     std::cout << my_address << ": different network: " << dest_addr << std::endl;
+  //   } else {
+  //     std::cout << my_address << ": same network: " << dest_addr << std::endl;
+  //   }
+  //   req->setFromExternalNetwork(next_network->second != dest_addr.network_addr);
+  //   send(msg, "cmPort$o");
+  //   return;
+  // }
   pk->setHopCount(pk->getHopCount() + 1);
   send(pk, "toQueue", out_gate_index);
+}
+
+bool Router::shouldReceive(Header *msg) {
+  auto dest_addr = msg->getDestAddr();
+  if (dest_addr == my_address) return true;
+  auto addr_list = provider.getAvailableAddresses();
+  auto it = std::find(addr_list.begin(), addr_list.end(), dest_addr);
+  return it != addr_list.end();
 }
 
 void Router::handlePacketForThisNode(omnetpp::cMessage *msg) {
@@ -188,18 +207,7 @@ void Router::handlePacketForThisNode(omnetpp::cMessage *msg) {
     send(msg, "rePort$o");  // send to Application locally
     return;
   }
-  if (dynamic_cast<ConnectionSetupRequest *>(msg)) {
-    bubble("Connection setup request received");
-    send(msg, "cmPort$o");
-    return;
-  }
-  if (dynamic_cast<ConnectionSetupResponse *>(msg)) {
-    bubble("Connection setup response received");
-    send(msg, "cmPort$o");
-    return;
-  }
-  if (dynamic_cast<RejectConnectionSetupRequest *>(msg)) {
-    bubble("Reject connection setup response received");
+  if (dynamic_cast<ConnectionSetupHeader *>(msg)) {
     send(msg, "cmPort$o");
     return;
   }

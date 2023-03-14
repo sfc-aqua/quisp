@@ -1,12 +1,16 @@
 import base_messages;
 namespace quisp::messages;
 
-
-packet ConnectionSetupRequest extends Header
-{
+packet ConnectionSetupHeader extends Header {
     int application_id @getter(getApplicationId) @setter(setApplicationId);
-    QNodeAddr actual_destAddr;
     QNodeAddr actual_srcAddr;
+    QNodeAddr actual_destAddr;
+    unsigned long RuleSet_id;
+    bool fromExternalNetwork;
+}
+
+packet ConnectionSetupRequest extends ConnectionSetupHeader
+{
     int num_measure;
     int number_of_required_Bellpairs;
     QNodeAddr stack_of_QNodeIndexes[];
@@ -17,20 +21,13 @@ packet ConnectionSetupRequest extends Header
     Header *upperLayerRequest;
 }
 
-packet RejectConnectionSetupRequest extends Header
+packet RejectConnectionSetupRequest extends ConnectionSetupHeader
 {
-    int application_id @getter(getApplicationId) @setter(setApplicationId);
-    QNodeAddr actual_destAddr;
-    QNodeAddr actual_srcAddr;
     int number_of_required_Bellpairs;
 }
 
-packet ConnectionSetupResponse extends Header
+packet ConnectionSetupResponse extends ConnectionSetupHeader
 {
-    int application_id @getter(getApplicationId) @setter(setApplicationId);
-    QNodeAddr actual_srcAddr;
-    QNodeAddr actual_destAddr;
-    unsigned long RuleSet_id;
     json ruleSet;
     int application_type;
     int stack_of_QNodeIndexes[];

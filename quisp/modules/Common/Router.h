@@ -1,8 +1,10 @@
 #pragma once
 #include <omnetpp.h>
-#include <types/QNodeAddr.h>
-#include <utils/ComponentProvider.h>
 #include <map>
+
+#include "messages/classical_messages.h"
+#include "types/QNodeAddr.h"
+#include "utils/ComponentProvider.h"
 
 namespace quisp::modules {
 
@@ -20,6 +22,7 @@ class Router : public omnetpp::cSimpleModule {
   virtual void initialize() override;
   virtual void handleMessage(omnetpp::cMessage *msg) override;
   void handlePacketForThisNode(omnetpp::cMessage *msg);
+  bool shouldReceive(messages::Header *msg);
 
   utils::ComponentProvider provider;
 
