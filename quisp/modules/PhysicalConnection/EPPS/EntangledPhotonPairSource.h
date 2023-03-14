@@ -1,7 +1,6 @@
 #pragma once
 
 #include <omnetpp.h>
-#include "EPPSController.cc"
 #include "PhotonicQubit_m.h"
 #include "backends/Backends.h"
 #include "backends/interfaces/IQubit.h"
@@ -24,16 +23,10 @@ class EntangledPhotonPairSource : public omnetpp::cSimpleModule {
 
   utils::ComponentProvider provider;
   IQuantumBackend *backend;
-  
+
  protected:
   virtual void initialize() override;
   virtual void handleMessage(omnetpp::cMessage* msg) override;
-  virtual void BubbleText(const char* txt);
-  virtual messages::PhotonicQubit *generatePhoton();
-  void entanglePhotons(messages::PhotonicQubit *photon_one, messages::PhotonicQubit *photon_two);
-  virtual void entanglePhotons();
-  virtual omnetpp::cModule* getEPPSNode();
-
  public:
   virtual void emitPhotons();
 };
