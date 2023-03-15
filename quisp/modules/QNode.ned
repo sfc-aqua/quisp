@@ -9,7 +9,6 @@ import modules.Common.*;
 module QNode
 {
     parameters:
-        int buffer_size = default(10);
         int address = default(0);
         int buffers = default(10); // default is defined as 10 in .ini file but can be changed independently in .ned file
         int mass = default(100);
