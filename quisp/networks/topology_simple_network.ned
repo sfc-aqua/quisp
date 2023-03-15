@@ -66,6 +66,36 @@ network Simple_MM
         EndNode1.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> EndNode2.quantum_port_receiver++;
 }
 
+network Simple_MSM
+{
+parameters:
+    **.speed_of_light_in_fiber = 208189.206944 km;
+
+submodules:
+    backend: Backend;
+    logger: Logger;
+    EndNode1: QNode {
+        address = 1;
+        node_type = "EndNode";
+        @display("i=COMP;p=98,62,m,5,60,60");
+    }
+    EndNode2: QNode {
+        address = 2;
+        node_type = "EndNode";
+        @display("i=COMP;p=268,62,m,5,60,60");
+    }
+    EPPS: EPPSNode {
+        address = 3;
+        @display("p=184,85,m,5,60,60");
+    }
+
+connections:
+    EndNode1.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> EPPS.port++;
+    EPPS.port++      <--> ClassicalChannel {  distance = 0.5km; } <--> EndNode2.port++;
+    EndNode1.quantum_port++ <--> QuantumChannel {  distance = 0.5km; } <--> EPPS.quantum_port++;
+    EPPS.quantum_port++      <--> QuantumChannel {  distance = 0.5km; } <--> EndNode2.quantum_port++;
+}
+
 network three_node_MIM
 {
     parameters:
