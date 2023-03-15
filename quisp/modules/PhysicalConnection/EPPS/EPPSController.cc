@@ -10,8 +10,6 @@
 #include "EntangledPhotonPairSource.h"
 #include "EPPSController.h"
 #include "modules/QNIC.h"
-
-
 using namespace omnetpp;
 
 namespace quisp::modules{
@@ -23,49 +21,52 @@ EPPSController::EPPSController() : provider(utils::ComponentProvider{this}) {}
 EPPSController::~EPPSController() {}
 
 void EPPSController::initialize() {
+  epps = check_and_cast<EntangledPhotonPairSource *>(getParentModule()->getSubmodule("epps"));
   frequency = par("frequency");
   address = getParentModule()->par("address").intValue();
-  timing_buffer = par("timing_buffer").doubleValue();
-  speed_of_light_in_channel = par("speed_of_light_in_fiber").doubleValue();
+  first_notification_timer = par("first_notification_timer").doubleValue();
   left_qnic_addr = getExternalAdressFromPort(0);
   right_qnic_addr = getExternalAdressFromPort(1);
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
+  number_of_sent_photons = 0;
   checkNeighborsBSACapacity();
+  checkNeighborsBuffer();
+  startPump();
 }
 
 void EPPSController::handleMessage(cMessage *msg) {
-  if (msg == generatePacket) {
+  auto emt = dynamic_cast<EmitPhotonRequest *>(msg);
+  if (number_of_sent_photons == 0) {
     EPPStimingNotifier *left_pk, *right_pk;
     left_pk = generateNotifier(left_travel_time, left_qnic_addr);
     right_pk = generateNotifier(right_travel_time, right_qnic_addr);
     send(left_pk, "to_router");  // send to port out. connected to local routing module (routing.localIn).
     send(right_pk, "to_router");
-    startPump();
-  } else if (dynamic_cast<EmitPhotonRequest *>(msg)) {
-    epps->emitPhotons();
-    SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
-    scheduleAt(simTime() + max_acceptance_rate, st);
-  } else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg)) {
-    epps->emitPhotons();
-    SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
-    scheduleAt(simTime() + max_acceptance_rate, st);
+    epps->emitPhotons(1);
+    number_of_sent_photons++;
+    emt->setFirst(false);
+    scheduleAt(simTime() + max_acceptance_rate, emt);
+  } else if (number_of_sent_photons == number_of_photons - 1){ // sending out last photon
+    epps->emitPhotons(2);
+    number_of_sent_photons++;
+    scheduleAt(simTime() + max_acceptance_rate, emt);
+  } else {
+    epps->emitPhotons(0);
+    number_of_sent_photons++;
+    scheduleAt(simTime() + max_acceptance_rate, emt);
   }
   delete msg;
 }
 
 void EPPSController::startPump() {
-  // for(int i=0; i<max_buffer; i++){
-  //   emt = new  EmitPhotonRequest();
-  //   scheduleAt(simTime()+timing_buffer+(max_accepted_rate*i), emt);
-  // }
-  emt = new EmitPhotonRequest("EmitPhotonRequest");
-  scheduleAt(simTime() + timing_buffer + max_acceptance_rate, emt);
+  EmitPhotonRequest *emt = new EmitPhotonRequest();
+  scheduleAt(simTime() + first_notification_timer, emt);
 }
 
 EPPStimingNotifier *EPPSController::generateNotifier(double time_to_travel, int dest_addr) {
   EPPStimingNotifier *pk = new EPPStimingNotifier("EppsTimingNotifier");
-  pk->setTiming_at(timing_buffer + time_to_travel);
+  pk->setTiming_at(first_notification_timer + time_to_travel);
   pk->setKind(4);
   pk->setInterval(max_acceptance_rate);
   pk->setSrcAddr(address);
@@ -100,8 +101,26 @@ void EPPSController::checkNeighborsBSACapacity() {
   if (pump_rate < max_acceptance_rate) max_acceptance_rate = pump_rate;
 }
 
+void EPPSController::checkNeighborsBuffer(){
+  int left_buffer = getParentModule()
+    ->getSubmodule("epps")
+    ->gate("quantum_port$i", 0)
+    ->getPreviousGate()  // EPPSNode quantum_port
+    ->getPreviousGate()  // QNode quantum_port
+    ->getOwnerModule() // QNode
+    ->par("buffer");
+  int right_buffer = getParentModule()
+    ->getSubmodule("epps")
+    ->gate("quantum_port$i", 1)
+    ->getPreviousGate()  // EPPSNode quantum_port
+    ->getPreviousGate()  // QNode quantum_port
+    ->getOwnerModule() // QNode
+    ->par("buffer");
+  number_of_photons = std::min(left_buffer, right_buffer);
+}
+
 double EPPSController::getTravelTimeFromPort(int port) {
-  cChannel *channel = getParentModule()->getSubmodule("bsa")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
+  cChannel *channel = getParentModule()->getSubmodule("epps")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
   double distance = channel->par("distance").doubleValue();
   double speed_of_light_in_channel = channel->par("speed_of_light_in_fiber");
   return distance / speed_of_light_in_channel;
