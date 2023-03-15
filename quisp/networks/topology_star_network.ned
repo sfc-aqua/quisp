@@ -74,7 +74,7 @@ network Star_MSM
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
-        EPPS[6]: EPPS {
+        EPPS[6]: EPPSNode {
             address = index+1000;
             @display("i=EPPS;p=110,77,m,5,60,60");
         }
