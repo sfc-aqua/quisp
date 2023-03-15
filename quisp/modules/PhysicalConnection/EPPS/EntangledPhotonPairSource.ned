@@ -10,6 +10,6 @@ simple EntangledPhotonPairSource
         double emission_y_error_rate = default(0);
         double emission_z_error_rate = default(0);
     gates:
-        inout from_epps_controller;
-        output quantum_port[2];
+        input from_epps_controller;
+        inout quantum_port[2];
 }
