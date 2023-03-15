@@ -27,8 +27,6 @@ class EPPSController : public cSimpleModule {
  protected:
   virtual void initialize() override;
   virtual void handleMessage(cMessage *msg) override;
-  virtual void checkNeighborsAddress();
-  virtual void checkNeighborsDistance();
   virtual void checkNeighborsBSACapacity();
   virtual void checkNeighborsBuffer();
   virtual EPPStimingNotifier *generateNotifier(double time_to_travel, int dest_addr);
@@ -44,18 +42,15 @@ class EPPSController : public cSimpleModule {
   int right_qnic_addr;
   double left_travel_time;
   double right_travel_time;
-  double left_acceptance_rate;
-  double right_acceptance_rate;
   double max_acceptance_rate;
   double frequency;
+  int number_of_photons;
+  int number_of_sent_photons;
 
   // EPPS characteristics
-  double timing_buffer;
-  double speed_of_light_in_channel;
+  double first_notification_timer;
+  EntangledPhotonPairSource* epps;
   utils::ComponentProvider provider;
-
-  EmitPhotonRequest *emt;
-  cMessage *generatePacket;
 };
 
 }  // namespace quisp::modules

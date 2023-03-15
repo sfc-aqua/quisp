@@ -8,14 +8,15 @@ using namespace omnetpp;
 namespace quisp::modules {
 
 Define_Module(EntangledPhotonPairSource);
+EntangledPhotonPairSource::EntangledPhotonPairSource() : provider(utils::ComponentProvider{this}) {}
 
-StationaryQubit::StationaryQubit() : provider(utils::ComponentProvider{this}) {}
+EntangledPhotonPairSource::~EntangledPhotonPairSource() {}
 
 void EntangledPhotonPairSource::initialize() {
-  emission_success_probability = par("error_rate").doubleValue();
-  emission_x_error_rate = par("x_error_ratio").doubleValue();
-  emission_y_error_rate = par("y_error_ratio").doubleValue();
-  emission_z_error_rate = par("z_error_ratio").doubleValue();
+  emission_success_probability = par("emission_success_probability").doubleValue();
+  emission_x_error_rate = par("emission_x_error_rate").doubleValue();
+  emission_y_error_rate = par("emission_y_error_rate").doubleValue();
+  emission_z_error_rate = par("emission_z_error_rate").doubleValue();
   emission_jittering_standard_deviation = par("emission_jittering_standard_deviation").doubleValue();
 
   backend = provider.getQuantumBackend();
@@ -43,7 +44,7 @@ void EntangledPhotonPairSource::handleMessage(cMessage *msg) {
   }
 }
 
-void EntangledPhotonPairSource::emitPhotons() {
+void EntangledPhotonPairSource::emitPhotons(int pulse) {
   Enter_Method("emitPhotons()");
   auto *photon_one = new PhotonicQubit("Photon_one");
   auto *photon_two = new PhotonicQubit("Photon_two");
@@ -53,6 +54,18 @@ void EntangledPhotonPairSource::emitPhotons() {
   photon_two_ref->noiselessCNOT(photon_one_ref);
   photon_one->setQubit_ref(photon_one_ref);
   photon_two->setQubit_ref(photon_two_ref);
+  if (pulse & ENTANGLEDPHOTONPAIRSOURCE_PULSE_BEGIN) {
+    photon_one->setFirst(true);
+    photon_two->setFirst(true);
+  }
+  if (pulse & ENTANGLEDPHOTONPAIRSOURCE_PULSE_END) {
+    photon_one->setLast(true);
+    photon_two->setLast(true);
+  }
+  if (pulse & ENTANGLEDPHOTONPAIRSOURCE_PULSE_BOUND) {
+    photon_one->setKind(3);
+    photon_two->setKind(3);
+  }
   float jitter_timing = normal(0, emission_jittering_standard_deviation);
   float abso = fabs(jitter_timing);
   scheduleAt(simTime() + abso, photon_one);
