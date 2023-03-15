@@ -6,6 +6,7 @@
 
 #include <cstring>
 #include <stdexcept>
+#include "messages/link_generation_messages_m.h"
 
 namespace quisp::modules {
 
@@ -30,22 +31,18 @@ void BSAController::initialize() {
     left_qnic = getExternalQNICInfoFromPort(0);
   }
   mode = par("mode").stringValue();
-  if(strcmp(mode, "active") == 0) {
-    offset_time_for_first_photon = calculateOffsetTimeFromDistance();
-    time_interval_between_photons = SimTime(1, SIMTIME_S).dbl() / getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
-  } else {
-    wait(pk);
-    offset_time_for_first_photon = pk->timing_at;
-    time_interval_between_photons = pk->interval;
-  }
   right_qnic = getExternalQNICInfoFromPort(1);
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
-  time_interval_between_photons = SimTime(1, SIMTIME_S).dbl() / getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
-  simtime_t first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
   time_out_count = 0;
   time_out_message = new BSMNotificationTimeout("bsm_notification_timeout");
-  scheduleAt(first_notification_timer, time_out_message);
+  if(strcmp(mode, "active") == 0) {
+    offset_time_for_first_photon = calculateOffsetTimeFromDistance();
+    time_interval_between_photons = SimTime(1, SIMTIME_S).dbl() / getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
+    simtime_t first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
+    scheduleAt(first_notification_timer, time_out_message);
+  }
+
 }
 
 void BSAController::handleMessage(cMessage *msg) {
@@ -70,15 +67,31 @@ void BSAController::handleMessage(cMessage *msg) {
     delete msg;
     return;
   }
+
+  // process parameters sent from epps controller
+  if(auto *notification_packet = dynamic_cast<EPPStimingNotifier *>(msg)) {
+    offset_time_for_first_photon = notification_packet->getTiming_at();
+    time_interval_between_photons = notification_packet->getInterval();
+    delete msg;
+    return;
+  }
   // a more realistic way of execution would be to send every click events through here.
   // but we opt for a better performance, since we are more interested in protocols
   // no emulating physical hardwares.
 }
 
 void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
-  // we will apply corrections at right nodes
-  auto *leftpk = generateNextNotificationTiming(true);
-  auto *rightpk = generateNextNotificationTiming(false);
+  CombinedBSAresults *leftpk;
+  CombinedBSAresults *rightpk;
+  if(strcmp(mode, "active")){
+    // we will apply corrections at right nodes
+    leftpk = generateNextNotificationTiming(true);
+    rightpk = generateNextNotificationTiming(false);
+  } else {
+    // think of new algorithm here
+    leftpk = generateNextNotificationTiming(true);
+    rightpk = generateNextNotificationTiming(false);
+  }
   for (int index = 0; index < batch_click_msg->numberOfClicks(); index++) {
     if (!batch_click_msg->getClickResults(index).success) continue;
     leftpk->appendSuccessIndex(index);
@@ -91,7 +104,6 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
   send(leftpk, "to_router");
   send(rightpk, "to_router");
   last_result_send_time = simTime();
-
   scheduleAt(simTime() + 1.1 * offset_time_for_first_photon, time_out_message);
 }
 

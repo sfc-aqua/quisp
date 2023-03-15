@@ -11,6 +11,9 @@
 #include <vector>
 
 namespace quisp::modules{
+#define ENTANGLEDPHOTONPAIRSOURCE_PULSE_BEGIN 0x01
+#define ENTANGLEDPHOTONPAIRSOURCE_PULSE_END 0x02
+#define ENTANGLEDPHOTONPAIRSOURCE_PULSE_BOUND (ENTANGLEDPHOTONPAIRSOURCE_PULSE_BEGIN | ENTANGLEDPHOTONPAIRSOURCE_PULSE_END)
 
 class EntangledPhotonPairSource : public omnetpp::cSimpleModule {
  private:
@@ -28,7 +31,9 @@ class EntangledPhotonPairSource : public omnetpp::cSimpleModule {
   virtual void initialize() override;
   virtual void handleMessage(omnetpp::cMessage* msg) override;
  public:
-  virtual void emitPhotons();
+  EntangledPhotonPairSource();
+  ~EntangledPhotonPairSource();
+  virtual void emitPhotons(int pulse);
 };
 
 }  // namespace quisp::modules

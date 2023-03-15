@@ -55,5 +55,4 @@ module EPPSNode
 
         epps_controller.to_router --> router.fromApp;
         router.toApp --> epps_controller.from_router;
-        epps_controller.to_epps --> epps.from_epps_controller;
 }

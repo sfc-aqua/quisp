@@ -6,9 +6,8 @@ simple EPPSController
 parameters:
     int address;
     double frequency = default(1);
-    double timing_buffer = default(0);
+    double first_notification_timer = default(0);
 gates:
     input from_router;
     output to_router;
-    output to_epps;
 }
