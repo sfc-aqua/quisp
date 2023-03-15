@@ -24,7 +24,7 @@ void EPPSController::initialize() {
   epps = check_and_cast<EntangledPhotonPairSource *>(getParentModule()->getSubmodule("epps"));
   frequency = par("frequency");
   address = getParentModule()->par("address").intValue();
-  first_notification_timer = par("first_notification_timer").doubleValue();
+  first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
   left_qnic_addr = getExternalAdressFromPort(0);
   right_qnic_addr = getExternalAdressFromPort(1);
   left_travel_time = getTravelTimeFromPort(0);
