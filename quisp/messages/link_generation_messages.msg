@@ -20,11 +20,16 @@ packet BSMTimingNotification extends Header
     int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
 }
 
-packet EPPStimingNotifier extends Header
+packet EPPSTimingNotification extends Header
 {
-    double timing_at;
-    double interval;
-    int internal_qnic = -1;
+    double first_photon_emit_time  @setter(setFirstPhotonEmitTime) @getter(getFirstPhotonEmitTime);
+    double interval @setter(setInterval)  @getter(getInterval);
+    QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
+    int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
+    int qnic_parent_addr     @setter(setQnicParentAddr) @getter(getQnicParentAddr);
+    QNIC_type other_qnic_type @setter(setOtherQnicType)  @getter(getOtherQnicType);
+    int other_qnic_index      @setter(setOtherQnicIndex) @getter(getOtherQnicIndex);
+    int other_qnic_parent_addr     @setter(setOtherQnicParentAddr) @getter(getOtherQnicParentAddr);
 }
 
 // Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier

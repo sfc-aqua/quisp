@@ -109,8 +109,8 @@ TEST_F(RouterTest, handleBSMTimingNotification) {
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
-TEST_F(RouterTest, handleEPPSTimingNotifier) {
-  auto msg = new EPPStimingNotifier;
+TEST_F(RouterTest, handleEPPSTimingNotification) {
+  auto msg = new EPPSTimingNotification;
   msg->setDestAddr(10);
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);

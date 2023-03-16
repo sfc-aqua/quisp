@@ -83,7 +83,7 @@ class BSAController : public cSimpleModule {
   simtime_t time_interval_between_photons;  ///< how separated should the photons be; is calculated by the dead time of the detector
   simtime_t speed_of_light_in_channel;  ///< Speed of light in optical fiber (in km per sec).
   utils::ComponentProvider provider;
-  const char* mode;
+  bool is_active;
   BellStateAnalyzer* bsa;
 
   // testing and debugging members

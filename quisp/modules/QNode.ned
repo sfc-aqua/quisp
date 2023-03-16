@@ -48,7 +48,7 @@ module QNode
         qrsa: quantumRoutingSoft {
             parameters:
                 address = parent.address;
-                @display("p=171,33");
+                @display("p=179,35;is=l");
                 number_of_qnics = sizeof(parent.quantum_port);
                 number_of_qnics_r = sizeof(parent.quantum_port_receiver);
                 number_of_qnics_rp = sizeof(parent.quantum_port_receiver_passive);
@@ -82,7 +82,7 @@ module QNode
                 parent_node_address = parent.address;
                 self_qnic_address = index + sizeof(parent.quantum_port) + sizeof(parent.quantum_port_receiver);
                 self_qnic_index = index;
-                num_buffer = default(int(buffers)); // number of buffers for each qnic
+                num_buffer = default(int(parent.buffers)); // number of buffers for each qnic
                 receiver = true;
                 passive = true;
                 self_qnic_type = 2;

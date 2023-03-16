@@ -85,6 +85,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void freeFailedEntanglementAttemptQubits(QNIC_type qnic_type, int qnic_index);
   simtime_t getEmitTimeFromBSMNotification(messages::BSMTimingNotification *notification);
   void schedulePhotonEmission(QNIC_type qnic_type, int qnic_index, messages::BSMTimingNotification *notification);
+  void scheduleMSMPhotonEmission(QNIC_type qnic_type, int qnic_index, messages::EPPSTimingNotification *notification);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
@@ -92,6 +93,10 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   runtime::RuntimeManager runtimes;
   std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
+
+  private:
+  int msm_neighbor_addr;
+  int msm_qnic_index;
 };
 
 Define_Module(RuleEngine);
