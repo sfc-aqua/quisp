@@ -13,7 +13,10 @@
 
 #include "QNicStore/QNicStore.h"
 #include "RuntimeCallback.h"
+#include "messages/BSA_ipc_messages_m.h"
+#include "messages/link_generation_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
+#include "modules/QNIC.h"
 
 namespace quisp::modules {
 
@@ -96,6 +99,25 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // early return since this doesn't affect entangled resource
     // and we don't want to delete these messages
     return;
+  // } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
+  //   send(notification_packet,"bsa controller");
+  } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
+    msm_neighbor_addr = notification_packet->getOtherQnicParentAddr();
+    msm_qnic_index = notification_packet->getQnicIndex();
+    stopOnGoingPhotonEmission(QNIC_RP, msm_qnic_index);
+    freeFailedEntanglementAttemptQubits(QNIC_RP, msm_qnic_index);
+    scheduleMSMPhotonEmission(QNIC_RP, msm_qnic_index, notification_packet);
+  } else if (auto *batch_click_pk = dynamic_cast<CombinedBatchClickEventResults *>(msg)) {
+    auto *pk = new CombinedBSAresults();
+    pk->setQnicIndex(msm_qnic_index);
+    pk->setQnicType(QNIC_RP);
+    pk->setNeighborAddress(msm_neighbor_addr);
+    for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+      if (!batch_click_pk->getClickResults(index).success) continue;
+      pk->appendSuccessIndex(index);
+      pk->appendCorrectionOperation(batch_click_pk->getClickResults(index).correction_operation);
+    }
+    handleLinkGenerationResult(pk);
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
@@ -133,6 +155,14 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
 void RuleEngine::schedulePhotonEmission(QNIC_type type, int qnic_index, BSMTimingNotification *notification) {
   auto first_photon_emit_time = getEmitTimeFromBSMNotification(notification);
+  auto *timer = emit_photon_timer_map[{type, qnic_index}];
+  timer->setFirst(true);
+  timer->setIntervalBetweenPhotons(notification->getInterval());
+  scheduleAt(first_photon_emit_time, timer);
+}
+
+void RuleEngine::scheduleMSMPhotonEmission(QNIC_type type, int qnic_index, EPPSTimingNotification *notification) {
+  auto first_photon_emit_time = notification->getFirstPhotonEmitTime();
   auto *timer = emit_photon_timer_map[{type, qnic_index}];
   timer->setFirst(true);
   timer->setIntervalBetweenPhotons(notification->getInterval());

@@ -18,4 +18,9 @@ packet BatchClickEvent {
     BSAClickResult click_results[] @appender(appendClickResults) @getter(getClickResults) @sizeGetter(numberOfClicks);
 }
 
+// Used for MSM.
+packet CombinedBatchClickEventResults extends Header {
+    BSAClickResult click_results[] @appender(appendClickResults) @getter(getClickResults) @sizeGetter(numberOfClicks);
+}
+
 packet CancelBSMTimeOutMsg {}

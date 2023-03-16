@@ -2,17 +2,19 @@
  *
  *  \brief EPPSController
  */
+#include "EPPSController.h"
 #include <PhotonicQubit_m.h>
 #include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <vector>
-
-#include "EntangledPhotonPairSource.h"
-#include "EPPSController.h"
+#include "messages/QNode_ipc_messages_m.h"
 #include "modules/QNIC.h"
+#include "omnetpp/cmessage.h"
+#include "omnetpp/csimulation.h"
+#include "omnetpp/simtime.h"
 using namespace omnetpp;
 
-namespace quisp::modules{
+namespace quisp::modules {
 
 Define_Module(EPPSController);
 
@@ -24,75 +26,80 @@ void EPPSController::initialize() {
   epps = check_and_cast<EntangledPhotonPairSource *>(getParentModule()->getSubmodule("epps"));
   frequency = par("frequency");
   address = getParentModule()->par("address").intValue();
-  first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
-  left_qnic_addr = getExternalAdressFromPort(0);
-  right_qnic_addr = getExternalAdressFromPort(1);
+  left_addr = getExternalAdressFromPort(0);
+  right_addr = getExternalAdressFromPort(1);
+  left_qnic_index = getExternalQNICIndexFromPort(0);
+  right_qnic_index = getExternalQNICIndexFromPort(1);
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
   number_of_sent_photons = 0;
   checkNeighborsBSACapacity();
   checkNeighborsBuffer();
-  startPump();
+  cMessage *msg = new cMessage();
+  first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
+  scheduleAt(first_notification_timer, msg);
 }
 
 void EPPSController::handleMessage(cMessage *msg) {
-  auto emt = dynamic_cast<EmitPhotonRequest *>(msg);
-  if (number_of_sent_photons == 0) {
-    EPPStimingNotifier *left_pk, *right_pk;
-    left_pk = generateNotifier(left_travel_time, left_qnic_addr);
-    right_pk = generateNotifier(right_travel_time, right_qnic_addr);
-    send(left_pk, "to_router");  // send to port out. connected to local routing module (routing.localIn).
-    send(right_pk, "to_router");
-    epps->emitPhotons(1);
-    number_of_sent_photons++;
-    emt->setFirst(false);
-    scheduleAt(simTime() + max_acceptance_rate, emt);
-  } else if (number_of_sent_photons == number_of_photons - 1){ // sending out last photon
-    epps->emitPhotons(2);
-    number_of_sent_photons++;
-    scheduleAt(simTime() + max_acceptance_rate, emt);
+  if(dynamic_cast<EmitPhotonRequest *>(msg)){
+    if (number_of_sent_photons == 0) {
+        epps->emitPhotons(1);
+        number_of_sent_photons++;
+        scheduleAt(simTime() + max_acceptance_rate, msg);
+    } else if (number_of_sent_photons == number_of_photons - 1) {  // sending out last photon
+        epps->emitPhotons(2);
+    } else {
+        epps->emitPhotons(0);
+        number_of_sent_photons++;
+        scheduleAt(simTime() + max_acceptance_rate, msg);
+    }
   } else {
-    epps->emitPhotons(0);
-    number_of_sent_photons++;
-    scheduleAt(simTime() + max_acceptance_rate, emt);
+    EPPSTimingNotification *left_pk, *right_pk;
+    left_pk = generateNotifier(true);
+    right_pk = generateNotifier(false);
+    send(left_pk, "to_router");
+    send(right_pk, "to_router");
+    EmitPhotonRequest *emt = new EmitPhotonRequest();
+    scheduleAt(simTime() + 2 * std::max(left_travel_time, right_travel_time) , emt);
+    delete msg;
   }
-  delete msg;
 }
 
-void EPPSController::startPump() {
-  EmitPhotonRequest *emt = new EmitPhotonRequest();
-  scheduleAt(simTime() + first_notification_timer, emt);
-}
-
-EPPStimingNotifier *EPPSController::generateNotifier(double time_to_travel, int dest_addr) {
-  EPPStimingNotifier *pk = new EPPStimingNotifier("EppsTimingNotifier");
-  pk->setTiming_at(first_notification_timer + time_to_travel);
+EPPSTimingNotification *EPPSController::generateNotifier(bool is_left) {
+  EPPSTimingNotification *pk = new EPPSTimingNotification("EPPSTimingNotification");
+  pk->setQnicParentAddr(is_left? left_addr: right_addr);
+  pk->setQnicIndex(is_left? left_qnic_index: right_qnic_index);
+  pk->setQnicType(QNIC_RP);
+  pk->setOtherQnicParentAddr(is_left? right_addr: left_addr);
+  pk->setOtherQnicIndex(is_left? right_qnic_index: left_qnic_index);
+  pk->setOtherQnicType(QNIC_RP);
+  pk->setFirstPhotonEmitTime(simTime().dbl() + 2 * (is_left? left_travel_time: right_travel_time));
   pk->setKind(4);
   pk->setInterval(max_acceptance_rate);
   pk->setSrcAddr(address);
-  pk->setDestAddr(dest_addr);
+  pk->setDestAddr(is_left? left_addr: right_addr);
   return pk;
 }
 
 void EPPSController::checkNeighborsBSACapacity() {
   int left_photon_detection_per_second = getParentModule()
-      ->getSubmodule("epps")
-      ->gate("quantum_port$i", 1)
-      ->getPreviousGate()  // EPPSNode quantum_port
-      ->getPreviousGate()  // QNode quantum_port
-      ->getPreviousGate() // qnic_rp quantum_port
-      ->getOwnerModule() // qnic_rp
-      ->getSubmodule("bsa") // BellStateAnalyzer
-      ->par("photon_detection_per_second");
+                                             ->getSubmodule("epps")
+                                             ->gate("quantum_port$i", 0)
+                                             ->getPreviousGate()  // EPPSNode quantum_port
+                                             ->getPreviousGate()  // QNode quantum_port_receiver_passive
+                                             ->getPreviousGate()  // QNIC quantum_port
+                                             ->getOwnerModule()   // QNIC
+                                             ->getSubmodule("bsa")  // BellStateAnalyzer
+                                             ->par("photon_detection_per_second");
   int right_photon_detection_per_second = getParentModule()
-      ->getSubmodule("epps")
-      ->gate("quantum_port$i", 1)
-      ->getPreviousGate()  // EPPSNode quantum_port
-      ->getPreviousGate()  // QNode quantum_port
-      ->getPreviousGate() // qnic_rp quantum_port
-      ->getOwnerModule() // qnic_rp
-      ->getSubmodule("bsa") // BellStateAnalyzer
-      ->par("photon_detection_per_second");
+                                              ->getSubmodule("epps")
+                                              ->gate("quantum_port$i", 1)
+                                              ->getPreviousGate()  // EPPSNode quantum_port
+                                              ->getPreviousGate()  // QNode quantum_port_receiver_passive
+                                              ->getPreviousGate()  // QNIC quantum_port
+                                              ->getOwnerModule()   // QNIC
+                                              ->getSubmodule("bsa")  // BellStateAnalyzer
+                                              ->par("photon_detection_per_second");
   int min_photon_detection_per_second = std::min(left_photon_detection_per_second, right_photon_detection_per_second);
   max_acceptance_rate = (double)1 / (double)min_photon_detection_per_second;
   // Adjust pump frequency to the lower BSA detection rate by neighbors.
@@ -101,21 +108,21 @@ void EPPSController::checkNeighborsBSACapacity() {
   if (pump_rate < max_acceptance_rate) max_acceptance_rate = pump_rate;
 }
 
-void EPPSController::checkNeighborsBuffer(){
+void EPPSController::checkNeighborsBuffer() {
   int left_buffer = getParentModule()
-    ->getSubmodule("epps")
-    ->gate("quantum_port$i", 0)
-    ->getPreviousGate()  // EPPSNode quantum_port
-    ->getPreviousGate()  // QNode quantum_port
-    ->getOwnerModule() // QNode
-    ->par("buffer");
+                        ->getSubmodule("epps")
+                        ->gate("quantum_port$i", 0)
+                        ->getPreviousGate()  // EPPSNode quantum_port
+                        ->getPreviousGate()  // QNode quantum_port
+                        ->getOwnerModule()  // QNode
+                        ->par("buffers");
   int right_buffer = getParentModule()
-    ->getSubmodule("epps")
-    ->gate("quantum_port$i", 1)
-    ->getPreviousGate()  // EPPSNode quantum_port
-    ->getPreviousGate()  // QNode quantum_port
-    ->getOwnerModule() // QNode
-    ->par("buffer");
+                         ->getSubmodule("epps")
+                         ->gate("quantum_port$i", 1)
+                         ->getPreviousGate()  // EPPSNode quantum_port
+                         ->getPreviousGate()  // QNode quantum_port
+                         ->getOwnerModule()  // QNode
+                         ->par("buffers");
   number_of_photons = std::min(left_buffer, right_buffer);
 }
 
@@ -131,9 +138,20 @@ int EPPSController::getExternalAdressFromPort(int port) {
       ->getSubmodule("epps")
       ->gate("quantum_port$i", port)
       ->getPreviousGate()  // EPPSNode quantum_port
-      ->getPreviousGate()  // QNode quantum_port
+      ->getPreviousGate()  // QNode quantum_port_receiver_passive
       ->getOwnerModule()  // QNode
       ->par("address");
+}
+
+int EPPSController::getExternalQNICIndexFromPort(int port) {
+  return getParentModule()
+      ->getSubmodule("epps")
+      ->gate("quantum_port$i", port)
+      ->getPreviousGate()  // EPPSNode quantum_port
+      ->getPreviousGate()  // QNode quantum_port_receiver_passive
+      ->getPreviousGate()  // QNIC quantum_port
+      ->getOwnerModule()   // QNIC
+      ->par("self_qnic_index");
 }
 
 }  // namespace quisp::modules

@@ -92,8 +92,8 @@ submodules:
 connections:
     EndNode1.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> EPPS.port++;
     EPPS.port++      <--> ClassicalChannel {  distance = 0.5km; } <--> EndNode2.port++;
-    EndNode1.quantum_port++ <--> QuantumChannel {  distance = 0.5km; } <--> EPPS.quantum_port++;
-    EPPS.quantum_port++      <--> QuantumChannel {  distance = 0.5km; } <--> EndNode2.quantum_port++;
+    EndNode1.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 0.5km; } <--> EPPS.quantum_port++;
+    EPPS.quantum_port++      <--> QuantumChannel {  distance = 0.5km; } <--> EndNode2.quantum_port_receiver_passive++;
 }
 
 network three_node_MIM

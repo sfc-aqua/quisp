@@ -48,12 +48,17 @@ module QNIC
             @display("p=436.278,487.008");
         }
 
-        bsa_controller: BSAController if receiver {
+        bsa_controller: BSAController if receiver && !passive {
             mode = "active";
             @display("p=466.716,798.152");
         }
 
-        gate_closer: dummyModule;
+        bsa_controller_passive: BSAController if receiver && passive {
+            mode = "passive";
+            @display("p=466.716,794.77");
+        }
+
+        gate_closer: dummyModule {
 
     connections:
         for i=0..num_buffer-1 {
@@ -66,7 +71,12 @@ module QNIC
         // if qnic is qnic_receiver
         bsa.quantum_port++ <--> lens.to_bsa if receiver;
         bsa.quantum_port++ <--> qnic_quantum_port if receiver;
-        bsa.to_bsa_controller --> bsa_controller.from_bsa if receiver;
-        bsa_controller.to_router --> to_parent_router if receiver;
-        bsa_controller.from_router <-- gate_closer.close_output if receiver;
+        bsa.to_bsa_controller --> bsa_controller.from_bsa if receiver && !passive;
+        bsa_controller.to_router --> to_parent_router if receiver && !passive;
+        bsa_controller.from_router <-- gate_closer.close_output if receiver && !passive;
+
+        // if qnic is qnic_receiver_passive
+        bsa.to_bsa_controller --> bsa_controller_passive.from_bsa if receiver && passive;
+        bsa_controller_passive.to_router --> to_parent_router if receiver && passive;
+        bsa_controller_passive.from_router <-- gate_closer.close_output if receiver && passive;
 }
