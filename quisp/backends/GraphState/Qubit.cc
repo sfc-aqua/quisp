@@ -389,7 +389,7 @@ EigenvalueResult GraphStateQubit::graphMeasureZ(const EigenvalueResult eigenvalu
 
 void GraphStateQubit::setFree() {
   // force qubit to be in |0> state
-  auto result = this->graphMeasureZ();
+  this->graphMeasureZ();
   this->vertex_operator = CliffordOperator::H;
   updated_time = backend->getSimTime();
 }
