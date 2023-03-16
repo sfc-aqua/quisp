@@ -16,8 +16,8 @@
 
 #include "messages/classical_messages.h"
 #include "modules/PhysicalConnection/BSA/BSAController.h"
-#include "modules/PhysicalConnection/EPPS/EPPSController.h"
 #include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
+#include "modules/PhysicalConnection/EPPS/EPPSController.h"
 #include "rules/RuleSet.h"
 
 using namespace quisp::messages;

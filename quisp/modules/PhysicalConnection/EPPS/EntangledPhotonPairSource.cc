@@ -32,7 +32,7 @@ void EntangledPhotonPairSource::handleMessage(cMessage *msg) {
     throw cRuntimeError("EntangledPhotonPairSource::handleMessage: message from outside is not expected");
   }
   int port = 0;
-  if(strcmp(msg->getName(), "RightPhoton")) port = 1;
+  if (strcmp(msg->getName(), "RightPhoton")) port = 1;
   double rand = dblrand();
   if (rand < (1 - emission_success_probability)) {
     PhotonicQubit *pk = check_and_cast<PhotonicQubit *>(msg);

@@ -42,7 +42,7 @@ void BSAController::initialize() {
   right_travel_time = getTravelTimeFromPort(1);
   time_out_count = 0;
   time_out_message = new BSMNotificationTimeout("bsm_notification_timeout");
-  if(is_active) {
+  if (is_active) {
     right_qnic = getExternalQNICInfoFromPort(1);
     offset_time_for_first_photon = calculateOffsetTimeFromDistance();
     time_interval_between_photons = SimTime(1, SIMTIME_S).dbl() / getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
@@ -53,7 +53,7 @@ void BSAController::initialize() {
 
 void BSAController::handleMessage(cMessage *msg) {
   if (msg == time_out_message) {
-    if(is_active){
+    if (is_active) {
       send(generateFirstNotificationTiming(true), "to_router");
       send(generateFirstNotificationTiming(false), "to_router");
     }
@@ -64,7 +64,7 @@ void BSAController::handleMessage(cMessage *msg) {
     return;
   } else
 
-  if (dynamic_cast<CancelBSMTimeOutMsg *>(msg)) {
+      if (dynamic_cast<CancelBSMTimeOutMsg *>(msg)) {
     cancelBSMTimeOut();
     delete msg;
     return;
@@ -96,7 +96,7 @@ void BSAController::handleMessage(cMessage *msg) {
 }
 
 void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
-  if(is_active){
+  if (is_active) {
     CombinedBSAresults *leftpk = generateNextNotificationTiming(true);
     CombinedBSAresults *rightpk = generateNextNotificationTiming(false);
     for (int index = 0; index < batch_click_msg->numberOfClicks(); index++) {
@@ -112,10 +112,10 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
     send(rightpk, "to_router");
   } else {
     CombinedBatchClickEventResults *batch_click_pk;
-    for(int index = 0; index < batch_click_msg->numberOfClicks(); index++) {
+    for (int index = 0; index < batch_click_msg->numberOfClicks(); index++) {
       batch_click_pk->appendClickResults(batch_click_msg->getClickResults(index));
     }
-    delete(batch_click_msg);
+    delete (batch_click_msg);
     batch_click_pk->setDestAddr(left_qnic.parent_node_addr);
     send(batch_click_pk, "to_router");
   }

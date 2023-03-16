@@ -41,17 +41,17 @@ void EPPSController::initialize() {
 }
 
 void EPPSController::handleMessage(cMessage *msg) {
-  if(dynamic_cast<EmitPhotonRequest *>(msg)){
+  if (dynamic_cast<EmitPhotonRequest *>(msg)) {
     if (number_of_sent_photons == 0) {
-        epps->emitPhotons(1);
-        number_of_sent_photons++;
-        scheduleAt(simTime() + max_acceptance_rate, msg);
+      epps->emitPhotons(1);
+      number_of_sent_photons++;
+      scheduleAt(simTime() + max_acceptance_rate, msg);
     } else if (number_of_sent_photons == number_of_photons - 1) {  // sending out last photon
-        epps->emitPhotons(2);
+      epps->emitPhotons(2);
     } else {
-        epps->emitPhotons(0);
-        number_of_sent_photons++;
-        scheduleAt(simTime() + max_acceptance_rate, msg);
+      epps->emitPhotons(0);
+      number_of_sent_photons++;
+      scheduleAt(simTime() + max_acceptance_rate, msg);
     }
   } else {
     EPPSTimingNotification *left_pk, *right_pk;
@@ -60,24 +60,24 @@ void EPPSController::handleMessage(cMessage *msg) {
     send(left_pk, "to_router");
     send(right_pk, "to_router");
     EmitPhotonRequest *emt = new EmitPhotonRequest();
-    scheduleAt(simTime() + 2 * std::max(left_travel_time, right_travel_time) , emt);
+    scheduleAt(simTime() + 2 * std::max(left_travel_time, right_travel_time), emt);
     delete msg;
   }
 }
 
 EPPSTimingNotification *EPPSController::generateNotifier(bool is_left) {
   EPPSTimingNotification *pk = new EPPSTimingNotification("EPPSTimingNotification");
-  pk->setQnicParentAddr(is_left? left_addr: right_addr);
-  pk->setQnicIndex(is_left? left_qnic_index: right_qnic_index);
+  pk->setQnicParentAddr(is_left ? left_addr : right_addr);
+  pk->setQnicIndex(is_left ? left_qnic_index : right_qnic_index);
   pk->setQnicType(QNIC_RP);
-  pk->setOtherQnicParentAddr(is_left? right_addr: left_addr);
-  pk->setOtherQnicIndex(is_left? right_qnic_index: left_qnic_index);
+  pk->setOtherQnicParentAddr(is_left ? right_addr : left_addr);
+  pk->setOtherQnicIndex(is_left ? right_qnic_index : left_qnic_index);
   pk->setOtherQnicType(QNIC_RP);
-  pk->setFirstPhotonEmitTime(simTime().dbl() + 2 * (is_left? left_travel_time: right_travel_time));
+  pk->setFirstPhotonEmitTime(simTime().dbl() + 2 * (is_left ? left_travel_time : right_travel_time));
   pk->setKind(4);
   pk->setInterval(max_acceptance_rate);
   pk->setSrcAddr(address);
-  pk->setDestAddr(is_left? left_addr: right_addr);
+  pk->setDestAddr(is_left ? left_addr : right_addr);
   return pk;
 }
 
@@ -88,7 +88,7 @@ void EPPSController::checkNeighborsBSACapacity() {
                                              ->getPreviousGate()  // EPPSNode quantum_port
                                              ->getPreviousGate()  // QNode quantum_port_receiver_passive
                                              ->getPreviousGate()  // QNIC quantum_port
-                                             ->getOwnerModule()   // QNIC
+                                             ->getOwnerModule()  // QNIC
                                              ->getSubmodule("bsa")  // BellStateAnalyzer
                                              ->par("photon_detection_per_second");
   int right_photon_detection_per_second = getParentModule()
@@ -97,7 +97,7 @@ void EPPSController::checkNeighborsBSACapacity() {
                                               ->getPreviousGate()  // EPPSNode quantum_port
                                               ->getPreviousGate()  // QNode quantum_port_receiver_passive
                                               ->getPreviousGate()  // QNIC quantum_port
-                                              ->getOwnerModule()   // QNIC
+                                              ->getOwnerModule()  // QNIC
                                               ->getSubmodule("bsa")  // BellStateAnalyzer
                                               ->par("photon_detection_per_second");
   int min_photon_detection_per_second = std::min(left_photon_detection_per_second, right_photon_detection_per_second);
@@ -150,7 +150,7 @@ int EPPSController::getExternalQNICIndexFromPort(int port) {
       ->getPreviousGate()  // EPPSNode quantum_port
       ->getPreviousGate()  // QNode quantum_port_receiver_passive
       ->getPreviousGate()  // QNIC quantum_port
-      ->getOwnerModule()   // QNIC
+      ->getOwnerModule()  // QNIC
       ->par("self_qnic_index");
 }
 
