@@ -99,8 +99,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // early return since this doesn't affect entangled resource
     // and we don't want to delete these messages
     return;
-  // } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
-  //   send(notification_packet,"bsa controller");
+    // } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
+    //   send(notification_packet,"bsa controller");
   } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
     msm_neighbor_addr = notification_packet->getOtherQnicParentAddr();
     msm_qnic_index = notification_packet->getQnicIndex();
