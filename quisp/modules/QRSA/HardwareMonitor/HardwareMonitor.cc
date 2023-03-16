@@ -16,6 +16,7 @@
 
 #include "messages/classical_messages.h"
 #include "modules/PhysicalConnection/BSA/BSAController.h"
+#include "modules/PhysicalConnection/EPPS/EPPSController.h"
 #include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
 #include "rules/RuleSet.h"
 
@@ -1195,7 +1196,28 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   }
 
   if (provider.isEPPSNodeType(type)) {
-    error("TO BE IMPLEMENTED");
+    auto *controller = dynamic_cast<EPPSController *>(thisNode.getSubmodule("epps_controller"));
+    if (controller == nullptr) {
+      error("EPPS controller not found");
+    }
+
+    int address_one = controller->getExternalAdressFromPort(0);
+    int address_two = controller->getExternalAdressFromPort(1);
+    int myaddress = par("address");
+
+    EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
+
+    if (address_one == -1 && address_two == -1) {
+      error("EPPS Controller is not initialized properly");
+    }
+
+    if (address_one == myaddress) {
+      inf->neighborQNode_address = address_two;
+    } else if (address_two == myaddress) {
+      inf->neighborQNode_address = address_one;
+    }
+
+    return inf;
   }
 
   error(
