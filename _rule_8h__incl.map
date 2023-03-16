@@ -7,7 +7,7 @@
 <area shape="rect" id="node6" href="$_action_8h.html" title=" " alt="" coords="563,79,632,104"/>
 <area shape="rect" id="node48" href="$_condition_8h.html" title=" " alt="" coords="78,709,165,735"/>
 <area shape="rect" id="node7" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="794,878,913,903"/>
-<area shape="rect" id="node8" href="$modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="699,152,826,177"/>
+<area shape="rect" id="node8" href="$modules_2_qubit_8h.html" title="QUBIT." alt="" coords="699,152,826,177"/>
 <area shape="rect" id="node9" href="$_stationary_qubit_8h.html" title="StationaryQubit." alt="" coords="2151,225,2353,265"/>
 <area shape="rect" id="node10" title=" " alt="" coords="1873,959,2005,984"/>
 <area shape="rect" id="node11" href="$_backends_8h.html" title=" " alt="" coords="3062,959,3213,984"/>
@@ -24,7 +24,7 @@
 <area shape="rect" id="node13" title=" " alt="" coords="2871,1113,2929,1138"/>
 <area shape="rect" id="node14" title=" " alt="" coords="2522,1113,2633,1138"/>
 <area shape="rect" id="node24" href="$_i_random_number_generator_8h.html" title=" " alt="" coords="2657,1105,2847,1145"/>
-<area shape="rect" id="node25" href="$backends_2_graph_state_2_q_u_b_i_t_8h.html" title=" " alt="" coords="2435,1113,2498,1138"/>
+<area shape="rect" id="node25" href="$backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="2435,1113,2498,1138"/>
 <area shape="rect" id="node16" title=" " alt="" coords="2975,1340,3030,1365"/>
 <area shape="rect" id="node18" title=" " alt="" coords="2367,1267,2510,1292"/>
 <area shape="rect" id="node20" title=" " alt="" coords="2219,1340,2285,1365"/>

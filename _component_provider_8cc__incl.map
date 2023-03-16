@@ -26,7 +26,7 @@
 <area shape="rect" id="node15" href="$_i_qubit_id_8h.html" title=" " alt="" coords="1000,1135,1079,1160"/>
 <area shape="rect" id="node16" href="$_i_qubit_8h.html" title=" " alt="" coords="1335,1054,1474,1079"/>
 <area shape="rect" id="node21" href="$_qubit_configuration_8h.html" title=" " alt="" coords="5,1054,204,1079"/>
-<area shape="rect" id="node17" href="$backends_2_graph_state_2_q_u_b_i_t_8h.html" title=" " alt="" coords="777,973,840,999"/>
+<area shape="rect" id="node17" href="$backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="777,973,840,999"/>
 <area shape="rect" id="node19" title=" " alt="" coords="538,1047,706,1087"/>
 <area shape="rect" id="node20" title=" " alt="" coords="731,1054,887,1079"/>
 <area shape="rect" id="node22" title=" " alt="" coords="381,1054,513,1079"/>
@@ -46,7 +46,7 @@
 <area shape="rect" id="node44" title=" " alt="" coords="3332,577,3392,603"/>
 <area shape="rect" id="node45" href="$_action_8h.html" title=" " alt="" coords="3281,658,3350,683"/>
 <area shape="rect" id="node47" href="$_condition_8h.html" title=" " alt="" coords="3507,577,3593,603"/>
-<area shape="rect" id="node46" href="$modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="2757,900,2884,925"/>
+<area shape="rect" id="node46" href="$modules_2_qubit_8h.html" title="QUBIT." alt="" coords="2757,900,2884,925"/>
 <area shape="rect" id="node48" title=" " alt="" coords="3521,658,3579,683"/>
 <area shape="rect" id="node49" href="$_clause_8h.html" title=" " alt="" coords="3425,658,3497,683"/>
 </map>
