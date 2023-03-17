@@ -117,7 +117,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       pk->appendSuccessIndex(index);
       pk->appendCorrectionOperation(batch_click_pk->getClickResults(index).correction_operation);
     }
-    handleLinkGenerationResult(pk);
+    scheduleAt(simTime(), pk);
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
