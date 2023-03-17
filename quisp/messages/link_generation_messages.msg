@@ -30,6 +30,7 @@ packet EPPSTimingNotification extends Header
     QNIC_type other_qnic_type @setter(setOtherQnicType)  @getter(getOtherQnicType);
     int other_qnic_index      @setter(setOtherQnicIndex) @getter(getOtherQnicIndex);
     int other_qnic_parent_addr     @setter(setOtherQnicParentAddr) @getter(getOtherQnicParentAddr);
+    double travel_time @setter(setTravelTime) @getter(getTravelTime);
 }
 
 // Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier

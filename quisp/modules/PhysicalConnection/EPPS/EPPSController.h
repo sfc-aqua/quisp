@@ -48,6 +48,8 @@ class EPPSController : public cSimpleModule {
   double frequency;
   int number_of_photons;
   int number_of_sent_photons;
+  EPPSNotificationTimeout *time_out_message;
+  int time_out_count;
 
   // EPPS characteristics
   EntangledPhotonPairSource *epps;

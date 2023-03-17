@@ -97,6 +97,9 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
  private:
   int msm_neighbor_addr;
   int msm_qnic_index;
+  int msm_offset_time_for_first_photon;
+  int msm_travel_time;
+  int msm_time_interval_between_photons;
 };
 
 Define_Module(RuleEngine);
