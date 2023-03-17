@@ -104,6 +104,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
     msm_neighbor_addr = notification_packet->getOtherQnicParentAddr();
     msm_qnic_index = notification_packet->getQnicIndex();
+    msm_offset_time_for_first_photon = notification_packet->getFirstPhotonEmitTime();
+    msm_travel_time = notification_packet->getTravelTime();
+    msm_time_interval_between_photons = notification_packet->getInterval();
     stopOnGoingPhotonEmission(QNIC_RP, msm_qnic_index);
     freeFailedEntanglementAttemptQubits(QNIC_RP, msm_qnic_index);
     scheduleMSMPhotonEmission(QNIC_RP, msm_qnic_index, notification_packet);
@@ -112,6 +115,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pk->setQnicIndex(msm_qnic_index);
     pk->setQnicType(QNIC_RP);
     pk->setNeighborAddress(msm_neighbor_addr);
+    pk->setFirstPhotonEmitTime(simTime() + msm_offset_time_for_first_photon - msm_travel_time);
+    pk->setInterval(msm_time_interval_between_photons);
     for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
       if (!batch_click_pk->getClickResults(index).success) continue;
       pk->appendSuccessIndex(index);

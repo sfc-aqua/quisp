@@ -54,10 +54,8 @@ void BSAController::initialize() {
 
 void BSAController::handleMessage(cMessage *msg) {
   if (msg == time_out_message) {
-    if (is_active) {
-      send(generateFirstNotificationTiming(true), "to_router");
-      send(generateFirstNotificationTiming(false), "to_router");
-    }
+    send(generateFirstNotificationTiming(true), "to_router");
+    send(generateFirstNotificationTiming(false), "to_router");
     bsa->resetState();
     // set timeout to be twice the travel time plus number of no response
     time_out_count++;
@@ -107,6 +105,7 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
     }
     send(leftpk, "to_router");
     send(rightpk, "to_router");
+    scheduleAt(simTime() + 1.1 * offset_time_for_first_photon, time_out_message);
   } else {
     CombinedBatchClickEventResults *batch_click_pk = new CombinedBatchClickEventResults();
     for (int index = 0; index < batch_click_msg->numberOfClicks(); index++) {
@@ -117,7 +116,6 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
     send(batch_click_pk, "to_router");
   }
   last_result_send_time = simTime();
-  scheduleAt(simTime() + 1.1 * offset_time_for_first_photon, time_out_message);
 }
 
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
