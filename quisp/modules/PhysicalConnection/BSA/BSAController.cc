@@ -6,6 +6,7 @@
 
 #include <cstring>
 #include <stdexcept>
+#include "messages/BSA_ipc_messages_m.h"
 #include "messages/base_messages_m.h"
 #include "messages/link_generation_messages_m.h"
 #include "omnetpp/cmessage.h"
@@ -62,15 +63,11 @@ void BSAController::handleMessage(cMessage *msg) {
     time_out_count++;
     scheduleAt(simTime() + (2 + time_out_count) * (offset_time_for_first_photon), msg);
     return;
-  } else
-
-      if (dynamic_cast<CancelBSMTimeOutMsg *>(msg)) {
+  } else if (dynamic_cast<CancelBSMTimeOutMsg *>(msg)) {
     cancelBSMTimeOut();
     delete msg;
     return;
-  }
-
-  if (auto *batch_click_msg = dynamic_cast<BatchClickEvent *>(msg)) {
+  } else if (auto *batch_click_msg = dynamic_cast<BatchClickEvent *>(msg)) {
     sendMeasurementResults(batch_click_msg);
     delete msg;
     return;
@@ -111,12 +108,12 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
     send(leftpk, "to_router");
     send(rightpk, "to_router");
   } else {
-    CombinedBatchClickEventResults *batch_click_pk;
+    CombinedBatchClickEventResults *batch_click_pk = new CombinedBatchClickEventResults();
     for (int index = 0; index < batch_click_msg->numberOfClicks(); index++) {
       batch_click_pk->appendClickResults(batch_click_msg->getClickResults(index));
     }
-    delete (batch_click_msg);
     batch_click_pk->setDestAddr(left_qnic.parent_node_addr);
+    batch_click_pk->setSrcAddr(left_qnic.parent_node_addr);
     send(batch_click_pk, "to_router");
   }
   last_result_send_time = simTime();
