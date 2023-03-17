@@ -4,6 +4,7 @@
  *  \brief Router
  */
 #include "Router.h"
+#include "messages/BSA_ipc_messages_m.h"
 #include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
 
 using namespace omnetpp;
@@ -77,6 +78,10 @@ void Router::handleMessage(cMessage *msg) {
   } else if (dest_addr == my_address && dynamic_cast<EPPSTimingNotification *>(msg)) {  // Timing for BSM
     bubble("Timing Notifier from EPPS received");
     send(pk, "rePort$o");  // send to Application locally
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<CombinedBatchClickEventResults *>(msg)) {
+    bubble("Batch click result from internal BSA received");
+    send(pk, "rePort$o");
     return;
   } else if (dest_addr == my_address && dynamic_cast<ConnectionSetupRequest *>(msg)) {
     bubble("Connection setup request received");
