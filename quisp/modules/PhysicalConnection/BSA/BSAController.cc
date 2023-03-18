@@ -66,6 +66,7 @@ void BSAController::handleMessage(cMessage *msg) {
     delete msg;
     return;
   } else if (auto *batch_click_msg = dynamic_cast<BatchClickEvent *>(msg)) {
+    bsa->resetState();
     sendMeasurementResults(batch_click_msg);
     delete msg;
     return;

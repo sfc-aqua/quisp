@@ -96,7 +96,7 @@ void Router::handleMessage(cMessage *msg) {
     send(pk, "rePort$o");  // send to Application locally
     return;
   } else if (dest_addr == my_address && dynamic_cast<CombinedBatchClickEventResults *>(msg)) {
-    bubble("Batch click result from internal BSA received");
+    bubble("Batch click result from partner BSA received");
     send(pk, "rePort$o");
     return;
   } else if (dest_addr == my_address && dynamic_cast<ConnectionSetupRequest *>(msg)) {
