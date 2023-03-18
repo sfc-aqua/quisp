@@ -114,7 +114,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto *pk = new CombinedBSAresults();
     pk->setQnicIndex(msm_qnic_index);
     pk->setQnicType(QNIC_RP);
-    pk->setNeighborAddress(parentAddress);
+    pk->setNeighborAddress(msm_neighbor_addr);
     pk->setFirstPhotonEmitTime(simTime() + msm_offset_time_for_first_photon - msm_travel_time);
     pk->setInterval(msm_time_interval_between_photons);
     for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
@@ -122,9 +122,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       pk->appendSuccessIndex(index);
       pk->appendCorrectionOperation(batch_click_pk->getClickResults(index).correction_operation);
     }
-    pk->setSrcAddr(parentAddress);
-    pk->setDestAddr(msm_neighbor_addr);
-    send(pk, "RouterPort$o");
+    scheduleAt(simTime(), pk);
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
