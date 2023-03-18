@@ -30,6 +30,7 @@ class EntangledPhotonPairSource : public omnetpp::cSimpleModule {
  protected:
   virtual void initialize() override;
   virtual void handleMessage(omnetpp::cMessage* msg) override;
+  virtual void finish() override;
 
  public:
   EntangledPhotonPairSource();

@@ -22,6 +22,8 @@ EPPSController::EPPSController() : provider(utils::ComponentProvider{this}) {}
 
 EPPSController::~EPPSController() {}
 
+void EPPSController::finish() { std::cout << "last EPPS message that was sent " << last_result_send_time << "\n"; }
+
 void EPPSController::initialize() {
   epps = check_and_cast<EntangledPhotonPairSource *>(getParentModule()->getSubmodule("epps"));
   frequency = par("frequency");
@@ -49,22 +51,23 @@ void EPPSController::handleMessage(cMessage *msg) {
     } else if (number_of_sent_photons == number_of_photons - 1) {  // sending out last photon
       epps->emitPhotons(2);
       delete(msg);
+      // set timeout to be twice the travel time plus number of no response
+      time_out_count++;
+      scheduleAt(simTime() + (2 + time_out_count) * (std::max(left_travel_time, right_travel_time)), time_out_message);
+      number_of_sent_photons = 0;
     } else {
       epps->emitPhotons(0);
       number_of_sent_photons++;
       scheduleAt(simTime() + max_acceptance_rate, msg);
     }
   } else if (msg == time_out_message) {
-    EPPSTimingNotification *left_pk, *right_pk;
-    left_pk = generateNotifier(true);
-    right_pk = generateNotifier(false);
+    last_result_send_time = simTime();
+    EPPSTimingNotification *left_pk = generateNotifier(true);
+    EPPSTimingNotification *right_pk = generateNotifier(false);
     send(left_pk, "to_router");
     send(right_pk, "to_router");
     EmitPhotonRequest *emt = new EmitPhotonRequest();
     scheduleAt(simTime() + 2 * std::max(left_travel_time, right_travel_time), emt);
-    // set timeout to be twice the travel time plus number of no response
-    time_out_count++;
-    scheduleAt(simTime() + (2 + time_out_count) * (simTime() + 2 * std::max(left_travel_time, right_travel_time)), msg);
   }
   return;
 }

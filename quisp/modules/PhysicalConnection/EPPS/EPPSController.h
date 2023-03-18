@@ -28,6 +28,7 @@ class EPPSController : public cSimpleModule {
  protected:
   virtual void initialize() override;
   virtual void handleMessage(cMessage *msg) override;
+  virtual void finish() override;
   virtual void checkNeighborsBSACapacity();
   virtual void checkNeighborsBuffer();
   virtual EPPSTimingNotification *generateNotifier(bool is_left);
@@ -50,6 +51,7 @@ class EPPSController : public cSimpleModule {
   int number_of_sent_photons;
   EPPSNotificationTimeout *time_out_message;
   int time_out_count;
+  simtime_t last_result_send_time;
 
   // EPPS characteristics
   EntangledPhotonPairSource *epps;
