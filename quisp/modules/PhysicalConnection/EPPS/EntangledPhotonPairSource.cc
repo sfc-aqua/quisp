@@ -12,6 +12,8 @@ EntangledPhotonPairSource::EntangledPhotonPairSource() : provider(utils::Compone
 
 EntangledPhotonPairSource::~EntangledPhotonPairSource() {}
 
+void EntangledPhotonPairSource::finish() {}
+
 void EntangledPhotonPairSource::initialize() {
   emission_success_probability = par("emission_success_probability").doubleValue();
   emission_x_error_rate = par("emission_x_error_rate").doubleValue();
