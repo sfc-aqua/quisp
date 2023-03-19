@@ -94,9 +94,7 @@ std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int 
   // prepare condition
   auto condition = std::make_unique<Condition>();
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, partner_address);
-  // auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address);
   condition->addClause(std::move(enough_resource_clause));
-  // condition->addClause(std::move(measure_count_clause));
   tomography_rule->setCondition(std::move(condition));
 
   // prepare action
