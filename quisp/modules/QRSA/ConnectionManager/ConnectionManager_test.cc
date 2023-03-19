@@ -219,15 +219,6 @@ TEST(ConnectionManagerTest, RespondToRequest) {
               "num_resource": 1
             },
             "type": "enough_resource"
-          },
-          {
-            "options": {
-              "interface": {
-                "partner_address": 5
-              },
-              "num_measure": 0
-            },
-            "type": "measure_count"
           }
         ]
       },
@@ -541,15 +532,6 @@ TEST(ConnectionManagerTest, RespondToRequest) {
               "num_resource": 1
             },
             "type": "enough_resource"
-          },
-          {
-            "options": {
-              "interface": {
-                "partner_address": 2
-              },
-              "num_measure": 0
-            },
-            "type": "measure_count"
           }
         ]
       },
