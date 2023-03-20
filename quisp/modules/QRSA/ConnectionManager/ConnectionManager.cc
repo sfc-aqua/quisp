@@ -126,43 +126,6 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 }
 
-PurType ConnectionManager::parsePurType(const std::string &pur_type) {
-  if (pur_type == "SINGLE_X") {
-    return PurType::SINGLE_X;
-  }
-  if (pur_type == "SINGLE_Z") {
-    return PurType::SINGLE_Z;
-  }
-  if (pur_type == "SINGLE_Y") {
-    return PurType::SINGLE_Y;
-  }
-  if (pur_type == "DOUBLE") {
-    return PurType::DOUBLE;
-  }
-  if (pur_type == "DOUBLE_INV") {
-    return PurType::DOUBLE_INV;
-  }
-  if (pur_type == "DSSA") {
-    return PurType::DSSA;
-  }
-  if (pur_type == "DSSA_INV") {
-    return PurType::DSSA_INV;
-  }
-  if (pur_type == "DSDA") {
-    return PurType::DSDA;
-  }
-  if (pur_type == "DSDA_INV") {
-    return PurType::DSDA_INV;
-  }
-  if (pur_type == "DSDA_SECOND") {
-    return PurType::DSDA_SECOND;
-  }
-  if (pur_type == "DSDA_SECOND_INV") {
-    return PurType::DSDA_SECOND_INV;
-  }
-  return PurType::INVALID;
-}
-
 /**
  * This function is called to handle the ConnectionSetupResponse at the intermediate node.
  * The only job here is to unpack the RuleSets, feed them to the RuleEngine via Router, and start the connection running.
@@ -466,6 +429,42 @@ void ConnectionManager::scheduleRequestRetry(int qnic_address) {
   EV << "schedule from retry" << endl;
   scheduleAt(simTime() + backoff, request_send_timing[qnic_address]);
   return;
+}
+PurType ConnectionManager::parsePurType(const std::string &pur_type) {
+  if (pur_type == "SINGLE_X") {
+    return PurType::SINGLE_X;
+  }
+  if (pur_type == "SINGLE_Z") {
+    return PurType::SINGLE_Z;
+  }
+  if (pur_type == "SINGLE_Y") {
+    return PurType::SINGLE_Y;
+  }
+  if (pur_type == "DOUBLE") {
+    return PurType::DOUBLE;
+  }
+  if (pur_type == "DOUBLE_INV") {
+    return PurType::DOUBLE_INV;
+  }
+  if (pur_type == "DSSA") {
+    return PurType::DSSA;
+  }
+  if (pur_type == "DSSA_INV") {
+    return PurType::DSSA_INV;
+  }
+  if (pur_type == "DSDA") {
+    return PurType::DSDA;
+  }
+  if (pur_type == "DSDA_INV") {
+    return PurType::DSDA_INV;
+  }
+  if (pur_type == "DSDA_SECOND") {
+    return PurType::DSDA_SECOND;
+  }
+  if (pur_type == "DSDA_SECOND_INV") {
+    return PurType::DSDA_SECOND_INV;
+  }
+  return PurType::INVALID;
 }
 
 }  // namespace quisp::modules
