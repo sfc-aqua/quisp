@@ -7,6 +7,8 @@
 
 #include "ConnectionManager.h"
 #include "RuleSetGenerator.h"
+#include "messages/connection_setup_messages_m.h"
+#include "rules/Action.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -80,28 +82,102 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   logger->logPacket("handleMessage", msg);
 
   if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
+    std::cout << req->getSrcAddr() << "->" << req->getDestAddr() << ": CM handle message@" << my_address << ", " << req->getActual_srcAddr() << "->" << req->getActual_destAddr()
+              << std::endl;
     auto actual_dst = req->getActual_destAddr();
     auto actual_src = req->getActual_srcAddr();
 
+    if (auto *upper_layer_req = dynamic_cast<const ConnectionSetupRequest *>(req->getUpperLayerRequest())) {
+      // if there's upper layer req
+      auto address_list = provider.getAvailableAddresses();
+      address_list.push_back(my_address);
+      auto it = std::find(address_list.begin(), address_list.end(), actual_dst);
+      if (it != address_list.end()) {
+        auto k = std::make_pair(upper_layer_req->getActual_srcAddr(), upper_layer_req->getActual_destAddr());
+        gateway_request_store.insert({k, req->dup()});
+        auto upper_it = std::find(address_list.begin(), address_list.end(), upper_layer_req->getActual_destAddr());
+        if (upper_it == address_list.end()) {
+          // this is the lower dest node. store the request and pass it to upper layer
+          tryRelayRequestToNextHop(upper_layer_req->dup());
+        } else {
+          // this is the top-level dest node and also the lower dest node.
+          respondToRequest(upper_layer_req->dup());
+        }
+
+        return;
+      }
+    }
+    // top-level req and this is the dest node
     if (actual_dst == my_address) {
       // got ConnectionSetupRequest and return the response
       respondToRequest(req);
       delete msg;
-    } else if (actual_src == my_address) {
+      return;
+    }
+
+    auto result = routing_daemon->findLowerLayerDestInfoByDestAddr(actual_dst);
+    if (result.has_value()) {
+      auto [network, current_my_addr, neighbor_addr, lower_dest_addr] = result.value();
+      std::cout << "src addr: " << req->getSrcAddr() << ", cur my addr:" << current_my_addr << std::endl;
+      if ((actual_src == my_address && actual_src != current_my_addr) || req->getDestAddr() != current_my_addr) {
+        // push this node as initiator node
+        auto responder_address = req->getActual_destAddr();
+        auto outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(responder_address);
+
+        if (outbound_qnic_address == -1) {
+          error("QNIC to destination cannot be found");
+        }
+
+        // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
+        auto inbound_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
+        auto outbound_info = hardware_monitor->findConnectionInfoByQnicAddr(outbound_qnic_address);
+
+        // Update information and send it to the next Qnode.
+        int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
+        int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
+
+        req->setSrcAddr(my_address);
+        req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
+        req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
+        req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
+        req->setStack_of_linkCosts(num_accumulated_costs, outbound_info->quantum_link_cost);
+
+        // create recursive request
+        auto *upper_layer_req = req;
+        auto new_req = new ConnectionSetupRequest("RecursiveConnSetupReq");
+        new_req->setActual_srcAddr(current_my_addr);
+        new_req->setActual_destAddr(lower_dest_addr);
+        new_req->setDestAddr(neighbor_addr);
+        new_req->setNum_measure(req->getNum_measure());
+        new_req->setKind(7);
+        new_req->setUpperLayerRequest(upper_layer_req);
+        queueApplicationRequest(new_req);
+        return;
+      }
+    }
+    // no lower layer for now
+    if (actual_src == my_address) {
       // initiator node
       queueApplicationRequest(req);
-    } else {
-      // intermediate node
-      tryRelayRequestToNextHop(req);
+      return;
     }
+    // intermediate node
+    tryRelayRequestToNextHop(req);
     return;
   }
 
   if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
-    auto initiator_addr = resp->getActual_destAddr();
-    auto responder_addr = resp->getActual_srcAddr();
+    auto actual_dest_addr = resp->getActual_destAddr();
+    auto actual_src_addr = resp->getActual_srcAddr();
+    auto key = std::make_pair(resp->getInitiatorAddr(), resp->getResponderAddr());
+    auto it = gateway_request_store.find(key);
+    if (it != gateway_request_store.end()) {
+      auto *stored_req = it->second;
+      rewriteRuleSet(stored_req, resp);
+      return;
+    }
 
-    if (initiator_addr == my_address || responder_addr == my_address) {
+    if (actual_dest_addr == my_address || actual_src_addr == my_address) {
       // this node is not a swapper
       storeRuleSetForApplication(resp);
     } else {
@@ -161,6 +237,7 @@ void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) 
 }
 
 void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
+  std::cout << "reject " << my_address << std::endl;
   int application_id = req->getApplicationId();
   int hop_count = req->getStack_of_QNodeIndexesArraySize();
   std::vector<int> path;
@@ -220,11 +297,51 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setDestAddr(owner_address);
     pkt->setActual_srcAddr(my_address);
     pkt->setActual_destAddr(owner_address);
+    pkt->setInitiatorAddr(req->getActual_srcAddr());
+    pkt->setResponderAddr(req->getActual_destAddr());
     pkt->setApplication_type(0);
     pkt->setKind(2);
     send(pkt, "RouterPort$o");
   }
   reserveQnic(qnic_addr);
+}
+
+void ConnectionManager::rewriteRuleSet(messages::ConnectionSetupRequest *stored_req, messages::ConnectionSetupResponse *resp) {
+  ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
+  auto rulesets = ruleset_gen.generateRuleSets(stored_req, createUniqueId());
+  std::cout << "rewrite--------- @" << my_address << std::endl;
+
+  // delete tomography action from lower layer rulesets
+  for (auto &[owner_addr, rs] : rulesets) {
+    RuleSet ruleset(0, QNodeAddr{0});
+    ruleset.deserialize_json(rs);
+    std::cout << ruleset << std::endl;
+    auto it = ruleset.rules.begin();
+    while (it != ruleset.rules.end()) {
+      auto *raw_rule = static_cast<Rule *>(it->get());
+      if (dynamic_cast<Tomography *>(raw_rule->action.get())) {
+        it = ruleset.rules.erase(it);
+        std::cout << "**delete tomography" << std::endl;
+      } else {
+        it++;
+      }
+    }
+    rulesets[owner_addr] = ruleset.serialize_json();
+  }
+  for (auto [owner_address, rs] : rulesets) {
+    ConnectionSetupResponse *pkt = new ConnectionSetupResponse("ConnectionSetupResponse");
+    pkt->setApplicationId(resp->getApplicationId());
+    pkt->setRuleSet(rs);
+    pkt->setSrcAddr(my_address);
+    pkt->setDestAddr(owner_address);
+    pkt->setActual_srcAddr(my_address);
+    pkt->setActual_destAddr(owner_address);
+    pkt->setInitiatorAddr(stored_req->getActual_srcAddr());
+    pkt->setResponderAddr(stored_req->getActual_destAddr());
+    pkt->setApplication_type(0);
+    pkt->setKind(2);
+    send(pkt, "RouterPort$o");
+  }
 }
 
 /**

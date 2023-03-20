@@ -108,12 +108,16 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto serialized_ruleset = pkt->getRuleSet();
     RuleSet ruleset(0, QNodeAddr{0});
     ruleset.deserialize_json(serialized_ruleset);
+    std::cout << "********--------------- @" << provider.getNodeAddr() << std::endl;
+    std::cout << ruleset << std::endl;
     runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     if (pkt->getApplication_type() != 0) error("This application is not recognized yet");
     auto serialized_ruleset = pkt->getRuleSet();
     RuleSet ruleset(0, QNodeAddr{0});
     ruleset.deserialize_json(serialized_ruleset);
+    std::cout << "********--------------- @" << provider.getNodeAddr() << std::endl;
+    std::cout << ruleset << std::endl;
     runtimes.acceptRuleSet(ruleset.construct());
   }
 

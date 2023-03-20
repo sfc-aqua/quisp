@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "IConnectionManager.h"
+#include "messages/connection_setup_messages_m.h"
 
 #include <messages/classical_messages.h>
 #include <modules/Logger/LoggerBase.h>
@@ -73,6 +74,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   rules::PurType purification_type;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
+  std::map<std::pair<QNodeAddr, QNodeAddr>, messages::ConnectionSetupRequest *> gateway_request_store;
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;
@@ -80,6 +82,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   void respondToRequest(messages::ConnectionSetupRequest *pk);
   void respondToRequest_deprecated(messages::ConnectionSetupRequest *pk);
   void tryRelayRequestToNextHop(messages::ConnectionSetupRequest *pk);
+  void rewriteRuleSet(messages::ConnectionSetupRequest *stored_req, messages::ConnectionSetupResponse *resp);
 
   void queueApplicationRequest(messages::ConnectionSetupRequest *pk);
   void initiateApplicationRequest(int qnic_address);
