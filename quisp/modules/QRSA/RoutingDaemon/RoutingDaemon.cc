@@ -5,7 +5,10 @@
  */
 #include "RoutingDaemon.h"
 #include <messages/classical_messages.h>
+#include <stdexcept>
 #include <vector>
+#include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
+#include "types/QNodeAddr.h"
 
 using namespace omnetpp;
 
@@ -113,11 +116,23 @@ double RoutingDaemon::calculateSecPerBellPair(const cTopology::LinkOut *const ou
 }
 
 void RoutingDaemon::generateRoutingTable(cTopology *topo) {
-  cTopology::Node *this_node = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
+  cTopology::Node *this_node = topo->getNodeFor(provider.getNode());  // The parent node with this specific router
 
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
     const auto node = topo->getNode(i);
     if (node == this_node) continue;  // skip the node that is running this specific router app
+
+    auto *target_module = node->getModule();
+
+    // dest node might have multiple addresses
+    std::vector<QNodeAddr> dest_node_addresses = {QNodeAddr{target_module->par("address").stringValue()}};
+    if (target_module->findPar("available_addresses") != -1) {
+      auto address_str_list = ((cValueArray *)target_module->par("available_addresses").objectValue())->asStringVector();
+      for (auto &s : address_str_list) {
+        auto addr = QNodeAddr{s.c_str()};
+        dest_node_addresses.push_back(addr);
+      }
+    }
 
     // Apply dijkstra to each node to find all shortest paths.
     topo->calculateWeightedSingleShortestPathsTo(node);  // Overwrites getNumPaths() and so on.
@@ -127,16 +142,144 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
       error("Path not found. This means that a node is completely separated...Probably not what you want now");
       continue;  // not connected
     }
+
     // Returns the next link/gate in the ith shortest paths towards the target node.
     cGate *parentModuleGate = this_node->getPath(0)->getLocalGate();
-    auto destAddr = QNodeAddr{node->getModule()->par("address").stringValue()};
 
-    qrtable[destAddr] = getQNicAddr(parentModuleGate);
+    {  // set next neighbor addr
+
+      auto *module = this_node->getPath(0)->getRemoteNode()->getModule();
+      // if the next neighbor node is a BSA, skip it and take the next module as a neighbor because we treate BSA as an link
+      if (strcmp(module->par("node_type").stringValue(), "BSA") == 0) {
+        if (this_node->getPath(0)->getRemoteNode()->getNumPaths() == 0) {
+          module = nullptr;
+        } else {
+          module = this_node->getPath(0)->getRemoteNode()->getPath(0)->getRemoteNode()->getModule();
+        }
+      }
+
+      if (module != nullptr) {
+        QNodeAddr next_addr{module->par("address").stringValue()};
+        for (auto &a : dest_node_addresses) {
+          neighbor_addr_table[a] = next_addr;
+          std::cout << "@" << myAddress << " neighbor_addr_table[" << a << "] = " << next_addr << std::endl;
+        }
+      }
+    }
+
+    auto *node_in_path = this_node;
+    // collect path info
+    std::vector<std::vector<QNodeAddr>> addrs_in_path{};
+
+    while (node_in_path != topo->getTargetNode()) {
+      auto node_type = node_in_path->getModule()->par("node_type").stringValue();
+      if (strcmp(node_type, "BSA") != 0) {
+        // std::cout << " . " << node_in_path->getModule()->par("address").stringValue() << std::endl;
+        auto addresses = RoutingDaemon::getQNodeAddressList(node_in_path->getModule());
+        addrs_in_path.push_back(addresses);
+      }
+      auto *path = node_in_path->getPath(0);
+      node_in_path = path->getRemoteNode();
+    }
+    auto node_type = node_in_path->getModule()->par("node_type").stringValue();
+    if (strcmp(node_type, "BSA") != 0) {
+      // std::cout << " ... " << node_in_path->getModule()->par("address").stringValue() << std::endl;
+      auto addresses = RoutingDaemon::getQNodeAddressList(node_in_path->getModule());
+      addrs_in_path.push_back(addresses);
+    }
+
+    for (auto &addresses : addrs_in_path) {
+      std::cout << "{";
+      for (auto &a : addresses) std::cout << a << ", ";
+      std::cout << "}" << std::endl;
+    }
+    auto it = RoutingDaemon::findNetworkBoundary(addrs_in_path, dest_node_addresses.at(0));
+    auto [current_network, current_addr, neighbor_addr, lower_dest_addr] = it;
+    std::cout << myAddress << "(" << current_addr << ")"
+              << "->" << dest_node_addresses << ": cur_net:" << current_network << ", neighbor:" << neighbor_addr << ", lower dest:" << lower_dest_addr << std::endl;
+    if (lower_dest_addr.isValid()) {
+      for (auto &a : dest_node_addresses) {
+        lower_layer_routing_table.insert({a, it});
+      }
+    }
+
+    for (auto &addr : dest_node_addresses) {
+      qrtable[addr] = getQNicAddr(parentModuleGate);
+      // std::cout << "qrtable@" << myAddress << "[" << addr << "]:" << qrtable[addr] << std::endl;
+    }
 
     if (!strstr(parentModuleGate->getFullName(), "quantum")) {
       error("Quantum routing table referring to classical gates...");
     }
   }
+}
+
+std::vector<QNodeAddr> RoutingDaemon::getQNodeAddressList(cModule *mod) {
+  if (mod->findPar("address") == -1) return {};
+  std::vector<QNodeAddr> address_list{QNodeAddr{mod->par("address").stringValue()}};
+
+  if (mod->findPar("available_addresses") == -1) return address_list;
+
+  for (auto &s : ((cValueArray *)(mod->par("available_addresses").objectValue()))->asStringVector()) {
+    address_list.push_back(QNodeAddr{s.c_str()});
+  }
+  return address_list;
+}
+
+DestInfoTuple RoutingDaemon::findNetworkBoundary(const std::vector<std::vector<types::QNodeAddr>> &path, QNodeAddr dest_addr) {
+  // current addr, neighbor addr, lower dest addr,
+
+  QNodeAddr current_addr{-1, -1};
+  QNodeAddr neighbor_addr{-1, -1};
+  QNodeAddr lower_dest_addr{-1, -1};
+  if (path.size() <= 1) return {-1, current_addr, neighbor_addr, lower_dest_addr};
+  auto src_addr_list = path[0];
+  auto next_addr_list = path[1];
+  int current_network = -1;
+  for (auto &src_addr : src_addr_list) {
+    for (auto &next_addr : next_addr_list) {
+      if (src_addr.network_addr == next_addr.network_addr) {
+        current_network = src_addr.network_addr;
+        current_addr = src_addr;
+        neighbor_addr = next_addr;
+        break;
+      }
+    }
+  }
+  if (current_network == -1) {
+    // different network
+    return {current_network, current_addr, neighbor_addr, lower_dest_addr};
+  }
+
+  std::vector<QNodeAddr> narrow_path;
+  for (auto &addrs : path) {
+    auto len = narrow_path.size();
+    for (auto &a : addrs) {
+      if (a.network_addr == current_network) {
+        narrow_path.push_back(a);
+      }
+    }
+    if (len == narrow_path.size()) {
+      for (auto &a : narrow_path) {
+        std::cout << a << "->";
+      }
+      std::cout << std::endl;
+      lower_dest_addr = narrow_path.at(narrow_path.size() - 1);
+      return {current_network, current_addr, neighbor_addr, lower_dest_addr};
+    }
+  }
+  if (dest_addr == path.at(path.size() - 1).at(0)) {
+    lower_dest_addr = narrow_path.at(narrow_path.size() - 1);
+  }
+  return {current_network, current_addr, neighbor_addr, lower_dest_addr};
+}
+
+std::optional<DestInfoTuple> RoutingDaemon::findLowerLayerDestInfoByDestAddr(QNodeAddr dest_addr) {
+  auto it = lower_layer_routing_table.find(dest_addr);
+  if (it == lower_layer_routing_table.end()) {
+    return std::nullopt;
+  }
+  return std::make_optional(it->second);
 }
 
 int RoutingDaemon::getQNicAddr(const cGate *const module_gate) {
