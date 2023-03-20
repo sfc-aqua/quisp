@@ -22,7 +22,7 @@ class RuleSet {
   types::QNodeAddr owner_addr;  ///< Address of RuleSet owner
   std::vector<std::unique_ptr<Rule>> rules;
 
-  Rule *addRule(std::unique_ptr<Rule> rule);
+  Rule* addRule(std::unique_ptr<Rule> rule);
   json serialize_json();
   void deserialize_json(json serialized);
   unsigned long createUniqueId();
@@ -30,3 +30,7 @@ class RuleSet {
 };
 
 }  // namespace quisp::rules
+
+namespace std {
+std::ostream& operator<<(std::ostream& os, const quisp::rules::RuleSet& rs);
+}

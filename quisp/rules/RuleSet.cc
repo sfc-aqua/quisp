@@ -13,8 +13,8 @@ using quisp::types::QNodeAddr;
 namespace quisp::rules {
 RuleSet::RuleSet(unsigned long ruleset_id, QNodeAddr owner_address) : ruleset_id(ruleset_id), owner_addr(owner_address) {}
 
-Rule *RuleSet::addRule(std::unique_ptr<Rule> rule) {
-  Rule *raw_ptr = rule.get();
+Rule* RuleSet::addRule(std::unique_ptr<Rule> rule) {
+  Rule* raw_ptr = rule.get();
   rules.push_back(std::move(rule));
   return raw_ptr;
 };
@@ -25,7 +25,7 @@ json RuleSet::serialize_json() {
   ruleset_json["ruleset_id"] = ruleset_id;
   ruleset_json["owner_address"] = owner_addr;
   ruleset_json["num_rules"] = rules.size();
-  for (auto &rule : rules) {
+  for (auto& rule : rules) {
     ruleset_json["rules"].push_back(rule->serialize_json());
   }
   return ruleset_json;
@@ -51,3 +51,14 @@ void RuleSet::deserialize_json(json serialized) {
 
 runtime::RuleSet RuleSet::construct() const { return rs_converter::RuleSetConverter::construct(*this); }
 }  // namespace quisp::rules
+
+namespace std {
+std::ostream& operator<<(std::ostream& os, const quisp::rules::RuleSet& rs) {
+  os << "RuleSet(" << rs.ruleset_id << ", owner:" << rs.owner_addr << ")\n";
+  for (auto& rule : rs.rules) {
+    std::cout << rule->name << "\n";
+  }
+
+  return os;
+}
+}  // namespace std
