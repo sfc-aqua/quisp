@@ -29,6 +29,7 @@ QNodeAddr::QNodeAddr(const char* addr_str) {
   host_addr = atoi(p);
 }
 
+bool QNodeAddr::isValid() const { return network_addr != -1 && host_addr != -1; }
 std::string QNodeAddr::str() const { return std::to_string(*this); }
 
 int QNodeAddr::toInt() {
@@ -67,5 +68,14 @@ std::string to_string(const quisp::types::QNodeAddr& addr) {
 std::ostream& operator<<(std::ostream& stream, const quisp::types::QNodeAddr& addr) {
   stream << std::to_string(addr.network_addr) << "." << std::to_string(addr.host_addr);
   return stream;
+}
+
+std::ostream& operator<<(std::ostream& os, const std::vector<quisp::types::QNodeAddr>& addr_vec) {
+  os << "{";
+  for (auto& a : addr_vec) {
+    os << a << ",";
+  }
+  os << "}";
+  return os;
 }
 }  // namespace std

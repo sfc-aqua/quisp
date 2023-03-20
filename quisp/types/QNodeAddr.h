@@ -11,6 +11,7 @@ struct QNodeAddr {
   QNodeAddr(int network_addr, int host_addr);
   QNodeAddr(char* addr_str);
   QNodeAddr(const char* addr_str);
+  bool isValid() const;
   std::string str() const;
   int network_addr = 0;
   int host_addr = -1;
@@ -53,4 +54,5 @@ struct ::std::hash<quisp::types::QNodeAddr> {
 std::string to_string(const quisp::types::QNodeAddr& addr);
 
 std::ostream& operator<<(std::ostream& os, const quisp::types::QNodeAddr& addr);
+std::ostream& operator<<(std::ostream& os, const std::vector<quisp::types::QNodeAddr>& addr_vec);
 }  // namespace std
