@@ -15,7 +15,6 @@ packet ConnectionSetupRequest extends ConnectionSetupHeader
     int number_of_required_Bellpairs;
     QNodeAddr stack_of_QNodeIndexes[];
     int stack_of_linkCosts[];
-    QNIC_pair_info stack_of_QNICs[];
 
     // for internetworking. this contains ConnectionSetupRequest
     Header *upperLayerRequest;

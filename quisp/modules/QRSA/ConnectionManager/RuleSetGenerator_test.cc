@@ -97,14 +97,10 @@ TEST_F(RuleSetGeneratorTest, Simple) {
   req->setActual_srcAddr(QNodeAddr{2});
   req->setDestAddr(QNodeAddr{5});
   req->setSrcAddr(QNodeAddr{4});
-  req->setStack_of_QNICsArraySize(3);
   req->setStack_of_QNodeIndexesArraySize(3);
   req->setStack_of_QNodeIndexes(0, QNodeAddr{2});
   req->setStack_of_QNodeIndexes(1, QNodeAddr{3});
   req->setStack_of_QNodeIndexes(2, QNodeAddr{4});
-  req->setStack_of_QNICs(0, QNIC_pair_info{.fst = NULL_CONNECTION_SETUP_INFO.qnic, .snd = {.type = QNIC_E, .index = 11, .address = 101}});
-  req->setStack_of_QNICs(1, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 12, .address = 102}, .snd = {.type = QNIC_E, .index = 13, .address = 103}});
-  req->setStack_of_QNICs(2, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
   auto rulesets = rsg->generateRuleSets(req, 1234);
   EXPECT_EQ(rulesets.size(), 4);
   {

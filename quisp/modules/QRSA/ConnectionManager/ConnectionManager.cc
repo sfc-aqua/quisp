@@ -297,7 +297,6 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   // Update information and send it to the next Qnode.
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
-  int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
 
   req->setApplicationId(application_id);
   req->setDestAddr(outbound_info->neighbor_address);
@@ -306,10 +305,6 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
   req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
   req->setStack_of_linkCosts(num_accumulated_costs, outbound_info->quantum_link_cost);
-  req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
-
-  QNIC_pair_info pair_info = {.fst = inbound_info->qnic, .snd = outbound_info->qnic};
-  req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
   reserveQnic(inbound_info->qnic.address);
   reserveQnic(outbound_info->qnic.address);
@@ -410,7 +405,6 @@ void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
   // Update information and send it to the next Qnode.
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
-  int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
 
   req->setDestAddr(outbound_info->neighbor_address);
   req->setSrcAddr(my_address);
@@ -418,10 +412,6 @@ void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
   req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
   req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
   req->setStack_of_linkCosts(num_accumulated_costs, outbound_info->quantum_link_cost);
-  req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
-
-  QNIC_pair_info pair_info = {.fst = inbound_info->qnic, .snd = outbound_info->qnic};
-  req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
   auto &request_queue = connection_setup_buffer[outbound_qnic_address];
   request_queue.push(req);
