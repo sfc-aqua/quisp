@@ -30,4 +30,6 @@ packet ConnectionSetupResponse extends ConnectionSetupHeader
     json ruleSet;
     int application_type;
     int stack_of_QNodeIndexes[];
+    QNodeAddr initiatorAddr;
+    QNodeAddr responderAddr;
 }
