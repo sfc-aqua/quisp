@@ -73,7 +73,7 @@ void Router::initialize() {
         if (my_address.network_addr != n_addr.network_addr) {
           for (auto &a : available_addr_list) {
             if (a.network_addr == n_addr.network_addr) {
-              std::cout << my_address << ":" << a << ": " << qnic->getFullPath() << " : gate index:" << qnic->getIndex() << " addr:" << addr_str << std::endl;
+              // std::cout << my_address << ":" << a << ": " << qnic->getFullPath() << " : gate index:" << qnic->getIndex() << " addr:" << addr_str << std::endl;
               in_network = true;
               gate_network_map[qnic->getIndex()] = n_addr.network_addr;
               break;
@@ -82,25 +82,22 @@ void Router::initialize() {
         }
         if (!in_network) {
           gate_network_map[qnic->getIndex()] = my_address.network_addr;
-          std::cout << my_address << ": " << qnic->getFullPath() << " : " << addr_str << std::endl;
+          // std::cout << my_address << ": " << qnic->getFullPath() << " : " << addr_str << std::endl;
         }
       }
       for (int i = 0; i < number_of_qnics_r; i++) {
         auto *qnic = provider.getQNIC(i, QNIC_R);
         auto addr_str = qnic->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule()->par("address").stringValue();
-        std::cout << my_address << ": " << qnic->getFullPath() << " : " << addr_str << std::endl;
+        // std::cout << my_address << ": " << qnic->getFullPath() << " : " << addr_str << std::endl;
       }
     }
 
-    std::cout << "----" << std::endl;
-    for (auto [gate_i, network_addr] : gate_network_map) {
-      std::cout << my_address << ": gate_index: " << gate_i << ", network:" << network_addr << std::endl;
-    }
-    std::cout << "----" << std::endl;
+    // std::cout << "----" << std::endl;
+    // for (auto [gate_i, network_addr] : gate_network_map) {
+    //   std::cout << my_address << ": gate_index: " << gate_i << ", network:" << network_addr << std::endl;
+    // }
+    // std::cout << "----" << std::endl;
   }
-  // auto * node = provider.getNode();
-
-  // node->gate("qnic_quantum_port$o")
 
   // Traverse through all the destinations from the thisNode
   for (int i = 0; i < topo->getNumNodes(); i++) {
@@ -163,9 +160,9 @@ void Router::handleMessage(cMessage *msg) {
     return;
   }
 
-  int out_gate_index = (*it).second;
+  int out_gate_index = it->second;
   // detect the packet comes from external network or internal network
-  //
+
   // auto *req = dynamic_cast<ConnectionSetupRequest *>(msg);
   // if (req != nullptr && gate_network_map.size() > 0) {
   //   auto next_network = gate_network_map.find(out_gate_index);
