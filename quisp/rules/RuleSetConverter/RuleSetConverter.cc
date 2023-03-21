@@ -748,13 +748,17 @@ Program RuleSetConverter::constructSwappingCorrectionAction(const SwappingCorrec
   PAULI_Y
     GATE_Y qubit
   UPDATE_PARTNER
+  # if upper_layer_ruleset_id is null
     PROMOTE qubit new_partner_addr
+  # else
+    PROMOTE qubit new_partner_addr new_ruleset_id
   */
   QubitId qubit{0};
   auto seq_no = RegId::REG0;
   auto pauli_op = RegId::REG1;
   auto new_partner_addr = RegId::REG2;
   QNodeAddr partner_address = act->qnic_interfaces[0].partner_addr;
+  auto upper_layer_ruleset_id = act->upper_layer_ruleset_id;
   MemoryKey key{"swapping_" + std::to_string(act->shared_rule_tag) + "_seq_no"};
   // label
   Label pauli_x_label{"pauli_x"};
@@ -780,7 +784,11 @@ Program RuleSetConverter::constructSwappingCorrectionAction(const SwappingCorrec
   // PAULI_Y
   opcodes.push_back(INSTR_GATE_Y_QubitId_{qubit, pauli_y_label});
   // UPDATE_PARTNER
-  opcodes.push_back(INSTR_PROMOTE_QubitId_RegId_{{qubit, new_partner_addr}, update_partner_label});
+  if (upper_layer_ruleset_id.has_value()) {
+    opcodes.push_back(INSTR_PROMOTE_QubitId_RegId_RuleSetId_{{qubit, new_partner_addr, upper_layer_ruleset_id.value()}, update_partner_label});
+  } else {
+    opcodes.push_back(INSTR_PROMOTE_QubitId_RegId_{{qubit, new_partner_addr}, update_partner_label});
+  }
   // END
   return Program{"SwappingCorrection", opcodes};
 }

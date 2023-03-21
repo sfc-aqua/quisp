@@ -63,6 +63,8 @@ class Runtime {
     virtual bool isQubitLocked(IQubitRecord* const) = 0;
     virtual void lockQubit(IQubitRecord* const, unsigned long rs_id, int rule_id, int action_index) = 0;
     virtual int getActionIndex(IQubitRecord* const) = 0;
+    virtual void promoteToNextRuleSet(IQubitRecord* const, QNodeAddr next_partner_addr, unsigned long ruleset_id) = 0;
+    virtual void updateBellPairPartner(IQubitRecord* const, QNodeAddr next_partner_addr) = 0;
 
     // Quantum Operations
     virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
@@ -278,6 +280,17 @@ class Runtime {
    * @param new_partner_addr new entangled partner's QNode address.
    */
   void promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr new_partner_addr);
+
+  /**
+   * @brief promote the qubit that has new entangled partner to other RuleSet.
+   *
+   * entanglement swapping operations need the promotion of the qubit in lower layer
+   *
+   * @param qubit_record the entangled qubit's record already assigned to the RuleSet
+   * @param new_partner_addr new entangled partner's QNode address.
+   * @param ruleset_id next RuleSet id in this node.
+   */
+  void promoteQubitToNextRuleSet(IQubitRecord* qubit_record, QNodeAddr new_partner_addr, unsigned long ruleset_id);
   //@}
 
   /** @name quantum operations */

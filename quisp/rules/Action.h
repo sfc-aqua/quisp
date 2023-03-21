@@ -1,5 +1,6 @@
 #pragma once
 #include <nlohmann/json.hpp>
+#include <optional>
 
 #include "modules/QNIC.h"
 #include "modules/QUBIT.h"
@@ -93,7 +94,9 @@ class SwappingCorrection : public Action {
  public:
   SwappingCorrection(json serialized) { deserialize_json(serialized); }  // for deserialization
   SwappingCorrection(QNodeAddr swapper_addr, int shared_rule_tag);
+  SwappingCorrection(QNodeAddr swapper_addr, int shared_rule_tag, std::optional<unsigned long> upper_layer_ruleset_id);
   int shared_rule_tag;
+  std::optional<unsigned long> upper_layer_ruleset_id;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

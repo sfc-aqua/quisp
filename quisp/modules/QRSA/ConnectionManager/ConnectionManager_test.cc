@@ -167,6 +167,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
               "partner_address": "0.3"
             }
           ],
+          "upper_layer_ruleset_id": null,
           "shared_rule_tag": 1
         },
         "type": "swapping_correction"
@@ -265,6 +266,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
               "partner_address": "0.4"
             }
           ],
+          "upper_layer_ruleset_id": null,
           "shared_rule_tag": 2
         },
         "type": "swapping_correction"
@@ -455,6 +457,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
               "partner_address": "0.4"
             }
           ],
+          "upper_layer_ruleset_id": null,
           "shared_rule_tag": 2
         },
         "type": "swapping_correction"
@@ -489,6 +492,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
               "partner_address": "0.3"
             }
           ],
+          "upper_layer_ruleset_id": null,
           "shared_rule_tag": 1
         },
         "type": "swapping_correction"

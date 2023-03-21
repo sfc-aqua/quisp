@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "Runtime.h"
+#include "omnetpp/cexception.h"
 
 namespace quisp::runtime {
 
@@ -423,6 +424,14 @@ void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_RegId_& instruct
   auto* qubit_rec = runtime->getQubitByQubitId(qubit_id);
   auto new_partner_addr = QNodeAddr::fromInt(runtime->getRegVal(new_partner_addr_reg));
   runtime->promoteQubitWithNewPartner(qubit_rec, new_partner_addr);
+}
+
+void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_RegId_RuleSetId_& instruction) {
+  auto [qubit_id, new_partner_addr_reg, rs_id] = instruction.args;
+  auto* qubit_rec = runtime->getQubitByQubitId(qubit_id);
+  auto new_partner_addr = QNodeAddr::fromInt(runtime->getRegVal(new_partner_addr_reg));
+  std::cout << "promote qubit to next ruleset @" << runtime->callback->getNodeInfo() << " to " << new_partner_addr << "@rs_id:" << rs_id << std::endl;
+  runtime->promoteQubitToNextRuleSet(qubit_rec, new_partner_addr, rs_id);
 }
 
 void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_SEQ_RegId_RegId_& instruction) {

@@ -19,6 +19,7 @@ namespace quisp::runtime {
 using quisp::types::QNodeAddr;
 
 using RuleId = int;
+using RuleSetId = unsigned long;
 
 /**
  * @brief describes the order which Qubit is assigned to a Stage/Rule.

@@ -1,4 +1,5 @@
 #include "Action.h"
+#include <optional>
 
 namespace quisp::rules {
 using types::QNodeAddr;
@@ -81,13 +82,20 @@ void PurificationCorrelation::deserialize_json(json serialized) {
   }
 }
 
-SwappingCorrection::SwappingCorrection(QNodeAddr swapper_addr, int shared_rule_tag) : Action(swapper_addr), shared_rule_tag(shared_rule_tag) {}
+SwappingCorrection::SwappingCorrection(QNodeAddr swapper_addr, int shared_rule_tag) : SwappingCorrection(swapper_addr, shared_rule_tag, std::nullopt) {}
+SwappingCorrection::SwappingCorrection(QNodeAddr swapper_addr, int shared_rule_tag, std::optional<unsigned long> upper_layer_ruleset_id)
+    : Action(swapper_addr), shared_rule_tag(shared_rule_tag), upper_layer_ruleset_id(upper_layer_ruleset_id) {}
 
 json SwappingCorrection::serialize_json() {
   json wait_json;
   wait_json["type"] = "swapping_correction";
   wait_json["options"]["interface"] = qnic_interfaces;
   wait_json["options"]["shared_rule_tag"] = shared_rule_tag;
+  if (upper_layer_ruleset_id.has_value()) {
+    wait_json["options"]["upper_layer_ruleset_id"] = upper_layer_ruleset_id.value();
+  } else {
+    wait_json["options"]["upper_layer_ruleset_id"] = nullptr;
+  }
   return wait_json;
 }
 
@@ -96,6 +104,11 @@ void SwappingCorrection::deserialize_json(json serialized) {
   if (options != nullptr) {
     options["interface"].get_to(qnic_interfaces);
     options["shared_rule_tag"].get_to(shared_rule_tag);
+    if (options["upper_layer_ruleset_id"].is_null()) {
+      upper_layer_ruleset_id = std::nullopt;
+    } else {
+      upper_layer_ruleset_id = options["upper_layer_ruleset_id"].get<unsigned long>();
+    }
   }
 }
 

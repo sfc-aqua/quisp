@@ -174,7 +174,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     if (it != gateway_request_store.end()) {
       auto *stored_req = it->second;
       rewriteRuleSet(stored_req, resp);
-      return;
+      // return;
     }
 
     if (actual_dest_addr == my_address || actual_src_addr == my_address) {
@@ -317,19 +317,30 @@ void ConnectionManager::rewriteRuleSet(messages::ConnectionSetupRequest *stored_
     ruleset.deserialize_json(rs);
     std::cout << ruleset << std::endl;
     auto it = ruleset.rules.begin();
+    bool tomography_removed = false;
+    auto &rules = ruleset.rules;
     while (it != ruleset.rules.end()) {
       auto *raw_rule = static_cast<Rule *>(it->get());
       if (dynamic_cast<Tomography *>(raw_rule->action.get())) {
-        it = ruleset.rules.erase(it);
+        it = rules.erase(it);
         std::cout << "**delete tomography" << std::endl;
+        tomography_removed = true;
       } else {
         it++;
+      }
+    }
+    if (tomography_removed) {
+      auto &last_rule = rules.at(rules.size() - 1);
+      if (auto *r = dynamic_cast<SwappingCorrection *>(last_rule->action.get())) {
+        // set the next upper layer RS id to the action.
+        // then runtime promote the qubit to upper layer's ruleset.
+        r->upper_layer_ruleset_id = resp->getRuleSet().at("ruleset_id");
       }
     }
     rulesets[owner_addr] = ruleset.serialize_json();
   }
   for (auto [owner_address, rs] : rulesets) {
-    ConnectionSetupResponse *pkt = new ConnectionSetupResponse("ConnectionSetupResponse");
+    auto *pkt = new ConnectionSetupResponse("RecursiveConnSetupResp");
     pkt->setApplicationId(resp->getApplicationId());
     pkt->setRuleSet(rs);
     pkt->setSrcAddr(my_address);

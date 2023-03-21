@@ -174,6 +174,21 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     return qubit->action_index;
   }
 
+  void updateBellPairPartner(IQubitRecord *const qubit_record, QNodeAddr next_partner_addr) override {
+    auto &bp_store = rule_engine->bell_pair_store;
+    bp_store.eraseQubit(qubit_record);
+    bp_store.insertEntangledQubit(next_partner_addr, qubit_record);
+  }
+
+  void promoteToNextRuleSet(IQubitRecord *const qubit_record, QNodeAddr next_partner_addr, unsigned long ruleset_id) override {
+    auto *rt = rule_engine->runtimes.findById(ruleset_id);
+    assert(rt != nullptr);
+    rt->assignQubitToRuleSet(next_partner_addr, qubit_record);
+    auto &bp_store = rule_engine->bell_pair_store;
+    bp_store.eraseQubit(qubit_record);
+    bp_store.insertEntangledQubit(next_partner_addr, qubit_record);
+  }
+
   std::string getNodeInfo() override {
     std::stringstream ss;
     ss << "QNodeAddr:" << std::to_string(rule_engine->parentAddress) << ", event #" << std::to_string(omnetpp::getSimulation()->getEventNumber());
