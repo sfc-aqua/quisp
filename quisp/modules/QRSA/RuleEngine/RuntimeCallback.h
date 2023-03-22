@@ -12,6 +12,7 @@
 #include "RuleEngine.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/RuleEngine/QubitRecord/IQubitRecord.h"
+#include "types/QNodeAddr.h"
 
 namespace quisp::modules::runtime_callback {
 
@@ -182,7 +183,10 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
 
   void promoteToNextRuleSet(IQubitRecord *const qubit_record, QNodeAddr next_partner_addr, unsigned long ruleset_id) override {
     auto *rt = rule_engine->runtimes.findById(ruleset_id);
-    assert(rt != nullptr);
+    if (rt == nullptr) {
+      std::cout << "failed to promote qubit @ " << getNodeInfo() << ", rs_id:" << ruleset_id << ", no runtime" << std::endl;
+      return;
+    }
     rt->assignQubitToRuleSet(next_partner_addr, qubit_record);
     auto &bp_store = rule_engine->bell_pair_store;
     bp_store.eraseQubit(qubit_record);
