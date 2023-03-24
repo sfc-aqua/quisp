@@ -19,6 +19,7 @@
 #include "messages/link_generation_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "modules/QNIC.h"
+#include "omnetpp/csimulation.h"
 #include "omnetpp/errmsg.h"
 
 namespace quisp::modules {
@@ -199,18 +200,19 @@ void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventRes
       msm_partner_node_measurement_results.push_back(batch_click_pk->getClickResults(index).success);
     }
   }
-  if(msm_parent_node_measurement_results.empty() || msm_parent_node_measurement_results.empty()) {
+  if (!msm_parent_node_measurement_results.empty() && !msm_partner_node_measurement_results.empty()) {
     auto bsa_results = generateCombinedBSAresults();
-    handleLinkGenerationResult(bsa_results);
+    msm_parent_node_measurement_results.clear();
+    msm_partner_node_measurement_results.clear();
+    scheduleAt(simTime(), bsa_results);
   }
 }
 
-CombinedBSAresults* RuleEngine::generateCombinedBSAresults() {
+CombinedBSAresults *RuleEngine::generateCombinedBSAresults() {
   CombinedBSAresults *bsa_results = new CombinedBSAresults();
   bsa_results->setQnicIndex(msm_qnic_index);
   bsa_results->setQnicType(QNIC_RP);
   bsa_results->setNeighborAddress(msm_neighbor_addr);
-  assert(bsa_results->getNeighborAddress() != 0);
   bsa_results->setFirstPhotonEmitTime(simTime() + msm_offset_time_for_first_photon + msm_travel_time);
   bsa_results->setInterval(msm_time_interval_between_photons);
   for (int index = 0; index < std::min(msm_parent_node_measurement_results.size(), msm_partner_node_measurement_results.size()); index++) {
@@ -218,8 +220,9 @@ CombinedBSAresults* RuleEngine::generateCombinedBSAresults() {
     bool isPsiPlus = dblrand() < 0.5;
     bool isYoungerAddress = parentAddress < msm_neighbor_addr;
     bsa_results->appendSuccessIndex(index);
-    bsa_results->appendCorrectionOperation(isYoungerAddress ? (isPsiPlus ? PauliOperator::X : PauliOperator::Y): PauliOperator::I);
+    bsa_results->appendCorrectionOperation(isYoungerAddress ? (isPsiPlus ? PauliOperator::X : PauliOperator::Y) : PauliOperator::I);
   }
+
   return bsa_results;
 }
 
