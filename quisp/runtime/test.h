@@ -42,6 +42,8 @@ class MockRuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   MOCK_METHOD(bool, isQubitLocked, (IQubitRecord* const), (override));
   MOCK_METHOD(void, lockQubit, (IQubitRecord* const, unsigned long rs_id, int rule_id, int action_index), (override));
   MOCK_METHOD(int, getActionIndex, (IQubitRecord* const), (override));
+  MOCK_METHOD(void, promoteToNextRuleSet, (IQubitRecord* const, QNodeAddr next_partner_addr, unsigned long ruleset_id), (override));
+  MOCK_METHOD(void, updateBellPairPartner, (IQubitRecord* const, QNodeAddr next_partner_addr), (override));
 };
 
 /// @brief count the number of qubit resources assigned to the rule.

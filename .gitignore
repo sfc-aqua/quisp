@@ -3,6 +3,7 @@
 
 ### pyenv virtualenv
 .python-version
+.venv
 
 ### quisp specific
 /doc/html/

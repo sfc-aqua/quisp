@@ -72,7 +72,7 @@ class ActionExecutionTest : public testing::Test {
   unsigned long long ruleset_id = 123;
   Runtime* runtime;
   MockRuntimeCallback* callback;
-  RuleSet rs{
+  quisp::runtime::RuleSet rs{
       "test",
       {},
       terminator,
