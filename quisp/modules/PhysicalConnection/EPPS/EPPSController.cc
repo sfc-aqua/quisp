@@ -50,7 +50,7 @@ void EPPSController::handleMessage(cMessage *msg) {
       scheduleAt(simTime() + max_acceptance_rate, msg);
     } else if (number_of_sent_photons == number_of_photons - 1) {  // sending out last photon
       epps->emitPhotons(2);
-      delete(msg);
+      delete (msg);
       // set timeout to be twice the travel time plus number of no response
       time_out_count++;
       scheduleAt(simTime() + (2 + time_out_count) * (std::max(left_travel_time, right_travel_time)), time_out_message);
