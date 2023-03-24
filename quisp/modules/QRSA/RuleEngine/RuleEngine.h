@@ -13,6 +13,7 @@
 #include "IRuleEngine.h"
 #include "QNicStore/IQNicStore.h"
 #include "QubitRecord/IQubitRecord.h"
+#include "messages/BSA_ipc_messages_m.h"
 #include "messages/classical_messages.h"
 #include "modules/Logger/LoggerBase.h"
 #include "modules/QNIC.h"
@@ -79,6 +80,8 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(messages::PurificationResult *purification_result);
   void handleSwappingResult(messages::SwappingResult *swapping_result);
+  void handleCombinedBatchClickEventResults(messages::CombinedBatchClickEventResults *batch_click_pk);
+  messages::CombinedBSAresults *generateCombinedBSAresults();
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);
@@ -100,6 +103,8 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int msm_offset_time_for_first_photon;
   int msm_travel_time;
   int msm_time_interval_between_photons;
+  std::vector<bool> msm_parent_node_measurement_results;
+  std::vector<bool> msm_partner_node_measurement_results;
 };
 
 Define_Module(RuleEngine);

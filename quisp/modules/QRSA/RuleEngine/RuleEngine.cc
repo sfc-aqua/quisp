@@ -6,8 +6,10 @@
 
 #include <cassert>
 #include <fstream>
+#include <iostream>
 #include <iterator>
 #include <memory>
+#include <ostream>
 #include <stdexcept>
 #include <utility>
 
@@ -17,6 +19,7 @@
 #include "messages/link_generation_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "modules/QNIC.h"
+#include "omnetpp/errmsg.h"
 
 namespace quisp::modules {
 
@@ -111,18 +114,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     freeFailedEntanglementAttemptQubits(QNIC_RP, msm_qnic_index);
     scheduleMSMPhotonEmission(QNIC_RP, msm_qnic_index, notification_packet);
   } else if (auto *batch_click_pk = dynamic_cast<CombinedBatchClickEventResults *>(msg)) {
-    auto *pk = new CombinedBSAresults();
-    pk->setQnicIndex(msm_qnic_index);
-    pk->setQnicType(QNIC_RP);
-    pk->setNeighborAddress(msm_neighbor_addr);
-    pk->setFirstPhotonEmitTime(simTime() + msm_offset_time_for_first_photon - msm_travel_time);
-    pk->setInterval(msm_time_interval_between_photons);
-    for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
-      if (!batch_click_pk->getClickResults(index).success) continue;
-      pk->appendSuccessIndex(index);
-      pk->appendCorrectionOperation(batch_click_pk->getClickResults(index).correction_operation);
-    }
-    scheduleAt(simTime(), pk);
+    handleCombinedBatchClickEventResults(batch_click_pk);
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
@@ -195,7 +187,44 @@ void RuleEngine::freeFailedEntanglementAttemptQubits(QNIC_type type, int qnic_in
   emitted_indices.clear();
 }
 
+void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventResults *batch_click_pk) {
+  if (batch_click_pk->getSrcAddr() == parentAddress) {
+    for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+      msm_parent_node_measurement_results.push_back(batch_click_pk->getClickResults(index).success);
+    }
+    batch_click_pk->setDestAddr(msm_neighbor_addr);
+    send(batch_click_pk->dup(), "RouterPort$o");
+  } else if (batch_click_pk->getSrcAddr() == msm_neighbor_addr) {
+    for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+      msm_partner_node_measurement_results.push_back(batch_click_pk->getClickResults(index).success);
+    }
+  }
+  if(msm_parent_node_measurement_results.empty() || msm_parent_node_measurement_results.empty()) {
+    auto bsa_results = generateCombinedBSAresults();
+    handleLinkGenerationResult(bsa_results);
+  }
+}
+
+CombinedBSAresults* RuleEngine::generateCombinedBSAresults() {
+  CombinedBSAresults *bsa_results = new CombinedBSAresults();
+  bsa_results->setQnicIndex(msm_qnic_index);
+  bsa_results->setQnicType(QNIC_RP);
+  bsa_results->setNeighborAddress(msm_neighbor_addr);
+  assert(bsa_results->getNeighborAddress() != 0);
+  bsa_results->setFirstPhotonEmitTime(simTime() + msm_offset_time_for_first_photon + msm_travel_time);
+  bsa_results->setInterval(msm_time_interval_between_photons);
+  for (int index = 0; index < std::min(msm_parent_node_measurement_results.size(), msm_partner_node_measurement_results.size()); index++) {
+    if (!(msm_parent_node_measurement_results.at(index) && msm_partner_node_measurement_results.at(index))) continue;
+    bool isPsiPlus = dblrand() < 0.5;
+    bool isYoungerAddress = parentAddress < msm_neighbor_addr;
+    bsa_results->appendSuccessIndex(index);
+    bsa_results->appendCorrectionOperation(isYoungerAddress ? (isPsiPlus ? PauliOperator::X : PauliOperator::Y): PauliOperator::I);
+  }
+  return bsa_results;
+}
+
 void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
+  assert(bsa_result->getNeighborAddress() != 0);
   auto type = bsa_result->getQnicType();
   auto qnic_index = bsa_result->getQnicIndex();
   auto num_success = bsa_result->getSuccessCount();
