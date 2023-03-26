@@ -103,8 +103,8 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int msm_offset_time_for_first_photon;
   int msm_travel_time;
   int msm_time_interval_between_photons;
-  std::vector<bool> msm_parent_node_measurement_results;
-  std::vector<bool> msm_partner_node_measurement_results;
+  std::vector<BSAClickResult> msm_parent_node_click_results;
+  std::vector<BSAClickResult> msm_partner_node_click_results;
 };
 
 Define_Module(RuleEngine);
