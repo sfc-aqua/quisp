@@ -44,72 +44,23 @@ namespace quisp::modules::routing_daemon {
  * the other important modules are classes.  That distinction needs to be
  * addressed.
  */
+
+RoutingDaemon::RoutingDaemon() : provider(utils::ComponentProvider{this}) {}
+
 void RoutingDaemon::initialize(int stage) {
   myAddress = getParentModule()->par("address");
 
-  // Topology creation for routing table
-  cTopology *topo = new cTopology("topo");
+  auto topology_initializer  = provider.getTopologyInitializer();
 
-  // Any node that has a parameter included_in_topology will be included in routing
-  topo->extractByParameter("included_in_topology", "\"yes\"");
+  // Topology creation for routing table
+  auto topo = topology_initializer->getTopologyForRoutingDaemon();
 
   // If no node with the parameter & value found, do nothing.
   if (topo->getNumNodes() == 0 || topo == nullptr) {
     return;
   }
 
-  updateChannelWeightsInTopology(topo);
   generateRoutingTable(topo);
-
-  delete topo;
-}
-
-// Initialize channel weights for all existing links.
-void RoutingDaemon::updateChannelWeightsInTopology(cTopology *topo) {
-  for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all nodes
-    auto node = topo->getNode(i);
-    updateChannelWeightsOfNode(node);
-  }
-}
-
-void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node *node) {
-  for (int i = 0; i < node->getNumOutLinks(); i++) {  // Traverse through all links from a specific node.
-
-    // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
-    auto outgoing_link = node->getLinkOut(i);
-
-    double channel_weight = calculateSecPerBellPair(outgoing_link);
-
-    if (strstr(outgoing_link->getLocalGate()->getFullName(), "quantum")) {
-      // Otherwise, keep the quantum channels and set the weight
-      outgoing_link->setWeight(channel_weight);  // Set channel weight
-    } else {
-      // Ignore classical link in quantum routing table
-      outgoing_link->disable();
-    }
-  }
-}
-
-// Calculate bell pair generation rate to use it as channel cost
-// The cost metric is taken from https://arxiv.org/abs/1206.5655
-double RoutingDaemon::calculateSecPerBellPair(const cTopology::LinkOut *const outgoing_link) {
-  double speed_of_light_in_fiber = outgoing_link->getLocalGate()->getChannel()->par("speed_of_light_in_fiber");
-  double channel_length = outgoing_link->getLocalGate()->getChannel()->par("distance");
-
-  auto *some_stationary_qubit_in_qnic = findModuleByPath("^.^.qnic[0].statQubit[0]");
-  auto *some_stationary_qubit_in_qnic_r = findModuleByPath("^.^.qnic_r[0].statQubit[0]");
-
-  double emission_prob = 1.0;
-  // TODO: fix this to read the emission success probability correctly. This is a quick fix!!
-  if (some_stationary_qubit_in_qnic != nullptr) {
-    emission_prob = some_stationary_qubit_in_qnic->par("emission_success_probability").doubleValue();
-  } else if (some_stationary_qubit_in_qnic_r != nullptr) {
-    emission_prob = some_stationary_qubit_in_qnic_r->par("emission_success_probability").doubleValue();
-  } else {
-    error("cannot read emission_success_probability from file");
-  }
-
-  return (channel_length / speed_of_light_in_fiber) * emission_prob;
 }
 
 void RoutingDaemon::generateRoutingTable(cTopology *topo) {

@@ -8,7 +8,7 @@
 #pragma once
 
 #include "IRoutingDaemon.h"
-
+#include "utils/ComponentProvider.h"
 #include "modules/QNIC.h"
 
 /** \class RoutingDaemon RoutingDaemon.cc
@@ -21,13 +21,13 @@ namespace quisp::modules::routing_daemon {
 using RoutingTable = std::map<int, int>;
 
 class RoutingDaemon : public IRoutingDaemon {
+ public:
+  RoutingDaemon();
+
  protected:
   int myAddress;
   RoutingTable qrtable;
-
-  void updateChannelWeightsInTopology(cTopology* topo);
-  void updateChannelWeightsOfNode(cTopology::Node* node);
-  double calculateSecPerBellPair(const cTopology::LinkOut* const outgoing_link);
+  utils::ComponentProvider provider;
 
   void generateRoutingTable(cTopology* topo);
   int getQNicAddr(const cGate* const parentModuleGate);
