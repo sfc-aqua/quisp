@@ -85,17 +85,27 @@ TEST(ConnectionManagerTest, Init) {
   ASSERT_EQ(c.par("address").intValue(), 123);
 }
 
-TEST(ConnectionManagerTest, GetRuleSetPath){
+TEST(ConnectionManagerTest, GetRuleSetPath) {
   auto *sim = prepareSimulation();
   auto *routing_daemon = new MockRoutingDaemon();
   auto *hardware_monitor = new MockHardwareMonitor();
   auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
-  sim -> registerComponent(connection_manager);
-  connection_manager -> par("rula_ruleset_path") = "./test1.json ./test2.json";
+  sim->registerComponent(connection_manager);
+  // path deliminated by white spaces are transformed into the vector of path
+  connection_manager->par("rula_ruleset_path") = "../rula/tests-e2e/tests/generated/test_0.json ../rula/tests-e2e/tests/generated/test_1.json";
+  connection_manager->callInitialize();
+  std::vector<std::string> path_list = {"../rula/tests-e2e/tests/generated/test_0.json", "../rula/tests-e2e/tests/generated/test_1.json"};
+  EXPECT_EQ(connection_manager->rula_ruleset_path, path_list);
+}
 
-  connection_manager -> callInitialize();
-  std::vector<std::string> path_list = {"./test1.json", "./test2.json"};
-  EXPECT_EQ(connection_manager -> rula_ruleset_path, path_list);
+TEST(ConnectionManagerTest, EmptyRuleSetPath) {
+  auto *sim = prepareSimulation();
+  auto *routing_daemon = new MockRoutingDaemon();
+  auto *hardware_monitor = new MockHardwareMonitor();
+  auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
+  sim->registerComponent(connection_manager);
+  connection_manager->callInitialize();
+  EXPECT_EQ(connection_manager->rula_ruleset_path.size(), 0);
 }
 
 TEST(ConnectionManagerTest, parsePurType) {

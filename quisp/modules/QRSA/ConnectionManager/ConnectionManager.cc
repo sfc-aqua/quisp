@@ -40,7 +40,16 @@ void ConnectionManager::initialize() {
   simultaneous_es_enabled = par("simultaneous_es_enabled");
   num_remote_purification = par("num_remote_purification");
   const char *ruleset_path = par("rula_ruleset_path").stringValue();
-  rula_ruleset_path = cStringTokenizer(ruleset_path).asVector();
+  if (ruleset_path == "") {
+    rula_ruleset_path = {};
+  } else {
+    rula_ruleset_path = cStringTokenizer(ruleset_path).asVector();
+    for (auto path : rula_ruleset_path) {
+      if (!std::filesystem::exists(path)) {
+        error("No ruleset file found: %s", path.c_str());
+      }
+    }
+  }
   if (num_remote_purification > 0) {
     es_with_purify = true;
   }
@@ -248,7 +257,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   }
 
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
-  auto rulesets = ruleset_gen.generateRuleSets(req, createUniqueId());
+  auto rulesets = ruleset_gen.generateRuleSets(req, createUniqueId(), rula_ruleset_path);
 
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {

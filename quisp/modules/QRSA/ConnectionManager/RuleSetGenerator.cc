@@ -1,3 +1,4 @@
+#include <fstream>
 #include <memory>
 
 #include "RuleSetGenerator.h"
@@ -61,7 +62,6 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
   rules_map[initiator_addr].emplace_back(tomographyRule(responder_addr, initiator_addr, num_measure, shared_rule_tag));
   rules_map[responder_addr].emplace_back(tomographyRule(initiator_addr, responder_addr, num_measure, shared_rule_tag));
 
-  std::map<int, json> rulesets{};
   // pack rules into RuleSets and serialize it as json
   for (auto it = rules_map.begin(); it != rules_map.end(); ++it) {
     int owner_address = it->first;
@@ -72,6 +72,24 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
       ruleset.addRule(std::move(rule));
     }
     rulesets.emplace(owner_address, ruleset.serialize_json());
+  }
+}
+else {
+  rulesets = generateRuleSetFromRuLa(ruleset_path);
+}
+return rulesets;
+}
+
+// Load ruleset from the path
+std::map<int, json> RuleSetGenerator::generateRuleSetFromRuLa(std::vector<std::string> ruleset_path) {
+  // open file and load the json
+  std::map<int, json> rulesets{};
+  for (std::string r_path : ruleset_path) {
+    auto test = std::ifstream(r_path);
+    json ruleset_json = json::parse(test);
+    // take address from the ruleset
+    auto owner_addr = ruleset_json.at("owner_addr");
+    rulesets.emplace(owner_addr, ruleset_json);
   }
   return rulesets;
 }

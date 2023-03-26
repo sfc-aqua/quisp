@@ -41,6 +41,13 @@ class RuleSetGeneratorTest : public testing::Test {
   RuleSetGenerator *rsg;
 };
 
+TEST_F(RuleSetGeneratorTest, useRuLaRuleSet) {
+  // read files from the
+  auto *req = new ConnectionSetupRequest();
+  auto rulesets = rsg->generateRuleSets(req, 1234, {"../rula/tests-e2e/tests/generated/test_0.json", "../rula/tests-e2e/tests/generated/test_1.json"});
+  EXPECT_EQ(rulesets.size(), 2);
+}
+
 TEST_F(RuleSetGeneratorTest, generateSimpleSwappingRuleSets) {
   std::map<int, std::vector<std::unique_ptr<Rule>>> rules_map{};
   std::vector<int> path{1, 2, 3, 4, 5};
@@ -104,7 +111,7 @@ TEST_F(RuleSetGeneratorTest, Simple) {
   req->setStack_of_QNICs(0, QNicPairInfo{NULL_CONNECTION_SETUP_INFO.qnic, {.type = QNIC_E, .index = 11, .address = 101}});
   req->setStack_of_QNICs(1, QNicPairInfo{{.type = QNIC_E, .index = 12, .address = 102}, {.type = QNIC_E, .index = 13, .address = 103}});
   req->setStack_of_QNICs(2, QNicPairInfo{{.type = QNIC_E, .index = 14, .address = 104}, {.type = QNIC_E, .index = 15, .address = 105}});
-  auto rulesets = rsg->generateRuleSets(req, 1234);
+  auto rulesets = rsg->generateRuleSets(req, 1234, {});
   EXPECT_EQ(rulesets.size(), 4);
   {
     auto ruleset = rulesets.find(2)->second;
