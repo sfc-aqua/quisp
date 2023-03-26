@@ -39,6 +39,7 @@ class ComponentProvider {
   IRealTimeController *getRealTimeController();
   IQuantumBackend *getQuantumBackend();
   ILogger *getLogger();
+  TopologyInitializer *getTopologyInitializer();
   // when a this class instantiated, a strategy class instantiation may fail because
   // the strategy class may depend on other modules instantiated by OMNeT++'s NED file.
   // So this method is for delaying to instantiate the strategy class.

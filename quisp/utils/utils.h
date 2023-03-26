@@ -4,6 +4,7 @@
 #include <modules/Backend/Backend.h>
 #include <modules/Logger/ILogger.h>
 #include <modules/Logger/LoggerModule.h>
+#include <modules/TopologyInitializer/TopologyInitializer.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
@@ -27,6 +28,7 @@ using modules::common::IQuantumBackend;
 using modules::Logger::ILogger;
 using modules::Logger::LoggerModule;
 using omnetpp::cModule;
+using modules::TopologyInitializer::TopologyInitializer;
 
 }  // namespace utils
 }  // namespace quisp

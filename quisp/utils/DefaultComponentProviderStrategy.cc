@@ -99,6 +99,16 @@ ILogger *DefaultComponentProviderStrategy::getLogger() {
   return logger_module->getLogger();
 }
 
+TopologyInitializer *DefaultComponentProviderStrategy::getTopologyInitializer() {
+  auto *qnode = getQNode();
+  auto *mod = qnode->findModuleByPath("TopologyInitializer");
+  if (mod == nullptr) {
+    throw cRuntimeError("TopologyInitializer not found");
+  }
+  auto *topo_initializer = check_and_cast<TopologyInitializer *>(mod);
+  return topo_initializer;
+}
+
 cModule *DefaultComponentProviderStrategy::getQRSA() {
   auto *qnode = getQNode();
   auto *qrsa = qnode->getSubmodule("qrsa");
