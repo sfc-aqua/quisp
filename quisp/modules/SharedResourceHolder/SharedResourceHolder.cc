@@ -1,40 +1,56 @@
-#include "TopologyInitializer.h"
+#include "SharedResourceHolder.h"
 #include <memory>
 #include <random>
 #include <vector>
 #include "omnetpp/ctopology.h"
 #include "utils/ComponentProvider.h"
 
-namespace quisp::modules::TopologyInitializer {
+namespace quisp::modules::SharedResourceHolder {
 
-TopologyInitializer::TopologyInitializer() {}
+SharedResourceHolder::SharedResourceHolder() {}
 
-TopologyInitializer::~TopologyInitializer() {}
+SharedResourceHolder::~SharedResourceHolder() {}
 
-void TopologyInitializer::initialize() {}
+void SharedResourceHolder::initialize() {}
 
-void TopologyInitializer::initTopologyForApplication(cTopology *topo) {}
+std::unordered_map<int, int> SharedResourceHolder::getEndNodeWeightMapForApplication(const char *node_type) {
+  std::call_once(app_init_flag, [&](){
+    cTopology *topo = new cTopology("topo");
 
-cTopology *TopologyInitializer::getTopologyForRoutingDaemon() {
-  static cTopology *topo = nullptr;
-  if(topo == nullptr) {
-    topo = new cTopology("topo");
+    topo->extractByParameter("node_type", node_type);
+
+    for (int i = 0; i < topo->getNumNodes(); i++) {
+      cModule *endnodeModule = topo->getNode(i)->getModule();
+      int address = endnodeModule->par("address").intValue();
+      int weight = endnodeModule->par("mass").intValue();
+
+      end_node_weight_map[address] = weight;
+    }
+    delete topo;
+  });
+  return end_node_weight_map;
+}
+
+cTopology *SharedResourceHolder::getTopologyForRoutingDaemon() {
+  std::call_once(rd_init_flag, [&](){
+    routingdaemon_topology = new cTopology("topo");
     // Any node that has a parameter included_in_topology will be included in routing
-    topo->extractByParameter("included_in_topology", "\"yes\"");
-    updateChannelWeightsInTopology(topo);
-  }
-  return topo;
+    routingdaemon_topology->extractByParameter("included_in_topology", "\"yes\"");
+    updateChannelWeightsInTopology(routingdaemon_topology);
+
+  });
+  return routingdaemon_topology;
 }
 
 // Initialize channel weights for all existing links.
-void TopologyInitializer::updateChannelWeightsInTopology(cTopology *topo) {
+void SharedResourceHolder::updateChannelWeightsInTopology(cTopology *topo) {
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all nodes
     auto node = topo->getNode(i);
     updateChannelWeightsOfNode(node);
   }
 }
 
-void TopologyInitializer::updateChannelWeightsOfNode(cTopology::Node *node) {
+void SharedResourceHolder::updateChannelWeightsOfNode(cTopology::Node *node) {
   for (int i = 0; i < node->getNumOutLinks(); i++) {  // Traverse through all links from a specific node.
 
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
@@ -52,13 +68,13 @@ void TopologyInitializer::updateChannelWeightsOfNode(cTopology::Node *node) {
   }
 }
 
-cModule *TopologyInitializer::getStatQubit(cModule *parent_module) {
+cModule *SharedResourceHolder::getStatQubit(cModule *parent_module) {
   if(parent_module == nullptr) return nullptr;
   return parent_module->getSubmodule("statQubit", 0);
 }
 
 // The cost metric is taken from https://arxiv.org/abs/1206.5655
-double TopologyInitializer::calculateSecPerBellPair(cModule *node_module, const cTopology::LinkOut *const outgoing_link) {
+double SharedResourceHolder::calculateSecPerBellPair(cModule *node_module, const cTopology::LinkOut *const outgoing_link) {
   double speed_of_light_in_fiber = outgoing_link->getLocalGate()->getChannel()->par("speed_of_light_in_fiber");
   double channel_length = outgoing_link->getLocalGate()->getChannel()->par("distance");
 
@@ -78,6 +94,6 @@ double TopologyInitializer::calculateSecPerBellPair(cModule *node_module, const 
   return (channel_length / speed_of_light_in_fiber) * emission_prob;
 }
 
-void TopologyInitializer::finish() {}
+void SharedResourceHolder::finish() {}
 
-}  // namespace quisp::modules::TopologyInitializer
+}  // namespace quisp::modules::SharedResourceHolder

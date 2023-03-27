@@ -4,7 +4,7 @@
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
-#include <modules/TopologyInitializer/TopologyInitializer.h>
+#include <modules/SharedResourceHolder/SharedResourceHolder.h>
 #include <utils/IComponentProviderStrategy.h>
 
 #include "Logger.h"
@@ -20,7 +20,7 @@ using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_type;
 using quisp::modules::common::IQuantumBackend;
 using quisp::modules::Logger::ILogger;
-using quisp::modules::TopologyInitializer::TopologyInitializer;
+using quisp::modules::SharedResourceHolder::SharedResourceHolder;
 using quisp::utils::IComponentProviderStrategy;
 using quisp_test::Logger::TestLogger;
 using quisp_test::simulation::TestSimulation;
@@ -50,7 +50,7 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   virtual IRealTimeController *getRealTimeController() override { return nullptr; };
   virtual IQuantumBackend *getQuantumBackend() override { return nullptr; };
   virtual ILogger *getLogger() override { return new TestLogger(); };
-  virtual TopologyInitializer *getTopologyInitializer() override { return nullptr; };
+  virtual SharedResourceHolder *getSharedResourceHolder() override { return nullptr; };
   std::vector<QNicSpec> qnic_specs;
   virtual int getNumQubits(int qnic_index, QNIC_type qnic_type) override {
     for (auto spec : qnic_specs) {

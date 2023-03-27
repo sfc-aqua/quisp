@@ -86,9 +86,9 @@ ILogger *ComponentProvider::getLogger() {
   return strategy->getLogger();
 }
 
-TopologyInitializer *ComponentProvider::getTopologyInitializer() {
+SharedResourceHolder *ComponentProvider::getSharedResourceHolder() {
   ensureStrategy();
-  return strategy->getTopologyInitializer();
+  return strategy->getSharedResourceHolder();
 }
 
 void ComponentProvider::setStrategy(std::unique_ptr<IComponentProviderStrategy> _strategy) { strategy = std::move(_strategy); }

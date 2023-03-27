@@ -52,10 +52,10 @@ RoutingDaemon::RoutingDaemon() : provider(utils::ComponentProvider{this}) {}
 void RoutingDaemon::initialize(int stage) {
   myAddress = provider.getNodeAddr();
 
-  auto topology_initializer  = provider.getTopologyInitializer();
+  auto shared_resource = provider.getSharedResourceHolder();
 
   // Topology creation for routing table
-  auto topo = topology_initializer->getTopologyForRoutingDaemon();
+  auto topo = shared_resource->getTopologyForRoutingDaemon();
 
   // If no node with the parameter & value found, do nothing.
   if (topo->getNumNodes() == 0 || topo == nullptr) {

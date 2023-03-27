@@ -99,14 +99,14 @@ ILogger *DefaultComponentProviderStrategy::getLogger() {
   return logger_module->getLogger();
 }
 
-TopologyInitializer *DefaultComponentProviderStrategy::getTopologyInitializer() {
+SharedResourceHolder *DefaultComponentProviderStrategy::getSharedResourceHolder() {
   auto *qnode = getQNode();
-  auto *mod = qnode->findModuleByPath("TopologyInitializer");
+  auto *mod = qnode->findModuleByPath("SharedResourceHolder");
   if (mod == nullptr) {
-    throw cRuntimeError("TopologyInitializer not found");
+    throw cRuntimeError("SharedResourceHolder not found");
   }
-  auto *topo_initializer = check_and_cast<TopologyInitializer *>(mod);
-  return topo_initializer;
+  auto *shared_resource_holder = check_and_cast<SharedResourceHolder *>(mod);
+  return shared_resource_holder;
 }
 
 cModule *DefaultComponentProviderStrategy::getQRSA() {
