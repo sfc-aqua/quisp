@@ -6,6 +6,7 @@ import ned.IdealChannel;
 import modules.*;
 import modules.Backend.Backend;
 import modules.Logger.Logger;
+import modules.SharedResourceHolder.SharedResourceHolder;
 import channels.*;
 
 
@@ -17,6 +18,7 @@ network Tomography_Linear_One_MM_MIM
     submodules:
         backend: Backend;
         logger: Logger;
+        sharedResourceHolder: SharedResourceHolder;
         EndNode[2]: QNode {
             address = index;
             node_type = "EndNode";
@@ -56,6 +58,7 @@ network Linear_One_MIM
     submodules:
         backend: Backend;
         logger: Logger;
+        sharedResourceHolder: SharedResourceHolder;
         source: QNode {
             address = 1;
             node_type = "EndNode";
@@ -88,6 +91,7 @@ network Linear_One_MIM_biasedDistance
     submodules:
         backend: Backend;
         logger: Logger;
+        sharedResourceHolder: SharedResourceHolder;
         source: QNode {
             address = 1;
             node_type = "EndNode";
@@ -124,6 +128,7 @@ network Linear_One_MM
     submodules:
         backend: Backend;
         logger: Logger;
+        sharedResourceHolder: SharedResourceHolder;
         EndNode[2]: QNode {
             address = index;
             node_type = "EndNode";
@@ -145,6 +150,7 @@ network Linear_One_MM_bufferGap
     submodules:
         backend: Backend;
         logger: Logger;
+        sharedResourceHolder: SharedResourceHolder;
         Small: QNode {
             address = 112302;
             node_type = "EndNode";
@@ -175,6 +181,7 @@ network Linear_One_MSM
     submodules:
         backend: Backend;
         logger: Logger;
+        sharedResourceHolder: SharedResourceHolder;
         source: QNode {
             address = 1;
             node_type = "EndNode";
