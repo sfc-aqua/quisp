@@ -10,7 +10,7 @@ package RoutingDaemon;
 
 import ned.DatarateChannel;
 import modules.QRSA.RoutingDaemon.*;
-import modules.TopologyInitializer.TopologyInitializer;
+import modules.SharedResourceHolder.SharedResourceHolder;
 import modules.QNode;
 
 
@@ -90,7 +90,7 @@ module MockQNode {
 network RoutingDaemonTestNet
 {
     submodules:
-        TopologyInitializer: TopologyInitializer;
+        SharedResourceHolder: SharedResourceHolder;
         mockQNode1: MockQNode {
             address = 1;
             node_type = "EndNode";
@@ -140,14 +140,14 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
       return currentModule;
     }
 
-    TopologyInitializer *getTopologyInitializer() override {
+    SharedResourceHolder *getSharedResourceHolder() override {
         auto *qnode = getQNode();
-        auto *mod = qnode->findModuleByPath("TopologyInitializer");
+        auto *mod = qnode->findModuleByPath("SharedResourceHolder");
         if (mod == nullptr) {
-            throw cRuntimeError("TopologyInitializer not found");
+            throw cRuntimeError("SharedResourceHolder not found");
         }
-        auto *topo_initializer = check_and_cast<TopologyInitializer *>(mod);
-        return topo_initializer;
+        auto *shared_resource = check_and_cast<SharedResourceHolder *>(mod);
+        return shared_resource;
     }
 
  private:
@@ -166,7 +166,7 @@ class TestRoutingDaemon : public quisp::modules::routing_daemon::RoutingDaemon {
 
     const double target_weight = 4.80332e-05;
     const double epsilon = 1e-10;
-    auto topo = provider.getTopologyInitializer()->getTopologyForRoutingDaemon();
+    auto topo = provider.getSharedResourceHolder()->getTopologyForRoutingDaemon();
     if (fabs(topo->getNode(0)->getLinkOut(0)->getWeight() - target_weight) > epsilon)
       printf("FAIL: topology's link should have weight 4.80332e-05 but it is %e\n", topo->getNode(0)->getLinkOut(0)->getWeight());
     if (fabs(topo->getNode(1)->getLinkOut(0)->getWeight() - target_weight) > epsilon)

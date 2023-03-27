@@ -106,19 +106,9 @@ void Application::handleMessage(cMessage *msg) {
  * \brief Store communicatable EndNode addresses and their mass parameters
  */
 void Application::createEndNodeWeightMap() {
-  cTopology *topo = new cTopology("topo");
-  std::unordered_map<int, int> temp_end_node_weight_map;
-
-  topo->extractByParameter("node_type", provider.getQNode()->par("node_type").str().c_str());
-
-  for (int i = 0; i < topo->getNumNodes(); i++) {
-    cModule *endnodeModule = topo->getNode(i)->getModule();
-    int address = endnodeModule->par("address").intValue();
-    int weight = endnodeModule->par("mass").intValue();
-
-    temp_end_node_weight_map[address] = weight;
-  }
-  delete topo;
+  auto shared_resource = provider.getSharedResourceHolder();
+  std::string node_type{provider.getQNode()->par("node_type").str().c_str()};
+  auto temp_end_node_weight_map = shared_resource->getEndNodeWeightMapForApplication(node_type.c_str());
 
   if (!par("has_specific_recipients").boolValue()) {
     // set self weight to 0; so we don't create self traffic

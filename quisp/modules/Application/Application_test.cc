@@ -18,9 +18,11 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy(TestQNode *_qnode) : parent_qnode(_qnode) {}
   cModule *getQNode() override { return parent_qnode; }
+  quisp::modules::SharedResourceHolder::SharedResourceHolder *getSharedResourceHolder() override { return &initializer; }
 
  private:
   TestQNode *parent_qnode;
+  quisp::modules::SharedResourceHolder::SharedResourceHolder initializer;
 };
 
 class AppTestTarget : public quisp::modules::Application {

@@ -25,7 +25,7 @@ class IComponentProviderStrategy {
   virtual IRealTimeController *getRealTimeController() = 0;
   virtual IQuantumBackend *getQuantumBackend() = 0;
   virtual ILogger *getLogger() = 0;
-  virtual TopologyInitializer *getTopologyInitializer() = 0;
+  virtual SharedResourceHolder *getSharedResourceHolder() = 0;
 };
 
 }  // namespace utils

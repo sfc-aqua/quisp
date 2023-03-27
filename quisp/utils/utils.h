@@ -4,12 +4,12 @@
 #include <modules/Backend/Backend.h>
 #include <modules/Logger/ILogger.h>
 #include <modules/Logger/LoggerModule.h>
-#include <modules/TopologyInitializer/TopologyInitializer.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
 #include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
+#include <modules/SharedResourceHolder/SharedResourceHolder.h>
 #include <modules/common_types.h>
 #include <omnetpp.h>
 
@@ -27,8 +27,8 @@ using modules::backend::BackendContainer;
 using modules::common::IQuantumBackend;
 using modules::Logger::ILogger;
 using modules::Logger::LoggerModule;
+using modules::SharedResourceHolder::SharedResourceHolder;
 using omnetpp::cModule;
-using modules::TopologyInitializer::TopologyInitializer;
 
 }  // namespace utils
 }  // namespace quisp
