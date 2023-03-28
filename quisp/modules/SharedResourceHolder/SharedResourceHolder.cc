@@ -14,7 +14,7 @@ SharedResourceHolder::~SharedResourceHolder() {}
 void SharedResourceHolder::initialize() {}
 
 std::unordered_map<int, int> SharedResourceHolder::getEndNodeWeightMapForApplication(const char *node_type) {
-  std::call_once(app_init_flag, [&](){
+  std::call_once(app_init_flag, [&]() {
     cTopology *topo = new cTopology("topo");
 
     topo->extractByParameter("node_type", node_type);
@@ -31,55 +31,72 @@ std::unordered_map<int, int> SharedResourceHolder::getEndNodeWeightMapForApplica
   return end_node_weight_map;
 }
 
-cTopology *SharedResourceHolder::getTopologyForRoutingDaemon() {
-  std::call_once(rd_init_flag, [&](){
-    routingdaemon_topology = new cTopology("topo");
-    // Any node that has a parameter included_in_topology will be included in routing
-    routingdaemon_topology->extractByParameter("included_in_topology", "\"yes\"");
-    updateChannelWeightsInTopology(routingdaemon_topology);
+cTopology *SharedResourceHolder::getTopologyForRouter() {
+  std::call_once(router_init_flag, [&]() {
+    router_topology = new cTopology("topo");
+    router_topology->extractByParameter("included_in_topology", "\"yes\"");
+    updateChannelWeightsInTopology(router_topology, nullptr);
+  });
+  return router_topology;
+}
 
+cTopology *SharedResourceHolder::getTopologyForRoutingDaemon(cModule *rd_module) {
+  std::call_once(rd_init_flag, [&]() {
+    routingdaemon_topology = new cTopology("topo");
+    routingdaemon_topology->extractByParameter("included_in_topology", "\"yes\"");
+    updateChannelWeightsInTopology(routingdaemon_topology, rd_module);
   });
   return routingdaemon_topology;
 }
 
 // Initialize channel weights for all existing links.
-void SharedResourceHolder::updateChannelWeightsInTopology(cTopology *topo) {
+void SharedResourceHolder::updateChannelWeightsInTopology(cTopology *topo, cModule *rd_module) {
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all nodes
     auto node = topo->getNode(i);
-    updateChannelWeightsOfNode(node);
+    updateChannelWeightsOfNode(node, rd_module);
   }
 }
 
-void SharedResourceHolder::updateChannelWeightsOfNode(cTopology::Node *node) {
-  for (int i = 0; i < node->getNumOutLinks(); i++) {  // Traverse through all links from a specific node.
+void SharedResourceHolder::setWeightIfQuantumChannel(cTopology::LinkOut *link, double weight) {
+  if (strstr(link->getLocalGate()->getFullName(), "quantum")) {
+    link->setWeight(weight);
+  } else {
+    // Ignore classical link in quantum routing table
+    link->disable();
+  }
+}
 
+void SharedResourceHolder::setWeightIfClassicalChannel(cTopology::LinkOut *link, double weight) {
+  if (strstr(link->getLocalGate()->getFullName(), "quantum")) {
+    // Ignore quantum link in classical routing table
+    link->disable();
+  } else {
+    link->setWeight(weight);
+  }
+}
+
+void SharedResourceHolder::updateChannelWeightsOfNode(cTopology::Node *node, cModule *rd_module) {
+  for (int i = 0; i < node->getNumOutLinks(); i++) {  // Traverse through all links from a specific node.
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
     auto outgoing_link = node->getLinkOut(i);
 
-    double channel_weight = calculateSecPerBellPair(node->getModule(), outgoing_link);
-
-    if (strstr(outgoing_link->getLocalGate()->getFullName(), "quantum")) {
-      // Otherwise, keep the quantum channels and set the weight
-      outgoing_link->setWeight(channel_weight);  // Set channel weight
+    if (rd_module != nullptr) {
+      double channel_weight = calculateSecPerBellPair(rd_module, outgoing_link);
+      setWeightIfQuantumChannel(outgoing_link, channel_weight);
     } else {
-      // Ignore classical link in quantum routing table
-      outgoing_link->disable();
+      double channel_cost = outgoing_link->getLocalGate()->getChannel()->par("cost");
+      setWeightIfClassicalChannel(outgoing_link, channel_cost);
     }
   }
 }
 
-cModule *SharedResourceHolder::getStatQubit(cModule *parent_module) {
-  if(parent_module == nullptr) return nullptr;
-  return parent_module->getSubmodule("statQubit", 0);
-}
-
 // The cost metric is taken from https://arxiv.org/abs/1206.5655
-double SharedResourceHolder::calculateSecPerBellPair(cModule *node_module, const cTopology::LinkOut *const outgoing_link) {
+double SharedResourceHolder::calculateSecPerBellPair(cModule *rd_module, const cTopology::LinkOut *const outgoing_link) {
   double speed_of_light_in_fiber = outgoing_link->getLocalGate()->getChannel()->par("speed_of_light_in_fiber");
   double channel_length = outgoing_link->getLocalGate()->getChannel()->par("distance");
 
-  auto *some_stationary_qubit_in_qnic = getStatQubit(node_module->getSubmodule("qnic", 0));
-  auto *some_stationary_qubit_in_qnic_r = getStatQubit(node_module->getSubmodule("qnic_r", 0));
+  auto *some_stationary_qubit_in_qnic = rd_module->findModuleByPath("^.^.qnic[0].statQubit[0]");
+  auto *some_stationary_qubit_in_qnic_r = rd_module->findModuleByPath("^.^.qnic_r[0].statQubit[0]");
 
   double emission_prob = 1.0;
   // TODO: fix this to read the emission success probability correctly. This is a quick fix!!

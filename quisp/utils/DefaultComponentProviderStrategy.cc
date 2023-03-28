@@ -100,8 +100,7 @@ ILogger *DefaultComponentProviderStrategy::getLogger() {
 }
 
 SharedResourceHolder *DefaultComponentProviderStrategy::getSharedResourceHolder() {
-  auto *qnode = getQNode();
-  auto *mod = qnode->findModuleByPath("SharedResourceHolder");
+  auto *mod = self->findModuleByPath("sharedResourceHolder");
   if (mod == nullptr) {
     throw cRuntimeError("SharedResourceHolder not found");
   }
