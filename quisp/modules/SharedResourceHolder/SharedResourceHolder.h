@@ -1,6 +1,7 @@
 #pragma once
 #include <omnetpp.h>
 #include <mutex>
+#include <optional>
 #include <unordered_map>
 
 using namespace omnetpp;
@@ -20,12 +21,9 @@ class SharedResourceHolder : public omnetpp::cSimpleModule {
 
  protected:
  private:
-  cTopology *constructTopology(cTopology *topo);
-  void updateChannelWeightsInTopology(cTopology *topo, cModule *rd_module);
-  void updateChannelWeightsOfNode(cTopology::Node *node, cModule *rd_module);
-  // void setWeightIfClassicalChannel(cTopology::LinkOut *link, double weight);
-  // void setWeightIfQuantumChannel(cTopology::LinkOut *link, double weight);
-  void setWeightOfChannel(cTopology::LinkOut *link, double weight, bool is_quantum);
+  void updateChannelWeightsInTopology(cTopology *&topo, std::optional<cModule *> rd_module);
+  void updateChannelWeightsOfNode(cTopology::Node *node, std::optional<cModule *> rd_module);
+  void setWeightOfChannel(cTopology::LinkOut *link, double weight, bool should_set_quantum_channel);
   double calculateSecPerBellPair(cModule *rd_module, const cTopology::LinkOut *const outgoing_link);
 
   std::once_flag app_init_flag{};
