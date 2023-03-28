@@ -114,14 +114,17 @@ Collaboration diagram for quisp::modules::routing_daemon::RoutingDaemon:</div>
 <div class="dyncontent">
 <div class="center"><img src="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon__coll__graph.png" border="0" usemap="#aquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon_coll__map" alt="Collaboration graph"/></div>
 <map name="aquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon_coll__map" id="aquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon_coll__map">
-<area shape="rect" title=" " alt="" coords="5,167,179,207"/>
-<area shape="rect" href="classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="11,79,173,119"/>
-<area shape="rect" title=" " alt="" coords="37,5,147,31"/>
+<area shape="rect" title=" " alt="" coords="155,183,328,223"/>
+<area shape="rect" href="classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="5,80,168,120"/>
+<area shape="rect" title=" " alt="" coords="31,5,142,31"/>
+<area shape="rect" href="classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="192,87,395,113"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ad159a02078c61dd70ab8243e9535cf46"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#ad159a02078c61dd70ab8243e9535cf46">RoutingDaemon</a> ()</td></tr>
+<tr class="separator:ad159a02078c61dd70ab8243e9535cf46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ab2d751126659f270564026eddca017"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a3ab2d751126659f270564026eddca017">getNumEndNodes</a> () override</td></tr>
 <tr class="separator:a3ab2d751126659f270564026eddca017"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4576d99ea4fe854405eda8be64512abb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a4576d99ea4fe854405eda8be64512abb">findQNicAddrByDestAddr</a> (int destAddr) override</td></tr>
@@ -157,7 +160,27 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a844eade71050e4899d1fc09c8d38a7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3f19447402f0c745ee2d5035496629b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1modules_1_1routing__daemon.html#afe0fff7bb75f97983581c3b534832b18">RoutingTable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#ac3f19447402f0c745ee2d5035496629b">qrtable</a></td></tr>
 <tr class="separator:ac3f19447402f0c745ee2d5035496629b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9ca0ce543512c09bbbd56d4daee1480"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html">utils::ComponentProvider</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#aa9ca0ce543512c09bbbd56d4daee1480">provider</a></td></tr>
+<tr class="separator:aa9ca0ce543512c09bbbd56d4daee1480"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ad159a02078c61dd70ab8243e9535cf46" name="ad159a02078c61dd70ab8243e9535cf46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad159a02078c61dd70ab8243e9535cf46">&#9670;&#160;</a></span>RoutingDaemon()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">RoutingDaemon::RoutingDaemon </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a1895a97ae2add3e86fa04eeed8491aa5" name="a1895a97ae2add3e86fa04eeed8491aa5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1895a97ae2add3e86fa04eeed8491aa5">&#9670;&#160;</a></span>calculateSecPerBellPair()</h2>
@@ -443,6 +466,28 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">int quisp::modules::routing_daemon::RoutingDaemon::myAddress</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa9ca0ce543512c09bbbd56d4daee1480" name="aa9ca0ce543512c09bbbd56d4daee1480"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9ca0ce543512c09bbbd56d4daee1480">&#9670;&#160;</a></span>provider</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html">utils::ComponentProvider</a> quisp::modules::routing_daemon::RoutingDaemon::provider</td>
         </tr>
       </table>
   </td>

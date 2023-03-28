@@ -1,9 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"structquisp_1_1modules_1_1entangled_photons.html#abb5e301bd2a79d2e1635538f778f5f87":[17,0,1,2,19,1],
-"structquisp_1_1modules_1_1entangled_photons.html#abb5e301bd2a79d2e1635538f778f5f87":[18,0,0,2,18,1],
-"structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html":[18,0,0,2,4,0],
-"structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html":[17,0,1,2,5,0],
 "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html#aaa049dcb8ff0292bbdb66c0d3946e264":[18,0,0,2,4,0,1],
 "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html#aaa049dcb8ff0292bbdb66c0d3946e264":[17,0,1,2,5,0,1],
 "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html#acb2fb99975e19139986e9bb05fae5d21":[18,0,0,2,4,0,2],

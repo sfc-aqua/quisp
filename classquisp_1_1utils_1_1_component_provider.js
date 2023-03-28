@@ -6,6 +6,7 @@ var classquisp_1_1utils_1_1_component_provider =
     [ "getLogger", "classquisp_1_1utils_1_1_component_provider.html#ab9fe2a8053c137a1b497bab6d9cbfb61", null ],
     [ "getNeighborNode", "classquisp_1_1utils_1_1_component_provider.html#aba871ba9e2a7ad2c4e4f19c33123f1dd", null ],
     [ "getNode", "classquisp_1_1utils_1_1_component_provider.html#aa884f367bb4b3e65983bc0efbf30e78f", null ],
+    [ "getNodeAddr", "classquisp_1_1utils_1_1_component_provider.html#ad3b1ef4e6087031d2cf544e88bce9f95", null ],
     [ "getNumQubits", "classquisp_1_1utils_1_1_component_provider.html#a9eddd3941e8c814c3ed9e8e74b784e55", null ],
     [ "getQNIC", "classquisp_1_1utils_1_1_component_provider.html#a838688f257c6430d643bb00b95b16039", null ],
     [ "getQNode", "classquisp_1_1utils_1_1_component_provider.html#a636701a8524a4f476f1786f6080cc319", null ],

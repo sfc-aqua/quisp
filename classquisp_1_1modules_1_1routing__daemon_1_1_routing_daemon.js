@@ -1,5 +1,6 @@
 var classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon =
 [
+    [ "RoutingDaemon", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#ad159a02078c61dd70ab8243e9535cf46", null ],
     [ "calculateSecPerBellPair", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a1895a97ae2add3e86fa04eeed8491aa5", null ],
     [ "findQNicAddrByDestAddr", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a4576d99ea4fe854405eda8be64512abb", null ],
     [ "generateRoutingTable", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a2fb207c650238f446c2abc90be8582e2", null ],
@@ -11,5 +12,6 @@ var classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon =
     [ "updateChannelWeightsInTopology", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#af998204d4a1b253d64572862d047e77a", null ],
     [ "updateChannelWeightsOfNode", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a788d355d4e6375457741c735ebb6c492", null ],
     [ "myAddress", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a844eade71050e4899d1fc09c8d38a7fa", null ],
+    [ "provider", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#aa9ca0ce543512c09bbbd56d4daee1480", null ],
     [ "qrtable", "classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#ac3f19447402f0c745ee2d5035496629b", null ]
 ];
