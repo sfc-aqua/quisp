@@ -5,10 +5,12 @@
 
 #include "Router.h"
 #include "messages/connection_setup_messages_m.h"
+#include "modules/SharedResourceHolder/SharedResourceHolder.h"
 #include "test_utils/Gate.h"
 using namespace quisp_test;
 using namespace quisp_test::utils;
 using namespace quisp::messages;
+using namespace quisp::modules::SharedResourceHolder;
 using OriginalRouter = quisp::modules::Router;
 
 namespace {
@@ -18,9 +20,11 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   Strategy(TestQNode* _qnode) : parent_qnode(_qnode) {}
   cModule* getNode() override { return parent_qnode; }
   int getNodeAddr() override { return parent_qnode->address; }
+  SharedResourceHolder *getSharedResourceHolder() override { return &shared_resource; }
 
  private:
   TestQNode* parent_qnode;
+  SharedResourceHolder shared_resource;
 };
 
 class Router : public OriginalRouter {
