@@ -53,7 +53,7 @@ void RoutingDaemon::initialize(int stage) {
   auto shared_resource = provider.getSharedResourceHolder();
 
   // Topology creation for routing table
-  auto topo = shared_resource->getTopologyForRoutingDaemon();
+  auto topo = shared_resource->getTopologyForRoutingDaemon(this);
 
   // If no node with the parameter & value found, do nothing.
   if (topo->getNumNodes() == 0 || topo == nullptr) {
