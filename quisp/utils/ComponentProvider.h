@@ -1,16 +1,15 @@
-#ifndef QUISP_UTILS_COMPONENTPROVIDER_H_
-#define QUISP_UTILS_COMPONENTPROVIDER_H_
+#pragma once
 
-#include <modules/QRSA/QRSA.h>
-#include <modules/common_types.h>
+#include <omnetpp.h>
+
 #include "DefaultComponentProviderStrategy.h"
 #include "IComponentProviderStrategy.h"
 #include "modules/Logger/LoggerModule.h"
-#include "omnetpp/cmodule.h"
+#include "modules/QRSA/QRSA.h"
+#include "modules/common_types.h"
 #include "utils.h"
 
-namespace quisp {
-namespace utils {
+namespace quisp::utils {
 
 /**
  * \brief ComponentProvider class provides a way to access other quisp other modules.
@@ -26,6 +25,7 @@ class ComponentProvider {
 
   cModule *getQNode();
   cModule *getNode();
+  int getNodeAddr();
   cModule *getNeighborNode(cModule *qnic);
   bool isQNodeType(const cModuleType *const type);
   bool isBSANodeType(const cModuleType *const type);
@@ -61,7 +61,4 @@ class ComponentProvider {
   void ensureStrategy();
 };
 
-}  // namespace utils
-}  // namespace quisp
-
-#endif /* QUISP_UTILS_COMPONENTPROVIDER_H_ */
+}  // namespace quisp::utils

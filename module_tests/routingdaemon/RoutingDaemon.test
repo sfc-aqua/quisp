@@ -34,8 +34,6 @@ module MockQRSA {
 
     submodules:
         rd: TestRoutingDaemon {
-            parameters:
-                address = parent.address;
         }
 
     connections:
@@ -121,13 +119,29 @@ using namespace omnetpp;
 using namespace quisp::messages;
 namespace RoutingDaemon {
 
+class Strategy : public quisp_test::TestComponentProviderStrategy {
+    public:
+    Strategy(cModule *_self): self(_self){}
+    int getNodeAddr() override {return self->getParentModule()->par("address").intValue(); }
+    cModule *self;
+};
+
 class TestRoutingDaemon : public quisp::modules::routing_daemon::RoutingDaemon {
  public:
-  TestRoutingDaemon() : RoutingDaemon() {}
+  TestRoutingDaemon() : RoutingDaemon() {
+    provider.setStrategy(std::make_unique<Strategy>(this));
+  }
+  void check(int expect, int actual) {
+    if (expect != actual) {
+      printf("FAIL: in the routing table, the value is %d but the expected value is %d\n", actual, expect);
+    }
+  }
   void finish() override {
-    int other_node_addr = 3 - myAddress;
-    if (qrtable[other_node_addr] != myAddress)
-      printf("FAIL: in the routing table, the value is %d but the expected value is %d\n", qrtable[other_node_addr], myAddress);
+    if (myAddress == 1){
+        check(qrtable[2], 1);
+    } else {
+        check(qrtable[1], 2);
+    }
   }
 };
 Define_Module(TestRoutingDaemon);

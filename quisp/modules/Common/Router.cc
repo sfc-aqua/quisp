@@ -14,7 +14,7 @@ namespace quisp::modules {
 Router::Router() : provider(utils::ComponentProvider{this}) {}
 
 void Router::initialize() {
-  my_address = provider.getNode()->par("address");
+  my_address = provider.getNodeAddr();
 
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
