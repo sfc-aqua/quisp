@@ -15,16 +15,16 @@ class SharedResourceHolder : public omnetpp::cSimpleModule {
 
   void initialize() override;
   void finish() override;
-  std::unordered_map<int, int> getEndNodeWeightMapForApplication(const char *node_type);
-  cTopology *getTopologyForRoutingDaemon(cModule *rd_module);
-  cTopology *getTopologyForRouter();
+  const std::unordered_map<int, int> getEndNodeWeightMapForApplication(const char *const node_type);
+  const cTopology *const getTopologyForRoutingDaemon(const cModule *const rd_module);
+  const cTopology *const getTopologyForRouter();
 
  protected:
  private:
-  void updateChannelWeightsInTopology(cTopology *&topo, std::optional<cModule *> rd_module);
-  void updateChannelWeightsOfNode(cTopology::Node *node, std::optional<cModule *> rd_module);
-  void setWeightOfChannel(cTopology::LinkOut *link, double weight, bool should_set_quantum_channel);
-  double calculateSecPerBellPair(cModule *rd_module, const cTopology::LinkOut *const outgoing_link);
+  void updateChannelWeightsInTopology(cTopology *&topo, std::optional<const cModule *const> rd_module);
+  void updateChannelWeightsOfNode(cTopology::Node *node, std::optional<const cModule *const> rd_module);
+  double calculateSecPerBellPair(const cModule *const rd_module, const cTopology::LinkOut *const outgoing_link);
+  void setWeightOfLink(cTopology::LinkOut *link, double weight, bool should_set_quantum_channel);
 
   std::once_flag app_init_flag{};
   std::unordered_map<int, int> end_node_weight_map;
