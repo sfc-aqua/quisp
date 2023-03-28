@@ -57,21 +57,14 @@ void SharedResourceHolder::updateChannelWeightsInTopology(cTopology *topo, cModu
   }
 }
 
-void SharedResourceHolder::setWeightIfQuantumChannel(cTopology::LinkOut *link, double weight) {
-  if (strstr(link->getLocalGate()->getFullName(), "quantum")) {
-    link->setWeight(weight);
-  } else {
-    // Ignore classical link in quantum routing table
-    link->disable();
-  }
-}
-
-void SharedResourceHolder::setWeightIfClassicalChannel(cTopology::LinkOut *link, double weight) {
-  if (strstr(link->getLocalGate()->getFullName(), "quantum")) {
+void SharedResourceHolder::setWeightOfChannel(cTopology::LinkOut *link, double weight, bool is_quantum) {
+  auto subname = strstr(link->getLocalGate()->getFullName(), "quantum");
+  bool is_quchannel = (subname != nullptr);
+  if ((is_quantum && is_quchannel) || (!is_quantum && !is_quchannel)) {
     // Ignore quantum link in classical routing table
-    link->disable();
-  } else {
     link->setWeight(weight);
+  } else {
+    link->disable();
   }
 }
 
@@ -82,10 +75,10 @@ void SharedResourceHolder::updateChannelWeightsOfNode(cTopology::Node *node, cMo
 
     if (rd_module != nullptr) {
       double channel_weight = calculateSecPerBellPair(rd_module, outgoing_link);
-      setWeightIfQuantumChannel(outgoing_link, channel_weight);
+      setWeightOfChannel(outgoing_link, channel_weight, true);
     } else {
       double channel_cost = outgoing_link->getLocalGate()->getChannel()->par("cost");
-      setWeightIfClassicalChannel(outgoing_link, channel_cost);
+      setWeightOfChannel(outgoing_link, channel_cost, false);
     }
   }
 }

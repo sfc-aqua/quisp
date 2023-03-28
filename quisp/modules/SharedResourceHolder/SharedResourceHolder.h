@@ -23,8 +23,9 @@ class SharedResourceHolder : public omnetpp::cSimpleModule {
   cTopology *constructTopology(cTopology *topo);
   void updateChannelWeightsInTopology(cTopology *topo, cModule *rd_module);
   void updateChannelWeightsOfNode(cTopology::Node *node, cModule *rd_module);
-  void setWeightIfClassicalChannel(cTopology::LinkOut *link, double weight);
-  void setWeightIfQuantumChannel(cTopology::LinkOut *link, double weight);
+  // void setWeightIfClassicalChannel(cTopology::LinkOut *link, double weight);
+  // void setWeightIfQuantumChannel(cTopology::LinkOut *link, double weight);
+  void setWeightOfChannel(cTopology::LinkOut *link, double weight, bool is_quantum);
   double calculateSecPerBellPair(cModule *rd_module, const cTopology::LinkOut *const outgoing_link);
 
   std::once_flag app_init_flag{};
