@@ -166,7 +166,7 @@ class TestRoutingDaemon : public quisp::modules::routing_daemon::RoutingDaemon {
 
     const double target_weight = 4.80332e-05;
     const double epsilon = 1e-10;
-    auto topo = provider.getSharedResourceHolder()->getTopologyForRoutingDaemon();
+    auto topo = provider.getSharedResourceHolder()->getTopologyForRoutingDaemon(this);
     if (fabs(topo->getNode(0)->getLinkOut(0)->getWeight() - target_weight) > epsilon)
       printf("FAIL: topology's link should have weight 4.80332e-05 but it is %e\n", topo->getNode(0)->getLinkOut(0)->getWeight());
     if (fabs(topo->getNode(1)->getLinkOut(0)->getWeight() - target_weight) > epsilon)
