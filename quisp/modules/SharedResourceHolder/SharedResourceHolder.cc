@@ -31,12 +31,12 @@ const std::unordered_map<int, int> SharedResourceHolder::getEndNodeWeightMapForA
   return end_node_weight_map;
 }
 
-const cTopology *const SharedResourceHolder::getTopologyForRouter() {
+cTopology *SharedResourceHolder::getTopologyForRouter() {
   std::call_once(router_init_flag, [&]() { updateChannelWeightsInTopology(router_topology, std::nullopt); });
   return router_topology;
 }
 
-const cTopology *const SharedResourceHolder::getTopologyForRoutingDaemon(const cModule *const rd_module) {
+cTopology *SharedResourceHolder::getTopologyForRoutingDaemon(const cModule *const rd_module) {
   std::call_once(rd_init_flag, [&]() { updateChannelWeightsInTopology(routingdaemon_topology, rd_module); });
   return routingdaemon_topology;
 }

@@ -16,8 +16,8 @@ class SharedResourceHolder : public omnetpp::cSimpleModule {
   void initialize() override;
   void finish() override;
   const std::unordered_map<int, int> getEndNodeWeightMapForApplication(const char *const node_type);
-  const cTopology *const getTopologyForRoutingDaemon(const cModule *const rd_module);
-  const cTopology *const getTopologyForRouter();
+  cTopology *getTopologyForRoutingDaemon(const cModule *const rd_module);
+  cTopology *getTopologyForRouter();
 
  protected:
  private:
