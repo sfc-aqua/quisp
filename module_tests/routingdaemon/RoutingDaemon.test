@@ -163,7 +163,7 @@ class TestRoutingDaemon : public quisp::modules::routing_daemon::RoutingDaemon {
       printf("FAIL: in the routing table, the value is %d but the expected value is %d\n", actual, expect);
     }
   }
-  void checkLinkWeight(int expect, int actual, double epsilon) {
+  void checkLinkWeight(double expect, double actual, double epsilon) {
     if (fabs(expect - actual) > epsilon) {
       printf("FAIL: topology's link has weight %e but the expected value is %e\n", actual, expect);
     }
@@ -178,8 +178,8 @@ class TestRoutingDaemon : public quisp::modules::routing_daemon::RoutingDaemon {
     const double target_weight = 4.80332e-05;
     const double epsilon = 1e-10;
     auto topo = provider.getSharedResourceHolder()->getTopologyForRoutingDaemon(this);
-    checkLinkWeight(target_weight, topo->getNode(0)->getLinkOut(0)->getWeight(). epsilon);
-    checkLinkWeight(target_weight, topo->getNode(1)->getLinkOut(0)->getWeight(). epsilon);
+    checkLinkWeight(target_weight, topo->getNode(0)->getLinkOut(0)->getWeight(), epsilon);
+    checkLinkWeight(target_weight, topo->getNode(1)->getLinkOut(0)->getWeight(), epsilon);
   }
 };
 Define_Module(TestRoutingDaemon);

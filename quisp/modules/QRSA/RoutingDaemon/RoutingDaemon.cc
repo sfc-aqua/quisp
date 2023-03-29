@@ -13,8 +13,6 @@ using namespace omnetpp;
 
 namespace quisp::modules::routing_daemon {
 
-RoutingDaemon::RoutingDaemon() : provider(this) {}
-
 /**
  *
  *  \brief RoutingDaemon
