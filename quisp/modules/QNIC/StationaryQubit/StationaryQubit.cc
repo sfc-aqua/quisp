@@ -250,13 +250,13 @@ MeasurementOutcome StationaryQubit::measureRandomPauliBasis() {
   auto outcome = MeasurementOutcome();
   if (rand < 1.0 / 3) {
     outcome.outcome_is_plus = qubit_ref->measureX() == EigenvalueResult::PLUS_ONE;
-    outcome.basis = 'X';
+    outcome.basis = backends::abstract::Basis::X;
   } else if (rand < 2.0 / 3) {
     outcome.outcome_is_plus = qubit_ref->measureY() == EigenvalueResult::PLUS_ONE;
-    outcome.basis = 'Y';
+    outcome.basis = backends::abstract::Basis::Y;
   } else {
     outcome.outcome_is_plus = qubit_ref->measureZ() == EigenvalueResult::PLUS_ONE;
-    outcome.basis = 'Z';
+    outcome.basis = backends::abstract::Basis::Z;
   }
   outcome.GOD_clean = 'F';  // need to fix this to properly track the error
   return outcome;
