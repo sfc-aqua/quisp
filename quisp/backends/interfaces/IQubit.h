@@ -18,7 +18,7 @@ enum class EigenvalueResult : int {
   PLUS_ONE,
   MINUS_ONE,
 };
-enum Basis{
+enum Basis {
   X,
   Y,
   Z,

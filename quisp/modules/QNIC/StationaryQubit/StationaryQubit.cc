@@ -15,6 +15,7 @@
 
 using namespace Eigen;
 
+using quisp::backends::abstract::Basis;
 using quisp::messages::PhotonicQubit;
 using quisp::modules::qubit_id::QubitId;
 using quisp::types::EigenvalueResult;
@@ -250,13 +251,13 @@ MeasurementOutcome StationaryQubit::measureRandomPauliBasis() {
   auto outcome = MeasurementOutcome();
   if (rand < 1.0 / 3) {
     outcome.outcome_is_plus = qubit_ref->measureX() == EigenvalueResult::PLUS_ONE;
-    outcome.basis = backends::abstract::Basis::X;
+    outcome.basis = Basis::X;
   } else if (rand < 2.0 / 3) {
     outcome.outcome_is_plus = qubit_ref->measureY() == EigenvalueResult::PLUS_ONE;
-    outcome.basis = backends::abstract::Basis::Y;
+    outcome.basis = Basis::Y;
   } else {
     outcome.outcome_is_plus = qubit_ref->measureZ() == EigenvalueResult::PLUS_ONE;
-    outcome.basis = backends::abstract::Basis::Z;
+    outcome.basis = Basis::Z;
   }
   outcome.GOD_clean = 'F';  // need to fix this to properly track the error
   return outcome;
