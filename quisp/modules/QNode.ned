@@ -9,7 +9,6 @@ import modules.Common.*;
 module QNode
 {
     parameters:
-        int buffer_size = default(10);
         int address = default(0);
         int buffers = default(10); // default is defined as 10 in .ini file but can be changed independently in .ned file
         int mass = default(100);
@@ -48,7 +47,6 @@ module QNode
         }
         qrsa: quantumRoutingSoft {
             parameters:
-                address = parent.address;
                 @display("p=171,33");
                 number_of_qnics = sizeof(parent.quantum_port);
                 number_of_qnics_r = sizeof(parent.quantum_port_receiver);

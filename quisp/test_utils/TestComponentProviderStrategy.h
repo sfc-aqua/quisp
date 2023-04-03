@@ -5,6 +5,7 @@
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
 #include <utils/IComponentProviderStrategy.h>
+
 #include "Logger.h"
 #include "Simulation.h"
 
@@ -21,6 +22,7 @@ using quisp::modules::Logger::ILogger;
 using quisp::utils::IComponentProviderStrategy;
 using quisp_test::Logger::TestLogger;
 using quisp_test::simulation::TestSimulation;
+
 struct QNicSpec {
   QNIC_type type;
   int qnic_index;
@@ -35,6 +37,7 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   virtual cModule *getQNode() override { return nullptr; };
   virtual cModule *getNode() override { return nullptr; };
   virtual cModule *getNeighborNode(cModule *qnic) override { return nullptr; };
+  virtual int getNodeAddr() override { return -1; };
   virtual bool isQNodeType(const cModuleType *const type) override { return false; };
   virtual bool isBSANodeType(const cModuleType *const type) override { return false; };
   virtual bool isSPDCNodeType(const cModuleType *const type) override { return false; };

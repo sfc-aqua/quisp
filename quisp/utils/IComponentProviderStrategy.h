@@ -1,11 +1,10 @@
-#ifndef QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_
-#define QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_
+#pragma once
 
 #include <memory>
+
 #include "utils.h"
 
-namespace quisp {
-namespace utils {
+namespace quisp::utils {
 
 class IComponentProviderStrategy {
  public:
@@ -14,6 +13,7 @@ class IComponentProviderStrategy {
   virtual cModule *getQNode() = 0;
   virtual cModule *getNode() = 0;
   virtual cModule *getNeighborNode(cModule *qnic) = 0;
+  virtual int getNodeAddr() = 0;
   virtual bool isQNodeType(const cModuleType *const module) = 0;
   virtual bool isBSANodeType(const cModuleType *const module) = 0;
   virtual bool isSPDCNodeType(const cModuleType *const module) = 0;
@@ -27,7 +27,4 @@ class IComponentProviderStrategy {
   virtual ILogger *getLogger() = 0;
 };
 
-}  // namespace utils
-}  // namespace quisp
-
-#endif /* QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_ */
+}  // namespace quisp::utils
