@@ -30,58 +30,59 @@ void RuleSetGenerator::generateReverseSwapAtHalfRuleSets(int left_index, int rig
   generateReverseSwapAtHalfRuleSets(swapper_index, right_index, rules_map, path, shared_rule_tag);
 };
 
-std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id) {
-  // prepare information for RuleSets generation
-  auto path = collectPath(req);
-  std::map<int /* node addr */, std::vector<std::unique_ptr<Rule>>> rules_map;
-  int num_measure = req->getNum_measure();
-  int shared_rule_tag = 0;
+std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id, std::vector<std::string> ruleset_path) {
+  std::map<int, json> rulesets{};
+  if (ruleset_path.size() == 0) {
+    // prepare information for RuleSets generation
+    auto path = collectPath(req);
+    std::map<int /* node addr */, std::vector<std::unique_ptr<Rule>>> rules_map;
+    int num_measure = req->getNum_measure();
+    int shared_rule_tag = 0;
 
-  generateReverseSwapAtHalfRuleSets(0, path.size() - 1, rules_map, path, shared_rule_tag);
-  // if you want to do link-level purification; do it here and add to the back.
-  for (auto& [address, rs] : rules_map) {
-    std::reverse(rs.begin(), rs.end());
-  }
-
-  // // if you want to do e2e purification before tomography do it here
-  // int left_addr = path.front();
-  // int right_addr = path.back();
-  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_X, ++shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
-  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_X, shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
-
-  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_Z, ++shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
-  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_Z, shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
-
-  // add tomography rules
-  auto initiator_addr = path.front();
-  ++shared_rule_tag;
-  rules_map[initiator_addr].emplace_back(tomographyRule(responder_addr, initiator_addr, num_measure, shared_rule_tag));
-  rules_map[responder_addr].emplace_back(tomographyRule(initiator_addr, responder_addr, num_measure, shared_rule_tag));
-
-  // pack rules into RuleSets and serialize it as json
-  for (auto it = rules_map.begin(); it != rules_map.end(); ++it) {
-    int owner_address = it->first;
-    auto rules = std::move(it->second);
-    RuleSet ruleset(ruleset_id, owner_address);
-    for (int i = 0; i < rules.size(); i++) {
-      auto rule = std::move(rules.at(i));
-      ruleset.addRule(std::move(rule));
+    generateReverseSwapAtHalfRuleSets(0, path.size() - 1, rules_map, path, shared_rule_tag);
+    // if you want to do link-level purification; do it here and add to the back.
+    for (auto& [address, rs] : rules_map) {
+      std::reverse(rs.begin(), rs.end());
     }
-    rulesets.emplace(owner_address, ruleset.serialize_json());
+
+    // // if you want to do e2e purification before tomography do it here
+    // int left_addr = path.front();
+    // int right_addr = path.back();
+    // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_X, ++shared_rule_tag));
+    // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
+    // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_X, shared_rule_tag));
+    // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
+
+    // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_Z, ++shared_rule_tag));
+    // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
+    // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_Z, shared_rule_tag));
+    // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
+
+    // add tomography rules
+    auto initiator_addr = path.front();
+    ++shared_rule_tag;
+    rules_map[initiator_addr].emplace_back(tomographyRule(responder_addr, initiator_addr, num_measure, shared_rule_tag));
+    rules_map[responder_addr].emplace_back(tomographyRule(initiator_addr, responder_addr, num_measure, shared_rule_tag));
+
+    // pack rules into RuleSets and serialize it as json
+    for (auto it = rules_map.begin(); it != rules_map.end(); ++it) {
+      int owner_address = it->first;
+      auto rules = std::move(it->second);
+      RuleSet ruleset(ruleset_id, owner_address);
+      for (int i = 0; i < rules.size(); i++) {
+        auto rule = std::move(rules.at(i));
+        ruleset.addRule(std::move(rule));
+      }
+      rulesets.emplace(owner_address, ruleset.serialize_json());
+    }
+  } else {
+    rulesets = generateRuleSetsFromRuLa(ruleset_path);
   }
-}
-else {
-  rulesets = generateRuleSetFromRuLa(ruleset_path);
-}
-return rulesets;
+  return rulesets;
 }
 
 // Load ruleset from the path
-std::map<int, json> RuleSetGenerator::generateRuleSetFromRuLa(std::vector<std::string> ruleset_path) {
+std::map<int, json> RuleSetGenerator::generateRuleSetsFromRuLa(std::vector<std::string> ruleset_path) {
   // open file and load the json
   std::map<int, json> rulesets{};
   for (std::string r_path : ruleset_path) {

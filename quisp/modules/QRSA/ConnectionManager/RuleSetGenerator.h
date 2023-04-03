@@ -28,7 +28,7 @@ class RuleSetGenerator {
    * @param ruleset_path
    * @return std::map<int, nlohmann:json> a map of json serialized RuleSets and corresponding node address
    */
-  std::map<int, nlohmann::json> generateRuleSetFromRuLa(std::vector<std::string> ruleset_path);
+  std::map<int, nlohmann::json> generateRuleSetsFromRuLa(std::vector<std::string> ruleset_path);
 
   /**
    * @brief generate rules for each node in the path.
