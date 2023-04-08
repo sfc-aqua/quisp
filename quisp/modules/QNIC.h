@@ -4,11 +4,12 @@
  *
  *  \brief QNIC
  */
-#ifndef QUISP_MODULES_QNIC_H_
-#define QUISP_MODULES_QNIC_H_
+
+#pragma once
 
 #include <omnetpp.h>
 #include <nlohmann/json.hpp>
+
 using namespace omnetpp;
 
 namespace quisp::modules {
@@ -33,26 +34,16 @@ static const char* QNIC_names[QNIC_N] = {
     "qnic_rp",
 };
 
-typedef struct {
+struct QNIC {
   QNIC_type type;
   int index;
+  // QNIC's self_qnic_address
   int address;
-  bool isReserved;
-} QNIC_id;
+  // Pointer to that particular QNIC.
+  cModule* pointer = nullptr;
+};
 
-typedef struct {
-  QNIC_id fst;
-  QNIC_id snd;
-} QNIC_pair_info;
-
-typedef struct QNIC : QNIC_id {
-  cModule* pointer;  // Pointer to that particular QNIC.
-  int address;
-} QNIC;
-
-// Table to check the qnic is reserved or not.
-typedef std::map<int, std::map<int, bool>> QNIC_reservation_table;
-
+using QNicPairInfo = std::pair<QNIC, QNIC>;
 }  // namespace quisp::modules
 
 namespace std {
@@ -67,5 +58,3 @@ class hash<pair<quisp::modules::QNIC_type, int>> {
   std::size_t operator()(pair<quisp::modules::QNIC_type, int> const& key) const noexcept { return std::hash<int>()((int)key.first * 10000 + key.second); }
 };
 }  // namespace std
-
-#endif  // QUISP_MODULES_QNIC_H_

@@ -32,8 +32,8 @@ void Application::initialize() {
     scheduleAt(simTime(), msg);
     return;
   }
-
-  my_address = provider.getQNode()->par("address");
+  id = 0;
+  my_address = provider.getNodeAddr();
   is_initiator = provider.getQNode()->par("is_initiator");
 
   if (!is_initiator) {
@@ -52,6 +52,7 @@ void Application::initialize() {
  */
 ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources) {
   ConnectionSetupRequest *pk = new ConnectionSetupRequest("ConnSetupRequest");
+  pk->setApplicationId(id);
   pk->setActual_srcAddr(my_address);
   pk->setActual_destAddr(dest_addr);
   pk->setDestAddr(my_address);

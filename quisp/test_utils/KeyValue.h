@@ -2,16 +2,17 @@
 
 #include <omnetpp.h>
 
-namespace quisp_test {
-namespace key_value {
+namespace quisp_test::key_value {
 
 class TestKeyValue : public omnetpp::cConfiguration::KeyValue {
  public:
+  TestKeyValue(const char *key, const char *value) : key(key), value(value) {}
   TestKeyValue() {}
-  const char *getKey() const override { return ""; };
-  const char *getValue() const override { return ""; };
+  const char *key = "";
+  const char *value = "";
+  const char *getKey() const override { return key; };
+  const char *getValue() const override { return value; };
   const char *getBaseDirectory() const override { return ""; };
 };
 
-}  // namespace key_value
-}  // namespace quisp_test
+}  // namespace quisp_test::key_value

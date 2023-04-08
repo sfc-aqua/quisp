@@ -1,34 +1,30 @@
-#ifndef QUISP_MODULES_I_HARDWAREMONITOR_H_
-#define QUISP_MODULES_I_HARDWAREMONITOR_H_
+#pragma once
+
+#include <omnetpp.h>
 #include <memory>
+
 #include "modules/QNIC.h"
-#include "omnetpp/csimplemodule.h"
+
 using namespace omnetpp;
-namespace quisp {
-namespace modules {
+
+namespace quisp::modules {
 using quisp::modules::QNIC;
 using quisp::modules::QNIC_N;
 
 struct NeighborInfo {
-  // QNode, SPDC, BSA
-  cModuleType *type;
   int address;
   int neighborQNode_address;  // QNode (May be across SDPC or BSA node)
 };
 
 struct InterfaceInfo {
-  // QubitAddr(int node_addr, int qnic_index, int qubit_index):node_address(node_addr),qnic_index(qnic_index),qubit_index(qubit_index){}
   QNIC qnic;
-  double initial_fidelity = -1; /*Oka's protocol?*/
   int buffer_size;
   double link_cost;
   int neighborQNode_address;
-  int neighborQNode_qnic_type;
-  QNIC neighbor_qnic;
 };
 
 struct ConnectionSetupInfo {
-  QNIC_id qnic;
+  QNIC qnic;
   int neighbor_address;
   int quantum_link_cost;
 };
@@ -41,7 +37,7 @@ const ConnectionSetupInfo NULL_CONNECTION_SETUP_INFO{.qnic =
                                                      .neighbor_address = -1,
                                                      .quantum_link_cost = -1};
 
-struct tomography_outcome {
+struct TomographyOutcome {
   char my_basis;
   bool my_output_is_plus;
   char my_GOD_clean;
@@ -50,7 +46,7 @@ struct tomography_outcome {
   char partner_GOD_clean;
 };
 
-struct output_count {
+struct OutputCount {
   int total_count;
   int plus_plus;
   int plus_minus;
@@ -58,31 +54,28 @@ struct output_count {
   int minus_minus;
 };
 
-struct link_cost {
+struct LinkCost {
   simtime_t tomography_time;
   int tomography_measurements;
   double Bellpair_per_sec;
 };
 
 // qnic_index -> InterfaceInfo
-typedef std::map<int, InterfaceInfo> NeighborTable;
+using NeighborTable = std::map<int, InterfaceInfo>;
 
 // basis combination -> raw output count
 // e.g.
 // "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50},
 // "XY" -> {....
-typedef std::map<int, std::map<std::string, output_count>> raw_data;  // qnic -> partner . basis string . output
-typedef std::map<int, link_cost> LinkCostMap;
-typedef std::map<int, std::map<int, tomography_outcome>> TomographyOutcomeTable;  // partner -> <count_id, outcome>
+using RawData = std::map<int, std::map<std::string, OutputCount>>;  // qnic -> partner . basis string . output
+using LinkCostMap = std::map<int, LinkCost>;
+using TomographyOutcomeTable = std::map<int, std::map<int, TomographyOutcome>>;  // partner -> <count_id, outcome>
 
 class IHardwareMonitor : public cSimpleModule {
  public:
   virtual ~IHardwareMonitor(){};
-  virtual NeighborTable passNeighborTable() = 0;
   virtual int getQnicNumQubits(int qnic_index, QNIC_type qnic_type) = 0;
   virtual std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) = 0;
   virtual std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) = 0;
 };
-}  // namespace modules
-}  // namespace quisp
-#endif
+}  // namespace quisp::modules

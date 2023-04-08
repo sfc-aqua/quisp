@@ -8,6 +8,6 @@ void LoggerBase::initializeLogger(utils::ComponentProvider& provider) {
   logger = provider.getLogger();
   logger->setModule(provider.module);
   auto* qnode = provider.getQNode();
-  if (qnode != nullptr) logger->setQNodeAddress(qnode->par("address").intValue());
+  if (qnode != nullptr) logger->setQNodeAddress(provider.getNodeAddr());
 }
 }  // namespace quisp::modules::Logger

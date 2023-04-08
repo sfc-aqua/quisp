@@ -1,6 +1,7 @@
 #pragma once
-#include <modules/QNIC.h>
 #include <memory>
+
+#include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 namespace quisp::modules::qubit_record {
 
@@ -24,9 +25,6 @@ class IQubitRecord {
   virtual int getQNicIndex() const = 0;
   virtual QNIC_type getQNicType() const = 0;
 
-  virtual bool isRuleApplied(unsigned long rule_id) const = 0;
-  virtual void markRuleApplied(unsigned long rule_id) = 0;
-  virtual void clearAppliedRules() = 0;
   IStationaryQubit* qubit_ptr = nullptr;
 };
 

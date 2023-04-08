@@ -54,7 +54,28 @@ jobs:
         run: make exe
       - name: Run Simulations
         run: pytest simulation_tests -n auto
-
+  module-test:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/sfc-aqua/quisp-ci:latest
+      credentials:
+        username: quisp-bot
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: work around permission issue
+        run: git config --global --add safe.directory /__w/quisp/quisp
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: make eigen
+        run: make eigen
+      - name: generate makefile
+        run: make makefile-lib
+      - name: generate message headers
+        run: make msgheaders
+      - name: make googletest
+        run: make googletest
+      - name: run module_tests
+        run: make run-module-test
   clang-tidy:
     runs-on: ubuntu-latest
     container:

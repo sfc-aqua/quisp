@@ -1,19 +1,14 @@
-#ifndef MODULES_IROUTING_DAEMON_H_
-#define MODULES_IROUTING_DAEMON_H_
+#pragma once
 
-#include "omnetpp/csimplemodule.h"
+#include <omnetpp.h>
 
 using omnetpp::cSimpleModule;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 class IRoutingDaemon : public cSimpleModule {
  public:
-  virtual int returnNumEndNodes() = 0;
-  virtual int return_QNIC_address_to_destAddr(int destAddr) = 0;
+  virtual int getNumEndNodes() = 0;
+  virtual int findQNicAddrByDestAddr(int destAddr) = 0;
 };
-}  // namespace modules
-}  // namespace quisp
-
-#endif
+}  // namespace quisp::modules

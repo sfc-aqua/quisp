@@ -118,6 +118,17 @@ We define how to format code via `.clang-format` and lint vs `.clang-tidy` at pr
 * If you're writing code using [Visual Studio Code](https://code.visualstudio.com), we have a [guide](/doc/development_setup/vscode_setup.md) on how to setup.
 * If you're using OMNeT++ IDE, you can format the code seamlessly using [CppStyle](https://github.com/wangzw/CppStyle).
 
+## Updating the quisp version
+
+To ensure compatibility of the network definition, we need to update the version.
+We use the [tbump](https://github.com/your-tools/tbump) to automate the bumping
+the version. This commands add the new version tag and push it.
+
+```bash
+pip install tbump
+tbump <new-version>
+```
+
 ## License
 
 By contributing, you agree that your contributions will be licensed under [3-Clause BSD License](/LICENSE).

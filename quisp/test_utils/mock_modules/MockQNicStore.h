@@ -1,14 +1,13 @@
 #pragma once
 
 #include <gmock/gmock.h>
-#include <modules/QNIC/StationaryQubit/StationaryQubit.h>
-#include <test_utils/ModuleType.h>
+#include <modules/QNIC.h>
+#include <modules/QRSA/RuleEngine/QNicStore/IQNicStore.h>
 #include <test_utils/TestUtilFunctions.h>
-#include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
-#include "modules/QRSA/RuleEngine/QNicStore/IQNicStore.h"
 
 namespace quisp_test::mock_modules::qnic_store {
 
+using quisp::modules::QNIC_type;
 using quisp::modules::qnic_store::IQNicStore;
 
 class MockQNicStore : public IQNicStore {

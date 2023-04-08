@@ -1,13 +1,15 @@
-#include "HardwareMonitor.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
-#include <test_utils/TestUtils.h>
+#include <omnetpp/csimulation.h>
+
+#include "HardwareMonitor.h"
+
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
-#include "omnetpp/csimulation.h"
+#include "test_utils/TestUtils.h"
 
 namespace {
 
@@ -65,7 +67,7 @@ TEST(HardwareMonitorTestTarget, Init) {
   prepareSimulation();
   auto* mock_routing_daemon = new MockRoutingDaemon;
   auto* mock_qubit = new MockQubit;
-  EXPECT_CALL(*mock_routing_daemon, returnNumEndNodes()).WillOnce(Return(1));
+  EXPECT_CALL(*mock_routing_daemon, getNumEndNodes()).WillOnce(Return(1));
   HardwareMonitorTestTarget c{mock_qubit, mock_routing_daemon};
 
   c.initialize(0);

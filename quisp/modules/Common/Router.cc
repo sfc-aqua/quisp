@@ -3,37 +3,18 @@
  *
  *  \brief Router
  */
-#include <messages/classical_messages.h>  //Path selection: type = 1, Timing notifier for BMA: type = 4
-#include <omnetpp.h>
-#include <map>
+#include "Router.h"
+#include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
 
 using namespace omnetpp;
 using namespace quisp::messages;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
-/** \class Router Router.cc
- *
- *  \brief Router
- */
-class Router : public cSimpleModule {
- private:
-  int myAddress;
+Router::Router() : provider(utils::ComponentProvider{this}) {}
 
-  typedef std::map<int, int> RoutingTable;  // destaddr -> gateindex
-  RoutingTable rtable;
-
- protected:
-  virtual void initialize(int stage) override;
-  virtual void handleMessage(cMessage *msg) override;
-  virtual int numInitStages() const override { return 1; };
-};
-
-Define_Module(Router);
-
-void Router::initialize(int stage) {
-  myAddress = getParentModule()->par("address");
+void Router::initialize() {
+  my_address = provider.getNodeAddr();
 
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
@@ -47,8 +28,6 @@ void Router::initialize(int stage) {
   }
 
   cTopology::Node *thisNode = topo->getNodeFor(getParentModule());  // The parent node with this specific router
-
-  int number_of_links_total = 0;
 
   // Initialize channel weights for all existing links.
   for (int x = 0; x < topo->getNumNodes(); x++) {  // Traverse through all nodes
@@ -86,7 +65,7 @@ void Router::initialize(int stage) {
     int address = topo->getNode(i)->getModule()->par("address");
 
     // Store gate index per destination from this node
-    rtable[address] = gateIndex;
+    routing_table[address] = gateIndex;
 
     if (strstr(parentModuleGate->getFullName(), "quantum")) {
       error("Classical routing table referring to quantum gates...");
@@ -100,99 +79,82 @@ void Router::handleMessage(cMessage *msg) {
   // check the header of the received package
   Header *pk = check_and_cast<Header *>(msg);
 
-  int destAddr = pk->getDestAddr();
+  int dest_addr = pk->getDestAddr();
   int who_are_you = pk->getKind();
 
   // If destination is this node: Path selection
-  if (destAddr == myAddress && who_are_you == 1) {
+  if (dest_addr == my_address && who_are_you == 1) {
     send(pk, "toApp");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<BSMTimingNotification *>(msg)) {  // Timing for BSM
+  } else if (dest_addr == my_address && dynamic_cast<BSMTimingNotification *>(msg)) {  // Timing for BSM
     bubble("Timing Notifier from BSA (stand-alone or internal) received");
     send(pk, "rePort$o");  // send to Application locally
     return;
-  } else if (destAddr == myAddress && dynamic_cast<EPPStimingNotifier *>(msg)) {  // Timing for BSM
+  } else if (dest_addr == my_address && dynamic_cast<EPPStimingNotifier *>(msg)) {  // Timing for BSM
     bubble("Timing Notifier from EPPS received");
     send(pk, "rePort$o");  // send to Application locally
     return;
-  } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupRequest *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<ConnectionSetupRequest *>(msg)) {
     bubble("Connection setup request received");
     send(pk, "cmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupResponse *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<ConnectionSetupResponse *>(msg)) {
     bubble("Connection setup response received");
     send(pk, "cmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<RejectConnectionSetupRequest *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<RejectConnectionSetupRequest *>(msg)) {
     bubble("Reject connection setup response received");
     send(pk, "cmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     bubble("Internal RuleSet Forwarding packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     bubble("Internal RuleSet Forwarding Application packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<SwappingResult *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<SwappingResult *>(msg)) {
     bubble("Swapping Result packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<SimultaneousSwappingResult *>(msg)) {
-    bubble("Swapping Result packet received");
-    send(pk, "rePort$o");
-    return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<LinkTomographyRequest *>(msg)) {
     bubble("Link tomography request received");
     send(pk, "hmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyAck *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<LinkTomographyAck *>(msg)) {
     bubble("Link tomography ack received");
     send(pk, "hmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRuleSet *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     bubble("Link tomography rule set received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyResult *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<LinkTomographyResult *>(msg)) {
     bubble("Link tomography result received");
     send(pk, "hmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<PurificationResult *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<PurificationResult *>(msg)) {
     bubble("Purification result received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<DoublePurificationResult *>(msg)) {
-    bubble("DoublePurification result received");
-    send(pk, "rePort$o");
-    return;
-  } else if (destAddr == myAddress && dynamic_cast<DS_DoublePurificationResult *>(msg)) {
-    bubble("DS_DoublePurification result received");
-    send(pk, "rePort$o");
-    return;
-  } else if (destAddr == myAddress && dynamic_cast<DS_DoublePurificationSecondResult *>(msg)) {
-    bubble("DS_DoublePurificationSecond result received");
-    send(pk, "rePort$o");
-    return;
-  } else if (destAddr == myAddress && dynamic_cast<StopEmitting *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<StopEmitting *>(msg)) {
     send(pk, "rePort$o");
     return;
   }
 
   // Check if packet is reachable
-  RoutingTable::iterator it = rtable.find(destAddr);
-  if (it == rtable.end()) {
-    std::cout << "In Node[" << myAddress << "]Address... " << destAddr << " unreachable, discarding packet " << pk->getName() << endl;
+  auto it = routing_table.find(dest_addr);
+  if (it == routing_table.end()) {
+    std::cout << "In Node[" << my_address << "]Address... " << dest_addr << " unreachable, discarding packet " << pk->getName() << endl;
     delete pk;
     error("Router couldn't find the path. Shoudn't happen. Or maybe the router does not understand the packet.");
     return;
   }
 
-  int outGateIndex = (*it).second;
+  int out_gate_index = (*it).second;
   pk->setHopCount(pk->getHopCount() + 1);
-  send(pk, "toQueue", outGateIndex);
+  send(pk, "toQueue", out_gate_index);
 }
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules

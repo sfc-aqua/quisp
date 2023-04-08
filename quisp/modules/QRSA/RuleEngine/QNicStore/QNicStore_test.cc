@@ -1,6 +1,7 @@
 #include "QNicStore.h"
 #include <gtest/gtest.h>
 #include <modules/Logger/DisabledLogger.h>
+#include <modules/QNIC.h>
 #include <omnetpp/cmodule.h>
 #include <test_utils/TestUtils.h>
 #include <utils/ComponentProvider.h>
@@ -13,6 +14,7 @@ using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_N;
 using quisp::modules::QNIC_R;
 using quisp::modules::QNIC_RP;
+using quisp::modules::QNIC_type;
 
 class Strategy : public TestComponentProviderStrategy {
  public:

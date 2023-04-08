@@ -5,37 +5,44 @@
  *      Author: takaakimatsuo
  */
 
-#ifndef MODULES_ROUTINGDAEMON_H_
-#define MODULES_ROUTINGDAEMON_H_
+#pragma once
 
-#include <modules/QNIC.h>
 #include "IRoutingDaemon.h"
+
+#include "modules/QNIC.h"
+#include "utils/ComponentProvider.h"
 
 /** \class RoutingDaemon RoutingDaemon.cc
  *
  *  \brief RoutingDaemon
  */
+namespace quisp::modules::routing_daemon {
 
-namespace quisp {
-namespace modules {
+// destaddr -> {self_qnic_address (unique)}
+using RoutingTable = std::map<int, int>;
 
 class RoutingDaemon : public IRoutingDaemon {
- private:
+ protected:
   int myAddress;
-  typedef std::map<int, QNIC> RoutingTable;  // destaddr -> {gate_index (We need this to access qnic, but it is not unique because we have 3 types of qnics), qnic_address (unique)}
   RoutingTable qrtable;
 
- protected:
+  void updateChannelWeightsInTopology(cTopology* topo);
+  void updateChannelWeightsOfNode(cTopology::Node* node);
+  double calculateSecPerBellPair(const cTopology::LinkOut* const outgoing_link);
+
+  void generateRoutingTable(cTopology* topo);
+  int getQNicAddr(const cGate* const parentModuleGate);
+
   void initialize(int stage) override;
-  void handleMessage(cMessage *msg) override;
+  void handleMessage(cMessage* msg) override;
   int numInitStages() const override { return 3; };
 
+  utils::ComponentProvider provider;
+
  public:
-  int returnNumEndNodes() override;
-  int return_QNIC_address_to_destAddr(int destAddr) override;
+  RoutingDaemon();
+  int getNumEndNodes() override;
+  int findQNicAddrByDestAddr(int destAddr) override;
 };
 
-}  // namespace modules
-}  // namespace quisp
-
-#endif /* MODULES_ROUTINGDAEMON_H_ */
+}  // namespace quisp::modules::routing_daemon

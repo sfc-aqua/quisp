@@ -1,14 +1,16 @@
 #include "ConnectionManager.h"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <messages/classical_messages.h>
-#include <modules/QNIC.h>
-#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
-#include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
 #include <omnetpp.h>
-#include <rules/Action.h>
-#include <test_utils/TestUtils.h>
 #include <nlohmann/json.hpp>
+
+#include "messages/classical_messages.h"
+#include "modules/QNIC.h"
+#include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
+#include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
+#include "rules/Action.h"
+#include "test_utils/TestUtils.h"
 
 using json = nlohmann::json;
 namespace {
@@ -27,6 +29,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   Strategy(IRoutingDaemon *_routing_daemon, IHardwareMonitor *_hardware_monitor) : routing_daemon(_routing_daemon), hardware_monitor(_hardware_monitor) {}
   Strategy() {}
   ~Strategy() {}
+  int getNodeAddr() override { return 5; };
   IRoutingDaemon *getRoutingDaemon() override { return routing_daemon; }
   IHardwareMonitor *getHardwareMonitor() override { return hardware_monitor; }
   IRoutingDaemon *routing_daemon = nullptr;
@@ -46,7 +49,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
   using quisp::modules::ConnectionManager::respondToRequest_deprecated;
   ConnectionManagerTestTarget(IRoutingDaemon *routing_daemon, IHardwareMonitor *hardware_monitor)
       : quisp::modules::ConnectionManager(), toRouterGate(new TestGate(this, "RouterPort$o")) {
-    setParInt(this, "address", 123);
+    setParInt(this, "address", 5);
     setParInt(this, "total_number_of_qnics", 10);
     this->setName("connection_manager_test_target");
     setParBool(this, "simultaneous_es_enabled", false);
@@ -60,7 +63,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
     setComponentType(new module_type::TestModuleType("test cm"));
   }
   ConnectionManagerTestTarget() : quisp::modules::ConnectionManager() {
-    setParInt(this, "address", 123);
+    setParInt(this, "address", 5);
     setParInt(this, "total_number_of_qnics", 10);
     this->setName("connection_manager_test_target");
     this->provider.setStrategy(std::make_unique<Strategy>());
@@ -78,7 +81,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
 
 TEST(ConnectionManagerTest, Init) {
   ConnectionManagerTestTarget c;
-  ASSERT_EQ(c.par("address").intValue(), 123);
+  ASSERT_EQ(c.par("address").intValue(), 5);
 }
 
 TEST(ConnectionManagerTest, parsePurType) {
@@ -89,7 +92,8 @@ TEST(ConnectionManagerTest, parsePurType) {
 
   auto pur_type = connection_manager->parsePurType("SINGLE_X");
   EXPECT_EQ(pur_type, PurType::SINGLE_X);
-
+  pur_type = connection_manager->parsePurType("SINGLE_Y");
+  EXPECT_EQ(pur_type, PurType::SINGLE_Y);
   pur_type = connection_manager->parsePurType("SINGLE_Z");
   EXPECT_EQ(pur_type, PurType::SINGLE_Z);
   pur_type = connection_manager->parsePurType("DOUBLE");
@@ -127,6 +131,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
   // qnic_index(id)     11       12           13       14           15       16
   // [QNode2](qnic_addr:101) -- (102)[QNode3](103) -- (104)[QNode4](105) -- (106)[QNode5(test target)]
+  req->setApplicationId(1);
   req->setActual_destAddr(5);
   req->setActual_srcAddr(2);
   req->setDestAddr(5);
@@ -136,10 +141,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   req->setStack_of_QNodeIndexes(0, 2);
   req->setStack_of_QNodeIndexes(1, 3);
   req->setStack_of_QNodeIndexes(2, 4);
-  req->setStack_of_QNICs(0, QNIC_pair_info{.fst = NULL_CONNECTION_SETUP_INFO.qnic, .snd = {.type = QNIC_E, .index = 11, .address = 101}});
-  req->setStack_of_QNICs(1, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 12, .address = 102}, .snd = {.type = QNIC_E, .index = 13, .address = 103}});
-  req->setStack_of_QNICs(2, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
-  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(4)).Times(1).WillOnce(Return(106));
+  req->setStack_of_QNICs(0, QNicPairInfo{NULL_CONNECTION_SETUP_INFO.qnic, {.type = QNIC_E, .index = 11, .address = 101}});
+  req->setStack_of_QNICs(1, QNicPairInfo{{.type = QNIC_E, .index = 12, .address = 102}, {.type = QNIC_E, .index = 13, .address = 103}});
+  req->setStack_of_QNICs(2, QNicPairInfo{{.type = QNIC_E, .index = 14, .address = 104}, {.type = QNIC_E, .index = 15, .address = 105}});
+  EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(4)).Times(1).WillOnce(Return(106));
 
   sim->setContext(connection_manager);
   connection_manager->respondToRequest(req);
@@ -149,52 +154,95 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   {
     auto *packetFor2 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[0]);
     ASSERT_NE(packetFor2, nullptr);
+    EXPECT_EQ(packetFor2->getApplicationId(), 1);
     EXPECT_EQ(packetFor2->getDestAddr(), 2);
     auto ruleset = packetFor2->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset["rules"].size(), 1);
+    EXPECT_EQ(ruleset["rules"].size(), 2);
     auto expected_ruleset = R"({
-	"num_rules": 1,
-	"owner_address": 2,
-	"rules": [ {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 5
-				}],
-				"num_measure": 0,
-				"owner_address": 2
-			},
-			"type": "tomography"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}, {
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_measure": 0
-				},
-				"type": "measure_count"
-			}]
-		},
-		"interface": [{
-			"partner_address": 5
-		}],
-    	"shared_tag": 2,
-		"name": "",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}],
-	"ruleset_id": 1234
+  "num_rules": 2,
+  "owner_address": 2,
+  "rules": [
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 3
+            }
+          ],
+          "shared_rule_tag": 1
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 3
+              },
+              "shared_rule_tag": 1
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 3
+        }
+      ],
+      "name": "swapping correction from 3",
+      "receive_tag": 1,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 5
+            }
+          ],
+          "num_measure": 0,
+          "owner_address": 2
+        },
+        "type": "tomography"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 5
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          },
+          {
+            "options": {
+              "interface": {
+                "partner_address": 5
+              },
+              "num_measure": 0
+            },
+            "type": "measure_count"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 5
+        }
+      ],
+      "name": "tomography with address 5",
+      "receive_tag": 3,
+      "send_tag": 3
+    }
+  ],
+  "ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
@@ -203,52 +251,109 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   {
     auto *packetFor3 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[1]);
     ASSERT_NE(packetFor3, nullptr);
+    EXPECT_EQ(packetFor3->getApplicationId(), 1);
     EXPECT_EQ(packetFor3->getDestAddr(), 3);
     auto ruleset = packetFor3->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset["rules"].size(), 1);
+    EXPECT_EQ(ruleset["rules"].size(), 2);
 
     auto expected_ruleset = R"({
-	"num_rules": 1,
-	"owner_address": 3,
-	"rules": [{
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 2
-				}, {
-					"partner_address": 5
-				}],
-				"remote_interface": [{
-					"partner_address": 2
-				}, {
-					"partner_address": 5
-				}]
-			},
-			"type": "swapping"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": { "partner_address": 2 },
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}, {
-				"options": {
-					"interface": { "partner_address": 5 },
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{ "partner_address": 2 }, { "partner_address": 5 }],
-    	"shared_tag": 1,
-		"name": "",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}],
-	"ruleset_id": 1234
+  "num_rules": 2,
+  "owner_address": 3,
+  "rules": [
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 4
+            }
+          ],
+          "shared_rule_tag": 2
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 4
+              },
+              "shared_rule_tag": 2
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 4
+        }
+      ],
+      "name": "swapping correction from 4",
+      "receive_tag": 2,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 2
+            },
+            {
+              "partner_address": 5
+            }
+          ],
+          "remote_interface": [
+            {
+              "partner_address": 2
+            },
+            {
+              "partner_address": 5
+            }
+          ],
+          "shared_rule_tag": 1
+        },
+        "type": "swapping"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 2
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          },
+          {
+            "options": {
+              "interface": {
+                "partner_address": 5
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 2
+        },
+        {
+          "partner_address": 5
+        }
+      ],
+      "name": "swap between 2 and 5",
+      "receive_tag": -1,
+      "send_tag": 1
+    }
+  ],
+  "ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
@@ -257,6 +362,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   {
     auto *packetFor4 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[2]);
     ASSERT_NE(packetFor4, nullptr);
+    EXPECT_EQ(packetFor4->getApplicationId(), 1);
     EXPECT_EQ(packetFor4->getDestAddr(), 4);
     auto ruleset = packetFor4->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
@@ -264,54 +370,68 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
     // rule3 (id: 2): swapping with [3, 5], next to -1
     auto expected_ruleset = R"({
-	"num_rules": 1,
-	"owner_address": 4,
-	"rules": [{
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 3
-				}, {
-					"partner_address": 5
-				}],
-				"remote_interface": [{
-					"partner_address": 3
-				}, {
-					"partner_address": 5
-				}]
-			},
-			"type": "swapping"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 3
-					},
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}, {
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 3
-		}, {
-			"partner_address": 5
-		}],
-    	"shared_tag": 0,
-		"name": "",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}],
-	"ruleset_id": 1234
+  "num_rules": 1,
+  "owner_address": 4,
+  "rules": [
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 3
+            },
+            {
+              "partner_address": 5
+            }
+          ],
+          "remote_interface": [
+            {
+              "partner_address": 3
+            },
+            {
+              "partner_address": 5
+            }
+          ],
+          "shared_rule_tag": 2
+        },
+        "type": "swapping"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 3
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          },
+          {
+            "options": {
+              "interface": {
+                "partner_address": 5
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 3
+        },
+        {
+          "partner_address": 5
+        }
+      ],
+      "name": "swap between 3 and 5",
+      "receive_tag": -1,
+      "send_tag": 2
+    }
+  ],
+  "ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
@@ -320,64 +440,136 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   {
     auto *packetFor5 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[3]);
     ASSERT_NE(packetFor5, nullptr);
+    EXPECT_EQ(packetFor5->getApplicationId(), 1);
     EXPECT_EQ(packetFor5->getDestAddr(), 5);
     auto ruleset = packetFor5->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset["rules"].size(), 1);
+    EXPECT_EQ(ruleset["rules"].size(), 3);
 
     // rule6 (id: 5): tomography with 1, to (id: -1)
     auto expected_ruleset = R"({
-	"num_rules": 1,
-	"owner_address": 5,
-	"rules": [{
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 2
-				}],
-				"num_measure": 0,
-				"owner_address": 5
-			},
-			"type": "tomography"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 2
-					},
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}, {
-				"options": {
-					"interface": {
-						"partner_address": 2
-					},
-					"num_measure": 0
-				},
-				"type": "measure_count"
-			}]
-		},
-		"interface": [{
-			"partner_address": 2
-		}],
-    	"shared_tag": 2,
-		"name": "",
-		"next_rule_id": -1,
-		"rule_id": 0 
-	}],
-	"ruleset_id": 1234
+  "num_rules": 3,
+  "owner_address": 5,
+  "rules": [
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 4
+            }
+          ],
+          "shared_rule_tag": 2
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 4
+              },
+              "shared_rule_tag": 2
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 4
+        }
+      ],
+      "name": "swapping correction from 4",
+      "receive_tag": 2,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 3
+            }
+          ],
+          "shared_rule_tag": 1
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 3
+              },
+              "shared_rule_tag": 1
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 3
+        }
+      ],
+      "name": "swapping correction from 3",
+      "receive_tag": 1,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 2
+            }
+          ],
+          "num_measure": 0,
+          "owner_address": 5
+        },
+        "type": "tomography"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 2
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          },
+          {
+            "options": {
+              "interface": {
+                "partner_address": 2
+              },
+              "num_measure": 0
+            },
+            "type": "measure_count"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 2
+        }
+      ],
+      "name": "tomography with address 2",
+      "receive_tag": 3,
+      "send_tag": 3
+    }
+  ],
+  "ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
   delete routing_daemon;
   delete hardware_monitor;
-}
-
-TEST(ConnectionManagerTest, GetQNICInterface) {
-  ConnectionManagerTestTarget c;
-  ASSERT_EQ(c.par("address").intValue(), 123);
 }
 
 TEST(ConnectionManagerTest, QnicReservation) {

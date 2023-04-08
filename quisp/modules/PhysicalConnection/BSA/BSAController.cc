@@ -2,15 +2,10 @@
  *
  *  \brief BSAController
  */
-#include "./BSAController.h"
+#include "BSAController.h"
+
 #include <cstring>
 #include <stdexcept>
-#include "messages/BSA_ipc_messages_m.h"
-#include "messages/link_generation_messages_m.h"
-#include "modules/PhysicalConnection/BSA/types.h"
-#include "modules/QNIC.h"
-#include "omnetpp/cchannel.h"
-#include "omnetpp/cexception.h"
 
 namespace quisp::modules {
 
@@ -23,22 +18,23 @@ BSAController::~BSAController() { cancelAndDelete(time_out_message); }
 void BSAController::finish() { std::cout << "last BSM message that was sent " << last_result_send_time << "\n"; }
 
 void BSAController::initialize() {
+  bsa = check_and_cast<BellStateAnalyzer *>(getParentModule()->getSubmodule("bsa"));
   // if this BSA is internal set left to be self node
   if (strcmp(getParentModule()->getName(), "qnic_r") == 0) {
-    address = provider.getQNode()->par("address").intValue();
-    left_qnic.address = provider.getQNode()->par("address").intValue();
+    address = provider.getNodeAddr();
+    left_qnic.parent_node_addr = address;
     left_qnic.index = getParentModule()->par("self_qnic_index").intValue();
     left_qnic.type = QNIC_R;
   } else {
     address = getParentModule()->par("address").intValue();
     left_qnic = getExternalQNICInfoFromPort(0);
   }
+  time_interval_between_photons = SimTime(1, SIMTIME_S) / SimTime(getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue(), SIMTIME_S);
+  simtime_t first_notification_timer = SimTime(par("initial_notification_timing_buffer").doubleValue());
   right_qnic = getExternalQNICInfoFromPort(1);
   offset_time_for_first_photon = calculateOffsetTimeFromDistance();
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
-  time_interval_between_photons = SimTime(1, SIMTIME_S).dbl() / getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
-  auto first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
   time_out_count = 0;
   time_out_message = new BSMNotificationTimeout("bsm_notification_timeout");
   scheduleAt(first_notification_timer, time_out_message);
@@ -48,6 +44,7 @@ void BSAController::handleMessage(cMessage *msg) {
   if (msg == time_out_message) {
     send(generateFirstNotificationTiming(true), "to_router");
     send(generateFirstNotificationTiming(false), "to_router");
+    bsa->resetState();
     // set timeout to be twice the travel time plus number of no response
     time_out_count++;
     scheduleAt(simTime() + (2 + time_out_count) * (offset_time_for_first_photon), msg);
@@ -78,30 +75,28 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
     if (!batch_click_msg->getClickResults(index).success) continue;
     leftpk->appendSuccessIndex(index);
     leftpk->appendCorrectionOperation(PauliOperator::I);
-    leftpk->setNeighborAddress(right_qnic.address);
+    leftpk->setNeighborAddress(right_qnic.parent_node_addr);
     rightpk->appendSuccessIndex(index);
     rightpk->appendCorrectionOperation(batch_click_msg->getClickResults(index).correction_operation);
-    rightpk->setNeighborAddress(left_qnic.address);
+    rightpk->setNeighborAddress(left_qnic.parent_node_addr);
   }
   send(leftpk, "to_router");
   send(rightpk, "to_router");
   last_result_send_time = simTime();
 
-  // need to cancel the timeout and restart the timeout timer
-  cancelEvent(time_out_message);
-  scheduleAt(simTime() + 2 * offset_time_for_first_photon, time_out_message);
+  scheduleAt(simTime() + 1.1 * offset_time_for_first_photon, time_out_message);
 }
 
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
-  int destination = (is_left) ? left_qnic.address : right_qnic.address;
+  int destination = (is_left) ? left_qnic.parent_node_addr : right_qnic.parent_node_addr;
   int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
   auto qnic_type = (is_left) ? left_qnic.type : right_qnic.type;
   auto *notification_packet = new BSMTimingNotification();
   auto travel_time = (is_left) ? left_travel_time : right_travel_time;
 
   // The node should emit at <arrival_time - travel_time>
-  double arrival_time = simTime().dbl() + offset_time_for_first_photon;
-  double emit_time = arrival_time - travel_time;
+  simtime_t arrival_time = simTime() + offset_time_for_first_photon;
+  simtime_t emit_time = arrival_time - travel_time;
 
   notification_packet->setSrcAddr(address);
   notification_packet->setDestAddr(destination);
@@ -113,15 +108,15 @@ BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_le
 }
 
 CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) {
-  int destination = (is_left) ? left_qnic.address : right_qnic.address;
+  int destination = (is_left) ? left_qnic.parent_node_addr : right_qnic.parent_node_addr;
   int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
   auto qnic_type = (is_left) ? left_qnic.type : right_qnic.type;
   auto *notification_packet = new CombinedBSAresults();
   auto travel_time = (is_left) ? left_travel_time : right_travel_time;
 
   // The node should emit at <arrival_time - travel_time>
-  double arrival_time = simTime().dbl() + offset_time_for_first_photon;
-  double emit_time = arrival_time - travel_time;
+  simtime_t arrival_time = simTime() + offset_time_for_first_photon;
+  simtime_t emit_time = arrival_time - travel_time;
 
   notification_packet->setSrcAddr(address);
   notification_packet->setDestAddr(destination);
@@ -132,10 +127,10 @@ CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) 
   return notification_packet;
 }
 
-double BSAController::calculateOffsetTimeFromDistance() {
+simtime_t BSAController::calculateOffsetTimeFromDistance() {
   auto one_way_longer_travel_time = std::max(getTravelTimeFromPort(0), getTravelTimeFromPort(1));
-  // we add 5 times the photon interval to offset the travel time for safety in case RuleEngine has internal delay;
-  return 2 * one_way_longer_travel_time + time_interval_between_photons * 5;
+  // we add 10 times the photon interval to offset the travel time for safety in case RuleEngine has internal delay;
+  return 2 * one_way_longer_travel_time + time_interval_between_photons * 10;
 }
 
 int BSAController::getExternalAdressFromPort(int port) {
@@ -172,7 +167,6 @@ int BSAController::getExternalQNICIndexFromPort(int port) {
 
   // this BSAController is inside QNIC_R but the port is connecting to outside
   if (port != 0 && strcmp(getParentModule()->getName(), "qnic_r") == 0) {
-    auto *bsa = getParentModule()->getSubmodule("bsa");
     return getParentModule()
         ->getSubmodule("bsa")
         ->gate("quantum_port$i", port)
@@ -195,7 +189,7 @@ int BSAController::getExternalQNICIndexFromPort(int port) {
       ->par("self_qnic_index");
 }
 
-double BSAController::getTravelTimeFromPort(int port) {
+simtime_t BSAController::getTravelTimeFromPort(int port) {
   cChannel *channel;
   // this port connects to internal QNIC
   // since only port 0 is supposed to be connected to internal QNIC
@@ -205,17 +199,13 @@ double BSAController::getTravelTimeFromPort(int port) {
     // this port connects to outside QNode
     channel = getParentModule()->getSubmodule("bsa")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
   }
-  double distance = channel->par("distance").doubleValue();
-  double speed_of_light_in_channel = channel->par("speed_of_light_in_fiber");
-  return distance / speed_of_light_in_channel;
+  double distance = channel->par("distance").doubleValue();  // km
+  double speed_of_light_in_channel = channel->par("speed_of_light_in_fiber").doubleValue();  // km/sec
+  return SimTime(distance / speed_of_light_in_channel);
 }
 
-QNIC_id BSAController::getExternalQNICInfoFromPort(int port) {
-  QNIC_id qid;
-  qid.address = getExternalAdressFromPort(port);
-  qid.index = getExternalQNICIndexFromPort(port);
-  qid.type = QNIC_E;
-  return qid;
+BSAController::QNicInfo BSAController::getExternalQNICInfoFromPort(int port) {
+  return QNicInfo{.type = QNIC_E, .index = getExternalQNICIndexFromPort(port), .parent_node_addr = getExternalAdressFromPort(port)};
 }
 
 void BSAController::cancelBSMTimeOut() {

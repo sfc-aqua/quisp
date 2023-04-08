@@ -18,6 +18,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy(TestQNode *_qnode) : parent_qnode(_qnode) {}
   cModule *getQNode() override { return parent_qnode; }
+  int getNodeAddr() override { return parent_qnode->address; };
 
  private:
   TestQNode *parent_qnode;
@@ -26,8 +27,10 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 class AppTestTarget : public quisp::modules::Application {
  public:
   using quisp::modules::Application::getParentModule;
+  using quisp::modules::Application::id;
   using quisp::modules::Application::initialize;
   using quisp::modules::Application::par;
+
   cGate *gate(const char *gatename, int index = -1) override {
     if (strcmp(gatename, "toRouter") != 0) {
       throw cRuntimeError("unknown gate called");
@@ -53,7 +56,7 @@ TEST(AppTest, Init_IsNotInitiator) {
 
   sim->registerComponent(app);
   app->callInitialize();
-
+  ASSERT_EQ(app->id, 0);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 0);
 }
@@ -70,6 +73,7 @@ TEST(AppTest, Init_IsInitiator) {
   sim->registerComponent(app);
   app->callInitialize();
 
+  ASSERT_EQ(app->id, 0);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 1);
   ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());
@@ -90,6 +94,7 @@ TEST(AppTest, Init_WeightMap_Generation) {
   sim->registerComponent(app);
   app->callInitialize();
 
+  ASSERT_EQ(app->id, 0);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 3);
   ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());
@@ -106,6 +111,7 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   auto *mock_qnode = new TestQNode{123, 100, true};
   auto *mock_qnode2 = new TestQNode{456, 100, false};
   auto *app = new AppTestTarget{mock_qnode};
+  sim->setConfigValue("sim-time-limit", "5.1s");
 
   setParDouble(app, "request_generation_interval", 5);
   setParInt(app, "number_of_bellpair", 10);
@@ -114,6 +120,7 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   sim->registerComponent(app);
   app->callInitialize();
 
+  ASSERT_EQ(app->id, 0);
   ASSERT_EQ(app->getAddress(), 123);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 2);
 
@@ -123,6 +130,7 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   auto *msg = app->toRouterGate->messages.at(0);
   ASSERT_NE(msg, nullptr);
   auto *pkt = dynamic_cast<ConnectionSetupRequest *>(msg);
+  ASSERT_EQ(pkt->getApplicationId(), 0);
   ASSERT_EQ(pkt->getActual_srcAddr(), 123);
   ASSERT_EQ(pkt->getActual_destAddr(), mock_qnode2->address);
   ASSERT_EQ(pkt->getSrcAddr(), 123);
@@ -205,6 +213,7 @@ TEST(AppTest, Specifying_Valid_Addresses_As_Recipients) {
   sim->registerComponent(app);
   app->callInitialize();
 
+  ASSERT_EQ(app->id, 0);
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
   ASSERT_EQ(app->getEndNodeWeightMap().size(), 2);  // self and 456
   ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());

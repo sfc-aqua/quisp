@@ -46,6 +46,7 @@ class GraphStateQubit : public IQubit {
 
   void gateX() override;
   void gateZ() override;
+  void gateY() override;
   void gateH() override;
   void gateS() override;
   void gateSdg() override;

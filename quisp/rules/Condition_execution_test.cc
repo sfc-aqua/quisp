@@ -1,19 +1,14 @@
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-#include <modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h>
-#include <runtime/Runtime.h>
-#include <runtime/test.h>
-#include <runtime/types.h>
-#include <test_utils/TestUtils.h>
 #include <memory>
 
-#include "Action.h"
-#include "modules/QNIC.h"
-#include "omnetpp/simtime.h"
-#include "rules/Clause.h"
-#include "rules/Condition.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
+#include "modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h"
+#include "runtime/test.h"
+#include "runtime/types.h"
+#include "test_utils/TestUtils.h"
+
 #include "rules/RuleSetConverter/RuleSetConverter.h"
-#include "runtime/Value.h"
 
 namespace {
 using namespace quisp_test;

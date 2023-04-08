@@ -1,4 +1,5 @@
 #include "types.h"
+
 #include <functional>
 #include <iostream>
 #include <string>
@@ -85,6 +86,9 @@ std::ostream& operator<<(std::ostream& stream, const Basis& value) {
       break;
     case Basis::Z:
       stream << std::string("Z");
+      break;
+    case Basis::Y:
+      stream << std::string("Y");
       break;
     case Basis::RANDOM:
       stream << std::string("RANDOM");

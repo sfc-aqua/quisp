@@ -392,7 +392,7 @@ EigenvalueResult GraphStateQubit::graphMeasureZ(const EigenvalueResult eigenvalu
 
 void GraphStateQubit::setFree() {
   // force qubit to be in |0> state
-  auto result = this->graphMeasureZ();
+  this->graphMeasureZ();
   this->vertex_operator = CliffordOperator::H;
   updated_time = backend->getSimTime();
 }
@@ -420,6 +420,12 @@ void GraphStateQubit::gateZ() {
 void GraphStateQubit::gateX() {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::X);
+  this->applySingleQubitGateError(gate_err_x);
+}
+void GraphStateQubit::gateY() {
+  this->applyMemoryError();
+  this->applyClifford(CliffordOperator::Y);
+  // TODO: add single qubit error gate for Y?
   this->applySingleQubitGateError(gate_err_x);
 }
 void GraphStateQubit::gateS() {

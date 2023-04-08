@@ -1,8 +1,4 @@
 #include "ComponentProvider.h"
-#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
-#include "omnetpp/cmodule.h"
-#include "utils/utils.h"
 
 namespace quisp::utils {
 
@@ -11,6 +7,16 @@ ComponentProvider::ComponentProvider(cModule *_module) : module(_module) {}
 cModule *ComponentProvider::getQNode() {
   ensureStrategy();
   return strategy->getQNode();
+}
+
+cModule *ComponentProvider::getNode() {
+  ensureStrategy();
+  return strategy->getNode();
+}
+
+int ComponentProvider::getNodeAddr() {
+  ensureStrategy();
+  return strategy->getNodeAddr();
 }
 
 cModule *ComponentProvider::getNeighborNode(cModule *qnic) {

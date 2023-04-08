@@ -1,7 +1,13 @@
 %description:
 Application module should send back the ConnectionSetupReq and InternalRuleSetForwarding to the router
 
+%file: package.ned
+package Application;
+@namespace(Application);
+
 %file: test.ned
+package Application;
+
 import ned.DatarateChannel;
 import modules.Application.Application;
 import modules.QNode;
