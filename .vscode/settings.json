@@ -49,6 +49,7 @@
         "--ignore=googletest",
         "--ignore=eigen",
         "--ignore=scripts",
-        "--ignore=spdlog"
+        "--ignore=spdlog",
+        "--ignore=quisp.py/docs",
     ]
 }
