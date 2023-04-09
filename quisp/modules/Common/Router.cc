@@ -16,10 +16,8 @@ Router::Router() : provider(utils::ComponentProvider{this}) {}
 void Router::initialize() {
   my_address = provider.getNodeAddr();
 
-  auto shared_resource = provider.getSharedResourceHolder();
-
   // Topology creation for routing table
-  auto topo = shared_resource->getTopologyForRouter();
+  auto topo = provider.getTopologyForRouter();
 
   // If no node with the parameter & value found, do nothing.
   if (topo->getNumNodes() == 0 || topo == nullptr) {

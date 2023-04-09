@@ -1,19 +1,19 @@
-#include "SharedResourceHolder.h"
+#include "SharedResource.h"
 #include <memory>
 #include <random>
 #include <vector>
 #include "omnetpp/ctopology.h"
 #include "utils/ComponentProvider.h"
 
-namespace quisp::modules::SharedResourceHolder {
+namespace quisp::modules::SharedResource {
 
-SharedResourceHolder::SharedResourceHolder() {}
+SharedResource::SharedResource() {}
 
-SharedResourceHolder::~SharedResourceHolder() {}
+SharedResource::~SharedResource() {}
 
-void SharedResourceHolder::initialize() {}
+void SharedResource::initialize() {}
 
-const std::unordered_map<int, int> SharedResourceHolder::getEndNodeWeightMapForApplication(const char *const node_type) {
+const std::unordered_map<int, int> SharedResource::getEndNodeWeightMapForApplication(const char *const node_type) {
   std::call_once(app_init_flag, [&]() {
     cTopology *topo = new cTopology("topo");
 
@@ -31,18 +31,27 @@ const std::unordered_map<int, int> SharedResourceHolder::getEndNodeWeightMapForA
   return end_node_weight_map;
 }
 
-cTopology *SharedResourceHolder::getTopologyForRouter() {
+cTopology *SharedResource::getTopologyForRouter() {
   std::call_once(router_init_flag, [&]() { updateChannelWeightsInTopology(router_topology, std::nullopt); });
   return router_topology;
 }
 
-cTopology *SharedResourceHolder::getTopologyForRoutingDaemon(const cModule *const rd_module) {
+cTopology *SharedResource::getTopologyForRoutingDaemon(const cModule *const rd_module) {
   std::call_once(rd_init_flag, [&]() { updateChannelWeightsInTopology(routingdaemon_topology, rd_module); });
   return routingdaemon_topology;
 }
 
-// Initialize channel weights for all existing links.
-void SharedResourceHolder::updateChannelWeightsInTopology(cTopology *&topo, std::optional<const cModule *const> rd_module) {
+/**
+ * @brief Initialize channel weights for all existing links in the Topology
+ * 
+ * @param topo router_topology or routingdaemon_topology
+ * @param rd_module 
+ * rd_module is needed for the function to distinguish between Router and RoutingDaemon,               
+ * as they require different procedures to initialize cTopology.  
+ * In detail, RoutingDaemon must call calculateSecPerBellPair function to update              
+ * the channel weights, and calculateSecPerBellPair function requires the rd_module.
+ */
+void SharedResource::updateChannelWeightsInTopology(cTopology *&topo, std::optional<const cModule *const> rd_module) {
   topo = new cTopology("topo");
   topo->extractByParameter("included_in_topology", "\"yes\"");
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all nodes
@@ -51,7 +60,7 @@ void SharedResourceHolder::updateChannelWeightsInTopology(cTopology *&topo, std:
   }
 }
 
-void SharedResourceHolder::updateChannelWeightsOfNode(cTopology::Node *node, std::optional<const cModule *const> rd_module) {
+void SharedResource::updateChannelWeightsOfNode(cTopology::Node *node, std::optional<const cModule *const> rd_module) {
   for (int i = 0; i < node->getNumOutLinks(); i++) {  // Traverse through all links from a specific node.
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
     auto outgoing_link = node->getLinkOut(i);
@@ -67,7 +76,7 @@ void SharedResourceHolder::updateChannelWeightsOfNode(cTopology::Node *node, std
 }
 
 // The cost metric is taken from https://arxiv.org/abs/1206.5655
-double SharedResourceHolder::calculateSecPerBellPair(const cModule *const rd_module, const cTopology::LinkOut *const outgoing_link) {
+double SharedResource::calculateSecPerBellPair(const cModule *const rd_module, const cTopology::LinkOut *const outgoing_link) {
   double speed_of_light_in_fiber = outgoing_link->getLocalGate()->getChannel()->par("speed_of_light_in_fiber");
   double channel_length = outgoing_link->getLocalGate()->getChannel()->par("distance");
 
@@ -87,7 +96,14 @@ double SharedResourceHolder::calculateSecPerBellPair(const cModule *const rd_mod
   return (channel_length / speed_of_light_in_fiber) * emission_prob;
 }
 
-void SharedResourceHolder::setWeightOfLink(cTopology::LinkOut *link, double weight, bool should_set_quantum_link) {
+/**
+ * @param link 
+ * @param weight 
+ * @param should_set_quantum_link 
+ * If should_set_quantum_link is true, the function will set quantum links to the value of weight (RoutingDaemon sets quantum links).
+ * If should_set_quantum_link is false, the function will set any other links to the value of weight (Router sets classical links).
+ */
+void SharedResource::setWeightOfLink(cTopology::LinkOut *link, double weight, bool should_set_quantum_link) {
   bool is_quantum_link = (strstr(link->getLocalGate()->getFullName(), "quantum") != nullptr);
   if (should_set_quantum_link == is_quantum_link) {
     link->setWeight(weight);
@@ -96,6 +112,6 @@ void SharedResourceHolder::setWeightOfLink(cTopology::LinkOut *link, double weig
   }
 }
 
-void SharedResourceHolder::finish() {}
+void SharedResource::finish() {}
 
-}  // namespace quisp::modules::SharedResourceHolder
+}  // namespace quisp::modules::SharedResource

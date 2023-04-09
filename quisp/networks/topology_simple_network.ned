@@ -6,7 +6,7 @@ import ned.IdealChannel;
 import modules.*;
 import modules.Backend.Backend;
 import modules.Logger.Logger;
-import modules.SharedResourceHolder.SharedResourceHolder;
+import modules.SharedResource.SharedResource;
 import channels.*;
 
 network Simple_MIM
@@ -17,7 +17,7 @@ network Simple_MIM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";
@@ -49,7 +49,7 @@ network Simple_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";
@@ -74,7 +74,7 @@ network three_node_MIM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";
@@ -122,7 +122,7 @@ network three_node_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";

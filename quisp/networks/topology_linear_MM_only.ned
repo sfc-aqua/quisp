@@ -6,7 +6,7 @@ import ned.IdealChannel;
 import modules.*;
 import modules.Backend.Backend;
 import modules.Logger.Logger;
-import modules.SharedResourceHolder.SharedResourceHolder;
+import modules.SharedResource.SharedResource;
 import channels.*;
 
 network four_node_MM
@@ -17,7 +17,7 @@ network four_node_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";
@@ -55,7 +55,7 @@ network five_node_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";
@@ -93,7 +93,7 @@ network six_node_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";
@@ -131,7 +131,7 @@ network seven_node_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";
@@ -169,7 +169,7 @@ network eight_node_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";
@@ -207,7 +207,7 @@ network nine_node_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";
@@ -245,7 +245,7 @@ network ten_node_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";

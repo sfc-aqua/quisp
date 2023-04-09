@@ -10,7 +10,7 @@ package RoutingDaemon;
 
 import ned.DatarateChannel;
 import modules.QRSA.RoutingDaemon.*;
-import modules.SharedResourceHolder.SharedResourceHolder;
+import modules.SharedResource.SharedResource;
 import modules.QNode;
 
 
@@ -88,7 +88,7 @@ module MockQNode {
 network RoutingDaemonTestNet
 {
     submodules:
-        SharedResourceHolder: SharedResourceHolder;
+        SharedResource: SharedResource;
         mockQNode1: MockQNode {
             address = 1;
             node_type = "EndNode";
@@ -139,13 +139,13 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
       return currentModule;
     }
 
-    SharedResourceHolder *getSharedResourceHolder() override {
+    SharedResource *getSharedResource() override {
         auto *qnode = getQNode();
-        auto *mod = qnode->findModuleByPath("SharedResourceHolder");
+        auto *mod = qnode->findModuleByPath("SharedResource");
         if (mod == nullptr) {
-            throw cRuntimeError("SharedResourceHolder not found");
+            throw cRuntimeError("SharedResource not found");
         }
-        auto *shared_resource = check_and_cast<SharedResourceHolder *>(mod);
+        auto *shared_resource = check_and_cast<SharedResource *>(mod);
         return shared_resource;
     }
 
@@ -177,7 +177,7 @@ class TestRoutingDaemon : public quisp::modules::routing_daemon::RoutingDaemon {
 
     const double target_weight = 4.80332e-05;
     const double epsilon = 1e-10;
-    auto topo = provider.getSharedResourceHolder()->getTopologyForRoutingDaemon(this);
+    auto topo = provider.getTopologyForRoutingDaemon(this);
     checkLinkWeight(target_weight, topo->getNode(0)->getLinkOut(0)->getWeight(), epsilon);
     checkLinkWeight(target_weight, topo->getNode(1)->getLinkOut(0)->getWeight(), epsilon);
   }

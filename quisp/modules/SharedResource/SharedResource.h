@@ -6,12 +6,30 @@
 
 using namespace omnetpp;
 
-namespace quisp::modules::SharedResourceHolder {
+/**
+ * @brief SharedResource is a global module that initializes shared static resources
+ * and provides them to other modules.
+ * 
+ * @details
+ * SharedResource provides the following:
+ * 1. EndNodeWeightMap for Application module
+ * 2. cTopology that has channel weights initialized for RoutingDaemon and Router modules
+ * 
+ * SharedResource initializes these resources the first time when other modules
+ * attempt to access the resources.
+ * Once the initialization is done, the resources are 
+ * never modified again for the lifetime of the SharedResource instance.
+ * 
+ * Modules can access the shared resources by calling methods from ComponentProvider
+ * 
+ */
 
-class SharedResourceHolder : public omnetpp::cSimpleModule {
+namespace quisp::modules::SharedResource {
+
+class SharedResource : public omnetpp::cSimpleModule {
  public:
-  SharedResourceHolder();
-  ~SharedResourceHolder();
+  SharedResource();
+  ~SharedResource();
 
   void initialize() override;
   void finish() override;
@@ -36,5 +54,5 @@ class SharedResourceHolder : public omnetpp::cSimpleModule {
   cTopology *routingdaemon_topology = nullptr;
 };
 
-Define_Module(SharedResourceHolder);
-}  // namespace quisp::modules::SharedResourceHolder
+Define_Module(SharedResource);
+}  // namespace quisp::modules::SharedResource

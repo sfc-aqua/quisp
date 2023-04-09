@@ -9,7 +9,7 @@
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
 #include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
-#include <modules/SharedResourceHolder/SharedResourceHolder.h>
+#include <modules/SharedResource/SharedResource.h>
 #include <modules/common_types.h>
 #include <omnetpp.h>
 
@@ -27,7 +27,7 @@ using modules::backend::BackendContainer;
 using modules::common::IQuantumBackend;
 using modules::Logger::ILogger;
 using modules::Logger::LoggerModule;
-using modules::SharedResourceHolder::SharedResourceHolder;
+using modules::SharedResource::SharedResource;
 using omnetpp::cModule;
 
 }  // namespace utils

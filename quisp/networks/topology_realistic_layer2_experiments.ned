@@ -6,7 +6,7 @@ import ned.IdealChannel;
 import modules.*;
 import modules.Backend.Backend;
 import modules.Logger.Logger;
-import modules.SharedResourceHolder.SharedResourceHolder;
+import modules.SharedResource.SharedResource;
 import channels.*;
 
 network Realistic_Layer2_Simple_MIM_MM_all_in_one
@@ -18,7 +18,7 @@ network Realistic_Layer2_Simple_MIM_MM_all_in_one
     submodules:
         backend: Backend{}
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -205,7 +205,7 @@ network Realistic_Layer2_Simple_MIM_MM_5km
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -248,7 +248,7 @@ network Realistic_Layer3_Simple_MM_MM_5km
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -295,7 +295,7 @@ network Realistic_Layer2_Simple_MIM_MM_7_5km
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -339,7 +339,7 @@ network Realistic_Layer2_Simple_MIM_MM_10km
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -384,7 +384,7 @@ network Realistic_Layer2_Simple_MIM_MM_15km
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -427,7 +427,7 @@ network Realistic_Layer2_Simple_MIM_MM_50km
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -471,7 +471,7 @@ network Realistic_Layer2_Simple_MIM_MM_40km
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -516,7 +516,7 @@ network Realistic_Layer2_Simple_MIM_MM_25km
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -559,7 +559,7 @@ network Realistic_Layer2_Simple_MIM_MM_30km
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -604,7 +604,7 @@ network Realistic_Layer2_Simple_MIM_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -650,7 +650,7 @@ network Realistic_Layer2_Simple_MIM_MM_same
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -694,7 +694,7 @@ network Realistic_Layer2_RouterNet
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         Router1[1]: QNode {
             address = 1;
             node_type = "Router";
@@ -765,7 +765,7 @@ network Realistic_Layer2_Star_Sep
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
@@ -994,7 +994,7 @@ network Realistic_Layer2_MM_MIM_MIM_MIM_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         //EndNode[2]: QNode {
         EndNode[1]: QNode {
             address = 100+index;
@@ -1034,7 +1034,7 @@ network Realistic_Layer2_MIM_MIM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode[2]: QNode {
             address = index;
             node_type = "EndNode";
@@ -1076,7 +1076,7 @@ network Realistic_Layer2_MIM_tomography
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode[2]: QNode {
             address = index;
             node_type = "EndNode";

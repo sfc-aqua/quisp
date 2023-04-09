@@ -21,7 +21,7 @@ import ned.IdealChannel;
 import ned.DatarateChannel;
 import modules.Backend.Backend;
 import modules.Logger.Logger;
-import modules.SharedResourceHolder.SharedResourceHolder;
+import modules.SharedResource.SharedResource;
 
 // Dumbell MM network
 network topology_dumbell_MM
@@ -31,7 +31,7 @@ network topology_dumbell_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";
@@ -100,7 +100,7 @@ network topology_dumbell_MIM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode1: QNode {
             address = 1;
             node_type = "EndNode";

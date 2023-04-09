@@ -6,7 +6,7 @@ import ned.IdealChannel;
 import modules.*;
 import modules.Backend.Backend;
 import modules.Logger.Logger;
-import modules.SharedResourceHolder.SharedResourceHolder;
+import modules.SharedResource.SharedResource;
 import channels.*;
 
 network Three_BSA_star
@@ -22,7 +22,7 @@ network Three_BSA_star
         //}
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         EndNode[3]: QNode {
             //Initializerでaddress = node idにすればconflict無くなるかも。
             address = index+100000;
@@ -66,7 +66,7 @@ network Star_MSM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         node[3]: QNode {
             address = index;
             node_type = "EndNode";
@@ -130,7 +130,7 @@ network Star_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         node[3]: QNode {
             address = index;
             node_type = "EndNode";

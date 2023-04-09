@@ -39,7 +39,9 @@ class ComponentProvider {
   IRealTimeController *getRealTimeController();
   IQuantumBackend *getQuantumBackend();
   ILogger *getLogger();
-  SharedResourceHolder *getSharedResourceHolder();
+  cTopology *getTopologyForRoutingDaemon(const cModule *const rd_module);
+  cTopology *getTopologyForRouter();
+  const std::unordered_map<int, int> getEndNodeWeightMapForApplication(std::string node_type);
   // when a this class instantiated, a strategy class instantiation may fail because
   // the strategy class may depend on other modules instantiated by OMNeT++'s NED file.
   // So this method is for delaying to instantiate the strategy class.
@@ -55,6 +57,8 @@ class ComponentProvider {
   // This will be instantiated when it is needed through ensureStrategy method.
   // It will be deleted automatically when ComponentProvider's deconstructor called.
   std::unique_ptr<IComponentProviderStrategy> strategy = nullptr;
+  
+  SharedResource *getSharedResource();
 
   // before calling strategy class, this internal method ensure that
   // the strategy class instance exists.

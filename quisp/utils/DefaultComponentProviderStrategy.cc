@@ -99,12 +99,12 @@ ILogger *DefaultComponentProviderStrategy::getLogger() {
   return logger_module->getLogger();
 }
 
-SharedResourceHolder *DefaultComponentProviderStrategy::getSharedResourceHolder() {
-  auto *mod = self->findModuleByPath("sharedResourceHolder");
+SharedResource *DefaultComponentProviderStrategy::getSharedResource() {
+  auto *mod = self->findModuleByPath("sharedResource");
   if (mod == nullptr) {
-    throw cRuntimeError("SharedResourceHolder not found");
+    throw cRuntimeError("SharedResource not found");
   }
-  auto *shared_resource_holder = check_and_cast<SharedResourceHolder *>(mod);
+  auto *shared_resource_holder = check_and_cast<SharedResource *>(mod);
   return shared_resource_holder;
 }
 

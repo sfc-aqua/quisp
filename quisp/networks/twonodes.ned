@@ -4,7 +4,7 @@ import ned.DatarateChannel;
 import modules.*;
 import modules.Backend.Backend;
 import modules.Logger.Logger;
-import modules.SharedResourceHolder.SharedResourceHolder;
+import modules.SharedResource.SharedResource;
 import channels.*;
 
 
@@ -25,7 +25,7 @@ network twonodes
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         source: QNode {
             address = 1;
             buffers = 7;
@@ -59,7 +59,7 @@ network threenodes
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         source: QNode {
             address = 1;
             buffers = 7;
@@ -102,7 +102,7 @@ network morenodes
     submodules:
         backend: Backend;
         logger: Logger;
-        sharedResourceHolder: SharedResourceHolder;
+        sharedResource: SharedResource;
         source: QNode {
             address = 1;
             @display("i=COMP;p=278,81");
