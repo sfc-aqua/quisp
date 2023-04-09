@@ -13,7 +13,7 @@
 #include "vector"
 
 namespace quisp {
-using util_functions::mapToLabel;
+using util_functions::samplingWithWeights;
 namespace backends::graph_state {
 
 using abstract::EigenvalueResult;

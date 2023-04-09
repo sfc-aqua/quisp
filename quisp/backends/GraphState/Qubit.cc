@@ -62,7 +62,7 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
       {err.no_error_ceil, ErrorLabel::NO_ERR}, {err.x_error_ceil, ErrorLabel::X}, {err.z_error_ceil, ErrorLabel::Z}, {err.y_error_ceil, ErrorLabel::Y}};
 
   double rand = (double)std::rand() / RAND_MAX;
-  ErrorLabel r = mapToLabel(weights, rand);
+  ErrorLabel r = samplingWithWeights(weights, rand);
 
   switch (r) {
     case ErrorLabel::NO_ERR:
@@ -91,7 +91,7 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
       {err.zi_error_ceil, ErrorLabel::ZI},     {err.zz_error_ceil, ErrorLabel::ZZ},
   };
   double rand = (double)std::rand() / RAND_MAX;
-  ErrorLabel r = mapToLabel(weights, rand);
+  ErrorLabel r = samplingWithWeights(weights, rand);
 
   switch (r) {
     case ErrorLabel::NO_ERR:
@@ -193,7 +193,7 @@ void GraphStateQubit::applyMemoryError() {
         {relaxed_ceil, ErrorLabel::Relaxation}};
 
     double rand = (double)std::rand() / RAND_MAX;
-    ErrorLabel r = mapToLabel(weights, rand);
+    ErrorLabel r = samplingWithWeights(weights, rand);
 
     switch (r) {
       case ErrorLabel::NO_ERR:
