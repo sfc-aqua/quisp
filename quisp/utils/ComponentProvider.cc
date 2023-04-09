@@ -93,7 +93,7 @@ const std::unordered_map<int, int> ComponentProvider::getEndNodeWeightMapForAppl
 
 cTopology *ComponentProvider::getTopologyForRoutingDaemon(const cModule *const rd_module) {
   auto shared_resource = getSharedResource();
-  return shared_resource->getTopologyForRoutingDaemon(rd_module)
+  return shared_resource->getTopologyForRoutingDaemon(rd_module);
 }
 
 cTopology *ComponentProvider::getTopologyForRouter() {
