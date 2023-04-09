@@ -64,14 +64,6 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
   double rand = (double)std::rand() / RAND_MAX;
   ErrorLabel r = mapToLabel(weights, rand);
 
-  /*
-   * 0.0    No_error_ceil       Z_error_ceil  1.0
-   *  |          |                   |         |
-   *  | No Error | X Error | Z Error | Y Error |
-   *                       |
-   *                  X_error_ceil
-   */
-
   switch (r) {
     case ErrorLabel::NO_ERR:;
     case ErrorLabel::X:
@@ -96,14 +88,6 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
   };
   double rand = (double)std::rand() / RAND_MAX;
   ErrorLabel r = mapToLabel(weights, rand);
-
-  /*
-   * 0.0  No_error_ceil    XI_error_ceil     IY_error_ceil     YY_error_ceil    ZI_error_ceil  1.0
-   *  |        |                 |                 |                 |                 |        |
-   *  | No err | IX err | XI err | XX err | IY err | YI err | YY err | IZ err | ZI err | ZZ err |
-   *                    |                 |                 |                 |
-   *              IX_error_ceil      XX_error_ceil     YI_error_ceil    IZ_error_ceil
-   */
 
   switch (r) {
     case ErrorLabel::NO_ERR:;
@@ -182,14 +166,6 @@ void GraphStateQubit::applyMemoryError() {
     // take error rate vector from DynamicTransitionMatrix Eq 5.3
     pi_vector = pi_vector * transition_mat;
 
-    /* this prepares the sectors for Monte-Carlo. later, we'll pick a random value and check with this sectors.
-     *
-     * 0.0    clean_ceil             z_ceil              excited_ceil
-     *  |          |                   |                      |
-     *  | No Error | X Error | Z Error | Y Error | Excitation | Relaxation |
-     *                       |                   |                         |
-     *                    x_ceil               y_ceil                     1.0
-     */
     double clean_ceil = pi_vector(0, 0);
     double x_ceil = clean_ceil + pi_vector(0, 1);
     double z_ceil = x_ceil + pi_vector(0, 2);
