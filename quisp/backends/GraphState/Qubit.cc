@@ -65,13 +65,17 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
   ErrorLabel r = mapToLabel(weights, rand);
 
   switch (r) {
-    case ErrorLabel::NO_ERR:;
+    case ErrorLabel::NO_ERR:
+      break;
     case ErrorLabel::X:
       this->applyClifford(CliffordOperator::X);
+      break;
     case ErrorLabel::Z:
       this->applyClifford(CliffordOperator::Z);
+      break;
     case ErrorLabel::Y:
       this->applyClifford(CliffordOperator::Y);
+      break;
   }
 }
 
@@ -90,28 +94,38 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
   ErrorLabel r = mapToLabel(weights, rand);
 
   switch (r) {
-    case ErrorLabel::NO_ERR:;
+    case ErrorLabel::NO_ERR:
+      break;
     case ErrorLabel::IX:
       this->applyClifford(CliffordOperator::X);
+      break;
     case ErrorLabel::XI:
       another_qubit->applyClifford(CliffordOperator::X);
+      break;
     case ErrorLabel::XX:
       this->applyClifford(CliffordOperator::X);
       another_qubit->applyClifford(CliffordOperator::X);
+      break;
     case ErrorLabel::IZ:
       this->applyClifford(CliffordOperator::Z);
+      break;
     case ErrorLabel::ZI:
       another_qubit->applyClifford(CliffordOperator::Z);
+      break;
     case ErrorLabel::ZZ:
       this->applyClifford(CliffordOperator::Z);
       another_qubit->applyClifford(CliffordOperator::Z);
+      break;
     case ErrorLabel::IY:
       this->applyClifford(CliffordOperator::Y);
+      break;
     case ErrorLabel::YI:
       another_qubit->applyClifford(CliffordOperator::Y);
+      break;
     case ErrorLabel::YY:
       this->applyClifford(CliffordOperator::Y);
       another_qubit->applyClifford(CliffordOperator::Y);
+      break;
   }
 }
 
@@ -182,18 +196,24 @@ void GraphStateQubit::applyMemoryError() {
     ErrorLabel r = mapToLabel(weights, rand);
 
     switch (r) {
-      case ErrorLabel::NO_ERR:;
+      case ErrorLabel::NO_ERR:
+        break;
       case ErrorLabel::X:
         this->applyClifford(CliffordOperator::X);
+        break;
       case ErrorLabel::Z:
         this->applyClifford(CliffordOperator::Z);
+        break;
       case ErrorLabel::Y:
         this->applyClifford(CliffordOperator::X);
         this->applyClifford(CliffordOperator::Z);
+        break;
       case ErrorLabel::Exitation:
         this->excite();
+        break;
       case ErrorLabel::Relaxation:
         this->relax();
+        break;
       default:
           // Memory completely mixed error
           // This should never happen
