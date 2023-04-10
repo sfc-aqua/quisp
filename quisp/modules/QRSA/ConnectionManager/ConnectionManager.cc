@@ -345,7 +345,7 @@ void ConnectionManager::rewriteRuleSet(messages::ConnectionSetupRequest *stored_
     pkt->setRuleSet(rs);
     pkt->setSrcAddr(my_address);
     pkt->setDestAddr(owner_address);
-    pkt->setActual_srcAddr(my_address);
+    pkt->setActual_srcAddr(stored_req->getActual_destAddr());
     pkt->setActual_destAddr(owner_address);
     pkt->setInitiatorAddr(stored_req->getActual_srcAddr());
     pkt->setResponderAddr(stored_req->getActual_destAddr());
