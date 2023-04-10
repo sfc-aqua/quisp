@@ -127,7 +127,7 @@ void Application::createEndNodeWeightMap() {
     return;
   }
 
-  auto recipient_addresses_str = ((cValueArray *)(par("possible_recipients").objectValue()))->asStringVector();
+  auto recipient_addresses_str = ((cValueArray *)(provider.getQNode()->par("possible_recipients").objectValue()))->asStringVector();
   std::vector<QNodeAddr> recipient_addresses = {};
   for (auto &s : recipient_addresses_str) {
     recipient_addresses.push_back(QNodeAddr{s.c_str()});

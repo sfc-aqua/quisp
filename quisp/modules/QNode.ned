@@ -20,6 +20,8 @@ module QNode
         string node_type = default("none");
         double emission_timing_std = default(0); // in seconds
         bool simultaneous_es_enabled = default(false);
+        object possible_recipients = default([]);
+        bool has_specific_recipients = default(false);
 
     gates:
         inout port[]; // size will be determined by the number of connections defined at the end of this file
@@ -31,6 +33,7 @@ module QNode
         app: Application {
             parameters:
                 @display("p=30,43");
+                has_specific_recipients = parent.has_specific_recipients;
         }
         router: Router {
             parameters:
