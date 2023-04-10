@@ -43,12 +43,12 @@ cTopology *SharedResource::getTopologyForRoutingDaemon(const cModule *const rd_m
 
 /**
  * @brief Initialize channel weights for all existing links in the Topology
- * 
+ *
  * @param topo router_topology or routingdaemon_topology
- * @param rd_module 
- * rd_module is needed for the function to distinguish between Router and RoutingDaemon,               
- * as they require different procedures to initialize cTopology.  
- * In detail, RoutingDaemon must call calculateSecPerBellPair function to update              
+ * @param rd_module
+ * rd_module is needed for the function to distinguish between Router and RoutingDaemon,
+ * as they require different procedures to initialize cTopology.
+ * In detail, RoutingDaemon must call calculateSecPerBellPair function to update
  * the channel weights, and calculateSecPerBellPair function requires the rd_module.
  */
 void SharedResource::updateChannelWeightsInTopology(cTopology *&topo, std::optional<const cModule *const> rd_module) {
@@ -97,9 +97,9 @@ double SharedResource::calculateSecPerBellPair(const cModule *const rd_module, c
 }
 
 /**
- * @param link 
- * @param weight 
- * @param should_set_quantum_link 
+ * @param link
+ * @param weight
+ * @param should_set_quantum_link
  * If should_set_quantum_link is true, the function will set quantum links to the value of weight (RoutingDaemon sets quantum links).
  * If should_set_quantum_link is false, the function will set any other links to the value of weight (Router sets classical links).
  */

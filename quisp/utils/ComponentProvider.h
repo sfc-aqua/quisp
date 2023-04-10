@@ -57,7 +57,7 @@ class ComponentProvider {
   // This will be instantiated when it is needed through ensureStrategy method.
   // It will be deleted automatically when ComponentProvider's deconstructor called.
   std::unique_ptr<IComponentProviderStrategy> strategy = nullptr;
-  
+
   SharedResource *getSharedResource();
 
   // before calling strategy class, this internal method ensure that
