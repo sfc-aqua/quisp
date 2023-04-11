@@ -22,6 +22,7 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   IRealTimeController *getRealTimeController() override;
   IQuantumBackend *getQuantumBackend() override;
   ILogger *getLogger() override;
+  SharedResource *getSharedResource() override;
 
  private:
   const cModuleType *const QNodeType = cModuleType::get("modules.QNode");

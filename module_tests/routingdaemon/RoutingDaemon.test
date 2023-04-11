@@ -10,6 +10,7 @@ package RoutingDaemon;
 
 import ned.DatarateChannel;
 import modules.QRSA.RoutingDaemon.*;
+import modules.SharedResource.SharedResource;
 import modules.QNode;
 
 
@@ -87,6 +88,7 @@ module MockQNode {
 network RoutingDaemonTestNet
 {
     submodules:
+        SharedResource: SharedResource;
         mockQNode1: MockQNode {
             address = 1;
             node_type = "EndNode";
@@ -115,14 +117,39 @@ network = RoutingDaemonTestNet
 #include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
 #include <modules/Common/Queue.h>
 #include <test_utils/TestUtils.h>
+#include "utils/ComponentProvider.h"
 using namespace omnetpp;
 using namespace quisp::messages;
+using namespace quisp::utils;
+using namespace quisp_test;
 namespace RoutingDaemon {
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
-    public:
-    Strategy(cModule *_self): self(_self){}
+ public:
+    Strategy(cModule *_self) : self(_self) {}
     int getNodeAddr() override {return self->getParentModule()->par("address").intValue(); }
+    cModule *getQNode() override {
+      cModule *currentModule = self->getParentModule();
+      while (strncmp(currentModule->getFullName(), "mockQNode", 9)) {
+          currentModule = currentModule->getParentModule();
+          if (currentModule == nullptr) {
+              throw cRuntimeError("MockQNode module not found.");
+          }
+      }
+      return currentModule;
+    }
+
+    SharedResource *getSharedResource() override {
+        auto *qnode = getQNode();
+        auto *mod = qnode->findModuleByPath("SharedResource");
+        if (mod == nullptr) {
+            throw cRuntimeError("SharedResource not found");
+        }
+        auto *shared_resource = check_and_cast<SharedResource *>(mod);
+        return shared_resource;
+    }
+
+ private:
     cModule *self;
 };
 
@@ -131,17 +158,28 @@ class TestRoutingDaemon : public quisp::modules::routing_daemon::RoutingDaemon {
   TestRoutingDaemon() : RoutingDaemon() {
     provider.setStrategy(std::make_unique<Strategy>(this));
   }
-  void check(int expect, int actual) {
+  void checkAddress(int expect, int actual) {
     if (expect != actual) {
       printf("FAIL: in the routing table, the value is %d but the expected value is %d\n", actual, expect);
     }
   }
+  void checkLinkWeight(double expect, double actual, double epsilon) {
+    if (fabs(expect - actual) > epsilon) {
+      printf("FAIL: topology's link has weight %e but the expected value is %e\n", actual, expect);
+    }
+  }
   void finish() override {
     if (myAddress == 1){
-        check(qrtable[2], 1);
+        checkAddress(qrtable[2], 1);
     } else {
-        check(qrtable[1], 2);
+        checkAddress(qrtable[1], 2);
     }
+
+    const double target_weight = 4.80332e-05;
+    const double epsilon = 1e-10;
+    auto topo = provider.getTopologyForRoutingDaemon(this);
+    checkLinkWeight(target_weight, topo->getNode(0)->getLinkOut(0)->getWeight(), epsilon);
+    checkLinkWeight(target_weight, topo->getNode(1)->getLinkOut(0)->getWeight(), epsilon);
   }
 };
 Define_Module(TestRoutingDaemon);
