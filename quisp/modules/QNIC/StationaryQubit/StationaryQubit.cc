@@ -58,6 +58,7 @@ void StationaryQubit::initialize() {
   // watch variables to show them in the GUI
   WATCH(emitted_time);
   WATCH(is_busy);
+  WATCH(qubit_ref);
 }
 
 std::unique_ptr<IConfiguration> StationaryQubit::prepareBackendQubitConfiguration(bool overwrite) {
@@ -263,3 +264,12 @@ MeasurementOutcome StationaryQubit::measureRandomPauliBasis() {
 }
 
 }  // namespace quisp::modules
+
+// functions for debugging
+namespace std {
+std::ostream& operator<<(std::ostream& os, quisp::modules::IBackendQubit *qubit_ref)
+{
+    os << qubit_ref->graphState();
+    return os;
+}
+} // namespace std

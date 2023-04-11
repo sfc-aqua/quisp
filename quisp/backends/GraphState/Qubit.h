@@ -59,6 +59,10 @@ class GraphStateQubit : public IQubit {
   EigenvalueResult noiselessMeasureZ(EigenvalueResult forced_result) override;
   EigenvalueResult noiselessMeasureX(EigenvalueResult forced_result) override;
 
+  // for debugging
+  std::string graphState() override;
+
+
  protected:
   // error simulation
   void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate);
@@ -106,6 +110,9 @@ class GraphStateQubit : public IQubit {
   const IQubitId *id;
   GraphStateBackend *const backend;
   const bool is_short_live;
+
+  // for debugging
+  std::string cliffordToString(CliffordOperator op);
 };
 
 }  // namespace quisp::backends::graph_state
