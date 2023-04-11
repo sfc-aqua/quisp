@@ -79,11 +79,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (auto *bsa_results = dynamic_cast<CombinedBSAresults *>(msg)) {
       handleLinkGenerationResult(bsa_results);
     }
-    auto type = notification_packet->getQnicType();
-    auto qnic_index = notification_packet->getQnicIndex();
-    stopOnGoingPhotonEmission(type, qnic_index);
-    freeFailedEntanglementAttemptQubits(type, qnic_index);
-    schedulePhotonEmission(type, qnic_index, notification_packet);
+    if (notification_packet->getFirstPhotonEmitTime() >= simTime()) {
+      auto type = notification_packet->getQnicType();
+      auto qnic_index = notification_packet->getQnicIndex();
+      stopOnGoingPhotonEmission(type, qnic_index);
+      freeFailedEntanglementAttemptQubits(type, qnic_index);
+      schedulePhotonEmission(type, qnic_index, notification_packet);
+    }
   } else if (auto *pk = dynamic_cast<EmitPhotonRequest *>(msg)) {
     auto type = pk->getQnicType();
     auto qnic_index = pk->getQnicIndex();
@@ -213,9 +215,9 @@ CombinedBSAresults *RuleEngine::generateCombinedBSAresults() {
   bsa_results->setQnicIndex(msm_qnic_index);
   bsa_results->setQnicType(QNIC_RP);
   bsa_results->setNeighborAddress(msm_neighbor_addr);
-  bsa_results->setFirstPhotonEmitTime(simTime() + msm_offset_time_for_first_photon);
+  bsa_results->setFirstPhotonEmitTime(simTime() - msm_offset_time_for_first_photon);
   bsa_results->setInterval(msm_time_interval_between_photons);
-  for (int index = 0; index < std::min(msm_parent_node_click_results.size(), msm_partner_node_click_results.size()); index++) {
+  for (int index = 0; index < msm_parent_node_click_results.size(); index++) {
     if (!msm_parent_node_click_results.at(index).success || !msm_partner_node_click_results.at(index).success) continue;
     bool is_phi_minus = msm_parent_node_click_results.at(index).correction_operation != msm_partner_node_click_results.at(index).correction_operation;
     bool is_younger_address = parentAddress < msm_neighbor_addr;
@@ -241,14 +243,18 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
     bell_pair_store.insertEntangledQubit(partner_address, qubit_record);
     emitted_indices.erase(iterator);
 
+    // for debugging
+    auto* qubit = provider.getStationaryQubit(qubit_record);
+    auto* qubit_ref = qubit->getBackendQubitRef();
+    auto graph_state = qubit_ref->graphState();
+
     auto correction_operation = bsa_result->getCorrectionOperationList(i);
     if (correction_operation == PauliOperator::X) {
       realtime_controller->applyXGate(qubit_record);
     } else if (correction_operation == PauliOperator::Z) {
       realtime_controller->applyZGate(qubit_record);
     } else if (correction_operation == PauliOperator::Y) {
-      realtime_controller->applyXGate(qubit_record);
-      realtime_controller->applyZGate(qubit_record);
+      realtime_controller->applyYGate(qubit_record);
     }
 
   }
