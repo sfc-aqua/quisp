@@ -140,6 +140,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a20c6dd6ea9f53f9ececa194cc5173528"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9fe2a8053c137a1b497bab6d9cbfb61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html">ILogger</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html#ab9fe2a8053c137a1b497bab6d9cbfb61">getLogger</a> ()</td></tr>
 <tr class="separator:ab9fe2a8053c137a1b497bab6d9cbfb61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa22ce795335eec9aad1884e369d13268"><td class="memItemLeft" align="right" valign="top">cTopology *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html#aa22ce795335eec9aad1884e369d13268">getTopologyForRoutingDaemon</a> (const cModule *const rd_module)</td></tr>
+<tr class="separator:aa22ce795335eec9aad1884e369d13268"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb4c080be5e6cb8b6df61235c0946f6b"><td class="memItemLeft" align="right" valign="top">cTopology *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html#afb4c080be5e6cb8b6df61235c0946f6b">getTopologyForRouter</a> ()</td></tr>
+<tr class="separator:afb4c080be5e6cb8b6df61235c0946f6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0eddf860f8ee5a63a9302fd09b21efc"><td class="memItemLeft" align="right" valign="top">const std::unordered_map&lt; int, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html#aa0eddf860f8ee5a63a9302fd09b21efc">getEndNodeWeightMapForApplication</a> (std::string node_type)</td></tr>
+<tr class="separator:aa0eddf860f8ee5a63a9302fd09b21efc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abba267196c30c742e53b8ccdcac40455"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html#abba267196c30c742e53b8ccdcac40455">setStrategy</a> (std::unique_ptr&lt; <a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html">IComponentProviderStrategy</a> &gt; _strategy)</td></tr>
 <tr class="separator:abba267196c30c742e53b8ccdcac40455"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -150,6 +156,8 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:ae33dab9921f0641590d51cfc2a7c6405"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html">SharedResource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html#ae33dab9921f0641590d51cfc2a7c6405">getSharedResource</a> ()</td></tr>
+<tr class="separator:ae33dab9921f0641590d51cfc2a7c6405"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7773f2ecb5036a3530ff93ceff44d294"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html#a7773f2ecb5036a3530ff93ceff44d294">ensureStrategy</a> ()</td></tr>
 <tr class="separator:a7773f2ecb5036a3530ff93ceff44d294"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -204,6 +212,24 @@ Private Attributes</h2></td></tr>
 <span class="mlabels"><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa0eddf860f8ee5a63a9302fd09b21efc" name="aa0eddf860f8ee5a63a9302fd09b21efc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0eddf860f8ee5a63a9302fd09b21efc">&#9670;&#160;</a></span>getEndNodeWeightMapForApplication()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::unordered_map&lt; int, int &gt; quisp::utils::ComponentProvider::getEndNodeWeightMapForApplication </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>node_type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
@@ -418,6 +444,31 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ae33dab9921f0641590d51cfc2a7c6405" name="ae33dab9921f0641590d51cfc2a7c6405"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae33dab9921f0641590d51cfc2a7c6405">&#9670;&#160;</a></span>getSharedResource()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html">SharedResource</a> * quisp::utils::ComponentProvider::getSharedResource </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad119a53fb7d1f5027c242e03b74c1100" name="ad119a53fb7d1f5027c242e03b74c1100"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad119a53fb7d1f5027c242e03b74c1100">&#9670;&#160;</a></span>getStationaryQubit() <span class="overload">[1/2]</span></h2>
 
@@ -463,6 +514,41 @@ Private Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">modules::qrsa::IQubitRecord</a> *const&#160;</td>
           <td class="paramname"><em>qubit_record</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afb4c080be5e6cb8b6df61235c0946f6b" name="afb4c080be5e6cb8b6df61235c0946f6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb4c080be5e6cb8b6df61235c0946f6b">&#9670;&#160;</a></span>getTopologyForRouter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cTopology * quisp::utils::ComponentProvider::getTopologyForRouter </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa22ce795335eec9aad1884e369d13268" name="aa22ce795335eec9aad1884e369d13268"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa22ce795335eec9aad1884e369d13268">&#9670;&#160;</a></span>getTopologyForRoutingDaemon()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cTopology * quisp::utils::ComponentProvider::getTopologyForRoutingDaemon </td>
+          <td>(</td>
+          <td class="paramtype">const cModule *const&#160;</td>
+          <td class="paramname"><em>rd_module</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

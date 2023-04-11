@@ -7,7 +7,7 @@ var searchData=
   ['emitted_5fphoton_5forder_5fmap_4',['emitted_photon_order_map',['../classquisp_1_1modules_1_1_rule_engine.html#ad899a4502562d1a0adbf1c3f5ec8b938',1,'quisp::modules::RuleEngine']]],
   ['emitted_5ftime_5',['emitted_time',['../classquisp_1_1modules_1_1_stationary_qubit.html#ab07f97f37fedd8c56842f5185220b8ec',1,'quisp::modules::StationaryQubit']]],
   ['emt_6',['emt',['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#ae55fa4a8b562c040c32960728d619789',1,'quisp::modules::SPDC_Controller::emt()'],['../classquisp_1_1modules_1_1_rule_engine.html#a44e6a6eeae38b4d52a8e5d3484b150f9',1,'quisp::modules::RuleEngine::emt()']]],
-  ['end_5fnode_5fweight_5fmap_7',['end_node_weight_map',['../classquisp_1_1modules_1_1_application.html#a89347a6f3ea0078be536262b7a604070',1,'quisp::modules::Application']]],
+  ['end_5fnode_5fweight_5fmap_7',['end_node_weight_map',['../classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html#aefeb86d80f5139d3457c09dd1834c2cd',1,'quisp::modules::SharedResource::SharedResource::end_node_weight_map()'],['../classquisp_1_1modules_1_1_application.html#a89347a6f3ea0078be536262b7a604070',1,'quisp::modules::Application::end_node_weight_map()']]],
   ['end_5ftransmission_5fevent_8',['end_transmission_event',['../classquisp_1_1modules_1_1_queue.html#a3a6c00ea94f823e98cfe7f6c73173297',1,'quisp::modules::Queue']]],
   ['entangled_5fpartner_9',['entangled_partner',['../classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a29a214c1e0451b6caa045d6940903bc8',1,'quisp_test::mock_modules::stationary_qubit::MockQubit']]],
   ['epps_10',['epps',['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#af79ab31d82089e489270ea3ad9957c41',1,'quisp::modules::SPDC_Controller']]],

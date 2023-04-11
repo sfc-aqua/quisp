@@ -12,8 +12,8 @@ var searchData=
   ['_7egraphstatequbit_9',['~GraphStateQubit',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a191161612b2d43f611543fa0ac4c51d7',1,'quisp::backends::graph_state::GraphStateQubit']]],
   ['_7ehardwaremonitor_10',['~HardwareMonitor',['../classquisp_1_1modules_1_1_hardware_monitor.html#a907bdd14844249d3a4000dfa06ff7196',1,'quisp::modules::HardwareMonitor']]],
   ['_7eiapplication_11',['~IApplication',['../classquisp_1_1modules_1_1_i_application.html#ab7b31ef26359370dff8cc93843a1fb13',1,'quisp::modules::IApplication']]],
-  ['_7eicallback_12',['~ICallBack',['../structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#a9cbc908625d8fe2eb1a39b0240441056',1,'quisp::runtime::Runtime::ICallBack']]],
-  ['_7eicallback_13',['~ICallback',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend_1_1_i_callback.html#add571d79c43c42a955be21d5fe87845f',1,'quisp::backends::graph_state::GraphStateBackend::ICallback']]],
+  ['_7eicallback_12',['~ICallback',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend_1_1_i_callback.html#add571d79c43c42a955be21d5fe87845f',1,'quisp::backends::graph_state::GraphStateBackend::ICallback']]],
+  ['_7eicallback_13',['~ICallBack',['../structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#a9cbc908625d8fe2eb1a39b0240441056',1,'quisp::runtime::Runtime::ICallBack']]],
   ['_7eicomponentproviderstrategy_14',['~IComponentProviderStrategy',['../classquisp_1_1utils_1_1_i_component_provider_strategy.html#a216a11486fe764113d233b7c362e5b89',1,'quisp::utils::IComponentProviderStrategy']]],
   ['_7eiconfiguration_15',['~IConfiguration',['../classquisp_1_1backends_1_1abstract_1_1_i_configuration.html#a1dbd46c8f8ce51d56445f6d7c712adaa',1,'quisp::backends::abstract::IConfiguration']]],
   ['_7eiconnectionmanager_16',['~IConnectionManager',['../classquisp_1_1modules_1_1_i_connection_manager.html#a221f082afbe7be5c1353f6aee56f46a9',1,'quisp::modules::IConnectionManager']]],
@@ -36,8 +36,9 @@ var searchData=
   ['_7equbitrecord_33',['~QubitRecord',['../classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#aaddb0cc15c3ff8e78f0c98847e3684ff',1,'quisp::modules::qubit_record::QubitRecord']]],
   ['_7eruleengine_34',['~RuleEngine',['../classquisp_1_1modules_1_1_rule_engine.html#a8682ec33e939845acb543ac6c4bea07d',1,'quisp::modules::RuleEngine']]],
   ['_7eruntime_35',['~Runtime',['../classquisp_1_1runtime_1_1_runtime.html#a7059fd9b7f0f5dfbb359bb51023b4bde',1,'quisp::runtime::Runtime']]],
-  ['_7estaticenv_36',['~StaticEnv',['../classquisp__test_1_1env_1_1_static_env.html#aab6a9c99d1b3df6e0b7d4adb04e869a4',1,'quisp_test::env::StaticEnv']]],
-  ['_7estationaryqubitconfiguration_37',['~StationaryQubitConfiguration',['../classquisp_1_1backends_1_1_stationary_qubit_configuration.html#ac3f80120aad671e7cb986e386ef4ce0f',1,'quisp::backends::StationaryQubitConfiguration']]],
-  ['_7etestcomponentproviderstrategy_38',['~TestComponentProviderStrategy',['../classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#aaf6ed18aad4cd53c86eb17abbbb03242',1,'quisp_test::strategy::TestComponentProviderStrategy']]],
-  ['_7etestlogger_39',['~TestLogger',['../classquisp__test_1_1_logger_1_1_test_logger.html#a6a0342f7c7b703790500d8400adf8b9e',1,'quisp_test::Logger::TestLogger']]]
+  ['_7esharedresource_36',['~SharedResource',['../classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html#abf16efd62e530a80a849ebd1e4aa7f05',1,'quisp::modules::SharedResource::SharedResource']]],
+  ['_7estaticenv_37',['~StaticEnv',['../classquisp__test_1_1env_1_1_static_env.html#aab6a9c99d1b3df6e0b7d4adb04e869a4',1,'quisp_test::env::StaticEnv']]],
+  ['_7estationaryqubitconfiguration_38',['~StationaryQubitConfiguration',['../classquisp_1_1backends_1_1_stationary_qubit_configuration.html#ac3f80120aad671e7cb986e386ef4ce0f',1,'quisp::backends::StationaryQubitConfiguration']]],
+  ['_7etestcomponentproviderstrategy_39',['~TestComponentProviderStrategy',['../classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#aaf6ed18aad4cd53c86eb17abbbb03242',1,'quisp_test::strategy::TestComponentProviderStrategy']]],
+  ['_7etestlogger_40',['~TestLogger',['../classquisp__test_1_1_logger_1_1_test_logger.html#a6a0342f7c7b703790500d8400adf8b9e',1,'quisp_test::Logger::TestLogger']]]
 ];

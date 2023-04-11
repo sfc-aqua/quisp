@@ -67,6 +67,9 @@ var annotated_dup =
         [ "runtime_callback", "namespacequisp_1_1modules_1_1runtime__callback.html", [
           [ "RuntimeCallback", "structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback.html", "structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback" ]
         ] ],
+        [ "SharedResource", "namespacequisp_1_1modules_1_1_shared_resource.html", [
+          [ "SharedResource", "classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html", "classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource" ]
+        ] ],
         [ "Application", "classquisp_1_1modules_1_1_application.html", "classquisp_1_1modules_1_1_application" ],
         [ "BellPairStore", "classquisp_1_1modules_1_1_bell_pair_store.html", "classquisp_1_1modules_1_1_bell_pair_store" ],
         [ "BellStateAnalyzer", "classquisp_1_1modules_1_1_bell_state_analyzer.html", "classquisp_1_1modules_1_1_bell_state_analyzer" ],

@@ -13,6 +13,7 @@ var classquisp_1_1utils_1_1_i_component_provider_strategy =
     [ "getQuantumBackend", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a165116b5c8d6004891c4ca99369aacfa", null ],
     [ "getRealTimeController", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a496b556c593114eaf807821ed9935a40", null ],
     [ "getRoutingDaemon", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a35ba29ab9de79a0f1209c806d65bb94f", null ],
+    [ "getSharedResource", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#aba8f9983e46bc958bf78d3b7afe60a1f", null ],
     [ "getStationaryQubit", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a12f1414f62bef1a64c4b1129e9177f98", null ],
     [ "isBSANodeType", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a4ef49663eb60fb445fc9fdc920dfbebc", null ],
     [ "isQNodeType", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#ab23170a1049ca45b78a177f51c8bea93", null ],

@@ -71,6 +71,7 @@ var hierarchy =
       [ "quisp::modules::Queue", "classquisp_1_1modules_1_1_queue.html", null ],
       [ "quisp::modules::Router", "classquisp_1_1modules_1_1_router.html", null ],
       [ "quisp::modules::SPDC_Controller", "classquisp_1_1modules_1_1_s_p_d_c___controller.html", null ],
+      [ "quisp::modules::SharedResource::SharedResource", "classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html", null ],
       [ "quisp::modules::backend::BackendContainer", "classquisp_1_1modules_1_1backend_1_1_backend_container.html", null ],
       [ "quisp::modules::dummyModule", "classquisp_1_1modules_1_1dummy_module.html", null ]
     ] ],

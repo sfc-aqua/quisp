@@ -18,6 +18,7 @@ var namespacequisp_1_1modules =
     [ "routing_daemon", "namespacequisp_1_1modules_1_1routing__daemon.html", "namespacequisp_1_1modules_1_1routing__daemon" ],
     [ "ruleset_gen", "namespacequisp_1_1modules_1_1ruleset__gen.html", "namespacequisp_1_1modules_1_1ruleset__gen" ],
     [ "runtime_callback", "namespacequisp_1_1modules_1_1runtime__callback.html", "namespacequisp_1_1modules_1_1runtime__callback" ],
+    [ "SharedResource", "namespacequisp_1_1modules_1_1_shared_resource.html", "namespacequisp_1_1modules_1_1_shared_resource" ],
     [ "Application", "classquisp_1_1modules_1_1_application.html", "classquisp_1_1modules_1_1_application" ],
     [ "BellPairStore", "classquisp_1_1modules_1_1_bell_pair_store.html", "classquisp_1_1modules_1_1_bell_pair_store" ],
     [ "BellStateAnalyzer", "classquisp_1_1modules_1_1_bell_state_analyzer.html", "classquisp_1_1modules_1_1_bell_state_analyzer" ],
