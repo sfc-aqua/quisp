@@ -35,6 +35,7 @@ void EPPSController::initialize() {
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
   number_of_sent_photons = 0;
+  time_out_count = 0;
   checkNeighborsBSACapacity();
   checkNeighborsBuffer();
   time_out_message = new EPPSNotificationTimeout();
@@ -51,9 +52,12 @@ void EPPSController::handleMessage(cMessage *msg) {
     } else if (number_of_sent_photons == number_of_photons - 1) {  // sending out last photon
       epps->emitPhotons(2);
       delete (msg);
+
+      // Is this intended behavior?
       // set timeout to be twice the travel time plus number of no response
       time_out_count++;
       scheduleAt(simTime() + (2 + time_out_count) * (std::max(left_travel_time, right_travel_time)), time_out_message);
+
       number_of_sent_photons = 0;
     } else {
       epps->emitPhotons(0);
