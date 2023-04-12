@@ -55,6 +55,8 @@ void EntangledPhotonPairSource::emitPhotons(int pulse) {
   right_photon_ref->noiselessCNOT(left_photon_ref);
   left_photon->setQubit_ref(left_photon_ref);
   right_photon->setQubit_ref(right_photon_ref);
+  left_photon->setGraphState(left_photon_ref->graphState().c_str());
+  right_photon->setGraphState(right_photon_ref->graphState().c_str());
   if (pulse & ENTANGLEDPHOTONPAIRSOURCE_PULSE_BEGIN) {
     left_photon->setFirst(true);
     right_photon->setFirst(true);
