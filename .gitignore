@@ -1,3 +1,10 @@
+### results by quisp.py
+result.jsonl
+result.output
+result.output_dm
+Custom.ini
+quisp/networks/test_network.ned
+
 ### direnv https://github.com/direnv/direnv
 .envrc
 
