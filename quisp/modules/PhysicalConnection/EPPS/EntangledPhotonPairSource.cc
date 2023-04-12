@@ -51,6 +51,10 @@ void EntangledPhotonPairSource::emitPhotons(int pulse) {
   auto *right_photon = new PhotonicQubit("RightPhoton");
   auto *left_photon_ref = backend->getShortLiveQubit();
   auto *right_photon_ref = backend->getShortLiveQubit();
+// :TODO: figure out why these photons were initialized to |+> state.
+  left_photon_ref->noiselessH();
+  right_photon_ref->noiselessH();
+
   left_photon_ref->noiselessH();
   right_photon_ref->noiselessCNOT(left_photon_ref);
   left_photon->setQubit_ref(left_photon_ref);
