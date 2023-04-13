@@ -1,4 +1,4 @@
-FROM ghcr.io/sfc-aqua/quisp-dev:latest
+FROM ghcr.io/sfc-aqua/quisp-dev:v0.9.7
 
 RUN mkdir /var/run/sshd
 RUN echo 'root:coffeeplease' | chpasswd
@@ -11,7 +11,7 @@ EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
 
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
-    sudo apt-get install -y nodejs &&\
+    sudo apt-get install -y nodejs python3.9-venv &&\
     npm i -g yarn
 
 

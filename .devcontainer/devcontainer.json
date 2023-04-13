@@ -7,7 +7,7 @@
 		"dockerfile": "Dockerfile"
 	},
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "uname -a",
+	"postCreateCommand": "bash -c \" test ! -d .venv && python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt && test ! -d quisp.py/.git && git submodule update --init quisp.py && pip install -e quisp.py && bear -- make run-unit-test MODE=debug && make exe\"",
 	"remoteUser": "vscode",
 	"postStartCommand": "sudo service ssh start",
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
