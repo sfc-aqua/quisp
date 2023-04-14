@@ -494,7 +494,7 @@ EigenvalueResult GraphStateQubit::noiselessMeasureX(EigenvalueResult eigenvalue)
 
 // function for debugging, outputs the graph state of the current qubit
 std::string GraphStateQubit::graphState() {
-  std::string result = "VOP: " +  cliffordToString(this->vertex_operator)  + " Neighbors: " +  std::to_string(this->neighbors.size());
+  std::string result = "VOP: " + cliffordToString(this->vertex_operator) + " Neighbors: " + std::to_string(this->neighbors.size());
   return result;
 }
 
