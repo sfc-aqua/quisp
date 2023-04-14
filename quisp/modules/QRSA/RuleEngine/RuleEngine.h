@@ -81,7 +81,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void handlePurificationResult(messages::PurificationResult *purification_result);
   void handleSwappingResult(messages::SwappingResult *swapping_result);
   void handleCombinedBatchClickEventResults(messages::CombinedBatchClickEventResults *batch_click_pk);
-  messages::CombinedBSAresults *generateCombinedBSAresults();
+  messages::CombinedBSAresults *generateCombinedBSAresults(int qnic_index);
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);
@@ -98,13 +98,12 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
 
  private:
-  struct MSMQNodeInfo {
+  struct MSMInfo {
     int address;
-    int qnic_index;
     std::vector<BSAClickResult> parent_clicks;
     std::vector<BSAClickResult> partner_clicks;
   };
-  std::vector<MSMQNodeInfo> msm_qnode_infos;
+  std::map<int, MSMInfo> msm_info_map;
 };
 
 Define_Module(RuleEngine);
