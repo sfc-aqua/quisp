@@ -98,13 +98,13 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
 
  private:
-  int msm_neighbor_addr;
-  int msm_qnic_index;
-  int msm_offset_time_for_first_photon;
-  int msm_travel_time;
-  int msm_time_interval_between_photons;
-  std::vector<BSAClickResult> msm_parent_node_click_results;
-  std::vector<BSAClickResult> msm_partner_node_click_results;
+    struct MSMQNodeInfo {
+    int address;
+    int qnic_index;
+    std::vector<BSAClickResult> parent_clicks;
+    std::vector<BSAClickResult> partner_clicks;
+  };
+  std::vector<MSMQNodeInfo> msm_qnode_infos;
 };
 
 Define_Module(RuleEngine);

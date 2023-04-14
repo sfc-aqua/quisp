@@ -79,7 +79,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (auto *bsa_results = dynamic_cast<CombinedBSAresults *>(msg)) {
       handleLinkGenerationResult(bsa_results);
     }
-    if (notification_packet->getFirstPhotonEmitTime() >= simTime()) {
+    if (notification_packet->getFirstPhotonEmitTime() != 0) {
       auto type = notification_packet->getQnicType();
       auto qnic_index = notification_packet->getQnicIndex();
       stopOnGoingPhotonEmission(type, qnic_index);
@@ -105,17 +105,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // early return since this doesn't affect entangled resource
     // and we don't want to delete these messages
     return;
-    // } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
-    //   send(notification_packet,"bsa controller");
   } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
-    msm_neighbor_addr = notification_packet->getOtherQnicParentAddr();
-    msm_qnic_index = notification_packet->getQnicIndex();
-    msm_offset_time_for_first_photon = notification_packet->getFirstPhotonEmitTime();
-    msm_travel_time = notification_packet->getTravelTime();
-    msm_time_interval_between_photons = notification_packet->getInterval();
-    stopOnGoingPhotonEmission(QNIC_RP, msm_qnic_index);
-    freeFailedEntanglementAttemptQubits(QNIC_RP, msm_qnic_index);
-    scheduleMSMPhotonEmission(QNIC_RP, msm_qnic_index, notification_packet);
+    auto address = notification_packet->getOtherQnicParentAddr();
+    auto qnic_index = notification_packet->getQnicIndex();
+    msm_qnode_infos.emplace_back(MSMQNodeInfo{.address = address, .qnic_index = qnic_index});
+    stopOnGoingPhotonEmission(QNIC_RP, qnic_index);
+    freeFailedEntanglementAttemptQubits(QNIC_RP, qnic_index);
+    scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
   } else if (auto *batch_click_pk = dynamic_cast<CombinedBatchClickEventResults *>(msg)) {
     handleCombinedBatchClickEventResults(batch_click_pk);
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
@@ -191,39 +187,44 @@ void RuleEngine::freeFailedEntanglementAttemptQubits(QNIC_type type, int qnic_in
 }
 
 void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventResults *batch_click_pk) {
-  if (batch_click_pk->getSrcAddr() == parentAddress) {
+  for (MSMQNodeInfo msm_qnode_info : msm_qnode_infos) {
+    if (batch_click_pk->getSrcAddr() == parentAddress) {
     for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
-      msm_parent_node_click_results.push_back(batch_click_pk->getClickResults(index));
+      msm_qnode_info.parent_clicks.emplace_back(batch_click_pk->getClickResults(index));
     }
-    batch_click_pk->setDestAddr(msm_neighbor_addr);
+    batch_click_pk->setDestAddr(msm_qnode_info.address);
     send(batch_click_pk->dup(), "RouterPort$o");
-  } else if (batch_click_pk->getSrcAddr() == msm_neighbor_addr) {
-    for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
-      msm_partner_node_click_results.push_back(batch_click_pk->getClickResults(index));
+  } else if (batch_click_pk->getSrcAddr() == msm_qnode_info.address) {
+      for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+        msm_qnode_info.partner_clicks.emplace_back(batch_click_pk->getClickResults(index));
+      }
+    }
+    if (!msm_qnode_info.parent_clicks.empty() && !msm_qnode_info.partner_clicks.empty()) {
+      CombinedBSAresults *bsa_results = generateCombinedBSAresults();
+      msm_qnode_info.parent_clicks.clear();
+      msm_qnode_info.partner_clicks.clear();
+      scheduleAt(simTime(), bsa_results);
     }
   }
-  if (!msm_parent_node_click_results.empty() && !msm_partner_node_click_results.empty()) {
-    CombinedBSAresults *bsa_results = generateCombinedBSAresults();
-    msm_parent_node_click_results.clear();
-    msm_partner_node_click_results.clear();
-    scheduleAt(simTime(), bsa_results);
-  }
+  msm_qnode_infos.clear();
 }
 
 CombinedBSAresults *RuleEngine::generateCombinedBSAresults() {
   CombinedBSAresults *bsa_results = new CombinedBSAresults();
-  bsa_results->setQnicIndex(msm_qnic_index);
-  bsa_results->setQnicType(QNIC_RP);
-  bsa_results->setNeighborAddress(msm_neighbor_addr);
-  bsa_results->setFirstPhotonEmitTime(simTime() - msm_offset_time_for_first_photon);
-  bsa_results->setInterval(msm_time_interval_between_photons);
-  for (int index = 0; index < msm_parent_node_click_results.size(); index++) {
-    if (!msm_parent_node_click_results.at(index).success || !msm_partner_node_click_results.at(index).success) continue;
-    bool is_phi_minus = msm_parent_node_click_results.at(index).correction_operation != msm_partner_node_click_results.at(index).correction_operation;
-    bool is_younger_address = parentAddress < msm_neighbor_addr;
-    bsa_results->appendSuccessIndex(index);
-    bsa_results->appendCorrectionOperation(is_younger_address && is_phi_minus ? PauliOperator::Z : PauliOperator::I);
+  for (MSMQNodeInfo msm_qnode_info : msm_qnode_infos) {
+    bsa_results->setQnicIndex(msm_qnode_info.qnic_index);
+    bsa_results->setQnicType(QNIC_RP);
+    bsa_results->setNeighborAddress(msm_qnode_info.qnic_index);
+    bsa_results->setFirstPhotonEmitTime(0);
+    for (int index = 0; index < msm_qnode_info.parent_clicks.size(); index++) {
+      if (!msm_qnode_info.parent_clicks.at(index).success || !msm_qnode_info.partner_clicks.at(index).success) continue;
+      bool is_phi_minus = msm_qnode_info.parent_clicks.at(index).correction_operation != msm_qnode_info.partner_clicks.at(index).correction_operation;
+      bool is_younger_address = parentAddress < msm_qnode_info.address;
+      bsa_results->appendSuccessIndex(index);
+      bsa_results->appendCorrectionOperation(is_younger_address && is_phi_minus ? PauliOperator::Z : PauliOperator::I);
+    }
   }
+
 
   return bsa_results;
 }
