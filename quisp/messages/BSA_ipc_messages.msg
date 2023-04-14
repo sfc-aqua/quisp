@@ -21,6 +21,7 @@ packet BatchClickEvent {
 // Used for MSM.
 packet CombinedBatchClickEventResults extends Header {
     BSAClickResult click_results[] @appender(appendClickResults) @getter(getClickResults) @sizeGetter(numberOfClicks);
+    int qnic_index @getter(getQnicIndex) @setter(setQnicIndex);
 }
 
 packet CancelBSMTimeOutMsg {}

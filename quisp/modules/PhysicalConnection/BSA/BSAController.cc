@@ -71,21 +71,6 @@ void BSAController::handleMessage(cMessage *msg) {
     delete msg;
     return;
   }
-  // if(auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
-  //   right_qnic.parent_node_addr = notification_packet->getOtherQnicParentAddr();
-  //   right_qnic.index = notification_packet->getOtherQnicIndex();
-  //   right_qnic.type = QNIC_RP;
-  //   offset_time_for_first_photon = notification_packet->getFirstPhotonEmitTime();
-  //   time_interval_between_photons = notification_packet->getInterval();
-  //   send(generateFirstNotificationTiming(true), "to_router");
-  //   Header *ack = new Header("epps_ack");
-  //   ack->setSrcAddr(address);
-  //   ack->setDestAddr(notification_packet->getSrcAddr());
-  //   send(ack, "to_router");
-  //   bsa->resetState();
-  //   delete msg;
-  //   return;
-  // }
   // a more realistic way of execution would be to send every click events through here.
   // but we opt for a better performance, since we are more interested in protocols
   // no emulating physical hardwares.
@@ -112,6 +97,7 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
     for (int index = 0; index < batch_click_msg->numberOfClicks(); index++) {
       batch_click_pk->appendClickResults(batch_click_msg->getClickResults(index));
     }
+    batch_click_pk->setQnicIndex(left_qnic.index);
     batch_click_pk->setDestAddr(left_qnic.parent_node_addr);
     batch_click_pk->setSrcAddr(left_qnic.parent_node_addr);
     send(batch_click_pk, "to_router");
