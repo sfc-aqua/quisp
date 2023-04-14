@@ -66,7 +66,7 @@ class IQubit {
   virtual EigenvalueResult measureZ() { throw std::runtime_error("measureZ not implemented"); }
 
   // for debugging, reads the VOP and graph state of a qubit and outputs it as string
-  virtual std::string graphState(){ throw std::runtime_error("measureZ not implemented"); }
+  virtual std::string graphState() { throw std::runtime_error("measureZ not implemented"); }
 };
 
 }  // namespace quisp::backends::abstract

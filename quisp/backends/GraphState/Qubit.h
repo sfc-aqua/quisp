@@ -67,7 +67,6 @@ class GraphStateQubit : public IQubit {
   // for debugging
   std::string graphState() override;
 
-
  protected:
   // error simulation
   void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate);

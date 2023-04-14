@@ -98,7 +98,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
 
  private:
-    struct MSMQNodeInfo {
+  struct MSMQNodeInfo {
     int address;
     int qnic_index;
     std::vector<BSAClickResult> parent_clicks;

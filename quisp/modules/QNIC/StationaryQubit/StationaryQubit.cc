@@ -268,9 +268,8 @@ MeasurementOutcome StationaryQubit::measureRandomPauliBasis() {
 
 // functions for debugging
 namespace std {
-std::ostream& operator<<(std::ostream& os, quisp::modules::IBackendQubit *qubit_ref)
-{
-    os << qubit_ref->graphState();
-    return os;
+std::ostream &operator<<(std::ostream &os, quisp::modules::IBackendQubit *qubit_ref) {
+  os << qubit_ref->graphState();
+  return os;
 }
-} // namespace std
+}  // namespace std
