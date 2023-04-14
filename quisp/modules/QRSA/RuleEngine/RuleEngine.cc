@@ -189,12 +189,12 @@ void RuleEngine::freeFailedEntanglementAttemptQubits(QNIC_type type, int qnic_in
 void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventResults *batch_click_pk) {
   for (MSMQNodeInfo msm_qnode_info : msm_qnode_infos) {
     if (batch_click_pk->getSrcAddr() == parentAddress) {
-    for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
-      msm_qnode_info.parent_clicks.emplace_back(batch_click_pk->getClickResults(index));
-    }
-    batch_click_pk->setDestAddr(msm_qnode_info.address);
-    send(batch_click_pk->dup(), "RouterPort$o");
-  } else if (batch_click_pk->getSrcAddr() == msm_qnode_info.address) {
+      for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+        msm_qnode_info.parent_clicks.emplace_back(batch_click_pk->getClickResults(index));
+      }
+      batch_click_pk->setDestAddr(msm_qnode_info.address);
+      send(batch_click_pk->dup(), "RouterPort$o");
+    } else if (batch_click_pk->getSrcAddr() == msm_qnode_info.address) {
       for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
         msm_qnode_info.partner_clicks.emplace_back(batch_click_pk->getClickResults(index));
       }
@@ -224,8 +224,6 @@ CombinedBSAresults *RuleEngine::generateCombinedBSAresults() {
       bsa_results->appendCorrectionOperation(is_younger_address && is_phi_minus ? PauliOperator::Z : PauliOperator::I);
     }
   }
-
-
   return bsa_results;
 }
 
@@ -245,8 +243,8 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
     emitted_indices.erase(iterator);
 
     // for debugging
-    auto* qubit = provider.getStationaryQubit(qubit_record);
-    auto* qubit_ref = qubit->getBackendQubitRef();
+    auto *qubit = provider.getStationaryQubit(qubit_record);
+    auto *qubit_ref = qubit->getBackendQubitRef();
     auto graph_state = qubit_ref->graphState();
 
     auto correction_operation = bsa_result->getCorrectionOperationList(i);
@@ -257,7 +255,6 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
     } else if (correction_operation == PauliOperator::Y) {
       realtime_controller->applyYGate(qubit_record);
     }
-
   }
 }
 
