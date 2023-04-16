@@ -5,6 +5,7 @@
  */
 #include "RoutingDaemon.h"
 #include <messages/classical_messages.h>
+#include <optional>
 #include <stdexcept>
 #include <vector>
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
@@ -229,48 +230,106 @@ std::vector<QNodeAddr> RoutingDaemon::getQNodeAddressList(cModule *mod) {
 DestInfoTuple RoutingDaemon::findNetworkBoundary(const std::vector<std::vector<types::QNodeAddr>> &path, QNodeAddr dest_addr) {
   // current addr, neighbor addr, lower dest addr,
 
-  QNodeAddr current_addr{-1, -1};
-  QNodeAddr neighbor_addr{-1, -1};
-  QNodeAddr lower_dest_addr{-1, -1};
-  if (path.size() <= 1) return {-1, current_addr, neighbor_addr, lower_dest_addr};
-  auto src_addr_list = path[0];
-  auto next_addr_list = path[1];
   int current_network = -1;
-  for (auto &src_addr : src_addr_list) {
-    for (auto &next_addr : next_addr_list) {
-      if (src_addr.network_addr == next_addr.network_addr) {
-        current_network = src_addr.network_addr;
-        current_addr = src_addr;
-        neighbor_addr = next_addr;
-        break;
+  int depth = 0;
+  std::vector<std::vector<QNodeAddr>> layers = {{path[0][0]}};
+  std::tuple<QNodeAddr, QNodeAddr> current_hop = {QNodeAddr{}, QNodeAddr{}};
+  auto find_intersect = [&](const std::vector<QNodeAddr> &v1, const std::vector<QNodeAddr> &v2) {
+    for (const auto &e1 : v1) {
+      for (const auto &e2 : v2) {
+        if (e1 == e2) return e1;
       }
     }
-  }
-  if (current_network == -1) {
-    // different network
-    return {current_network, current_addr, neighbor_addr, lower_dest_addr};
+    return QNodeAddr{-1, -1};
+  };
+
+  auto find_same_layer_hop = [&](const std::vector<QNodeAddr> &v1, const std::vector<QNodeAddr> &v2) {
+    std::optional<std::tuple<QNodeAddr, QNodeAddr>> result = std::nullopt;
+    for (const auto &e1 : v1) {
+      for (const auto &e2 : v2) {
+        if (e1.network_addr == e2.network_addr) {
+          result = std::make_optional(std::make_tuple(e1, e2));
+          break;
+        }
+      }
+    }
+    return result;
+  };
+
+  auto get_network_by_depth = [&](int current_depth) {
+    assert(layers.size() > current_depth);
+    assert(layers[current_depth].size() > 0);
+    return layers[current_depth][layers[current_depth].size() - 1].network_addr;
+  };
+
+  // loop hop by hop addr pair
+  for (int i = 0; i < path.size() - 1; i++) {
+    // find same network addr pair in hop by hop
+    auto hop = find_same_layer_hop(path[i], path[i + 1]);
+    if (hop.has_value()) {
+      current_hop = hop.value();
+      int network = get_network_by_depth(depth);
+      if (network == std::get<0>(current_hop).network_addr) {
+        // found same network layer
+        layers[depth].push_back(std::get<0>(current_hop));
+        layers[depth].push_back(std::get<1>(current_hop));
+      } else {
+        // different network layer hop
+        if (depth > 0 && std::get<0>(current_hop).network_addr == get_network_by_depth(depth - 1)) {
+          // upper layer has same network (come back from subnet path)
+          depth -= 1;
+          layers[depth].push_back(std::get<0>(current_hop));
+          layers[depth].push_back(std::get<1>(current_hop));
+        } else {
+          // one more deeper layer
+          depth += 1;
+          if (layers.size() > depth) {
+            layers[depth].push_back(std::get<0>(current_hop));
+            layers[depth].push_back(std::get<1>(current_hop));
+          } else {
+            layers.push_back({std::get<0>(current_hop), std::get<1>(current_hop)});
+          }
+        }
+      }
+    } else {  // across different network
+      current_hop = {path[i][0], path[i + 1][0]};
+
+      if (layers.size() > depth) {
+        if (depth > 0) {
+          depth -= 1;
+        }
+        layers[depth].push_back(path[i][0]);
+        layers[depth].push_back(path[i + 1][0]);
+      } else {
+        depth += 1;
+        if (layers.size() > depth) {
+          layers[depth].push_back(std::get<0>(current_hop));
+          layers[depth].push_back(std::get<1>(current_hop));
+        } else {
+          layers.push_back({std::get<0>(current_hop), std::get<1>(current_hop)});
+        }
+      }
+    }
   }
 
-  std::vector<QNodeAddr> narrow_path;
-  for (auto &addrs : path) {
-    auto len = narrow_path.size();
-    for (auto &a : addrs) {
-      if (a.network_addr == current_network) {
-        narrow_path.push_back(a);
+  QNodeAddr current_addr{-1, -1};
+  QNodeAddr neighbor_addr(-1, -1);
+  QNodeAddr lower_dest_addr(-1, -1);
+  if (layers.size() > 1) {
+    current_addr = find_intersect(path[0], layers[1]);
+    if (current_addr.isValid()) {
+      neighbor_addr = find_intersect(path[1], layers[1]);
+      lower_dest_addr = layers[1][0];
+      int first_lower_network = layers[1][0].network_addr;
+      for (const auto &addr : layers[1]) {
+        if (first_lower_network != addr.network_addr) {
+          break;
+        }
+        lower_dest_addr = addr;
       }
     }
-    if (len == narrow_path.size()) {
-      for (auto &a : narrow_path) {
-        std::cout << a << "->";
-      }
-      std::cout << std::endl;
-      lower_dest_addr = narrow_path.at(narrow_path.size() - 1);
-      return {current_network, current_addr, neighbor_addr, lower_dest_addr};
-    }
   }
-  if (dest_addr == path.at(path.size() - 1).at(0)) {
-    lower_dest_addr = narrow_path.at(narrow_path.size() - 1);
-  }
+  current_network = lower_dest_addr.network_addr;
   return {current_network, current_addr, neighbor_addr, lower_dest_addr};
 }
 
