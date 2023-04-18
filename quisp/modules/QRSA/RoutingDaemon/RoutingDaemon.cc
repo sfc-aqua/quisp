@@ -163,7 +163,7 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
         QNodeAddr next_addr{module->par("address").stringValue()};
         for (auto &a : dest_node_addresses) {
           neighbor_addr_table[a] = next_addr;
-          std::cout << "@" << myAddress << " neighbor_addr_table[" << a << "] = " << next_addr << std::endl;
+          // std::cout << "@" << myAddress << " neighbor_addr_table[" << a << "] = " << next_addr << std::endl;
         }
       }
     }
@@ -189,15 +189,15 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
       addrs_in_path.push_back(addresses);
     }
 
-    for (auto &addresses : addrs_in_path) {
-      std::cout << "{";
-      for (auto &a : addresses) std::cout << a << ", ";
-      std::cout << "}" << std::endl;
-    }
+    // for (auto &addresses : addrs_in_path) {
+    //   std::cout << "{";
+    //   for (auto &a : addresses) std::cout << a << ", ";
+    //   std::cout << "}" << std::endl;
+    // }
     auto it = RoutingDaemon::findNetworkBoundary(addrs_in_path, dest_node_addresses.at(0));
     auto [current_network, current_addr, neighbor_addr, lower_dest_addr] = it;
-    std::cout << myAddress << "(" << current_addr << ")"
-              << "->" << dest_node_addresses << ": cur_net:" << current_network << ", neighbor:" << neighbor_addr << ", lower dest:" << lower_dest_addr << std::endl;
+    // std::cout << myAddress << "(" << current_addr << ")"
+    //           << "->" << dest_node_addresses << ": cur_net:" << current_network << ", neighbor:" << neighbor_addr << ", lower dest:" << lower_dest_addr << std::endl;
     if (lower_dest_addr.isValid()) {
       for (auto &a : dest_node_addresses) {
         lower_layer_routing_table.insert({a, it});

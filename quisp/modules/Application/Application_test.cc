@@ -208,7 +208,7 @@ TEST(AppTest, Specifying_Valid_Addresses_As_Recipients) {
   cValueArray *cval_arr = new cValueArray();
   cval_arr->add("0.456");
 
-  quisp_test::utils::setParObject(app, "possible_recipients", cval_arr);
+  quisp_test::utils::setParObject(mock_qnode, "possible_recipients", cval_arr);
 
   sim->registerComponent(app);
   app->callInitialize();
