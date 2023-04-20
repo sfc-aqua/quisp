@@ -26,6 +26,7 @@ void JsonLogger::setQNodeAddress(QNodeAddr addr) { qnode_address = addr; }
 void JsonLogger::logPacket(const std::string& event_type, omnetpp::cMessage const* const msg) {
   auto current_time = omnetpp::simTime();
   _logger->info("\"simtime\": {}, \"event_type\": \"{}\", \"address\": \"{}\", {}", current_time, event_type, qnode_address, format(msg));
+  _logger->flush();
 }
 
 void JsonLogger::logQubitState(quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_busy, bool is_allocated) {
@@ -44,6 +45,12 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << "\", \"actual_src_addr\": \"" << req->getActual_srcAddr();
     os << "\", \"num_measure\": " << req->getNum_measure();
     os << ", \"num_required_bell_pairs\": " << req->getNumber_of_required_Bellpairs();
+    os << ", \"stack_of_qnode_indices\": [";
+    for (int i = 0; i < req->getStack_of_QNodeIndexesArraySize(); i++) {
+      if (i != 0) os << ", ";
+      os << req->getStack_of_QNodeIndexes(i);
+    }
+    os << "]";
     return os.str();
   }
   if (auto* req = dynamic_cast<const quisp::messages::RejectConnectionSetupRequest*>(msg)) {
@@ -64,12 +71,6 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << "\", \"ruleset_id\": " << req->getRuleSet_id();
     os << ", \"ruleset\": " << req->getRuleSet();
     os << ", \"application_type\": " << req->getApplication_type();
-    os << ", \"stack_of_qnode_indices\": [";
-    for (int i = 0; i < req->getStack_of_QNodeIndexesArraySize(); i++) {
-      if (i != 0) os << ", ";
-      os << req->getStack_of_QNodeIndexes(i);
-    }
-    os << "]";
     return os.str();
   }
 

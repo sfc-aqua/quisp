@@ -107,7 +107,8 @@ TEST_F(JsonLoggerTest, ConnSetupTest) {
     "actual_dest_addr": "0.1",
     "actual_src_addr": "0.2",
     "num_measure": 5,
-    "num_required_bell_pairs": 7
+    "num_required_bell_pairs": 7,
+    "stack_of_qnode_indices": []
   })";
   ASSERT_THAT(json::parse(log_stream.str()), EqualsJson(expected));
 }
