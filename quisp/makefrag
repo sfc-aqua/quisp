@@ -48,7 +48,7 @@ $(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(TEST_OBJS)  $(wildcard $(
 	$(Q)$(CXX) $(LDFLAGS) -lpthread -o $(TARGET_DIR)/run_unit_test $(TEST_OBJS) $(OBJS) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
 
 run-unit-test: $(TARGET_DIR)/run_unit_test
-	$(TARGET_DIR)/run_unit_test
+	$(TARGET_DIR)/run_unit_test --gtest_brief=1
 
 $(TARGET_DIR)/coverage.profraw:
 	rm -rf coverage*

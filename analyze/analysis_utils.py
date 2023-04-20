@@ -269,3 +269,17 @@ def plot_timeline(ax: "Axes", timelines, data_kind: "str", config: "Optional[Plo
         alpha=0.5,
         label=config["label"],
     )
+
+
+
+def count_rulesets_by_responders(df: "pd.DataFrame") -> "pd.DataFrame":
+    if "msg_type" in df and "actual_src_addr" in df:
+        # actual_src_addr is responder
+        # the counts means the number of RSs the responder generated
+        return (
+            df[df["msg_type"] == "ConnectionSetupResponse"]
+            .groupby("actual_src_addr")
+            .size()
+            .reset_index(name="counts")
+        )
+    return pd.DataFrame()
