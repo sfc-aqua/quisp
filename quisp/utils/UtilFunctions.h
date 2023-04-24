@@ -12,9 +12,9 @@ using quisp::backends::abstract::IRandomNumberGenerator;
     std::map<Label, double> weights: weight(double) and label are a pair of values and it is a elements of std:map.
     rand: random number(double)
   Return:
-    It returns label which previous_label_weight < rand <= label_weight
+    It returns label probabilistically according to the weights.
   Example:
-    weight = {{0.3, ErrorLabel::X}, {0.7, ErrorLabel::Z}, {1.0, ErrorLabel::Y}}}
+    weight = {{0.3, ErrorLabel::X}, {0.4, ErrorLabel::Z}, {0.3, ErrorLabel::Y}}}
     rand = 0.4
 
     returns ErrorLabel::Z
