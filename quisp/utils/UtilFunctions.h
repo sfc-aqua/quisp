@@ -9,7 +9,7 @@ using quisp::backends::abstract::IRandomNumberGenerator;
   Description:
     This is a function that, given a set of labels and weights and a random number, returns a label according to the random number
   Args:
-    std::map<double, Label> weights: weight(double) and label are a pair of values and it is a elements of std:map.
+    std::map<Label, double> weights: weight(double) and label are a pair of values and it is a elements of std:map.
     rand: random number(double)
   Return:
     It returns label which previous_label_weight < rand <= label_weight
@@ -21,15 +21,13 @@ using quisp::backends::abstract::IRandomNumberGenerator;
  */
 template <typename Label>
 Label samplingWithWeights(std::map<Label, double> weights, double rand) {
-  double ceil;
-  static bool IsFirst = true;
+  double sum = 0;
   for (auto &[l, w] : weights) {
-    if (IsFirst) {
-      ceil = 1 - w;
-      IsFirst = false;
-    } else {
-      ceil += w;
-    }
+    sum += w;
+  }
+  double ceil = 0;
+  for (auto &[l, w] : weights) {
+    ceil += w / sum;
 
     if (rand <= ceil) {
       return l;

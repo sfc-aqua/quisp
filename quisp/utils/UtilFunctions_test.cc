@@ -5,43 +5,20 @@
 namespace {
 using quisp::util_functions::samplingWithWeights;
 
-TEST(UtilFunctionsTest, samplingWithWeightsTest1) {
+TEST(UtilFunctionsTest, samplingWithWeightsTest) {
   enum class ErrorLabel : int { NO_ERR, X, Z, Y };
-  std::map<double, ErrorLabel> weights = {{0.2, ErrorLabel::NO_ERR}, {0.5, ErrorLabel::X}, {0.7, ErrorLabel::Z}, {1.0, ErrorLabel::Y}};
+  std::map<ErrorLabel, double> weights = {{ErrorLabel::NO_ERR, 0.2}, {ErrorLabel::X, 0.3}, {ErrorLabel::Z, 0.3}, {ErrorLabel::Y, 0.2}};
 
-  double rand = 0.2;
-  ErrorLabel r = samplingWithWeights(weights, rand);
-
+  ErrorLabel r = samplingWithWeights(weights, 0.2);
   EXPECT_EQ(r, ErrorLabel::NO_ERR);
-}
 
-TEST(UtilFunctionsTest, samplingWithWeightsTest2) {
-  enum class ErrorLabel : int { NO_ERR, X, Z, Y };
-  std::map<double, ErrorLabel> weights = {{0.2, ErrorLabel::NO_ERR}, {0.5, ErrorLabel::X}, {0.7, ErrorLabel::Z}, {1.0, ErrorLabel::Y}};
-
-  double rand = 0.5;
-  ErrorLabel r = samplingWithWeights(weights, rand);
-
+  r = samplingWithWeights(weights, 0.5);
   EXPECT_EQ(r, ErrorLabel::X);
-}
 
-TEST(UtilFunctionsTest, samplingWithWeightsTest3) {
-  enum class ErrorLabel : int { NO_ERR, X, Z, Y };
-  std::map<double, ErrorLabel> weights = {{0.2, ErrorLabel::NO_ERR}, {0.5, ErrorLabel::X}, {0.7, ErrorLabel::Z}, {1.0, ErrorLabel::Y}};
-
-  double rand = 0.7;
-  ErrorLabel r = samplingWithWeights(weights, rand);
-
+  r = samplingWithWeights(weights, 0.8);
   EXPECT_EQ(r, ErrorLabel::Z);
-}
 
-TEST(UtilFunctionsTest, samplingWithWeightsTest4) {
-  enum class ErrorLabel : int { NO_ERR, X, Z, Y };
-  std::map<double, ErrorLabel> weights = {{0.2, ErrorLabel::NO_ERR}, {0.5, ErrorLabel::X}, {0.7, ErrorLabel::Z}, {1.0, ErrorLabel::Y}};
-
-  double rand = 1.0;
-  ErrorLabel r = samplingWithWeights(weights, rand);
-
+  r = samplingWithWeights(weights, 1.0);
   EXPECT_EQ(r, ErrorLabel::Y);
 }
 }  // namespace

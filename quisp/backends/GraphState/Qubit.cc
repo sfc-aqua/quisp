@@ -59,9 +59,9 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
 
   enum class ErrorLabel : int { NO_ERR, X, Z, Y };
   std::map<ErrorLabel, double> weights = {
-      {ErrorLabel::NO_ERR, err.pauli_error_rate}, {ErrorLabel::X, err.x_error_rate}, {ErrorLabel::Z, err.z_error_rate}, {ErrorLabel::Y, err.y_error_rate}};
+      {ErrorLabel::NO_ERR, 1 - err.pauli_error_rate}, {ErrorLabel::X, err.x_error_rate}, {ErrorLabel::Z, err.z_error_rate}, {ErrorLabel::Y, err.y_error_rate}};
 
-  double rand = (double)std::rand() / RAND_MAX;
+  double rand = backend->dblrand();
   ErrorLabel r = samplingWithWeights(weights, rand);
 
   switch (r) {
@@ -86,11 +86,18 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
 
   enum class ErrorLabel : int { NO_ERR, IX, XI, XX, IY, YI, YY, IZ, ZI, ZZ };
   std::map<ErrorLabel, double> weights{
-      {ErrorLabel::NO_ERR, err.pauli_error_rate}, {ErrorLabel::IX, err.ix_error_rate}, {ErrorLabel::XI, err.xi_error_rate}, {ErrorLabel::XX, err.xx_error_rate},
-      {ErrorLabel::IY, err.iy_error_rate},        {ErrorLabel::YI, err.yi_error_rate}, {ErrorLabel::YY, err.yy_error_rate}, {ErrorLabel::IZ, err.iz_error_rate},
-      {ErrorLabel::ZI, err.zi_error_rate},        {ErrorLabel::ZZ, err.zz_error_rate},
+      {ErrorLabel::NO_ERR, 1 - err.pauli_error_rate},
+      {ErrorLabel::IX, err.ix_error_rate},
+      {ErrorLabel::XI, err.xi_error_rate},
+      {ErrorLabel::XX, err.xx_error_rate},
+      {ErrorLabel::IY, err.iy_error_rate},
+      {ErrorLabel::YI, err.yi_error_rate},
+      {ErrorLabel::YY, err.yy_error_rate},
+      {ErrorLabel::IZ, err.iz_error_rate},
+      {ErrorLabel::ZI, err.zi_error_rate},
+      {ErrorLabel::ZZ, err.zz_error_rate},
   };
-  double rand = (double)std::rand() / RAND_MAX;
+  double rand = backend->dblrand();
   ErrorLabel r = samplingWithWeights(weights, rand);
 
   switch (r) {
@@ -184,7 +191,7 @@ void GraphStateQubit::applyMemoryError() {
     std::map<ErrorLabel, double> weights = {{ErrorLabel::NO_ERR, pi_vector(0, 0)}, {ErrorLabel::X, pi_vector(0, 1)},         {ErrorLabel::Z, pi_vector(0, 2)},
                                             {ErrorLabel::Y, pi_vector(0, 3)},      {ErrorLabel::Exitation, pi_vector(0, 4)}, {ErrorLabel::Relaxation, pi_vector(0, 5)}};
 
-    double rand = (double)std::rand() / RAND_MAX;
+    double rand = backend->dblrand();
     ErrorLabel r = samplingWithWeights(weights, rand);
 
     switch (r) {
