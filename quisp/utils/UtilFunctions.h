@@ -20,9 +20,18 @@ using quisp::backends::abstract::IRandomNumberGenerator;
     returns ErrorLabel::Z
  */
 template <typename Label>
-Label samplingWithWeights(std::map<double, Label> weights, double rand) {
-  for (auto &[w, l] : weights) {
-    if (rand <= w) {
+Label samplingWithWeights(std::map<Label, double> weights, double rand) {
+  double ceil;
+  static bool IsFirst = true;
+  for (auto &[l, w] : weights) {
+    if (IsFirst) {
+      ceil = 1 - w;
+      IsFirst = false;
+    } else {
+      ceil += w;
+    }
+
+    if (rand <= ceil) {
       return l;
     }
   }

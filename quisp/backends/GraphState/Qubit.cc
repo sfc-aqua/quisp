@@ -58,8 +58,8 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
   }
 
   enum class ErrorLabel : int { NO_ERR, X, Z, Y };
-  std::map<double, ErrorLabel> weights = {
-      {err.no_error_ceil, ErrorLabel::NO_ERR}, {err.x_error_ceil, ErrorLabel::X}, {err.z_error_ceil, ErrorLabel::Z}, {err.y_error_ceil, ErrorLabel::Y}};
+  std::map<ErrorLabel, double> weights = {
+      {ErrorLabel::NO_ERR, err.pauli_error_rate}, {ErrorLabel::X, err.x_error_rate}, {ErrorLabel::Z, err.z_error_rate}, {ErrorLabel::Y, err.y_error_rate}};
 
   double rand = (double)std::rand() / RAND_MAX;
   ErrorLabel r = samplingWithWeights(weights, rand);
@@ -85,10 +85,10 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
   }
 
   enum class ErrorLabel : int { NO_ERR, IX, XI, XX, IY, YI, YY, IZ, ZI, ZZ };
-  std::map<double, ErrorLabel> weights{
-      {err.no_error_ceil, ErrorLabel::NO_ERR}, {err.ix_error_ceil, ErrorLabel::IX}, {err.xi_error_ceil, ErrorLabel::XI}, {err.xx_error_ceil, ErrorLabel::XX},
-      {err.iy_error_ceil, ErrorLabel::IY},     {err.yi_error_ceil, ErrorLabel::YI}, {err.yy_error_ceil, ErrorLabel::YY}, {err.iz_error_ceil, ErrorLabel::IZ},
-      {err.zi_error_ceil, ErrorLabel::ZI},     {err.zz_error_ceil, ErrorLabel::ZZ},
+  std::map<ErrorLabel, double> weights{
+      {ErrorLabel::NO_ERR, err.pauli_error_rate}, {ErrorLabel::IX, err.ix_error_rate}, {ErrorLabel::XI, err.xi_error_rate}, {ErrorLabel::XX, err.xx_error_rate},
+      {ErrorLabel::IY, err.iy_error_rate},        {ErrorLabel::YI, err.yi_error_rate}, {ErrorLabel::YY, err.yy_error_rate}, {ErrorLabel::IZ, err.iz_error_rate},
+      {ErrorLabel::ZI, err.zi_error_rate},        {ErrorLabel::ZZ, err.zz_error_rate},
   };
   double rand = (double)std::rand() / RAND_MAX;
   ErrorLabel r = samplingWithWeights(weights, rand);
@@ -180,17 +180,9 @@ void GraphStateQubit::applyMemoryError() {
     // take error rate vector from DynamicTransitionMatrix Eq 5.3
     pi_vector = pi_vector * transition_mat;
 
-    double clean_ceil = pi_vector(0, 0);
-    double x_ceil = clean_ceil + pi_vector(0, 1);
-    double z_ceil = x_ceil + pi_vector(0, 2);
-    double y_ceil = z_ceil + pi_vector(0, 3);
-    double excited_ceil = y_ceil + pi_vector(0, 4);
-    double relaxed_ceil = excited_ceil + pi_vector(0, 5);
-
     enum class ErrorLabel { NO_ERR, X, Z, Y, Exitation, Relaxation };
-    std::map<double, ErrorLabel> weights = {
-        {clean_ceil, ErrorLabel::NO_ERR},      {x_ceil, ErrorLabel::X}, {z_ceil, ErrorLabel::Z}, {y_ceil, ErrorLabel::Y}, {excited_ceil, ErrorLabel::Exitation},
-        {relaxed_ceil, ErrorLabel::Relaxation}};
+    std::map<ErrorLabel, double> weights = {{ErrorLabel::NO_ERR, pi_vector(0, 0)}, {ErrorLabel::X, pi_vector(0, 1)},         {ErrorLabel::Z, pi_vector(0, 2)},
+                                            {ErrorLabel::Y, pi_vector(0, 3)},      {ErrorLabel::Exitation, pi_vector(0, 4)}, {ErrorLabel::Relaxation, pi_vector(0, 5)}};
 
     double rand = (double)std::rand() / RAND_MAX;
     ErrorLabel r = samplingWithWeights(weights, rand);
