@@ -14,7 +14,7 @@ using quisp::backends::abstract::IRandomNumberGenerator;
   Return:
     It returns label probabilistically according to the weights.
   Example:
-    weight = {{0.3, ErrorLabel::X}, {0.4, ErrorLabel::Z}, {0.3, ErrorLabel::Y}}}
+    weight = {{ErrorLabel::X, 0.3}, {ErrorLabel::Z, 0.4}, {ErrorLabel::Y, 0.3}}}
     rand = 0.4
 
     returns ErrorLabel::Z
