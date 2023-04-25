@@ -5,6 +5,7 @@
 #include <memory>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "backends/GraphState/types.h"
+#include "backends/interfaces/IQubit.h"
 #include "test.h"
 
 namespace {
@@ -45,7 +46,7 @@ class QubitTest : public ::testing::Test {
 
 TEST_F(QubitTest, applySingleQubitGateErrorTest) {
   auto conf = new StationaryQubitConfiguration;
-  auto meas = qubit->measureZ();
+  EigenvalueResult meas;
 
   conf->x_gate_err_rate = 0.9;
   conf->x_gate_x_err_ratio = 0.3;
@@ -58,9 +59,59 @@ TEST_F(QubitTest, applySingleQubitGateErrorTest) {
   auto* qubit = backend->GsQubit::createQubit(id, std::move(conf2));
   auto Gs_qubit = reinterpret_cast<TestGsQubit*>(qubit);
 
+  rng->double_value = 0.;
+  Gs_qubit->gateX();
+  meas = Gs_qubit->measureZ();
+  EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
+  Gs_qubit->setFree();
+  Gs_qubit->gateX();
+  meas = qubit->measureX();
+  EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
+  Gs_qubit->setFree();
+  Gs_qubit->gateX();
+  meas = qubit->measureY();
+  EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
+  Gs_qubit->setFree();
+
   rng->double_value = 0.4;
   Gs_qubit->gateX();
   meas = Gs_qubit->measureZ();
+  EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
+  Gs_qubit->setFree();
+  Gs_qubit->gateX();
+  meas = qubit->measureX();
+  EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
+  Gs_qubit->setFree();
+  Gs_qubit->gateX();
+  meas = qubit->measureY();
+  EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
+  Gs_qubit->setFree();
+  
+  rng->double_value = 0.7;
+  Gs_qubit->gateX();
+  meas = Gs_qubit->measureZ();
+  EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
+  Gs_qubit->setFree();
+  Gs_qubit->gateX();
+  meas = qubit->measureX();
+  EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
+  Gs_qubit->setFree();
+  Gs_qubit->gateX();
+  meas = qubit->measureY();
+  EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
+  Gs_qubit->setFree();
+  
+  rng->double_value = 1.0;
+  Gs_qubit->gateX();
+  meas = Gs_qubit->measureZ();
+  EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
+  Gs_qubit->setFree();
+  Gs_qubit->gateX();
+  meas = qubit->measureX();
+  EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
+  Gs_qubit->setFree();
+  Gs_qubit->gateX();
+  meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   Gs_qubit->setFree();
 }
