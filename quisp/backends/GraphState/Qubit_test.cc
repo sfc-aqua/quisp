@@ -86,7 +86,7 @@ TEST_F(QubitTest, applySingleQubitGateErrorTest) {
   meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   Gs_qubit->setFree();
-  
+
   rng->double_value = 0.7;
   Gs_qubit->gateX();
   meas = Gs_qubit->measureZ();
@@ -100,7 +100,7 @@ TEST_F(QubitTest, applySingleQubitGateErrorTest) {
   meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   Gs_qubit->setFree();
-  
+
   rng->double_value = 1.0;
   Gs_qubit->gateX();
   meas = Gs_qubit->measureZ();
