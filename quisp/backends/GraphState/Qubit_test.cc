@@ -29,7 +29,6 @@ class GsQubit : public GraphStateBackend {
   GsQubit(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> config) : GraphStateBackend(std::move(rng), std::move(config)) {}
 };
 
-
 class QubitTest : public ::testing::Test {
  protected:
   void SetUp() {
@@ -47,7 +46,7 @@ class QubitTest : public ::testing::Test {
 TEST_F(QubitTest, applySingleQubitGateErrorTest) {
   auto conf = new StationaryQubitConfiguration;
   auto meas = qubit->measureZ();
-  
+
   conf->x_gate_err_rate = 0.9;
   conf->x_gate_x_err_ratio = 0.3;
   conf->x_gate_y_err_ratio = 0.3;
@@ -65,6 +64,5 @@ TEST_F(QubitTest, applySingleQubitGateErrorTest) {
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   Gs_qubit->setFree();
 }
-
 
 }  // namespace
