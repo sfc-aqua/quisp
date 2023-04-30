@@ -188,7 +188,7 @@ void GraphStateQubit::applyMemoryError() {
     pi_vector = pi_vector * transition_mat;
 
     enum class ErrorLabel { NO_ERR, X, Z, Y, Excitation, Relaxation };
-    std::map<ErrorLabel, double> weights = {{ErrorLabel::NO_ERR, pi_vector(0, 0)}, {ErrorLabel::X, pi_vector(0, 1)},         {ErrorLabel::Z, pi_vector(0, 2)},
+    std::map<ErrorLabel, double> weights = {{ErrorLabel::NO_ERR, pi_vector(0, 0)}, {ErrorLabel::X, pi_vector(0, 1)},          {ErrorLabel::Z, pi_vector(0, 2)},
                                             {ErrorLabel::Y, pi_vector(0, 3)},      {ErrorLabel::Excitation, pi_vector(0, 4)}, {ErrorLabel::Relaxation, pi_vector(0, 5)}};
 
     double rand = backend->dblrand();
