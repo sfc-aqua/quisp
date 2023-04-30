@@ -187,9 +187,9 @@ void GraphStateQubit::applyMemoryError() {
     // take error rate vector from DynamicTransitionMatrix Eq 5.3
     pi_vector = pi_vector * transition_mat;
 
-    enum class ErrorLabel { NO_ERR, X, Z, Y, Exitation, Relaxation };
+    enum class ErrorLabel { NO_ERR, X, Z, Y, Excitation, Relaxation };
     std::map<ErrorLabel, double> weights = {{ErrorLabel::NO_ERR, pi_vector(0, 0)}, {ErrorLabel::X, pi_vector(0, 1)},         {ErrorLabel::Z, pi_vector(0, 2)},
-                                            {ErrorLabel::Y, pi_vector(0, 3)},      {ErrorLabel::Exitation, pi_vector(0, 4)}, {ErrorLabel::Relaxation, pi_vector(0, 5)}};
+                                            {ErrorLabel::Y, pi_vector(0, 3)},      {ErrorLabel::Excitation, pi_vector(0, 4)}, {ErrorLabel::Relaxation, pi_vector(0, 5)}};
 
     double rand = backend->dblrand();
     ErrorLabel r = samplingWithWeights(weights, rand);
@@ -207,7 +207,7 @@ void GraphStateQubit::applyMemoryError() {
         this->applyClifford(CliffordOperator::X);
         this->applyClifford(CliffordOperator::Z);
         break;
-      case ErrorLabel::Exitation:
+      case ErrorLabel::Excitation:
         this->excite();
         break;
       case ErrorLabel::Relaxation:
