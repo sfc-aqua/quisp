@@ -56,27 +56,26 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
   if (err.pauli_error_rate == 0) {
     return;
   }
-  // Gives a random double between 0.0 ~ 1.0
-  double rand = backend->dblrand();
 
-  /*
-   * 0.0    No_error_ceil       Z_error_ceil  1.0
-   *  |          |                   |         |
-   *  | No Error | X Error | Z Error | Y Error |
-   *                       |
-   *                  X_error_ceil
-   */
-  if (rand <= err.no_error_ceil) {
-    // No error
-  } else if (err.no_error_ceil < rand && rand <= err.x_error_ceil && (err.no_error_ceil != err.x_error_ceil)) {
-    // X error
-    this->applyClifford(CliffordOperator::X);
-  } else if (err.x_error_ceil < rand && rand <= err.z_error_ceil && (err.x_error_ceil != err.z_error_ceil)) {
-    // Z error
-    this->applyClifford(CliffordOperator::Z);
-  } else {
-    // Y error
-    this->applyClifford(CliffordOperator::Y);
+  enum class ErrorLabel : int { NO_ERR, X, Z, Y };
+  std::map<ErrorLabel, double> weights = {
+      {ErrorLabel::NO_ERR, 1 - err.pauli_error_rate}, {ErrorLabel::X, err.x_error_rate}, {ErrorLabel::Z, err.z_error_rate}, {ErrorLabel::Y, err.y_error_rate}};
+
+  double rand = backend->dblrand();
+  ErrorLabel r = samplingWithWeights(weights, rand);
+
+  switch (r) {
+    case ErrorLabel::NO_ERR:
+      break;
+    case ErrorLabel::X:
+      this->applyClifford(CliffordOperator::X);
+      break;
+    case ErrorLabel::Z:
+      this->applyClifford(CliffordOperator::Z);
+      break;
+    case ErrorLabel::Y:
+      this->applyClifford(CliffordOperator::Y);
+      break;
   }
 }
 
@@ -85,50 +84,58 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
     return;
   }
 
-  // Gives a random double between 0.0 ~ 1.0
+  enum class ErrorLabel : int { NO_ERR, IX, XI, XX, IY, YI, YY, IZ, ZI, ZZ };
+  std::map<ErrorLabel, double> weights{
+      {ErrorLabel::NO_ERR, 1 - err.pauli_error_rate},
+      {ErrorLabel::IX, err.ix_error_rate},
+      {ErrorLabel::XI, err.xi_error_rate},
+      {ErrorLabel::XX, err.xx_error_rate},
+      {ErrorLabel::IY, err.iy_error_rate},
+      {ErrorLabel::YI, err.yi_error_rate},
+      {ErrorLabel::YY, err.yy_error_rate},
+      {ErrorLabel::IZ, err.iz_error_rate},
+      {ErrorLabel::ZI, err.zi_error_rate},
+      {ErrorLabel::ZZ, err.zz_error_rate},
+  };
   double rand = backend->dblrand();
+  ErrorLabel r = samplingWithWeights(weights, rand);
 
-  /*
-   * 0.0  No_error_ceil    XI_error_ceil     IY_error_ceil     YY_error_ceil    ZI_error_ceil  1.0
-   *  |        |                 |                 |                 |                 |        |
-   *  | No err | IX err | XI err | XX err | IY err | YI err | YY err | IZ err | ZI err | ZZ err |
-   *                    |                 |                 |                 |
-   *              IX_error_ceil      XX_error_ceil     YI_error_ceil    IZ_error_ceil
-   */
-  if (rand <= err.no_error_ceil) {
-    // No error
-  } else if (err.no_error_ceil < rand && rand <= err.ix_error_ceil && (err.no_error_ceil != err.ix_error_ceil)) {
-    // IX error
-    this->applyClifford(CliffordOperator::X);
-  } else if (err.ix_error_ceil < rand && rand <= err.xi_error_ceil && (err.ix_error_ceil != err.xi_error_ceil)) {
-    // XI error
-    another_qubit->applyClifford(CliffordOperator::X);
-  } else if (err.xi_error_ceil < rand && rand <= err.xx_error_ceil && (err.xi_error_ceil != err.xx_error_ceil)) {
-    // XX error
-    this->applyClifford(CliffordOperator::X);
-    another_qubit->applyClifford(CliffordOperator::X);
-  } else if (err.xx_error_ceil < rand && rand <= err.iz_error_ceil && (err.xx_error_ceil != err.iz_error_ceil)) {
-    // IZ error
-    this->applyClifford(CliffordOperator::Z);
-  } else if (err.iz_error_ceil < rand && rand <= err.zi_error_ceil && (err.iz_error_ceil != err.zi_error_ceil)) {
-    // ZI error
-    another_qubit->applyClifford(CliffordOperator::Z);
-  } else if (err.zi_error_ceil < rand && rand <= err.zz_error_ceil && (err.zi_error_ceil != err.zz_error_ceil)) {
-    // ZZ error
-    this->applyClifford(CliffordOperator::Z);
-    another_qubit->applyClifford(CliffordOperator::Z);
-  } else if (err.zz_error_ceil < rand && rand <= err.iy_error_ceil && (err.zz_error_ceil != err.iy_error_ceil)) {
-    // IY error
-    this->applyClifford(CliffordOperator::Y);
-  } else if (err.iy_error_ceil < rand && rand <= err.yi_error_ceil && (err.iy_error_ceil != err.yi_error_ceil)) {
-    // YI error
-    another_qubit->applyClifford(CliffordOperator::Y);
-  } else {
-    // YY error
-    this->applyClifford(CliffordOperator::Y);
-    another_qubit->applyClifford(CliffordOperator::Y);
+  switch (r) {
+    case ErrorLabel::NO_ERR:
+      break;
+    case ErrorLabel::IX:
+      this->applyClifford(CliffordOperator::X);
+      break;
+    case ErrorLabel::XI:
+      another_qubit->applyClifford(CliffordOperator::X);
+      break;
+    case ErrorLabel::XX:
+      this->applyClifford(CliffordOperator::X);
+      another_qubit->applyClifford(CliffordOperator::X);
+      break;
+    case ErrorLabel::IZ:
+      this->applyClifford(CliffordOperator::Z);
+      break;
+    case ErrorLabel::ZI:
+      another_qubit->applyClifford(CliffordOperator::Z);
+      break;
+    case ErrorLabel::ZZ:
+      this->applyClifford(CliffordOperator::Z);
+      another_qubit->applyClifford(CliffordOperator::Z);
+      break;
+    case ErrorLabel::IY:
+      this->applyClifford(CliffordOperator::Y);
+      break;
+    case ErrorLabel::YI:
+      another_qubit->applyClifford(CliffordOperator::Y);
+      break;
+    case ErrorLabel::YY:
+      this->applyClifford(CliffordOperator::Y);
+      another_qubit->applyClifford(CliffordOperator::Y);
+      break;
   }
 }
+
 void GraphStateQubit::applyMemoryError() {
   // If no memory error occurs, skip this memory error simulation.
   if (memory_err.error_rate == 0) return;
@@ -180,45 +187,36 @@ void GraphStateQubit::applyMemoryError() {
     // take error rate vector from DynamicTransitionMatrix Eq 5.3
     pi_vector = pi_vector * transition_mat;
 
-    /* this prepares the sectors for Monte-Carlo. later, we'll pick a random value and check with this sectors.
-     *
-     * 0.0    clean_ceil             z_ceil              excited_ceil
-     *  |          |                   |                      |
-     *  | No Error | X Error | Z Error | Y Error | Excitation | Relaxation |
-     *                       |                   |                         |
-     *                    x_ceil               y_ceil                     1.0
-     */
-    double clean_ceil = pi_vector(0, 0);
-    double x_ceil = clean_ceil + pi_vector(0, 1);
-    double z_ceil = x_ceil + pi_vector(0, 2);
-    double y_ceil = z_ceil + pi_vector(0, 3);
-    double excited_ceil = y_ceil + pi_vector(0, 4);
-    double relaxed_ceil = excited_ceil + pi_vector(0, 5);
+    enum class ErrorLabel { NO_ERR, X, Z, Y, Excitation, Relaxation };
+    std::map<ErrorLabel, double> weights = {{ErrorLabel::NO_ERR, pi_vector(0, 0)}, {ErrorLabel::X, pi_vector(0, 1)},          {ErrorLabel::Z, pi_vector(0, 2)},
+                                            {ErrorLabel::Y, pi_vector(0, 3)},      {ErrorLabel::Excitation, pi_vector(0, 4)}, {ErrorLabel::Relaxation, pi_vector(0, 5)}};
 
-    // Gives a random double between 0.0 ~ 1.0
     double rand = backend->dblrand();
+    ErrorLabel r = samplingWithWeights(weights, rand);
 
-    if (rand < clean_ceil) {
-      // Qubit will end up with no error
-    } else if (clean_ceil <= rand && rand < x_ceil && (clean_ceil != x_ceil)) {
-      // X error
-      this->applyClifford(CliffordOperator::X);
-    } else if (x_ceil <= rand && rand < z_ceil && (x_ceil != z_ceil)) {
-      // Z error
-      this->applyClifford(CliffordOperator::Z);
-    } else if (z_ceil <= rand && rand < y_ceil && (z_ceil != y_ceil)) {
-      // Y error
-      this->applyClifford(CliffordOperator::X);
-      this->applyClifford(CliffordOperator::Z);
-    } else if (y_ceil <= rand && rand < excited_ceil && (y_ceil != excited_ceil)) {
-      // Excitation error
-      this->excite();
-    } else if (excited_ceil <= rand && rand < relaxed_ceil && (excited_ceil != relaxed_ceil)) {
-      // Relaxation error
-      this->relax();
-    } else {
-      // Memory completely mixed error
-      // This should never happen
+    switch (r) {
+      case ErrorLabel::NO_ERR:
+        break;
+      case ErrorLabel::X:
+        this->applyClifford(CliffordOperator::X);
+        break;
+      case ErrorLabel::Z:
+        this->applyClifford(CliffordOperator::Z);
+        break;
+      case ErrorLabel::Y:
+        this->applyClifford(CliffordOperator::X);
+        this->applyClifford(CliffordOperator::Z);
+        break;
+      case ErrorLabel::Excitation:
+        this->excite();
+        break;
+      case ErrorLabel::Relaxation:
+        this->relax();
+        break;
+      default:
+          // Memory completely mixed error
+          // This should never happen
+          ;
     }
   }
   updated_time = current_time;
