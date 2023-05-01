@@ -1,7 +1,8 @@
 <map id="quisp/backends/GraphState/test.h" name="quisp/backends/GraphState/test.h">
-<area shape="rect" id="node1" title=" " alt="" coords="315,5,497,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="419,5,601,45"/>
 <area shape="rect" id="node2" href="$_gs__backend__test_8cc.html" title=" " alt="" coords="5,101,188,141"/>
 <area shape="rect" id="node3" href="$_gs__multi__qubit__test_8cc.html" title=" " alt="" coords="212,101,395,141"/>
 <area shape="rect" id="node4" href="$_gs__qubit__internal__graph__test_8cc.html" title=" " alt="" coords="419,93,601,148"/>
 <area shape="rect" id="node5" href="$_gs__single__qubit__test_8cc.html" title=" " alt="" coords="625,101,808,141"/>
+<area shape="rect" id="node6" href="$_qubit__test_8cc.html" title=" " alt="" coords="832,101,1015,141"/>
 </map>

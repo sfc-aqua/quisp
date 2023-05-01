@@ -7,5 +7,8 @@ var namespacequisp =
     [ "rules", "namespacequisp_1_1rules.html", "namespacequisp_1_1rules" ],
     [ "runtime", "namespacequisp_1_1runtime.html", "namespacequisp_1_1runtime" ],
     [ "types", "namespacequisp_1_1types.html", null ],
+    [ "util_functions", "namespacequisp_1_1util__functions.html", [
+      [ "samplingWithWeights", "namespacequisp_1_1util__functions.html#a4de3363230c64863be030b72581c6f02", null ]
+    ] ],
     [ "utils", "namespacequisp_1_1utils.html", "namespacequisp_1_1utils" ]
 ];

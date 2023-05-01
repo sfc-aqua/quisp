@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('_test_utils_8h.html',''); initResizabl
 <code>#include &quot;<a class="el" href="_simulation_8h_source.html">Simulation.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_static_env_8h_source.html">StaticEnv.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_test_component_provider_strategy_8h_source.html">TestComponentProviderStrategy.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_util_functions_8h_source.html">UtilFunctions.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_test_util_functions_8h_source.html">TestUtilFunctions.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_mock_backend_qubit_8h_source.html">mock_backends/MockBackendQubit.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_mock_quantum_backend_8h_source.html">mock_backends/MockQuantumBackend.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_mock_hardware_monitor_8h_source.html">mock_modules/MockHardwareMonitor.h</a>&quot;</code><br />
@@ -122,7 +122,7 @@ Include dependency graph for TestUtils.h:</div>
 <area shape="rect" href="_simulation_8h.html" title=" " alt="" coords="2069,255,2163,280"/>
 <area shape="rect" href="_static_env_8h.html" title=" " alt="" coords="1907,255,1995,280"/>
 <area shape="rect" href="_test_component_provider_strategy_8h.html" title=" " alt="" coords="1167,86,1387,111"/>
-<area shape="rect" href="_util_functions_8h.html" title=" " alt="" coords="2303,174,2412,199"/>
+<area shape="rect" href="_test_util_functions_8h.html" title=" " alt="" coords="2277,174,2411,199"/>
 <area shape="rect" href="_mock_backend_qubit_8h.html" title=" " alt="" coords="2999,79,3203,119"/>
 <area shape="rect" href="_mock_quantum_backend_8h.html" title=" " alt="" coords="2769,79,2975,119"/>
 <area shape="rect" href="_mock_hardware_monitor_8h.html" title=" " alt="" coords="2491,79,2693,119"/>
@@ -171,34 +171,35 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="_test_utils_8h__dep__incl.png" border="0" usemap="#aquisp_2test__utils_2_test_utils_8hdep" alt=""/></div>
 <map name="aquisp_2test__utils_2_test_utils_8hdep" id="aquisp_2test__utils_2_test_utils_8hdep">
-<area shape="rect" title=" " alt="" coords="2684,5,2861,31"/>
+<area shape="rect" title=" " alt="" coords="2781,5,2959,31"/>
 <area shape="rect" href="_gs__multi__qubit__test_8cc.html" title=" " alt="" coords="5,86,188,126"/>
 <area shape="rect" href="_gs__qubit__internal__graph__test_8cc.html" title=" " alt="" coords="212,79,395,133"/>
 <area shape="rect" href="_gs__single__qubit__test_8cc.html" title=" " alt="" coords="419,86,601,126"/>
-<area shape="rect" href="_application__test_8cc.html" title=" " alt="" coords="625,86,800,126"/>
-<area shape="rect" href="_backend__test_8cc.html" title=" " alt="" coords="824,86,985,126"/>
-<area shape="rect" href="_router__test_8cc.html" title=" " alt="" coords="1010,86,1173,126"/>
-<area shape="rect" href="_json_logger__test_8cc.html" title=" " alt="" coords="1197,86,1348,126"/>
-<area shape="rect" href="_logger_module__test_8cc.html" title=" " alt="" coords="1373,86,1527,126"/>
-<area shape="rect" href="_stationary_qubit__test_8cc.html" title=" " alt="" coords="1552,79,1729,133"/>
-<area shape="rect" href="_connection_manager__test_8cc.html" title=" " alt="" coords="1754,79,1965,133"/>
-<area shape="rect" href="_hardware_monitor__test_8cc.html" title=" " alt="" coords="1989,79,2217,133"/>
-<area shape="rect" href="_real_time_controller__test_8cc.html" title=" " alt="" coords="2241,79,2424,133"/>
-<area shape="rect" href="_routing_daemon__test_8cc.html" title=" " alt="" coords="2448,79,2663,133"/>
-<area shape="rect" href="_bell_pair_store__test_8cc.html" title=" " alt="" coords="2687,79,2858,133"/>
-<area shape="rect" href="_q_nic_record__test_8cc.html" title=" " alt="" coords="2883,79,3049,133"/>
-<area shape="rect" href="_q_nic_store__test_8cc.html" title=" " alt="" coords="3073,79,3229,133"/>
-<area shape="rect" href="_qubit_record__test_8cc.html" title=" " alt="" coords="3253,79,3420,133"/>
-<area shape="rect" href="_rule_engine__photon__shooting__test_8cc.html" title=" " alt="" coords="3445,79,3615,133"/>
-<area shape="rect" href="_rule_engine__test_8cc.html" title=" " alt="" coords="3639,79,3799,133"/>
-<area shape="rect" href="_action__execution__test_8cc.html" title=" " alt="" coords="3823,86,3954,126"/>
-<area shape="rect" href="_action__serialize__test_8cc.html" title=" " alt="" coords="3979,86,4105,126"/>
-<area shape="rect" href="_clause__serialize__test_8cc.html" title=" " alt="" coords="4129,86,4259,126"/>
-<area shape="rect" href="_condition__execution__test_8cc.html" title=" " alt="" coords="4283,86,4425,126"/>
-<area shape="rect" href="_condition__test_8cc.html" title=" " alt="" coords="4449,86,4592,126"/>
-<area shape="rect" href="rules_2_rule_set__test_8cc.html" title=" " alt="" coords="4616,86,4751,126"/>
-<area shape="rect" href="_rule__test_8cc.html" title=" " alt="" coords="4775,93,4936,119"/>
-<area shape="rect" href="unit__test__main_8cc.html" title=" " alt="" coords="4960,93,5119,119"/>
+<area shape="rect" href="_qubit__test_8cc.html" title=" " alt="" coords="625,86,808,126"/>
+<area shape="rect" href="_application__test_8cc.html" title=" " alt="" coords="832,86,1007,126"/>
+<area shape="rect" href="_backend__test_8cc.html" title=" " alt="" coords="1031,86,1192,126"/>
+<area shape="rect" href="_router__test_8cc.html" title=" " alt="" coords="1217,86,1379,126"/>
+<area shape="rect" href="_json_logger__test_8cc.html" title=" " alt="" coords="1404,86,1555,126"/>
+<area shape="rect" href="_logger_module__test_8cc.html" title=" " alt="" coords="1579,86,1734,126"/>
+<area shape="rect" href="_stationary_qubit__test_8cc.html" title=" " alt="" coords="1759,79,1936,133"/>
+<area shape="rect" href="_connection_manager__test_8cc.html" title=" " alt="" coords="1961,79,2171,133"/>
+<area shape="rect" href="_hardware_monitor__test_8cc.html" title=" " alt="" coords="2196,79,2424,133"/>
+<area shape="rect" href="_real_time_controller__test_8cc.html" title=" " alt="" coords="2448,79,2631,133"/>
+<area shape="rect" href="_routing_daemon__test_8cc.html" title=" " alt="" coords="2655,79,2869,133"/>
+<area shape="rect" href="_bell_pair_store__test_8cc.html" title=" " alt="" coords="2894,79,3065,133"/>
+<area shape="rect" href="_q_nic_record__test_8cc.html" title=" " alt="" coords="3089,79,3256,133"/>
+<area shape="rect" href="_q_nic_store__test_8cc.html" title=" " alt="" coords="3280,79,3436,133"/>
+<area shape="rect" href="_qubit_record__test_8cc.html" title=" " alt="" coords="3460,79,3627,133"/>
+<area shape="rect" href="_rule_engine__photon__shooting__test_8cc.html" title=" " alt="" coords="3651,79,3822,133"/>
+<area shape="rect" href="_rule_engine__test_8cc.html" title=" " alt="" coords="3846,79,4006,133"/>
+<area shape="rect" href="_action__execution__test_8cc.html" title=" " alt="" coords="4030,86,4161,126"/>
+<area shape="rect" href="_action__serialize__test_8cc.html" title=" " alt="" coords="4185,86,4312,126"/>
+<area shape="rect" href="_clause__serialize__test_8cc.html" title=" " alt="" coords="4336,86,4465,126"/>
+<area shape="rect" href="_condition__execution__test_8cc.html" title=" " alt="" coords="4489,86,4632,126"/>
+<area shape="rect" href="_condition__test_8cc.html" title=" " alt="" coords="4656,86,4799,126"/>
+<area shape="rect" href="rules_2_rule_set__test_8cc.html" title=" " alt="" coords="4823,86,4957,126"/>
+<area shape="rect" href="_rule__test_8cc.html" title=" " alt="" coords="4981,93,5143,119"/>
+<area shape="rect" href="unit__test__main_8cc.html" title=" " alt="" coords="5167,93,5325,119"/>
 </map>
 </div>
 </div>

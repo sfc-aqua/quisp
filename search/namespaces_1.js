@@ -38,5 +38,6 @@ var searchData=
   ['stationary_5fqubit_35',['stationary_qubit',['../namespacequisp__test_1_1mock__modules_1_1stationary__qubit.html',1,'quisp_test::mock_modules']]],
   ['strategy_36',['strategy',['../namespacequisp__test_1_1strategy.html',1,'quisp_test']]],
   ['types_37',['types',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html',1,'quisp::backends::graph_state::types'],['../namespacequisp_1_1physical_1_1types.html',1,'quisp::physical::types'],['../namespacequisp_1_1types.html',1,'quisp::types']]],
-  ['utils_38',['utils',['../namespacequisp_1_1utils.html',1,'quisp::utils'],['../namespacequisp__test_1_1utils.html',1,'quisp_test::utils']]]
+  ['util_5ffunctions_38',['util_functions',['../namespacequisp_1_1util__functions.html',1,'quisp']]],
+  ['utils_39',['utils',['../namespacequisp_1_1utils.html',1,'quisp::utils'],['../namespacequisp__test_1_1utils.html',1,'quisp_test::utils']]]
 ];

@@ -11,7 +11,7 @@ var searchData=
   ['updatechannelweightsofnode_8',['updateChannelWeightsOfNode',['../classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html#a433cb4c3e7eb042b110a53200bc43a99',1,'quisp::modules::SharedResource::SharedResource']]],
   ['updated_5ftime_9',['updated_time',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a12b48cbd5182d6ab7a92721d88c6c1ff',1,'quisp::backends::graph_state::GraphStateQubit']]],
   ['usetestrng_10',['useTestRNG',['../namespacequisp__test_1_1utils.html#ac9608fdc54533daf8f1d6f999bce6e56',1,'quisp_test::utils']]],
-  ['utilfunctions_2ecc_11',['UtilFunctions.cc',['../_util_functions_8cc.html',1,'']]],
-  ['utilfunctions_2eh_12',['UtilFunctions.h',['../_util_functions_8h.html',1,'']]],
+  ['utilfunctions_2eh_11',['UtilFunctions.h',['../_util_functions_8h.html',1,'']]],
+  ['utilfunctions_5ftest_2ecc_12',['UtilFunctions_test.cc',['../_util_functions__test_8cc.html',1,'']]],
   ['utils_2eh_13',['utils.h',['../utils_8h.html',1,'']]]
 ];

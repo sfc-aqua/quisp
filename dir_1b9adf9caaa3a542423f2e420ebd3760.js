@@ -18,7 +18,7 @@ var dir_1b9adf9caaa3a542423f2e420ebd3760 =
     [ "StaticEnv.cc", "_static_env_8cc.html", null ],
     [ "StaticEnv.h", "_static_env_8h.html", "_static_env_8h" ],
     [ "TestComponentProviderStrategy.h", "_test_component_provider_strategy_8h.html", "_test_component_provider_strategy_8h" ],
-    [ "TestUtils.h", "_test_utils_8h.html", null ],
-    [ "UtilFunctions.cc", "_util_functions_8cc.html", "_util_functions_8cc" ],
-    [ "UtilFunctions.h", "_util_functions_8h.html", "_util_functions_8h" ]
+    [ "TestUtilFunctions.cc", "_test_util_functions_8cc.html", "_test_util_functions_8cc" ],
+    [ "TestUtilFunctions.h", "_test_util_functions_8h.html", "_test_util_functions_8h" ],
+    [ "TestUtils.h", "_test_utils_8h.html", null ]
 ];
