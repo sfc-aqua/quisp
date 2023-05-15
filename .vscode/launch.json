@@ -22,9 +22,11 @@
                 "./networks:./channels:./modules",
                 "-i",
                 "./images",
-                "./networks/omnetpp.ini",
+                "./simulations/simulation_test.ini",
                 "-u",
-                "Qtenv"
+                "Cmdenv",
+                "-c",
+                "Entanglement_Swapping_MM_3_Nodes"
             ],
             "cwd": "${workspaceFolder}/quisp"
         },
