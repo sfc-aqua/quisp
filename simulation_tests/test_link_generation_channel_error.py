@@ -47,6 +47,27 @@ async def test_ChannelXErrorSimpleMM():
         "Yerror": 0.00540325,
     }
 
+@pytest.mark.asyncio
+async def test_ChannelXErrorSimpleMSM():
+    worker = Worker()
+    await worker.run(
+        config_name="ChannelXErrorSimpleMSM",
+        ned_file_path="simulations/simulation_test.ini",
+    )
+    print(worker.output)
+    worker.print_results()
+    assert worker.results["EndNode1<-->EndNode2"]["data"] == {
+        "Fidelity": ,
+        "Xerror": ,
+        "Zerror": ,
+        "Yerror": ,
+    }
+    assert worker.results["EndNode2<-->EndNode1"]["data"] == {
+        "Fidelity": ,
+        "Xerror": ,
+        "Zerror": ,
+        "Yerror": ,
+    }
 
 @pytest.mark.asyncio
 async def test_MIM_Werner_State_Channel():
@@ -91,4 +112,26 @@ async def test_MM_Werner_State_Channel():
         "Xerror": 0.104376,
         "Zerror": 0.0904865,
         "Yerror": 0.105029,
+    }
+
+@pytest.mark.asyncio
+async def test_MSM_Werner_State_Channel():
+    worker = Worker()
+    await worker.run(
+        config_name="Channel_Error_Werner_State_MSM",
+        ned_file_path="simulations/simulation_test.ini",
+    )
+    print(worker.output)
+    worker.print_results()
+    assert worker.results["EndNode1<-->EndNode2"]["data"] == {
+        "Fidelity": ,
+        "Xerror": ,
+        "Zerror": ,
+        "Yerror": ,
+    }
+    assert worker.results["EndNode2<-->EndNode1"]["data"] == {
+        "Fidelity": ,
+        "Xerror": ,
+        "Zerror": ,
+        "Yerror": ,
     }

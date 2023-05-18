@@ -263,7 +263,7 @@ void HardwareMonitor::finish() {
   std::string file_name_dm = file_name + std::string("_dm");
   std::ofstream tomography_stats(file_name, std::ios_base::app);
   std::ofstream tomography_dm(file_name_dm, std::ios_base::app);
-  std::cout << "Opened new file to write.\n";
+  std::cout << "Opened new file to write. Address is " << my_address << "\n";
 
   // here generate tomography data storage
   tomography_data = new RawData[num_qnic_total];

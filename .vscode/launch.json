@@ -28,5 +28,66 @@
             ],
             "cwd": "${workspaceFolder}/quisp"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Simulation MSM Link",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/simulation_test.ini",
+                "-u",
+                "Cmdenv",
+                "-c",
+                "NoErrorMSM"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Simulation MIM Link",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/simulation_test.ini",
+                "-u",
+                "Cmdenv",
+                "-c",
+                "NoErrorMIM"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Simulation MSM ES",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/simulation_test.ini",
+                "-u",
+                "Cmdenv",
+                "-c",
+                "Entanglement_Swapping_MSM_3_Nodes"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "simple debug",
+            "program": "${workspaceFolder}/a.out",
+            "cwd": "${workspaceFolder}/quisp",
+        },
     ],
 }

@@ -18,6 +18,8 @@ packet BSMTimingNotification extends Header
     simtime_t interval  @setter(setInterval)  @getter(getInterval);
     QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
     int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
+    bool is_pure_bsa_result      @setter(setIsPureBSAResult) @getter(getIsPureBSAResult);
+
 }
 
 packet EPPSTimingNotification extends Header

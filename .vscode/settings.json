@@ -50,5 +50,6 @@
         "--ignore=eigen",
         "--ignore=scripts",
         "--ignore=spdlog"
-    ]
+    ],
+    "debug.allowBreakpointsEverywhere": true
 }

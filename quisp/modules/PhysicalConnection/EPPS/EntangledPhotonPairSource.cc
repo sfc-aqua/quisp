@@ -1,6 +1,5 @@
 #include "EntangledPhotonPairSource.h"
 #include "PhotonicQubit_m.h"
-#include "omnetpp/ccontextswitcher.h"
 
 using quisp::messages::PhotonicQubit;
 using namespace omnetpp;

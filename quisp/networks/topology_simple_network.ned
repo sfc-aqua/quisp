@@ -175,3 +175,48 @@ network three_node_MM
         EndNode1.quantum_port++ <--> QuantumChannel {  distance = 0.5km; } <--> Repeater.quantum_port_receiver++;
         Repeater.quantum_port++ <--> QuantumChannel {  distance = 0.5km; } <--> EndNode2.quantum_port_receiver++;
 }
+
+network three_node_MSM
+{
+    parameters:
+        **.speed_of_light_in_fiber = 205336.986301 km;
+        @display("bgb=541,254");
+    submodules:
+        backend: Backend;
+        logger: Logger;
+        EndNode1: QNode {
+            address = 1;
+            node_type = "EndNode";
+            @display("i=COMP;p=56,202");
+        }
+        EndNode2: QNode {
+            address = 5;
+            node_type = "EndNode";
+            @display("i=COMP;p=473,202");
+        }
+        Repeater: QNode {
+            address = 3;
+            node_type = "Repeater";
+            @display("i=REP1G;p=264,203");
+        }
+        EPPS1: EPPSNode {
+            address = 2;
+            node_type = "EPPS";
+            @display("p=158,86");
+        }
+        EPPS2: EPPSNode {
+            address = 4;
+            node_type = "EPPS";
+            @display("p=371,86");
+        }
+    connections:
+        EndNode1.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> EPPS1.port++;
+        Repeater.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> EPPS1.port++;
+        Repeater.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> EPPS2.port++;
+        EndNode2.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> EPPS2.port++;
+
+        EndNode1.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 0.5km; } <--> EPPS1.quantum_port++;
+        Repeater.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 0.5km; } <--> EPPS1.quantum_port++;
+        Repeater.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 0.5km; } <--> EPPS2.quantum_port++;
+        EndNode2.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 0.5km; } <--> EPPS2.quantum_port++;
+}
