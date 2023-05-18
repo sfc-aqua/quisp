@@ -155,6 +155,15 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     rule_engine->send(pkt, "RouterPort$o");
   }
 
+  void sendConnectionTeardownMessage(const unsigned long ruleset_id, const QNodeAddr parner_addr) override {
+    ConnectionTeardownMessage *pkt = new ConnectionTeardownMessage("ConnectionTeardownMessage");
+    pkt->setSrcAddr(rule_engine->parentAddress);
+    pkt->setDestAddr(parner_addr.val);
+    pkt->setRuleSet_id(ruleset_id);
+    pkt->setKind(8);
+    rule_engine->send(pkt, "RouterPort$o");
+  }
+
   void freeAndResetQubit(IQubitRecord *qubit) override {
     auto *stat_qubit = rule_engine->provider.getStationaryQubit((qubit));
     rule_engine->freeConsumedResource(qubit->getQNicIndex(), stat_qubit, qubit->getQNicType());
