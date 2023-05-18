@@ -79,7 +79,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (auto *bsa_results = dynamic_cast<CombinedBSAresults *>(msg)) {
       handleLinkGenerationResult(bsa_results);
     }
-    if (notification_packet->getFirstPhotonEmitTime() != 0) {
+    if (!notification_packet->getIsPureBSAResult()) {
       auto type = notification_packet->getQnicType();
       auto qnic_index = notification_packet->getQnicIndex();
       stopOnGoingPhotonEmission(type, qnic_index);
@@ -108,7 +108,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
     auto address = notification_packet->getOtherQnicParentAddr();
     auto qnic_index = notification_packet->getQnicIndex();
-    msm_info_map[qnic_index] = MSMInfo{.address = address};
+    msm_info_map[qnic_index] = MSMQnicInfo{.address = address};
     stopOnGoingPhotonEmission(QNIC_RP, qnic_index);
     freeFailedEntanglementAttemptQubits(QNIC_RP, qnic_index);
     scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
@@ -210,7 +210,7 @@ CombinedBSAresults *RuleEngine::generateCombinedBSAresults(int qnic_index) {
   bsa_results->setQnicIndex(qnic_index);
   bsa_results->setQnicType(QNIC_RP);
   bsa_results->setNeighborAddress(msm_info_map[qnic_index].address);
-  bsa_results->setFirstPhotonEmitTime(0);
+  bsa_results->setIsPureBSAResult(true);
   for (int index = 0; index < msm_info_map[qnic_index].parent_clicks.size(); index++) {
     if (!msm_info_map[qnic_index].parent_clicks.at(index).success || !msm_info_map[qnic_index].partner_clicks.at(index).success) continue;
     bool is_phi_minus = msm_info_map[qnic_index].parent_clicks.at(index).correction_operation != msm_info_map[qnic_index].partner_clicks.at(index).correction_operation;

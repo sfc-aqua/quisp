@@ -87,7 +87,7 @@ module QNode
                 passive = true;
                 self_qnic_type = 2;
                 emission_std = parent.emission_timing_std;
-                @display("p=328,82");
+                @display("p=338,82,m,5,50,60");
         }
 
     connections:
