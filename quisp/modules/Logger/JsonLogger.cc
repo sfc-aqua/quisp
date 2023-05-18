@@ -7,6 +7,7 @@ namespace quisp::modules::Logger {
 using quisp::messages::ConnectionSetupRequest;
 using quisp::messages::ConnectionSetupResponse;
 using quisp::messages::RejectConnectionSetupRequest;
+using quisp::messages::ConnectionTeardownMessage;
 
 JsonLogger::JsonLogger(std::shared_ptr<spdlog::logger> logger) : _logger(logger) {
   std::string jsonpattern = {"{%v}"};
@@ -69,6 +70,14 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
       os << req->getStack_of_QNodeIndexes(i);
     }
     os << "]";
+    return os.str();
+  }
+  if (auto* req = dynamic_cast<const quisp::messages::ConnectionTeardownMessage*>(msg)) {
+    std::stringstream os;
+    os << "\"msg_type\": \"ConnectionTeardownMessage\"";
+    os << ", \"dest_addr\": " << req->getDestAddr();
+    os << ", \"src_addr\": " << req->getSrcAddr();
+    os << ", \"ruleset_id\": " << req->getRuleSet_id();
     return os.str();
   }
 
