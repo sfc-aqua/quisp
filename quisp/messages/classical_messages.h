@@ -6,3 +6,4 @@
 #include "link_generation_messages_m.h"
 #include "purification_messages_m.h"
 #include "tomography_messages_m.h"
+#include "connection_teardown_messages_m.h"
