@@ -99,7 +99,8 @@ TEST_F(RuntimeManagerTest, Exec) {
   runtimes->acceptRuleSet(rs2);
   runtimes->acceptRuleSet(rs3);
   EXPECT_EQ(runtimes->size(), 3);
-  runtimes->exec();
+  bool terminated = runtimes->exec();
+  EXPECT_FALSE(terminated);
   {
     auto& rs1 = runtimes->at(0);
     auto& rs2 = runtimes->at(1);
@@ -128,7 +129,8 @@ TEST_F(RuntimeManagerTest, ExecAndTerminated) {
   runtimes->acceptRuleSet(rs2);
   runtimes->acceptRuleSet(rs3);
   EXPECT_EQ(runtimes->size(), 3);
-  runtimes->exec();
+  bool terminated = runtimes->exec();
+  EXPECT_FALSE(terminated);
   ASSERT_EQ(runtimes->size(), 2);
   {
     auto& rs1 = runtimes->at(0);
