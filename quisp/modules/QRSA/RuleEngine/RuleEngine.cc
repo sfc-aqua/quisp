@@ -5,12 +5,16 @@
 #include "RuleEngine.h"
 
 #include <cassert>
+#include <cstddef>
 #include <fstream>
 #include <iterator>
 #include <memory>
 #include <stdexcept>
 #include <utility>
 
+#include "messages/connection_teardown_messages_m.h"
+#include "runtime/RuleSet.h"
+#include "runtime/Runtime.h"
 #include "QNicStore/QNicStore.h"
 #include "RuntimeCallback.h"
 #include "modules/PhysicalConnection/BSA/types.h"
@@ -41,6 +45,8 @@ void RuleEngine::initialize() {
   bell_pair_store.logger = logger;
 
   parentAddress = provider.getNodeAddr();
+  qnode_indices = {};
+  
   number_of_qnics_all = par("total_number_of_qnics");
   number_of_qnics = par("number_of_qnics");
   number_of_qnics_r = par("number_of_qnics_r");
@@ -103,6 +109,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     handlePurificationResult(pkt);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
     handleSwappingResult(pkt);
+  } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownInfoForwarding *>(msg)) {
+    storeQNodeIndices(pkt);
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto serialized_ruleset = pkt->getRuleSet();
@@ -230,7 +238,25 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   }
 }
 
-void RuleEngine::executeAllRuleSets() { runtimes.exec(); }
+void RuleEngine::storeQNodeIndices(InternalConnectionTeardownInfoForwarding *connection_teardown_info){
+  int size = connection_teardown_info->getStack_of_QNodeIndexesArraySize();
+  for(int i = 0; i < size; i++){
+    qnode_indices.push_back(connection_teardown_info->getStack_of_QNodeIndexes(i));
+  }
+}
+
+void RuleEngine::executeAllRuleSets() { 
+  bool terminated = runtimes.exec(); 
+  if (terminated){
+    for(int i = 0; i < int(sizeof(qnode_indices)/sizeof(int)); i++){
+      ConnectionTeardownMessage *pkt = new ConnectionTeardownMessage("ConnectionTeardownMessage");
+      pkt->setSrcAddr(parentAddress);
+      pkt->setDestAddr(qnode_indices.at(i));
+      pkt->setRuleSet_id(runtimes.end()->ruleset.id);
+      send(pkt, "RouterPort$o");
+    }
+  }
+}
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationary_qubit_address"));
