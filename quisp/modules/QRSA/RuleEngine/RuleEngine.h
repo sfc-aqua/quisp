@@ -14,6 +14,7 @@
 #include "QNicStore/IQNicStore.h"
 #include "QubitRecord/IQubitRecord.h"
 #include "messages/classical_messages.h"
+#include "messages/connection_teardown_messages_m.h"
 #include "modules/Logger/LoggerBase.h"
 #include "modules/QNIC.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
@@ -58,6 +59,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   RuleEngine();
   ~RuleEngine();
   int parentAddress;  // Parent QNode's address
+
   messages::EmitPhotonRequest *emt;
   int number_of_qnics_all;  // qnic,qnic_r,_qnic_rp
   int number_of_qnics;
@@ -85,6 +87,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void freeFailedEntanglementAttemptQubits(QNIC_type qnic_type, int qnic_index);
   simtime_t getEmitTimeFromBSMNotification(messages::BSMTimingNotification *notification);
   void schedulePhotonEmission(QNIC_type qnic_type, int qnic_index, messages::BSMTimingNotification *notification);
+  void storeQNodeIndices(messages::InternalConnectionTeardownInfoForwarding *connection_teardown_info);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
@@ -92,6 +95,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   runtime::RuntimeManager runtimes;
   std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
+  std::vector<int> qnode_indices;
 };
 
 Define_Module(RuleEngine);
