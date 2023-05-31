@@ -8,7 +8,7 @@ class RuntimeManager {
   RuntimeManager(std::unique_ptr<Runtime::ICallBack>&& callback);
   void acceptRuleSet(const RuleSet&);
   Runtime* findById(unsigned long long ruleset_id);
-  void exec();
+  bool exec();
   std::vector<Runtime>::iterator begin();
   std::vector<Runtime>::iterator end();
   std::vector<Runtime>::reference at(size_t);

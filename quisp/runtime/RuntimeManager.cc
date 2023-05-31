@@ -16,15 +16,23 @@ Runtime *RuntimeManager::findById(unsigned long long ruleset_id) {
   return nullptr;
 }
 
-void RuntimeManager::exec() {
+bool RuntimeManager::exec() {
+  if (runtimes.size() == 0){
+    return false;
+  }
+  auto rtend = runtimes.end();
   for (auto it = runtimes.begin(); it != runtimes.end();) {
     it->exec();
     if (it->terminated) {
+      if (it == rtend) {
+        return it->terminated;
+      }
       it = runtimes.erase(it);
     } else {
       ++it;
     }
   }
+  return false;
 }
 
 std::vector<Runtime>::iterator RuntimeManager::begin() { return runtimes.begin(); }
