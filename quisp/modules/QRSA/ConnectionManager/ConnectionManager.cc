@@ -36,6 +36,7 @@ void ConnectionManager::initialize() {
   routing_daemon = provider.getRoutingDaemon();
   hardware_monitor = provider.getHardwareMonitor();
   my_address = provider.getNodeAddr();
+  node_addresses_along_path = {};
   num_of_qnics = par("total_number_of_qnics");
   simultaneous_es_enabled = par("simultaneous_es_enabled");
   num_remote_purification = par("num_remote_purification");
@@ -103,6 +104,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     if (initiator_addr == my_address || responder_addr == my_address) {
       // this node is not a swapper
+      storeQNodeIndices(resp);
       storeRuleSetForApplication(resp);
     } else {
       // this node is a swapper (intermediate node)
@@ -161,6 +163,28 @@ PurType ConnectionManager::parsePurType(const std::string &pur_type) {
     return PurType::DSDA_SECOND_INV;
   }
   return PurType::INVALID;
+}
+
+/**
+ * This function is called to handle the ConnectionSetupResponse at end nodes.
+ * The only job here is to get their QNodes Addresses and feed them to the RuleEngine via Router.
+ *
+ * \param pk the received ConnectionSetupResponse.
+ **/
+void ConnectionManager::storeQNodeIndices(ConnectionSetupResponse *pk) {
+
+  int size = pk->getStack_of_QNodeIndexesArraySize();
+  
+  InternalConnectionTeardownInfoForwarding *pk_internal = new InternalConnectionTeardownInfoForwarding("InternalConnectionTeardownInfoForwarding");
+  pk_internal->setDestAddr(pk->getDestAddr());
+  pk_internal->setSrcAddr(pk->getSrcAddr());
+  pk_internal->setKind(4);
+  pk_internal->setRuleSet_id(pk->getRuleSet_id());
+  pk_internal->setStack_of_QNodeIndexesArraySize(size);
+  for(int i = 0; i < size; i++){
+    pk_internal->setStack_of_QNodeIndexes(i, pk->getStack_of_QNodeIndexes(i));
+  }
+  send(pk_internal, "RouterPort$o");
 }
 
 /**
@@ -247,6 +271,10 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
   auto rulesets = ruleset_gen.generateRuleSets(req, createUniqueId());
+
+  for (auto rs = rulesets.begin(); rs != rulesets.end(); rs++) {
+        node_addresses_along_path.push_back(rs->first);
+  }
 
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {

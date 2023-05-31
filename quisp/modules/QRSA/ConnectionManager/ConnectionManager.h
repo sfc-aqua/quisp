@@ -8,6 +8,8 @@
 #pragma once
 
 #include <omnetpp.h>
+#include <locale>
+#include <map>
 #include <queue>
 #include <vector>
 
@@ -62,6 +64,8 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
  protected:
   int my_address;
   int num_of_qnics;
+  
+  std::vector<int> node_addresses_along_path;
   std::map<int, std::queue<messages::ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
   std::map<int, int> connection_retry_count;  // key is qnic address
   std::vector<int> reserved_qnics = {};  // reserved qnic address table
@@ -86,6 +90,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   void scheduleRequestRetry(int qnic_address);
   void popApplicationRequest(int qnic_address);
 
+  void storeQNodeIndices(messages::ConnectionSetupResponse *pk);
   void storeRuleSetForApplication(messages::ConnectionSetupResponse *pk);
   void storeRuleSet(messages::ConnectionSetupResponse *pk);
 
