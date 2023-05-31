@@ -155,7 +155,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     rule_engine->send(pkt, "RouterPort$o");
   }
 
-  void sendConnectionTeardownMessage(const unsigned long ruleset_id, const QNodeAddr parner_addr) override {
+  void sendConnectionTeardownMessage(const unsigned long ruleset_id, const QNodeAddr parner_addr) {
     ConnectionTeardownMessage *pkt = new ConnectionTeardownMessage("ConnectionTeardownMessage");
     pkt->setSrcAddr(rule_engine->parentAddress);
     pkt->setDestAddr(parner_addr.val);
