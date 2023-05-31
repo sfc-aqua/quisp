@@ -9,3 +9,11 @@ packet ConnectionTeardownMessage extends Header
     int srcAddr;
     unsigned long RuleSet_id;
 }
+
+packet InternalConnectionTeardownInfoForwarding extends Header
+{
+    int destAddr;
+    int srcAddr;
+    unsigned long RuleSet_id;
+    int stack_of_QNodeIndexes[];
+}
