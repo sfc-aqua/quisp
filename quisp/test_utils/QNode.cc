@@ -1,6 +1,6 @@
 #include "QNode.h"
 #include "ModuleType.h"
-#include "UtilFunctions.h"
+#include "TestUtilFunctions.h"
 
 namespace quisp_test {
 namespace qnode {

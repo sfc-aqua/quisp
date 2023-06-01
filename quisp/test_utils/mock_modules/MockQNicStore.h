@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 #include <modules/QNIC.h>
 #include <modules/QRSA/RuleEngine/QNicStore/IQNicStore.h>
-#include <test_utils/UtilFunctions.h>
+#include <test_utils/TestUtilFunctions.h>
 
 namespace quisp_test::mock_modules::qnic_store {
 

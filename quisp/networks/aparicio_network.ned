@@ -6,6 +6,7 @@ import ned.IdealChannel;
 import ned.DatarateChannel;
 import modules.Backend.Backend;
 import modules.Logger.Logger;
+import modules.SharedResource.SharedResource;
 
 // this network topology is taken from Figure 7.4 from Aparicio's Master thesis (https://aqua.sfc.wide.ad.jp/publications/Aparicio-master-thesis.pdf)
 // For the MIM link, the distance between one hop is the same as mentioned in the thesis but the probability of getting a Bell pair
@@ -19,6 +20,7 @@ network aparicio_MM
     submodules:
         backend: Backend;
         logger: Logger;
+        sharedResource: SharedResource;
         EndNodeA: QNode {
             address = 1;
             node_type = "EndNode";
@@ -128,6 +130,7 @@ network aparicio_MIM
     submodules:
         backend: Backend;
         logger: Logger;
+        sharedResource: SharedResource;
         EndNodeA: QNode {
             address = 1;
             node_type = "EndNode";

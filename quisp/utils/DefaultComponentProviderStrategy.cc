@@ -99,6 +99,15 @@ ILogger *DefaultComponentProviderStrategy::getLogger() {
   return logger_module->getLogger();
 }
 
+SharedResource *DefaultComponentProviderStrategy::getSharedResource() {
+  auto *mod = self->findModuleByPath("sharedResource");
+  if (mod == nullptr) {
+    throw cRuntimeError("SharedResource not found");
+  }
+  auto *shared_resource_holder = check_and_cast<SharedResource *>(mod);
+  return shared_resource_holder;
+}
+
 cModule *DefaultComponentProviderStrategy::getQRSA() {
   auto *qnode = getQNode();
   auto *qrsa = qnode->getSubmodule("qrsa");

@@ -17,38 +17,24 @@ void Router::initialize() {
   my_address = provider.getNodeAddr();
 
   // Topology creation for routing table
-  cTopology *topo = new cTopology("topo");
-
-  // Any node that has a parameter included_in_topology will be included in routing
-  topo->extractByParameter("included_in_topology", "\"yes\"");
+  auto topo = provider.getTopologyForRouter();
 
   // If no node with the parameter & value found, do nothing.
   if (topo->getNumNodes() == 0 || topo == nullptr) {
     return;
   }
 
+  generateRoutingTable(topo);
+}
+
+void Router::generateRoutingTable(cTopology *topo) {
   cTopology::Node *thisNode = topo->getNodeFor(getParentModule());  // The parent node with this specific router
-
-  // Initialize channel weights for all existing links.
-  for (int x = 0; x < topo->getNumNodes(); x++) {  // Traverse through all nodes
-    // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
-    for (int j = 0; j < topo->getNode(x)->getNumOutLinks(); j++) {  // Traverse through all links from a specific node.
-      double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");  // Get assigned cost for each channel written in .ned file
-
-      if (strstr(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName(), "quantum")) {
-        // Ignore quantum link in classical routing table
-        topo->getNode(x)->getLinkOut(j)->disable();
-      } else {
-        // Otherwise, keep the classical channels and set the weight
-        topo->getNode(x)->getLinkOut(j)->setWeight(channel_cost);  // Set channel weight
-      }
-    }
-  }
 
   // Traverse through all the destinations from the thisNode
   for (int i = 0; i < topo->getNumNodes(); i++) {
+    const auto node = topo->getNode(i);
     // skip the node that is running this specific router app
-    if (topo->getNode(i) == thisNode) continue;
+    if (node == thisNode) continue;
 
     // Apply dijkstra to each node to find all shortest paths.
     topo->calculateWeightedSingleShortestPathsTo(topo->getNode(i));
@@ -71,8 +57,6 @@ void Router::initialize() {
       error("Classical routing table referring to quantum gates...");
     }
   }
-
-  delete topo;
 }
 
 void Router::handleMessage(cMessage *msg) {

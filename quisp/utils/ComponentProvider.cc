@@ -86,7 +86,27 @@ ILogger *ComponentProvider::getLogger() {
   return strategy->getLogger();
 }
 
+const std::unordered_map<int, int> ComponentProvider::getEndNodeWeightMapForApplication(std::string node_type) {
+  auto shared_resource = getSharedResource();
+  return shared_resource->getEndNodeWeightMapForApplication(node_type.c_str());
+}
+
+cTopology *ComponentProvider::getTopologyForRoutingDaemon(const cModule *const rd_module) {
+  auto shared_resource = getSharedResource();
+  return shared_resource->getTopologyForRoutingDaemon(rd_module);
+}
+
+cTopology *ComponentProvider::getTopologyForRouter() {
+  auto shared_resource = getSharedResource();
+  return shared_resource->getTopologyForRouter();
+}
+
 void ComponentProvider::setStrategy(std::unique_ptr<IComponentProviderStrategy> _strategy) { strategy = std::move(_strategy); }
+
+SharedResource *ComponentProvider::getSharedResource() {
+  ensureStrategy();
+  return strategy->getSharedResource();
+}
 
 void ComponentProvider::ensureStrategy() {
   if (strategy != nullptr) return;

@@ -14,7 +14,7 @@
 #include "backends/interfaces/IQuantumBackend.h"
 #include "omnetpp/cmessage.h"
 #include "test_utils/Simulation.h"
-#include "test_utils/UtilFunctions.h"
+#include "test_utils/TestUtilFunctions.h"
 #include "test_utils/mock_backends/MockQuantumBackend.h"
 
 using quisp::backends::abstract::IQubit;

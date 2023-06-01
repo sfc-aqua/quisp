@@ -1,4 +1,4 @@
-#include "UtilFunctions.h"
+#include "TestUtilFunctions.h"
 #include <omnetpp.h>
 #include <omnetpp/cobjectparimpl.h>
 #include "RNG.h"
