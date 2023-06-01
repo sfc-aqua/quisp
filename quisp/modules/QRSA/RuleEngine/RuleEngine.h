@@ -20,6 +20,7 @@
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
+#include "omnetpp/cmessage.h"
 #include "rules/RuleSet.h"
 #include "runtime/Runtime.h"
 #include "runtime/RuntimeManager.h"
@@ -81,6 +82,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(messages::PurificationResult *purification_result);
   void handleSwappingResult(messages::SwappingResult *swapping_result);
+  void handleConnectionTeardownMessage(messages::ConnectionTeardownMessage *connection_teardown_message);
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);

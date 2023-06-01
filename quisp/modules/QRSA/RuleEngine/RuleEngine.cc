@@ -123,6 +123,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
+  }else if (auto *pkt = dynamic_cast<ConnectionTeardownMessage *>(msg)) {
+    handleConnectionTeardownMessage(pkt);
   }
 
   for (int i = 0; i < number_of_qnics; i++) {
@@ -215,6 +217,11 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   auto runtime = runtimes.findById(ruleset_id);
   if (runtime == nullptr) return;
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
+}
+
+void RuleEngine::handleConnectionTeardownMessage(ConnectionTeardownMessage *msg) {
+  auto ruleset_id = msg->getRuleSet_id();
+  runtimes.stopById(ruleset_id);
 }
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
