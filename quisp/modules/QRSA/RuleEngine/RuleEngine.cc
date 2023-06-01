@@ -238,13 +238,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   }
 }
 
-void RuleEngine::storeQNodeIndices(InternalConnectionTeardownInfoForwarding *connection_teardown_info){
-  int size = connection_teardown_info->getStack_of_QNodeIndexesArraySize();
-  for(int i = 0; i < size; i++){
-    qnode_indices.push_back(connection_teardown_info->getStack_of_QNodeIndexes(i));
-  }
-}
-
 void RuleEngine::executeAllRuleSets() { 
   bool terminated = runtimes.exec(); 
   if (terminated){
@@ -266,6 +259,13 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
     qubit_record->setAllocated(false);
   }
   bell_pair_store.eraseQubit(qubit_record);
+}
+
+void RuleEngine::storeQNodeIndices(InternalConnectionTeardownInfoForwarding *connection_teardown_info){
+  int size = connection_teardown_info->getStack_of_QNodeIndexesArraySize();
+  for(int i = 0; i < size; i++){
+    qnode_indices.push_back(connection_teardown_info->getStack_of_QNodeIndexes(i));
+  }
 }
 
 }  // namespace quisp::modules
