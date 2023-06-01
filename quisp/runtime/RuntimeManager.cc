@@ -35,6 +35,11 @@ bool RuntimeManager::exec() {
   return false;
 }
 
+void RuntimeManager::stopById(unsigned long long ruleset_id) {
+  auto rt = findById(ruleset_id);
+  rt->terminated = true;
+}
+
 std::vector<Runtime>::iterator RuntimeManager::begin() { return runtimes.begin(); }
 std::vector<Runtime>::iterator RuntimeManager::end() { return runtimes.end(); }
 std::vector<Runtime>::reference RuntimeManager::at(size_t index) { return runtimes.at(index); }
