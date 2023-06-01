@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <modules/Logger/DisabledLogger.h>
 #include <test_utils/TestUtils.h>
-#include "test_utils/UtilFunctions.h"
+#include "test_utils/TestUtilFunctions.h"
 
 namespace {
 using namespace quisp_test;

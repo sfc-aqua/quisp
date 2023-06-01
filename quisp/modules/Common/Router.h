@@ -18,6 +18,7 @@ class Router : public omnetpp::cSimpleModule {
  protected:
   virtual void initialize() override;
   virtual void handleMessage(omnetpp::cMessage *msg) override;
+  void generateRoutingTable(cTopology *topo);
 
   utils::ComponentProvider provider;
 

@@ -7,6 +7,7 @@ import channels.*;
 import modules.*;
 import modules.Backend.Backend;
 import modules.Logger.Logger;
+import modules.SharedResource.SharedResource;
 
 
 network Linear_five_MM_network
@@ -18,6 +19,7 @@ network Linear_five_MM_network
     submodules:
         backend: Backend;
         logger: Logger;
+        sharedResource: SharedResource;
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";

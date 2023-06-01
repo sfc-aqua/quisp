@@ -5,6 +5,7 @@ import modules.*;
 import channels.*;
 import modules.Backend.Backend;
 import modules.Logger.Logger;
+import modules.SharedResource.SharedResource;
 
 //
 // TODO auto-generated type
@@ -20,6 +21,7 @@ network Simple_constant_quantum_cost
     submodules:
         backend: Backend;
         logger: Logger;
+        sharedResource: SharedResource;
         endnode[3]: QNode {
             address = 10000000+index;
             node_type = "EndNode";

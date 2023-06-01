@@ -4,7 +4,7 @@
 #include <modules/common_types.h>
 #include <omnetpp.h>
 #include <test_utils/ModuleType.h>
-#include <test_utils/UtilFunctions.h>
+#include <test_utils/TestUtilFunctions.h>
 #include "omnetpp/simtime_t.h"
 
 namespace quisp_test::mock_backends {

@@ -153,5 +153,4 @@ TEST_F(GsBackendTest, getQubitWithConfiguration) {
   EXPECT_EQ(Gs_qubit->gate_err_cnot.zi_error_rate, conf->cnot_gate_zi_err_ratio);
   EXPECT_EQ(Gs_qubit->gate_err_cnot.zz_error_rate, conf->cnot_gate_zz_err_ratio);
 }
-
 }  // namespace
