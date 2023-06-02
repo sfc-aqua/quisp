@@ -4,7 +4,9 @@
  *  \brief Router
  */
 #include "Router.h"
+#include "messages/base_messages_m.h"
 #include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
+#include "messages/ospf_messages_m.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -13,8 +15,38 @@ namespace quisp::modules {
 
 Router::Router() : provider(utils::ComponentProvider{this}) {}
 
+void Router::ospfSendNeighbors() {
+
+  size_t num_dest = 0;
+
+  char dummy;
+  auto desc = gateDesc("toQueue", dummy);
+  num_dest = desc->gateSize();
+  for (size_t i = 0; i < num_dest; i++) {
+    ospfSendNeighbor(i);
+  }
+}
+
+void Router::ospfSendNeighbor(int gate_index) {
+  OSPFHelloPacket *msg = new OSPFHelloPacket;
+  // msg->setBitLength(1);
+  msg->setSrcAddr(this->my_address);
+  for (auto neighbor : neighbor_table) {
+    msg->appendNeighbors(neighbor.first);
+  }
+  send(msg, "toQueue", gate_index);
+}
+
+void Router::ospfRegisterNeighbor(Header *pk) {
+  auto src = pk->getSrcAddr();
+  auto gate_index = pk->getArrivalGate()->getIndex();
+  neighbor_table[src] = gate_index;
+}
+
 void Router::initialize() {
   my_address = provider.getNodeAddr();
+
+  ospfSendNeighbors();
 
   // Topology creation for routing table
   auto topo = provider.getTopologyForRouter();
@@ -60,6 +92,18 @@ void Router::generateRoutingTable(cTopology *topo) {
 }
 
 void Router::handleMessage(cMessage *msg) {
+
+  if (auto pk = dynamic_cast<OSPFHelloPacket *>(msg)) {
+    for (size_t i = 0; i < pk->getNeighborsArraySize(); i++) {
+      bool neighbor_is_registered = (my_address == pk->getNeighbors(i));
+      if (neighbor_is_registered) return;
+    }
+
+    ospfRegisterNeighbor(pk);
+    ospfSendNeighbor(neighbor_table[pk->getSrcAddr()]);
+    return;
+  }
+
   // check the header of the received package
   Header *pk = check_and_cast<Header *>(msg);
 
