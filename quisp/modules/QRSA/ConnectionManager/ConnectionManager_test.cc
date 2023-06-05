@@ -6,6 +6,8 @@
 #include <nlohmann/json.hpp>
 
 #include "messages/classical_messages.h"
+#include "messages/connection_setup_messages_m.h"
+#include "messages/connection_teardown_messages_m.h"
 #include "modules/QNIC.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
@@ -47,6 +49,8 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
   using quisp::modules::ConnectionManager::reserveQnic;
   using quisp::modules::ConnectionManager::respondToRequest;
   using quisp::modules::ConnectionManager::respondToRequest_deprecated;
+  using quisp::modules::ConnectionManager::storeTeardownInfo;
+
   ConnectionManagerTestTarget(IRoutingDaemon *routing_daemon, IHardwareMonitor *hardware_monitor)
       : quisp::modules::ConnectionManager(), toRouterGate(new TestGate(this, "RouterPort$o")) {
     setParInt(this, "address", 5);
@@ -600,5 +604,66 @@ TEST(ConnectionManagerTest, QnicReservation) {
   EXPECT_EQ(connection_manager->reserved_qnics.size(), 0);
   EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address));
   EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address2));
+}
+
+TEST(ConnectionManagerTest, StoreTeardownInfo){
+  auto *sim = prepareSimulation();
+  auto *routing_daemon = new MockRoutingDaemon();
+  auto *hardware_monitor = new MockHardwareMonitor();
+  auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
+  sim->registerComponent(connection_manager);
+  connection_manager->par("address") = 5;
+
+  auto res = new ConnectionSetupResponse();
+  res->setStack_of_QNodeIndexesArraySize(3);
+  EXPECT_EQ(res->getStack_of_QNodeIndexesArraySize(), 3);
+
+  res->setSrcAddr(1);
+  EXPECT_EQ(res->getSrcAddr(), 1);
+
+  res->setDestAddr(4);
+  EXPECT_EQ(res->getDestAddr(), 4);
+
+  res->setRuleSet_id(111);
+  EXPECT_EQ(res->getRuleSet_id(), 111);
+
+  res->setStack_of_QNodeIndexes(0, 2);
+  res->setStack_of_QNodeIndexes(1, 3);
+  res->setStack_of_QNodeIndexes(2, 4);
+  EXPECT_EQ(res->getStack_of_QNodeIndexes(0), 2);
+  EXPECT_EQ(res->getStack_of_QNodeIndexes(1), 3);
+  EXPECT_EQ(res->getStack_of_QNodeIndexes(2), 4);
+
+  connection_manager->callInitialize();
+  sim->setContext(connection_manager);
+
+  connection_manager->storeTeardownInfo(res);
+  auto gate = connection_manager->toRouterGate;
+  EXPECT_EQ(gate->messages.size(), 3);
+
+  {
+    auto *packetFor1 = dynamic_cast<InternalConnectionTeardownInfoForwarding *>(gate->messages[0]);
+    ASSERT_NE(packetFor1, nullptr);
+    EXPECT_EQ(packetFor1->getSrcAddr(), 1);
+    EXPECT_EQ(packetFor1->getDestAddr(), 2);
+    EXPECT_EQ(packetFor1->getRuleSet_id(), 111);
+  }
+
+  {
+    auto *packetFor2 = dynamic_cast<InternalConnectionTeardownInfoForwarding *>(gate->messages[1]);
+    ASSERT_NE(packetFor2, nullptr);
+    EXPECT_EQ(packetFor2->getSrcAddr(), 1);
+    EXPECT_EQ(packetFor2->getDestAddr(), 3);
+    EXPECT_EQ(packetFor2->getRuleSet_id(), 111);
+  }
+
+  {
+    auto *packetFor3 = dynamic_cast<InternalConnectionTeardownInfoForwarding *>(gate->messages[2]);
+    ASSERT_NE(packetFor3, nullptr);
+    EXPECT_EQ(packetFor3->getSrcAddr(), 1);
+    EXPECT_EQ(packetFor3->getDestAddr(), 4);
+    EXPECT_EQ(packetFor3->getRuleSet_id(), 111);
+  }
+  
 }
 }  // namespace

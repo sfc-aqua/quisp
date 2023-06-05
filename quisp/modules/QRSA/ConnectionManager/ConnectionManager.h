@@ -90,7 +90,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   void scheduleRequestRetry(int qnic_address);
   void popApplicationRequest(int qnic_address);
 
-  void storeQNodeIndices(messages::ConnectionSetupResponse *pk);
+  void storeTeardownInfo(messages::ConnectionSetupResponse *pk);
   void storeRuleSetForApplication(messages::ConnectionSetupResponse *pk);
   void storeRuleSet(messages::ConnectionSetupResponse *pk);
 

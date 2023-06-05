@@ -104,7 +104,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     if (initiator_addr == my_address || responder_addr == my_address) {
       // this node is not a swapper
-      storeQNodeIndices(resp);
+      storeTeardownInfo(resp);
       storeRuleSetForApplication(resp);
     } else {
       // this node is a swapper (intermediate node)
@@ -167,24 +167,22 @@ PurType ConnectionManager::parsePurType(const std::string &pur_type) {
 
 /**
  * This function is called to handle the ConnectionSetupResponse at end nodes.
- * The only job here is to get their QNodes Addresses and feed them to the RuleEngine via Router.
+ * The only job here is to store InternalConnectionTeardownInfoForwarding and feed them to the RuleEngine via Router.
  *
  * \param pk the received ConnectionSetupResponse.
  **/
-void ConnectionManager::storeQNodeIndices(ConnectionSetupResponse *pk) {
+void ConnectionManager::storeTeardownInfo(ConnectionSetupResponse *pk) {
 
   int size = pk->getStack_of_QNodeIndexesArraySize();
-  
-  InternalConnectionTeardownInfoForwarding *pk_internal = new InternalConnectionTeardownInfoForwarding("InternalConnectionTeardownInfoForwarding");
-  pk_internal->setDestAddr(pk->getDestAddr());
-  pk_internal->setSrcAddr(pk->getSrcAddr());
-  pk_internal->setKind(4);
-  pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  pk_internal->setStack_of_QNodeIndexesArraySize(size);
+   
   for(int i = 0; i < size; i++){
-    pk_internal->setStack_of_QNodeIndexes(i, pk->getStack_of_QNodeIndexes(i));
+    InternalConnectionTeardownInfoForwarding *pk_internal = new InternalConnectionTeardownInfoForwarding("InternalConnectionTeardownInfoForwarding");
+    pk_internal->setSrcAddr(pk->getSrcAddr());
+    pk_internal->setDestAddr(pk->getStack_of_QNodeIndexes(i));
+    pk_internal->setKind(4);
+    pk_internal->setRuleSet_id(pk->getRuleSet_id());
+    send(pk_internal, "RouterPort$o");
   }
-  send(pk_internal, "RouterPort$o");
 }
 
 /**
