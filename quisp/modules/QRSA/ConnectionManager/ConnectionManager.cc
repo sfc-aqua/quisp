@@ -178,7 +178,8 @@ void ConnectionManager::storeTeardownInfo(ConnectionSetupResponse *pk) {
   for(int i = 0; i < size; i++){
     InternalConnectionTeardownInfoForwarding *pk_internal = new InternalConnectionTeardownInfoForwarding("InternalConnectionTeardownInfoForwarding");
     pk_internal->setSrcAddr(pk->getSrcAddr());
-    pk_internal->setDestAddr(pk->getStack_of_QNodeIndexes(i));
+    pk_internal->setDestAddr(pk->getSrcAddr());
+    pk_internal->setActual_destAddr(pk->getStack_of_QNodeIndexes(i));
     pk_internal->setKind(4);
     pk_internal->setRuleSet_id(pk->getRuleSet_id());
     send(pk_internal, "RouterPort$o");

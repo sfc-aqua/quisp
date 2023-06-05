@@ -14,6 +14,6 @@ packet InternalConnectionTeardownInfoForwarding extends Header
 {
     int srcAddr;
     int destAddr;
+    int Actual_destAddr;
     unsigned long RuleSet_id;
-    int stack_of_QNodeIndexes[];
 }
