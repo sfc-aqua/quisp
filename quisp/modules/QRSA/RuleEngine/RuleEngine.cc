@@ -110,7 +110,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
     handleSwappingResult(pkt);
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownInfoForwarding *>(msg)) {
-    storeQNodeIndices(pkt);
+    handleInternalConnectionTeardownInfoForwarding(pkt);
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto serialized_ruleset = pkt->getRuleSet();
@@ -268,11 +268,9 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
   bell_pair_store.eraseQubit(qubit_record);
 }
 
-void RuleEngine::storeQNodeIndices(InternalConnectionTeardownInfoForwarding *connection_teardown_info){
-  int size = connection_teardown_info->getStack_of_QNodeIndexesArraySize();
-  for(int i = 0; i < size; i++){
-    qnode_indices.push_back(connection_teardown_info->getStack_of_QNodeIndexes(i));
-  }
+void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnectionTeardownInfoForwarding *connection_teardown_info){
+  auto dest_addr = connection_teardown_info->getActual_destAddr();  
+  qnode_indices.push_back(dest_addr);
 }
 
 }  // namespace quisp::modules
