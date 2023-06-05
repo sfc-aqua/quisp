@@ -219,6 +219,11 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
 }
 
+void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnectionTeardownInfoForwarding *connection_teardown_info){
+  auto dest_addr = connection_teardown_info->getActual_destAddr();  
+  qnode_indices.push_back(dest_addr);
+}
+
 void RuleEngine::handleConnectionTeardownMessage(ConnectionTeardownMessage *msg) {
   auto ruleset_id = msg->getRuleSet_id();
   runtimes.stopById(ruleset_id);
@@ -266,11 +271,6 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
     qubit_record->setAllocated(false);
   }
   bell_pair_store.eraseQubit(qubit_record);
-}
-
-void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnectionTeardownInfoForwarding *connection_teardown_info){
-  auto dest_addr = connection_teardown_info->getActual_destAddr();  
-  qnode_indices.push_back(dest_addr);
 }
 
 }  // namespace quisp::modules
