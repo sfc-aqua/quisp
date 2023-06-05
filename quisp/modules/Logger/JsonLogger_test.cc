@@ -7,6 +7,7 @@
 
 #include "JsonLogger.h"
 #include "messages/connection_setup_messages_m.h"
+#include "messages/connection_teardown_messages_m.h"
 #include "modules/QNIC.h"
 #include "omnetpp/cmessage.h"
 #include "test_utils/TestUtilFunctions.h"
@@ -73,6 +74,20 @@ TEST_F(JsonLoggerTest, ConnRejectTest) {
             "\"application_id\": 1, \"actual_dest_addr\": 1, "
             "\"actual_src_addr\": 2, \"num_required_bell_pairs\": 0}\n");
 }
+
+TEST_F(JsonLoggerTest, ConnTeardownTest) {
+  auto ter = new ConnectionTeardownMessage();
+  ter->setSrcAddr(1);
+  ter->setDestAddr(2);
+  ter->setRuleSet_id(1);
+  logger->setQNodeAddress(7);
+  logger->logPacket("test", ter);
+  EXPECT_EQ(log_stream.str(),
+            "{\"simtime\": 0, \"event_type\": \"test\", \"address\": \"7\", \"msg_type\": \"ConnectionTeardownMessage\", "
+            "\"src_addr\": 1, \"dest_addr\": 2, "
+            "\"ruleset_id\": 1}\n");
+}
+
 TEST_F(JsonLoggerTest, UnknownPacket) {
   auto* packet = new cMessage();
   logger->logPacket("test", packet);

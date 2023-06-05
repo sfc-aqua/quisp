@@ -75,8 +75,8 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
   if (auto* req = dynamic_cast<const quisp::messages::ConnectionTeardownMessage*>(msg)) {
     std::stringstream os;
     os << "\"msg_type\": \"ConnectionTeardownMessage\"";
-    os << ", \"dest_addr\": " << req->getDestAddr();
     os << ", \"src_addr\": " << req->getSrcAddr();
+    os << ", \"dest_addr\": " << req->getDestAddr();
     os << ", \"ruleset_id\": " << req->getRuleSet_id();
     return os.str();
   }
