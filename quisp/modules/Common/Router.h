@@ -20,7 +20,8 @@ class Router : public omnetpp::cSimpleModule {
   virtual void initialize() override;
   virtual void handleMessage(omnetpp::cMessage *msg) override;
   void generateRoutingTable(cTopology *topo);
-  void ospfSendNeighbors();
+  virtual size_t getNumNeighbors() const;
+  virtual void ospfSendNeighbors();
   void ospfSendNeighbor(int gate_index);
   void ospfRegisterNeighbor(messages::Header *pk);
 

@@ -15,24 +15,25 @@ namespace quisp::modules {
 
 Router::Router() : provider(utils::ComponentProvider{this}) {}
 
-void Router::ospfSendNeighbors() {
-
-  size_t num_dest = 0;
-
+size_t Router::getNumNeighbors() const {
   char dummy;
   auto desc = gateDesc("toQueue", dummy);
-  num_dest = desc->gateSize();
-  for (size_t i = 0; i < num_dest; i++) {
+  return desc->gateSize();
+}
+
+void Router::ospfSendNeighbors() {
+  size_t num_neighbors = getNumNeighbors();
+
+  for (size_t i = 0; i < num_neighbors; i++) {
     ospfSendNeighbor(i);
   }
 }
 
 void Router::ospfSendNeighbor(int gate_index) {
   OSPFHelloPacket *msg = new OSPFHelloPacket;
-  // msg->setBitLength(1);
   msg->setSrcAddr(this->my_address);
-  for (auto neighbor : neighbor_table) {
-    msg->appendNeighbors(neighbor.first);
+  for (auto registered_neighbor : neighbor_table) {
+    msg->appendNeighbors(registered_neighbor.first);
   }
   send(msg, "toQueue", gate_index);
 }
@@ -92,7 +93,6 @@ void Router::generateRoutingTable(cTopology *topo) {
 }
 
 void Router::handleMessage(cMessage *msg) {
-
   if (auto pk = dynamic_cast<OSPFHelloPacket *>(msg)) {
     for (size_t i = 0; i < pk->getNeighborsArraySize(); i++) {
       bool neighbor_is_registered = (my_address == pk->getNeighbors(i));
