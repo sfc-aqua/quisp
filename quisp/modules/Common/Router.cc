@@ -15,35 +15,6 @@ namespace quisp::modules {
 
 Router::Router() : provider(utils::ComponentProvider{this}) {}
 
-size_t Router::getNumNeighbors() const {
-  char dummy;
-  auto desc = gateDesc("toQueue", dummy);
-  return desc->gateSize();
-}
-
-void Router::ospfSendNeighbors() {
-  size_t num_neighbors = getNumNeighbors();
-
-  for (size_t i = 0; i < num_neighbors; i++) {
-    ospfSendNeighbor(i);
-  }
-}
-
-void Router::ospfSendNeighbor(int gate_index) {
-  OSPFHelloPacket *msg = new OSPFHelloPacket;
-  msg->setSrcAddr(this->my_address);
-  for (auto registered_neighbor : neighbor_table) {
-    msg->appendNeighbors(registered_neighbor.first);
-  }
-  send(msg, "toQueue", gate_index);
-}
-
-void Router::ospfRegisterNeighbor(Header *pk) {
-  auto src = pk->getSrcAddr();
-  auto gate_index = pk->getArrivalGate()->getIndex();
-  neighbor_table[src] = gate_index;
-}
-
 void Router::initialize() {
   my_address = provider.getNodeAddr();
 
@@ -93,15 +64,8 @@ void Router::generateRoutingTable(cTopology *topo) {
 }
 
 void Router::handleMessage(cMessage *msg) {
-  if (auto pk = dynamic_cast<OSPFHelloPacket *>(msg)) {
-    for (size_t i = 0; i < pk->getNeighborsArraySize(); i++) {
-      bool neighbor_is_registered = (my_address == pk->getNeighbors(i));
-      if (neighbor_is_registered) return;
-    }
-
-    ospfRegisterNeighbor(pk);
-    ospfSendNeighbor(neighbor_table[pk->getSrcAddr()]);
-    return;
+  if (auto pk = dynamic_cast<OspfHelloPacket *>(msg)) {
+    return ospfHandleHelloPacket(pk);
   }
 
   // check the header of the received package
@@ -183,6 +147,73 @@ void Router::handleMessage(cMessage *msg) {
   int out_gate_index = (*it).second;
   pk->setHopCount(pk->getHopCount() + 1);
   send(pk, "toQueue", out_gate_index);
+}
+
+void Router::ospfHandleHelloPacket(OspfHelloPacket *pk) {
+  auto src = pk->getSrcAddr();
+
+  if (ospfMyAddressIsRecognizedByNeighbor(pk) == false && ospfNeighborIsRegistered(src)) {
+    error(
+        "OspfHelloPacket error: Router%d does not recognize Router%d, \
+         but Router%d is already registered by Router %d, this should not happen",
+        src, my_address, src, my_address);
+  }
+
+  if (ospfMyAddressIsRecognizedByNeighbor(pk) && ospfNeighborIsRegistered(src)) {
+    if (neighbor_table[src].state != OspfState::INIT) {
+      error("neighbor_table[%d].state expected to be OspfState::INIT or 1, but it's %d", src, neighbor_table[src].state);
+    }
+
+    neighbor_table[src].state = OspfState::TWO_WAY;
+    return;
+  }
+
+  if (ospfMyAddressIsRecognizedByNeighbor(pk) == false && ospfNeighborIsRegistered(src) == false) {
+    ospfRegisterNeighbor(pk, OspfState::INIT);
+  } else if (ospfMyAddressIsRecognizedByNeighbor(pk) && ospfNeighborIsRegistered(src) == false) {
+    ospfRegisterNeighbor(pk, OspfState::TWO_WAY);
+  }
+  auto gate_index = pk->getArrivalGate()->getIndex();
+  ospfSendNeighbor(gate_index);
+  return;
+}
+
+void Router::ospfRegisterNeighbor(Header *pk, OspfState state) {
+  auto src = pk->getSrcAddr();
+  auto gate_index = pk->getArrivalGate()->getIndex();
+  neighbor_table[src] = OspfNeighborInfo(gate_index, state);
+}
+
+void Router::ospfSendNeighbors() {
+  size_t num_neighbors = getNumNeighbors();
+
+  for (size_t i = 0; i < num_neighbors; i++) {
+    ospfSendNeighbor(i);
+  }
+}
+
+void Router::ospfSendNeighbor(int gate_index) {
+  OspfHelloPacket *msg = new OspfHelloPacket;
+  msg->setSrcAddr(this->my_address);
+  for (auto registered_neighbor : neighbor_table) {
+    msg->appendNeighbors(registered_neighbor.first);
+  }
+  send(msg, "toQueue", gate_index);
+}
+
+size_t Router::getNumNeighbors() const {
+  char dummy;
+  auto desc = gateDesc("toQueue", dummy);
+  return desc->gateSize();
+}
+
+bool Router::ospfNeighborIsRegistered(int address) { return static_cast<bool>(neighbor_table.count(address)); }
+
+bool Router::ospfMyAddressIsRecognizedByNeighbor(OspfHelloPacket *msg) {
+  for (size_t i = 0; i < msg->getNeighborsArraySize(); i++) {
+    if (my_address == msg->getNeighbors(i)) return true;
+  }
+  return false;
 }
 
 }  // namespace quisp::modules

@@ -3,6 +3,7 @@
 #include <utils/ComponentProvider.h>
 #include <map>
 #include "messages/base_messages_m.h"
+#include "messages/ospf_messages_m.h"
 
 namespace quisp::modules {
 
@@ -19,17 +20,27 @@ class Router : public omnetpp::cSimpleModule {
  protected:
   virtual void initialize() override;
   virtual void handleMessage(omnetpp::cMessage *msg) override;
+  void ospfHandleHelloPacket(messages::OspfHelloPacket *pk);
   void generateRoutingTable(cTopology *topo);
   virtual size_t getNumNeighbors() const;
-  virtual void ospfSendNeighbors();
+  void ospfSendNeighbors();
   void ospfSendNeighbor(int gate_index);
-  void ospfRegisterNeighbor(messages::Header *pk);
+  bool ospfNeighborIsRegistered(int address);
+  bool ospfMyAddressIsRecognizedByNeighbor(messages::OspfHelloPacket *msg);
+  void ospfRegisterNeighbor(messages::Header *pk, messages::OspfState state);
 
   utils::ComponentProvider provider;
 
   int my_address;
   RoutingTable routing_table;
-  RoutingTable neighbor_table;
+
+  struct OspfNeighborInfo {
+    int gate_index = -1;
+    messages::OspfState state = messages::OspfState::DOWN;
+    OspfNeighborInfo(int idx, messages::OspfState st) : gate_index(idx), state(st) {}
+    OspfNeighborInfo() = default;
+  };
+  std::map<int, OspfNeighborInfo> neighbor_table;
 };
 
 Define_Module(Router);
