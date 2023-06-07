@@ -33,10 +33,12 @@ class Router : public OriginalRouter {
  public:
   using OriginalRouter::handleMessage;
   using OriginalRouter::initialize;
-  using OriginalRouter::ospfSendNeighbors;
-  using OriginalRouter::routing_table;
   using OriginalRouter::my_address;
   using OriginalRouter::neighbor_table;
+  using OriginalRouter::OspfNeighborInfo;
+  using OriginalRouter::ospfSendNeighbor;
+  using OriginalRouter::ospfSendNeighbors;
+  using OriginalRouter::routing_table;
   explicit Router(TestQNode* parent_qnode) : OriginalRouter() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_router"));
@@ -72,45 +74,112 @@ class RouterTest : public ::testing::Test {
     router = new Router(qnode);
     sim->registerComponent(router);
     sim->setContext(router);
-    router->callInitialize();
+    router->callInitialize();  // Router sends a message at initialization
+    // pop the sent message so the tests won't be affected by the message
     router->queueGate->messages.pop_back();
   }
   void TearDown() {}
+
+  /**
+   * This function mimics the behavior of Omnet++ internals
+   * that sets up the message arrival to Router module.
+   * Call this function before router->handleMessages
+   * when you want to retrieve the info of the arrival gate.
+   */
+  void mockMessageArrival(OspfHelloPacket* msg) {
+    int queue_size = 1;
+    int arrival_gate_index = 0;
+    router->addGateVector("fromQueue", cGate::Type::INPUT, queue_size);
+    msg->setArrival(router->getId(), router->findGate("fromQueue", arrival_gate_index));
+  }
 
   TestSimulation* sim;
   Router* router;
   TestQNode* qnode;
 };
 
-TEST_F(RouterTest, ospfSendHelloPacket) {
-  ASSERT_EQ(router->queueGate->messages.size(), 0);
-
+TEST_F(RouterTest, ospfSendHelloPacketAtInitialization) {
   router->ospfSendNeighbors();
-  auto down_state_msg = router->queueGate->messages[0];
-  auto *down_state_packet = check_and_cast<OSPFHelloPacket *>(down_state_msg);
+  auto down_state_msg = router->queueGate->messages.front();
+  auto* down_state_packet = check_and_cast<OspfHelloPacket*>(down_state_msg);
 
   ASSERT_EQ(down_state_packet->getSrcAddr(), router->my_address);
   ASSERT_EQ(down_state_packet->getNeighborsArraySize(), 0);
 }
 
-TEST_F(RouterTest, ospfReceiveHelloPacketFromNewNeighbor) {
+TEST_F(RouterTest, ospfSendHelloPacketWithNeighborInfo) {
+  int src = 1, send_gate_index = 0, arrival_gate_index = 0;
+  router->neighbor_table[src] = Router::OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
+
+  router->ospfSendNeighbor(send_gate_index);
+  auto msg = router->queueGate->messages.front();
+  auto* pk = check_and_cast<OspfHelloPacket*>(msg);
+
+  ASSERT_EQ(pk->getSrcAddr(), router->my_address);
+  ASSERT_EQ(pk->getNeighborsArraySize(), 1);
+  ASSERT_EQ(pk->getNeighbors(0), src);
+}
+
+TEST_F(RouterTest, ospfReceiveHelloPacketHandleImpossibleCase) {
   int src = 1;
-  auto msg_from_other_node = new OSPFHelloPacket;
+  auto msg_from_other_node = new OspfHelloPacket;
   msg_from_other_node->setSrcAddr(src);
 
-  int queue_size = 1;
   int arrival_gate_index = 0;
-  router->addGateVector("fromQueue", cGate::Type::INPUT, queue_size);
-  msg_from_other_node->setArrival(router->getId(), router->findGate("fromQueue", arrival_gate_index));
+  router->neighbor_table[src] = Router::OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
+  ASSERT_THROW(router->handleMessage(msg_from_other_node), cRuntimeError);
+}
+
+TEST_F(RouterTest, ospfReceiveHelloPacketFailedStateTransition) {
+  int src = 1;
+  auto msg_from_other_node = new OspfHelloPacket;
+  msg_from_other_node->setSrcAddr(src);
+
+  int arrival_gate_index = 0;
+  router->neighbor_table[src] = Router::OspfNeighborInfo(arrival_gate_index, OspfState::DOWN);
+  ASSERT_THROW(router->handleMessage(msg_from_other_node), cRuntimeError);
+}
+
+TEST_F(RouterTest, ospfReceiveHelloPacketAndEstablishInitState) {
+  int src = 1;
+  auto msg_from_other_node = new OspfHelloPacket;
+  msg_from_other_node->setSrcAddr(src);
+
+  mockMessageArrival(msg_from_other_node);
 
   router->handleMessage(msg_from_other_node);
-  ASSERT_EQ(router->neighbor_table.at(src), arrival_gate_index);
+  int arrival_gate_index = 0;
+  ASSERT_EQ(router->neighbor_table[src].gate_index, arrival_gate_index);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
+}
 
-  auto *msg_to_other_node = check_and_cast<OSPFHelloPacket *>(router->queueGate->messages[0]);
-  ASSERT_EQ(msg_to_other_node->getSrcAddr(), router->my_address);
-  ASSERT_EQ(msg_to_other_node->getNeighborsArraySize(), 1);
-  ASSERT_EQ(msg_to_other_node->getNeighbors(0), src);
+TEST_F(RouterTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
+  int src = 1;
+  auto msg_from_other_node = new OspfHelloPacket;
+  msg_from_other_node->setSrcAddr(src);
+  msg_from_other_node->appendNeighbors(router->my_address);
+
+  mockMessageArrival(msg_from_other_node);
+
+  router->handleMessage(msg_from_other_node);
+  int arrival_gate_index = 0;
+  ASSERT_EQ(router->neighbor_table[src].gate_index, arrival_gate_index);
+  ASSERT_EQ(router->queueGate->messages.size(), 1);
+}
+
+TEST_F(RouterTest, ospfReceiveHelloPacketAndTransitionFromInitToTwoWayState) {
+  int src = 1;
+  auto msg_from_other_node = new OspfHelloPacket;
+  msg_from_other_node->setSrcAddr(src);
+  msg_from_other_node->appendNeighbors(router->my_address);
+
+  mockMessageArrival(msg_from_other_node);
+
+  int arrival_gate_index = 0;
+  router->neighbor_table[src] = Router::OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
+  router->handleMessage(msg_from_other_node);
+  ASSERT_EQ(router->neighbor_table[src].gate_index, arrival_gate_index);
+  ASSERT_EQ(router->queueGate->messages.size(), 0);
 }
 
 TEST_F(RouterTest, handlePacketForUnknownAddr) {
