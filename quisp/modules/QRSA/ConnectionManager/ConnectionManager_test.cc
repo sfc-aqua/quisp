@@ -606,7 +606,7 @@ TEST(ConnectionManagerTest, QnicReservation) {
   EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address2));
 }
 
-TEST(ConnectionManagerTest, StoreTeardownInfo){
+TEST(ConnectionManagerTest, StoreTeardownInfo) {
   auto *sim = prepareSimulation();
   auto *routing_daemon = new MockRoutingDaemon();
   auto *hardware_monitor = new MockHardwareMonitor();
@@ -667,6 +667,5 @@ TEST(ConnectionManagerTest, StoreTeardownInfo){
     EXPECT_EQ(packetFor3->getActual_destAddr(), 4);
     EXPECT_EQ(packetFor3->getRuleSet_id(), 111);
   }
-  
 }
 }  // namespace

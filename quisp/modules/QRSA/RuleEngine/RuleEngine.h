@@ -98,7 +98,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
   std::vector<int> qnode_indices;
-  
 };
 
 Define_Module(RuleEngine);

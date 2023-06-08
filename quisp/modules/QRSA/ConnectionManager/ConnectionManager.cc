@@ -172,10 +172,9 @@ PurType ConnectionManager::parsePurType(const std::string &pur_type) {
  * \param pk the received ConnectionSetupResponse.
  **/
 void ConnectionManager::storeTeardownInfo(ConnectionSetupResponse *pk) {
-
   int size = pk->getStack_of_QNodeIndexesArraySize();
-   
-  for(int i = 0; i < size; i++){
+
+  for (int i = 0; i < size; i++) {
     InternalConnectionTeardownInfoForwarding *pk_internal = new InternalConnectionTeardownInfoForwarding("InternalConnectionTeardownInfoForwarding");
     pk_internal->setSrcAddr(pk->getSrcAddr());
     pk_internal->setDestAddr(pk->getSrcAddr());
@@ -272,7 +271,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   auto rulesets = ruleset_gen.generateRuleSets(req, createUniqueId());
 
   for (auto rs = rulesets.begin(); rs != rulesets.end(); rs++) {
-        node_addresses_along_path.push_back(rs->first);
+    node_addresses_along_path.push_back(rs->first);
   }
 
   // distribute rulesets to each qnode in the path

@@ -17,7 +17,7 @@ Runtime *RuntimeManager::findById(unsigned long long ruleset_id) {
 }
 
 bool RuntimeManager::exec() {
-  if (runtimes.size() == 0){
+  if (runtimes.size() == 0) {
     return false;
   }
   auto rtend = runtimes.end();

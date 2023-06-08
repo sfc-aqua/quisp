@@ -64,7 +64,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
  protected:
   int my_address;
   int num_of_qnics;
-  
+
   std::vector<int> node_addresses_along_path;
   std::map<int, std::queue<messages::ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
   std::map<int, int> connection_retry_count;  // key is qnic address

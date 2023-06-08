@@ -6,8 +6,8 @@ namespace quisp::modules::Logger {
 
 using quisp::messages::ConnectionSetupRequest;
 using quisp::messages::ConnectionSetupResponse;
-using quisp::messages::RejectConnectionSetupRequest;
 using quisp::messages::ConnectionTeardownMessage;
+using quisp::messages::RejectConnectionSetupRequest;
 
 JsonLogger::JsonLogger(std::shared_ptr<spdlog::logger> logger) : _logger(logger) {
   std::string jsonpattern = {"{%v}"};

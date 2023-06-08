@@ -12,12 +12,12 @@
 #include <stdexcept>
 #include <utility>
 
-#include "messages/connection_teardown_messages_m.h"
-#include "runtime/RuleSet.h"
-#include "runtime/Runtime.h"
 #include "QNicStore/QNicStore.h"
 #include "RuntimeCallback.h"
+#include "messages/connection_teardown_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
+#include "runtime/RuleSet.h"
+#include "runtime/Runtime.h"
 
 namespace quisp::modules {
 
@@ -46,7 +46,7 @@ void RuleEngine::initialize() {
 
   parentAddress = provider.getNodeAddr();
   qnode_indices = {};
-  
+
   number_of_qnics_all = par("total_number_of_qnics");
   number_of_qnics = par("number_of_qnics");
   number_of_qnics_r = par("number_of_qnics_r");
@@ -123,7 +123,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
-  }else if (auto *pkt = dynamic_cast<ConnectionTeardownMessage *>(msg)) {
+  } else if (auto *pkt = dynamic_cast<ConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
   }
 
@@ -219,8 +219,8 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
 }
 
-void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnectionTeardownInfoForwarding *connection_teardown_info){
-  auto dest_addr = connection_teardown_info->getActual_destAddr();  
+void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnectionTeardownInfoForwarding *connection_teardown_info) {
+  auto dest_addr = connection_teardown_info->getActual_destAddr();
   qnode_indices.push_back(dest_addr);
 }
 
@@ -250,10 +250,10 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   }
 }
 
-void RuleEngine::executeAllRuleSets() { 
-  bool terminated = runtimes.exec(); 
-  if (terminated){
-    for(int i = 0; i < int(sizeof(qnode_indices)/sizeof(int)); i++){
+void RuleEngine::executeAllRuleSets() {
+  bool terminated = runtimes.exec();
+  if (terminated) {
+    for (int i = 0; i < int(sizeof(qnode_indices) / sizeof(int)); i++) {
       ConnectionTeardownMessage *pkt = new ConnectionTeardownMessage("ConnectionTeardownMessage");
       pkt->setSrcAddr(parentAddress);
       pkt->setDestAddr(qnode_indices.at(i));
