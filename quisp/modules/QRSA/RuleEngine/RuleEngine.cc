@@ -194,6 +194,7 @@ void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventRes
     }
     batch_click_pk->setDestAddr(msm_info_map[qnic_index].address);
     send(batch_click_pk->dup(), "RouterPort$o");
+    // check whether msm_info_map[qnic_index].address is really the partner qnode address
   } else if (batch_click_pk->getSrcAddr() == msm_info_map[qnic_index].address) {
     for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
       msm_info_map[qnic_index].partner_clicks.emplace_back(batch_click_pk->getClickResults(index));
@@ -201,7 +202,7 @@ void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventRes
   }
   if (!msm_info_map[qnic_index].parent_clicks.empty() && !msm_info_map[qnic_index].partner_clicks.empty()) {
     CombinedBSAresults *bsa_results = generateCombinedBSAresults(qnic_index);
-    scheduleAt(simTime(), bsa_results);
+    handleLinkGenerationResult(bsa_results);
   }
 }
 
