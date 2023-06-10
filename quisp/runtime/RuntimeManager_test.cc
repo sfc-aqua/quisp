@@ -5,6 +5,7 @@
 #include "RuntimeManager.h"
 #include "runtime/types.h"
 #include "test.h"
+#include "test_utils/TestUtils.h"
 
 namespace {
 using namespace quisp::runtime;
@@ -14,6 +15,7 @@ using namespace testing;
 class RuntimeManagerTest : public testing::Test {
  protected:
   void SetUp() {
+    utils::prepareSimulation();
     auto cb = std::make_unique<MockRuntimeCallback>();
     callback = cb.get();
     runtimes = new RuntimeManager(std::move(cb));
@@ -130,7 +132,7 @@ TEST_F(RuntimeManagerTest, ExecAndTerminated) {
   runtimes->acceptRuleSet(rs3);
   EXPECT_EQ(runtimes->size(), 3);
   bool terminated = runtimes->exec();
-  EXPECT_FALSE(terminated);
+  EXPECT_TRUE(terminated);
   ASSERT_EQ(runtimes->size(), 2);
   {
     auto& rs1 = runtimes->at(0);

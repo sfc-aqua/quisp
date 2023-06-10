@@ -1,4 +1,6 @@
 #include "RuntimeManager.h"
+#include <iostream>
+#include <iterator>
 #include "omnetpp/cexception.h"
 
 namespace quisp::runtime {
@@ -17,22 +19,20 @@ Runtime *RuntimeManager::findById(unsigned long long ruleset_id) {
 }
 
 bool RuntimeManager::exec() {
+  auto result = false;
   if (runtimes.size() == 0) {
     return false;
   }
-  auto rtend = runtimes.end();
   for (auto it = runtimes.begin(); it != runtimes.end();) {
     it->exec();
     if (it->terminated) {
-      if (it == rtend) {
-        return it->terminated;
-      }
+      result = true;
       it = runtimes.erase(it);
     } else {
       ++it;
     }
   }
-  return false;
+  return result;
 }
 
 void RuntimeManager::stopById(unsigned long long ruleset_id) {
