@@ -39,6 +39,7 @@ class Router : public OriginalRouter {
   using OriginalRouter::ospfSendNeighbor;
   using OriginalRouter::ospfSendNeighbors;
   using OriginalRouter::routing_table;
+  using OriginalRouter::adj_list;
   explicit Router(TestQNode* parent_qnode) : OriginalRouter() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_router"));
