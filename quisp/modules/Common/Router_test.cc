@@ -19,7 +19,6 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy(TestQNode* _qnode) : parent_qnode(_qnode) {}
   cModule* getNode() override { return parent_qnode; }
-  cModule* getQNode() override { return parent_qnode; }
   int getNodeAddr() override { return parent_qnode->address; }
   SharedResource* getSharedResource() override { return &shared_resource; }
 
@@ -32,12 +31,12 @@ class Router : public OriginalRouter {
  public:
   using OriginalRouter::handleMessage;
   using OriginalRouter::initialize;
+  using OriginalRouter::LinkStateDatabase;
   using OriginalRouter::my_address;
   using OriginalRouter::neighbor_table;
   using OriginalRouter::ospfSendNeighbor;
   using OriginalRouter::ospfSendNeighbors;
   using OriginalRouter::routing_table;
-  using OriginalRouter::LinkStateDatabase;
   explicit Router(TestQNode* parent_qnode) : OriginalRouter() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_router"));
@@ -67,9 +66,7 @@ class Router : public OriginalRouter {
 
 class OspfTestGate : public gate::TestGate {
  public:
-  OspfTestGate(cModule *mod, const char *name) : TestGate(mod, name) {
-    installChannel(&channel);
-  };
+  OspfTestGate(cModule* mod, const char* name) : TestGate(mod, name) { installChannel(&channel); };
 
  private:
   channel::TestDatarateChannel channel;
@@ -77,7 +74,7 @@ class OspfTestGate : public gate::TestGate {
 
 class OspfTestQNode : public qnode::TestQNode {
  public:
-  OspfTestQNode(int addr, int mass, bool is_initiator) : TestQNode(addr, mass, is_initiator), port(this, "port") {};
+  OspfTestQNode(int addr, int mass, bool is_initiator) : TestQNode(addr, mass, is_initiator), port(this, "port"){};
   cGate* gate(const char* gatename, int index = -1) override {
     if (strcmp(gatename, "port$o") == 0) return &port;
     throw cRuntimeError("port: %s not found", gatename);
@@ -87,7 +84,6 @@ class OspfTestQNode : public qnode::TestQNode {
  private:
   OspfTestGate port;
 };
-
 
 class RouterTest : public ::testing::Test {
  protected:

@@ -3,9 +3,7 @@
 namespace quisp_test {
 namespace channel {
 
-TestDatarateChannel::TestDatarateChannel() : cDatarateChannel() {
-  setCost();
-}
+TestDatarateChannel::TestDatarateChannel() : cDatarateChannel() { setCost(); }
 
 void TestDatarateChannel::setCost(double cost) {
   auto *p = new cDoubleParImpl();
@@ -15,5 +13,5 @@ void TestDatarateChannel::setCost(double cost) {
   addPar(p);
 }
 
-}  // namespace qnode
+}  // namespace channel
 }  // namespace quisp_test

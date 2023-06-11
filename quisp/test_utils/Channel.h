@@ -12,8 +12,8 @@ namespace channel {
 
 using omnetpp::cMessage;
 using omnetpp::cModule;
-using omnetpp::simtime_t;
 using omnetpp::SendOptions;
+using omnetpp::simtime_t;
 using omnetpp::internal::cDoubleParImpl;
 using omnetpp::internal::cParImpl;
 
@@ -21,8 +21,7 @@ class TestDatarateChannel : public omnetpp::cDatarateChannel {
  public:
   explicit TestDatarateChannel();
 
-  void setCost(double cost=1);
-
+  void setCost(double cost = 1);
 };
-}  // namespace qnode
+}  // namespace channel
 }  // namespace quisp_test

@@ -1,7 +1,7 @@
 #pragma once
+#include <modules/Common/Ospf.h>
 #include <omnetpp.h>
 #include <utils/ComponentProvider.h>
-#include <modules/Common/Ospf.h>
 #include <map>
 #include "messages/classical_messages.h"
 #include "omnetpp/ctopology.h"
@@ -39,14 +39,14 @@ class Router : public omnetpp::cSimpleModule {
   void ospfInitiateExchangeState(int dest);
   void ospfRespondToExchangeStateMater(int dest);
   void ospfAppendLsdbSummaryToPacket(messages::OspfDbdPacket *msg);
-  void ospfSendLsdbSummary(int destination, bool i_am_master=false);
+  void ospfSendLsdbSummary(int destination, bool i_am_master = false);
 
   std::vector<int> identifyMissingRouterInfo(messages::OspfDbdPacket *pk);
   void ospfSendLinkStateRequest(messages::OspfDbdPacket *pk);
-  void ospfHandleLinkStateRequest(messages::OspfLsrPacket* pk);
+  void ospfHandleLinkStateRequest(messages::OspfLsrPacket *pk);
 
   void ospfHandleLinkStateUpdate(messages::OspfLsuPacket *pk);
-  void ospfUpdateLinkStateDatabase(messages::OspfLsuPacket* msg);
+  void ospfUpdateLinkStateDatabase(messages::OspfLsuPacket *msg);
   void sendUpdatedLsdbToNeighboringRouters(int source_of_updated_lsdb);
 
   void ospfAddMyAddressLsaToLsdb();
@@ -56,7 +56,6 @@ class Router : public omnetpp::cSimpleModule {
   int my_address;
   int my_dd_sequence = 0;
   RoutingTable routing_table;
-
 
   std::map<int, OspfNeighborInfo> neighbor_table;
 
