@@ -4,16 +4,7 @@
 
 namespace quisp::modules {
 
-enum class OspfState
-{
-    DOWN = 0,
-    INIT = 1,
-    TWO_WAY = 2,
-    EXSTART = 3,
-    EXCHANGE = 4,
-    LOADING = 5,
-    FULL = 6
-};
+enum class OspfState { DOWN = 0, INIT = 1, TWO_WAY = 2, EXSTART = 3, EXCHANGE = 4, LOADING = 5, FULL = 6 };
 
 struct OspfNeighborInfo {
   int router_id;
@@ -35,4 +26,4 @@ struct LinkStateAdvertisement {
   int lsa_age;
   std::vector<OspfNeighborInfo> neighbor_nodes;
 };
-}
+}  // namespace quisp::modules

@@ -75,11 +75,11 @@ void Router::handleMessage(cMessage *msg) {
     return ospfHandleLinkStateRequest(pk);
   }
 
-  if (auto pk = dynamic_cast<OspfLsuPacket*>(msg)) {
+  if (auto pk = dynamic_cast<OspfLsuPacket *>(msg)) {
     return ospfHandleLinkStateUpdate(pk);
   }
 
-  if (auto pk = dynamic_cast<OspfLsAckPacket*>(msg)) {
+  if (auto pk = dynamic_cast<OspfLsAckPacket *>(msg)) {
     return;
   }
 
@@ -218,7 +218,7 @@ void Router::ospfExStartState(OspfDbdPacket *pk) {
   if (pk->getIs_master()) {
     return ospfDecideMaster(src);
   }
-   // i am master
+  // i am master
   bool exchange_state_is_initiated = (neighbor_table[src].state == OspfState::EXCHANGE);
   if (exchange_state_is_initiated) return;
   ospfInitiateExchangeState(src);
@@ -251,7 +251,7 @@ void Router::ospfSendLinkStateRequest(OspfDbdPacket *pk) {
   std::vector<int> missing_lsas = identifyMissingRouterInfo(pk);
 
   if (missing_lsas.size() > 0) {
-    OspfLsrPacket* request = new OspfLsrPacket;
+    OspfLsrPacket *request = new OspfLsrPacket;
     request->setSrcAddr(my_address);
     for (auto router_id : missing_lsas) {
       request->appendRequested_router_info(router_id);
@@ -260,8 +260,8 @@ void Router::ospfSendLinkStateRequest(OspfDbdPacket *pk) {
   }
 }
 
-void Router::ospfHandleLinkStateRequest(OspfLsrPacket* pk) {
-  OspfLsuPacket* lsu = new OspfLsuPacket;
+void Router::ospfHandleLinkStateRequest(OspfLsrPacket *pk) {
+  OspfLsuPacket *lsu = new OspfLsuPacket;
   lsu->setSrcAddr(my_address);
 
   for (size_t i = 0; i < pk->getRequested_router_infoArraySize(); i++) {
@@ -279,7 +279,7 @@ void Router::ospfHandleLinkStateUpdate(OspfLsuPacket *pk) {
   sendUpdatedLsdbToNeighboringRouters(pk->getSrcAddr());
 }
 
-void Router::ospfUpdateLinkStateDatabase(OspfLsuPacket* pk) {
+void Router::ospfUpdateLinkStateDatabase(OspfLsuPacket *pk) {
   neighbor_table[pk->getSrcAddr()].state = OspfState::FULL;
 
   for (size_t i = 0; i < pk->getLsasArraySize(); i++) {
@@ -354,7 +354,7 @@ void Router::ospfAppendLsdbSummaryToPacket(OspfDbdPacket *msg) {
 void Router::ospfRegisterNeighbor(Header *pk, OspfState state) {
   auto src = pk->getSrcAddr();
   auto gate_index = pk->getArrivalGate()->getIndex();
-  double link_cost = provider.getQNode()->gate("port$o", gate_index)->getChannel()->par("cost");
+  double link_cost = provider.getNode()->gate("port$o", gate_index)->getChannel()->par("cost");
   neighbor_table[src] = OspfNeighborInfo(src, gate_index, state, link_cost);
 }
 
