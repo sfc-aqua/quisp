@@ -1,3 +1,25 @@
+cplusplus  {{
+    #include <modules/Common/Ospf.h>
+    using quisp::modules::OspfNeighborInfo;
+    using quisp::modules::OspfState;
+    using quisp::modules::LinkStateAdvertisement;
+}}
+
+class OspfNeighborInfo {
+    @existingClass;
+    @opaque;
+};
+
+class OspfState {
+    @existingClass;
+    @opaque;
+};
+
+class LinkStateAdvertisement {
+    @existingClass;
+    @opaque;
+};
+
 import base_messages;
 namespace quisp::messages;
 
@@ -9,41 +31,22 @@ packet OspfHelloPacket extends Header
 packet OspfDbdPacket extends Header
 {
     int dd_sequence;
-    int state;
+    OspfState state;
     bool is_master;
-    Lsa lsas[];
+    LinkStateAdvertisement lsdb[];
 }
 
-packet Lsa extends Header
-{
-    int lsa_id;
-    int lsa_origin_id;
-    int lsa_age;
-    int adjacent[];
-}
-
-packet Lsr extends Header
+packet OspfLsrPacket extends Header
 {
     int requested_router_info[];
 }
 
-packet LsuPacket extends Header
+packet OspfLsuPacket extends Header
 {
-    Lsa lsas[];
+    LinkStateAdvertisement lsas[];
 }
 
-packet LsAckPacket extends Header
+packet OspfLsAckPacket extends Header
 {
 
-}
-
-enum OspfState
-{
-    DOWN = 0;
-    INIT = 1;
-    TWO_WAY = 2;
-    EXSTART = 3;
-    EXCHANGE = 4;
-    LOADING = 5;
-    FULL = 6;
 }

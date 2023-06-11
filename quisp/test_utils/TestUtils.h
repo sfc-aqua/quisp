@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AccessPrivate.h"
+#include "Channel.h"
 #include "Gate.h"
 #include "ModuleType.h"
 #include "QNode.h"
@@ -19,6 +20,7 @@
 namespace quisp_test {
 
 // use these functions and classes in your unit test.
+using channel::TestDatarateChannel;
 using gate::TestGate;
 using mock_backends::MockBackendQubit;
 using mock_backends::MockQuantumBackend;

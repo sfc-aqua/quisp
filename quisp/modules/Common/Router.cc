@@ -5,10 +5,7 @@
  */
 #include "Router.h"
 #include <vector>
-#include "messages/base_messages_m.h"
 #include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
-#include "messages/ospf_messages_m.h"
-#include "omnetpp/ctopology.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -74,16 +71,15 @@ void Router::handleMessage(cMessage *msg) {
     return ospfHandleDbdPacket(pk);
   }
 
-  if (auto pk = dynamic_cast<Lsr *>(msg)) {
+  if (auto pk = dynamic_cast<OspfLsrPacket *>(msg)) {
     return ospfHandleLinkStateRequest(pk);
   }
 
-  // TODO: figure out when to update and compare lsa_age;
-  if (auto pk = dynamic_cast<LsuPacket*>(msg)) {
+  if (auto pk = dynamic_cast<OspfLsuPacket*>(msg)) {
     return ospfHandleLinkStateUpdate(pk);
   }
 
-  if (auto pk = dynamic_cast<LsAckPacket*>(msg)) {
+  if (auto pk = dynamic_cast<OspfLsAckPacket*>(msg)) {
     return;
   }
 
@@ -205,7 +201,15 @@ void Router::ospfHandleDbdPacket(OspfDbdPacket *pk) {
   if (pk->getState() == OspfState::EXSTART) {
     return ospfExStartState(pk);
   } else if (pk->getState() == OspfState::EXCHANGE) {
-    return ospfExchangeState(pk);
+    auto src = pk->getSrcAddr();
+
+    if (pk->getIs_master()) {
+      ospfRespondToExchangeStateMater(src);
+    }
+    if (pk->getLsdbArraySize()) {
+      ospfSendLinkStateRequest(pk);
+    }
+    return;
   }
 }
 
@@ -225,6 +229,11 @@ void Router::ospfInitiateExchangeState(int dest) {
   ospfSendLsdbSummary(dest, true);
 }
 
+void Router::ospfRespondToExchangeStateMater(int dest) {
+  neighbor_table[dest].state = OspfState::EXCHANGE;
+  ospfSendLsdbSummary(dest);
+}
+
 void Router::ospfDecideMaster(int neighbor) {
   if (my_address > neighbor) {
     auto i_am_master_msg = ospfCreateExstartDbdPacket(true);
@@ -235,18 +244,6 @@ void Router::ospfDecideMaster(int neighbor) {
   }
 }
 
-void Router::ospfExchangeState(OspfDbdPacket *pk) {
-  auto src = pk->getSrcAddr();
-
-  if (pk->getIs_master()) {
-    neighbor_table[src].state = OspfState::EXCHANGE;
-    ospfSendLsdbSummary(src);
-  }
-  if (pk->getLsasArraySize()) {
-    ospfSendLinkStateRequest(pk);
-  }
-}
-
 void Router::ospfSendLinkStateRequest(OspfDbdPacket *pk) {
   auto src = pk->getSrcAddr();
   neighbor_table[src].state = OspfState::LOADING;
@@ -254,7 +251,7 @@ void Router::ospfSendLinkStateRequest(OspfDbdPacket *pk) {
   std::vector<int> missing_lsas = identifyMissingRouterInfo(pk);
 
   if (missing_lsas.size() > 0) {
-    Lsr* request = new Lsr;
+    OspfLsrPacket* request = new OspfLsrPacket;
     request->setSrcAddr(my_address);
     for (auto router_id : missing_lsas) {
       request->appendRequested_router_info(router_id);
@@ -263,37 +260,33 @@ void Router::ospfSendLinkStateRequest(OspfDbdPacket *pk) {
   }
 }
 
-void Router::ospfHandleLinkStateRequest(Lsr* pk) {
-  LsuPacket* lsu = new LsuPacket;
+void Router::ospfHandleLinkStateRequest(OspfLsrPacket* pk) {
+  OspfLsuPacket* lsu = new OspfLsuPacket;
   lsu->setSrcAddr(my_address);
 
   for (size_t i = 0; i < pk->getRequested_router_infoArraySize(); i++) {
-    Lsa lsa = ospfGenerateLinkStateAdvertisement(pk->getRequested_router_info(i));
+    LinkStateAdvertisement lsa = LinkStateDatabase[pk->getRequested_router_info(i)];
     lsu->appendLsas(lsa);
   }
   send(lsu, "toQueue", neighbor_table[pk->getSrcAddr()].gate_index);
 }
 
-void Router::ospfHandleLinkStateUpdate(LsuPacket *pk) {
-  LsAckPacket *ack = new LsAckPacket;
+void Router::ospfHandleLinkStateUpdate(OspfLsuPacket *pk) {
+  OspfLsAckPacket *ack = new OspfLsAckPacket;
   send(ack, "toQueue", neighbor_table[pk->getSrcAddr()].gate_index);
 
-  ospfUpdateAdjList(pk);
+  ospfUpdateLinkStateDatabase(pk);
   sendUpdatedLsdbToNeighboringRouters(pk->getSrcAddr());
 }
 
-void Router::ospfUpdateAdjList(LsuPacket* pk) {
+void Router::ospfUpdateLinkStateDatabase(OspfLsuPacket* pk) {
   neighbor_table[pk->getSrcAddr()].state = OspfState::FULL;
 
   for (size_t i = 0; i < pk->getLsasArraySize(); i++) {
-    Lsa lsa = pk->getLsas(i);
-    auto origin = lsa.getLsa_origin_id();
-    adj_list[origin].lsa_age = lsa.getLsa_age();
-    adj_list[origin].adjacent_nodes.clear();
-    for (size_t j = 0; j < lsa.getAdjacentArraySize(); j++) {
-      auto adjacent_node = lsa.getAdjacent(j);
-      adj_list[origin].adjacent_nodes.emplace_back(adjacent_node);
-    }
+    LinkStateAdvertisement lsa = pk->getLsas(i);
+    auto origin = lsa.lsa_origin_id;
+    if (LinkStateDatabase.count(origin)) lsa.lsa_age++;
+    LinkStateDatabase[origin] = lsa;
   }
 }
 
@@ -313,14 +306,6 @@ OspfDbdPacket *Router::ospfCreateExstartDbdPacket(bool is_master) {
   return msg;
 }
 
-// OspfDbdPacket *Router::ospfPrepareLsdbSummary() {
-//   OspfDbdPacket *msg = new OspfDbdPacket;
-//   msg->setSrcAddr(my_address);
-//   msg->setState(OspfState::EXCHANGE);
-//   ospfAppendLsdbSummaryToPacket(msg);
-//   return msg;
-// }
-
 void Router::ospfSendLsdbSummary(int dest, bool i_am_master) {
   OspfDbdPacket *msg = new OspfDbdPacket;
   msg->setSrcAddr(my_address);
@@ -332,54 +317,45 @@ void Router::ospfSendLsdbSummary(int dest, bool i_am_master) {
 
 std::vector<int> Router::identifyMissingRouterInfo(OspfDbdPacket *pk) {
   std::vector<int> missing_lsas;
-  for (size_t i = 0; i < pk->getLsasArraySize(); i++) {
-    auto lsa = pk->getLsas(i);
-    auto lsa_origin = lsa.getLsa_origin_id();
-    auto lsa_age = lsa.getLsa_age();
-    if (adj_list.count(lsa_origin) == false || adj_list[lsa_origin].lsa_age < lsa_age) {
+  for (size_t i = 0; i < pk->getLsdbArraySize(); i++) {
+    LinkStateAdvertisement summary_lsa = pk->getLsdb(i);
+    auto lsa_origin = summary_lsa.lsa_origin_id;
+    auto lsa_age = summary_lsa.lsa_age;
+    if (LinkStateDatabase.count(lsa_origin) == false || LinkStateDatabase[lsa_origin].lsa_age < lsa_age) {
       missing_lsas.push_back(lsa_origin);
     }
   }
   return missing_lsas;
 }
 
-void Router::ospfConstructMyAddressAdjacencyList() {
-  adj_list[my_address].lsa_age = 0;
+void Router::ospfAddMyAddressLsaToLsdb() {
+  LinkStateDatabase[my_address].lsa_age = 0;
+  LinkStateDatabase[my_address].lsa_origin_id = my_address;
+  LinkStateDatabase[my_address].lsa_id = my_address;
   for (auto neighbor : neighbor_table) {
-    adj_list[my_address].adjacent_nodes.emplace_back(neighbor.first);
+    LinkStateDatabase[my_address].neighbor_nodes.push_back(neighbor.second);
   }
 }
 
 void Router::ospfAppendLsdbSummaryToPacket(OspfDbdPacket *msg) {
-  if (adj_list.count(my_address) == 0) {
-    ospfConstructMyAddressAdjacencyList();
+  if (LinkStateDatabase.count(my_address) == 0) {
+    ospfAddMyAddressLsaToLsdb();
   }
 
-  for (auto adj : adj_list) {
-    Lsa lsa = ospfGenerateLinkStateAdvertisement(adj.first);
-    msg->appendLsas(lsa);
+  for (auto lsa : LinkStateDatabase) {
+    LinkStateAdvertisement summary_lsa = lsa.second;
+    // LSDB summary only requires LSA origin and LSA age
+    // clear neighbor_nodes from summary_lsa to reduce packet size
+    summary_lsa.neighbor_nodes.clear();
+    msg->appendLsdb(summary_lsa);
   }
-}
-
-Lsa Router::ospfGenerateLinkStateAdvertisement(int requested_id) {
-  assert(adj_list.count(requested_id));
-
-  Lsa lsa;
-  lsa.setLsa_id(my_address);
-  lsa.setLsa_origin_id(requested_id);
-  lsa.setLsa_age(adj_list[requested_id].lsa_age);
-  for (auto node : adj_list[requested_id].adjacent_nodes) {
-    lsa.appendAdjacent(node.router_id);
-  }
-  return lsa;
 }
 
 void Router::ospfRegisterNeighbor(Header *pk, OspfState state) {
   auto src = pk->getSrcAddr();
   auto gate_index = pk->getArrivalGate()->getIndex();
-  // int link_cost = pk->getArrivalGate()->getChannel()->par("cost");
-  int link_cost = 1;
-  neighbor_table[src] = OspfNeighborInfo(gate_index, state, link_cost);
+  double link_cost = provider.getQNode()->gate("port$o", gate_index)->getChannel()->par("cost");
+  neighbor_table[src] = OspfNeighborInfo(src, gate_index, state, link_cost);
 }
 
 void Router::ospfSendNeighbors() {
