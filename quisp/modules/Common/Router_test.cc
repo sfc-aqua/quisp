@@ -5,10 +5,8 @@
 
 #include "Router.h"
 #include "gmock/gmock-spec-builders.h"
-#include "messages/connection_setup_messages_m.h"
-#include "messages/ospf_messages_m.h"
 #include "modules/SharedResource/SharedResource.h"
-#include "test_utils/Gate.h"
+
 using namespace quisp_test;
 using namespace quisp_test::utils;
 using namespace quisp::messages;
@@ -21,6 +19,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy(TestQNode* _qnode) : parent_qnode(_qnode) {}
   cModule* getNode() override { return parent_qnode; }
+  cModule* getQNode() override { return parent_qnode; }
   int getNodeAddr() override { return parent_qnode->address; }
   SharedResource* getSharedResource() override { return &shared_resource; }
 
@@ -35,11 +34,10 @@ class Router : public OriginalRouter {
   using OriginalRouter::initialize;
   using OriginalRouter::my_address;
   using OriginalRouter::neighbor_table;
-  using OriginalRouter::OspfNeighborInfo;
   using OriginalRouter::ospfSendNeighbor;
   using OriginalRouter::ospfSendNeighbors;
   using OriginalRouter::routing_table;
-  using OriginalRouter::adj_list;
+  using OriginalRouter::LinkStateDatabase;
   explicit Router(TestQNode* parent_qnode) : OriginalRouter() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_router"));
@@ -67,11 +65,35 @@ class Router : public OriginalRouter {
   size_t getNumNeighbors() const override { return 1; }
 };
 
+class OspfTestGate : public gate::TestGate {
+ public:
+  OspfTestGate(cModule *mod, const char *name) : TestGate(mod, name) {
+    installChannel(&channel);
+  };
+
+ private:
+  channel::TestDatarateChannel channel;
+};
+
+class OspfTestQNode : public qnode::TestQNode {
+ public:
+  OspfTestQNode(int addr, int mass, bool is_initiator) : TestQNode(addr, mass, is_initiator), port(this, "port") {};
+  cGate* gate(const char* gatename, int index = -1) override {
+    if (strcmp(gatename, "port$o") == 0) return &port;
+    throw cRuntimeError("port: %s not found", gatename);
+    return nullptr;
+  }
+
+ private:
+  OspfTestGate port;
+};
+
+
 class RouterTest : public ::testing::Test {
  protected:
   void SetUp() {
     sim = prepareSimulation();
-    qnode = new TestQNode(10, 0, true);
+    qnode = new OspfTestQNode(10, 0, true);
     router = new Router(qnode);
     sim->registerComponent(router);
     sim->setContext(router);
@@ -110,7 +132,7 @@ TEST_F(RouterTest, ospfSendHelloPacketAtInitialization) {
 
 TEST_F(RouterTest, ospfSendHelloPacketWithNeighborInfo) {
   int src = 1, send_gate_index = 0, arrival_gate_index = 0;
-  router->neighbor_table[src] = Router::OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
+  router->neighbor_table[src] = OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
 
   router->ospfSendNeighbor(send_gate_index);
   auto msg = router->queueGate->messages.front();
@@ -127,7 +149,7 @@ TEST_F(RouterTest, ospfReceiveHelloPacketHandleImpossibleCase) {
   msg_from_other_node->setSrcAddr(src);
 
   int arrival_gate_index = 0;
-  router->neighbor_table[src] = Router::OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
+  router->neighbor_table[src] = OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
   ASSERT_THROW(router->handleMessage(msg_from_other_node), cRuntimeError);
 }
 
@@ -137,7 +159,7 @@ TEST_F(RouterTest, ospfReceiveHelloPacketFailedStateTransition) {
   msg_from_other_node->setSrcAddr(src);
 
   int arrival_gate_index = 0;
-  router->neighbor_table[src] = Router::OspfNeighborInfo(arrival_gate_index, OspfState::DOWN);
+  router->neighbor_table[src] = OspfNeighborInfo(arrival_gate_index, OspfState::DOWN);
   ASSERT_THROW(router->handleMessage(msg_from_other_node), cRuntimeError);
 }
 
@@ -177,10 +199,10 @@ TEST_F(RouterTest, ospfReceiveHelloPacketAndTransitionFromInitToTwoWayState) {
   mockMessageArrival(msg_from_other_node);
 
   int arrival_gate_index = 0;
-  router->neighbor_table[src] = Router::OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
+  router->neighbor_table[src] = OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
   router->handleMessage(msg_from_other_node);
   ASSERT_EQ(router->neighbor_table[src].gate_index, arrival_gate_index);
-  ASSERT_EQ(router->queueGate->messages.size(), 0);
+  ASSERT_EQ(router->queueGate->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handlePacketForUnknownAddr) {
