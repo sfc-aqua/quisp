@@ -143,4 +143,27 @@ TEST_F(RuntimeManagerTest, ExecAndTerminated) {
     EXPECT_FALSE(rs3.terminated);
   }
 }
+
+TEST_F(RuntimeManagerTest, StopById) {
+  Program terminator{"terminator", {INSTR_RET_ReturnCode_{{ReturnCode::RS_TERMINATED}}}};
+  Rule rule{
+      "", -1, -1, cond_passed_once, checker,
+  };
+  RuleSet rs1{"rs1", {rule}, empty};
+  rs1.id = 1;
+  RuleSet rs2{"rs2", {rule}, terminator};
+  rs2.id = 2;
+  RuleSet rs3{"rs3", {rule}, empty};
+  rs3.id = 3;
+  runtimes->acceptRuleSet(rs1);
+  runtimes->acceptRuleSet(rs2);
+  runtimes->acceptRuleSet(rs3);
+  EXPECT_EQ(runtimes->size(), 3);
+  runtimes->stopById(rs1.id);
+  EXPECT_TRUE(runtimes->findById(rs1.id)->terminated);
+  runtimes->stopById(rs2.id);
+  EXPECT_TRUE(runtimes->findById(rs2.id)->terminated);
+  runtimes->stopById(rs3.id);
+  EXPECT_TRUE(runtimes->findById(rs3.id)->terminated);
+}
 }  // namespace
