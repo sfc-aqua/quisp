@@ -131,10 +131,18 @@ class Runtime {
   void assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record);
 
   /**
+   * @brief  free the entangled qubit to the RuleSet. The Runtime frees it from
+   * the first rule and other Rules can use the qubit.
+   *
+   * @param partner_addr the entangled partner QNode address for the qubit.
+   * @param qubit_record the entangled qubit's record.
+   */
+  void freeQubitFromRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record);
+
+  /**
    * @brief assign the entangled qubit to the rule
    *
    * @param partner_addr the entangled partner QNode address for the qubit.
-   * @param rule_id the rule id to assign the qubit
    * @param qubit_record  the entangled qubit's record
    */
   void assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record);

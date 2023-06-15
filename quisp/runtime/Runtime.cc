@@ -1,6 +1,7 @@
 #include "Runtime.h"
 
 #include <omnetpp.h>
+#include "runtime/types.h"
 
 namespace quisp::runtime {
 
@@ -152,6 +153,20 @@ QubitResources::iterator Runtime::findQubit(IQubitRecord* qubit_record) {
     }
   }
   throw cRuntimeError("Qubit not found: from the given QubitRecord");
+}
+
+void Runtime::freeQubitFromRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record) {
+  auto it = ruleset.partner_initial_rule_table.find(partner_addr);
+  assert(it != ruleset.partner_initial_rule_table.end());
+  auto rule_id = it->second;
+  auto sequence_number = resource_counter[{partner_addr, rule_id}];
+  for (auto it = qubits.begin(); it != qubits.end(); it++){
+    if (it->second == qubit_record){
+      qubits.erase(it);
+    }
+  }
+  sequence_number_to_qubit.erase({partner_addr, rule_id, sequence_number});
+  qubit_to_sequence_number.erase(qubit_record);
 }
 
 void Runtime::promoteQubit(IQubitRecord* qubit) {

@@ -226,4 +226,48 @@ TEST_F(RuntimeTest, AssignQubit) {
   EXPECT_EQ(runtime->getQubitByPartnerAddr(partner_addr2, 1), qubit3);
 }
 
+TEST_F(RuntimeTest, freeQubitFromRuleSet){
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+  RuleSet rs{
+      "",
+      {
+          Rule{
+              "requires qubit with partner_addr",
+              -1,
+              -1,
+              Program{"",
+                      {
+
+                          INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}},
+                          // return COND_PASSED
+                          INSTR_RET_ReturnCode_{{ReturnCode::COND_FAILED}}}},
+              Program{"action", {}},
+          },
+          Rule{"requires qubit with partner_addr", -1, -1,
+               Program{"",
+                       {
+                           // clang-format off
+                              INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr2, 0}},
+                           // clang-format on
+                       }},
+               Program{"action", {}}},
+      },
+  };
+
+  runtime->assignRuleSet(rs);
+  runtime->rule_id = 0;
+  EXPECT_EQ(runtime->qubits.size(), 0);
+  runtime->assignQubitToRuleSet(partner_addr, qubit);
+  runtime->assignQubitToRuleSet(partner_addr2, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr2, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+
+  runtime->freeQubitFromRuleSet(partner_addr, qubit);
+  EXPECT_EQ(runtime->getQubitByPartnerAddr(partner_addr, 0), qubit4);
+
+  runtime->freeQubitFromRuleSet(partner_addr2, qubit2);
+  EXPECT_EQ(runtime->getQubitByPartnerAddr(partner_addr2, 0), qubit3);
+
+}
+
 }  // namespace
