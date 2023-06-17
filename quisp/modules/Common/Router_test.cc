@@ -5,6 +5,7 @@
 
 #include "Router.h"
 #include "gmock/gmock-spec-builders.h"
+#include "modules/Common/Ospf.h"
 #include "modules/SharedResource/SharedResource.h"
 
 using namespace quisp_test;
@@ -31,11 +32,11 @@ class Router : public OriginalRouter {
  public:
   using OriginalRouter::handleMessage;
   using OriginalRouter::initialize;
-  using OriginalRouter::LinkStateDatabase;
+  using OriginalRouter::link_state_database;
   using OriginalRouter::my_address;
   using OriginalRouter::neighbor_table;
-  using OriginalRouter::ospfSendNeighbor;
-  using OriginalRouter::ospfSendNeighbors;
+  using OriginalRouter::ospfInitializeRouter;
+  using OriginalRouter::ospfSendHelloPacketToNeighbor;
   using OriginalRouter::routing_table;
   explicit Router(TestQNode* parent_qnode) : OriginalRouter() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
@@ -118,25 +119,25 @@ class RouterTest : public ::testing::Test {
 };
 
 TEST_F(RouterTest, ospfSendHelloPacketAtInitialization) {
-  router->ospfSendNeighbors();
+  router->ospfInitializeRouter();
   auto down_state_msg = router->queueGate->messages.front();
   auto* down_state_packet = check_and_cast<OspfHelloPacket*>(down_state_msg);
 
   ASSERT_EQ(down_state_packet->getSrcAddr(), router->my_address);
-  ASSERT_EQ(down_state_packet->getNeighborsArraySize(), 0);
+  ASSERT_EQ(down_state_packet->getNeighbor_table().size(), 0);
 }
 
 TEST_F(RouterTest, ospfSendHelloPacketWithNeighborInfo) {
   int src = 1, send_gate_index = 0, arrival_gate_index = 0;
   router->neighbor_table[src] = OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
 
-  router->ospfSendNeighbor(send_gate_index);
+  router->ospfSendHelloPacketToNeighbor(send_gate_index);
   auto msg = router->queueGate->messages.front();
   auto* pk = check_and_cast<OspfHelloPacket*>(msg);
 
   ASSERT_EQ(pk->getSrcAddr(), router->my_address);
-  ASSERT_EQ(pk->getNeighborsArraySize(), 1);
-  ASSERT_EQ(pk->getNeighbors(0), src);
+  ASSERT_EQ(pk->getNeighbor_table().size(), 1);
+  ASSERT_EQ(pk->getNeighbor_table().at(src).state, OspfState::INIT);
 }
 
 TEST_F(RouterTest, ospfReceiveHelloPacketHandleImpossibleCase) {
@@ -176,7 +177,9 @@ TEST_F(RouterTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
   int src = 1;
   auto msg_from_other_node = new OspfHelloPacket;
   msg_from_other_node->setSrcAddr(src);
-  msg_from_other_node->appendNeighbors(router->my_address);
+  NeighborTable neighbor_table;
+  neighbor_table[router->my_address] = OspfNeighborInfo(router->my_address);
+  msg_from_other_node->setNeighbor_table(neighbor_table);
 
   mockMessageArrival(msg_from_other_node);
 
@@ -190,7 +193,9 @@ TEST_F(RouterTest, ospfReceiveHelloPacketAndTransitionFromInitToTwoWayState) {
   int src = 1;
   auto msg_from_other_node = new OspfHelloPacket;
   msg_from_other_node->setSrcAddr(src);
-  msg_from_other_node->appendNeighbors(router->my_address);
+  NeighborTable neighbor_table;
+  neighbor_table[router->my_address] = OspfNeighborInfo(router->my_address);
+  msg_from_other_node->setNeighbor_table(neighbor_table);
 
   mockMessageArrival(msg_from_other_node);
 
