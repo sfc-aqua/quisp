@@ -1,5 +1,5 @@
 cplusplus  {{
-    #include <modules/Common/Ospf.h>
+    #include <modules/Common/LinkStateRoutingProtocol/Ospf.h>
     using quisp::modules::ospf::OspfNeighborInfo;
     using quisp::modules::ospf::OspfState;
     using quisp::modules::ospf::LinkStateAdvertisement;

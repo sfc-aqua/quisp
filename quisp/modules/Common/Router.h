@@ -1,5 +1,5 @@
 #pragma once
-#include <modules/Common/Ospf.h>
+#include <modules/Common/LinkStateRoutingProtocol/Ospf.h>
 #include <omnetpp.h>
 #include <utils/ComponentProvider.h>
 #include "messages/classical_messages.h"

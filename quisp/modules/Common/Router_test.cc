@@ -5,7 +5,6 @@
 
 #include "Router.h"
 #include "gmock/gmock-spec-builders.h"
-#include "modules/Common/Ospf.h"
 #include "modules/SharedResource/SharedResource.h"
 
 using namespace quisp_test;
