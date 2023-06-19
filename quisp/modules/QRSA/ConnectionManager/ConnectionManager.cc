@@ -196,6 +196,21 @@ void ConnectionManager::storeTeardownInfo(ConnectionSetupResponse *pk) {
   }
 }
 
+/**
+ * This function is called to handle the ConnectionTeardownMessage at end nodes.
+ * The only job here is to store InternalConnectionTeardownMessage and feed them to the RuleEngine via Router.
+ *
+ * \param pk the received ConnectionTeardownMessage.
+ **/
+void ConnectionManager::storeTeardownMessage(ConnectionTeardownMessage *pk) {
+  InternalConnectionTeardownMessage *pk_internal = new InternalConnectionTeardownMessage("InternalConnectionTeardownMessage");
+  pk_internal->setSrcAddr(pk->getSrcAddr());
+  pk_internal->setDestAddr(pk->getSrcAddr());
+  pk_internal->setKind(5);
+  pk_internal->setRuleSet_id(pk->getRuleSet_id());
+  send(pk_internal, "RouterPort$o");
+}
+
 
 /**
  * This function is called to handle the ConnectionSetupResponse at the intermediate node.
