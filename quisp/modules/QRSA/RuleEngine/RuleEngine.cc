@@ -227,6 +227,9 @@ void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnecti
 void RuleEngine::handleConnectionTeardownMessage(ConnectionTeardownMessage *msg) {
   auto ruleset_id = msg->getRuleSet_id();
   runtimes.stopById(ruleset_id);
+  for (int i = 0; i < number_of_qnics; i++) {
+    freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
+  }
 }
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
