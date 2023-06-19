@@ -4,7 +4,13 @@ namespace quisp::modules::ospf {
 
 void LinkStateDatabase::updateLinkStateDatabase(LinkStateAdvertisement& lsa) {
   const NodeAddr lsa_origin_id = lsa.lsa_origin_id;
-  if (link_state_database.count(lsa_origin_id)) lsa.lsa_age++;
+  if (link_state_database.count(lsa_origin_id)) {
+    auto my_lsa = link_state_database.at(lsa_origin_id);
+    if (my_lsa.lsa_age >= lsa.lsa_age) throw omnetpp::cRuntimeError("LinkStateDatabase::updateLinkStateDatabase: input lsa is outdated");
+    if (my_lsa.neighbor_nodes.size() >= lsa.neighbor_nodes.size())
+      throw omnetpp::cRuntimeError(
+          "LinkStateDatabase::updateLinkStateDatabase: size of neighbor_nodes is assumed to monotonically increase, but the input has smaller size of neighbor_nodes");
+  }
   link_state_database[lsa_origin_id] = lsa;
   lsdb_summary.clear();
 }
@@ -38,6 +44,13 @@ RouterIds LinkStateDatabase::identifyMissingLinkStateAdvertisementId(const LinkS
   return missing_lsas;
 }
 
+bool LinkStateDatabase::needsFullLinkStateAdvertisementOf(const SummaryLinkStateAdvertisement& summary_lsa) const {
+  const NodeAddr source_of_lsa = summary_lsa.lsa_origin_id;
+  if (!link_state_database.count(source_of_lsa)) return true;
+  if (link_state_database.at(source_of_lsa).lsa_age < summary_lsa.lsa_age) return true;
+  return false;
+}
+
 LinkStateUpdate LinkStateDatabase::getLinkStateUpdatesFor(const RouterIds& requests, int my_address) const {
   std::vector<LinkStateAdvertisement> lsu;
   for (const NodeAddr request : requests) {
@@ -48,26 +61,18 @@ LinkStateUpdate LinkStateDatabase::getLinkStateUpdatesFor(const RouterIds& reque
   return lsu;
 }
 
-
 LinkStateAdvertisement LinkStateDatabase::getLinkStateAdvertisementOf(NodeAddr router) const {
   if (!link_state_database.count(router)) throw omnetpp::cRuntimeError("Requested LSA of router%d does not exist", router);
   return link_state_database.at(router);
 }
 
-bool LinkStateDatabase::hasLinkStateAdvertisementOf(NodeAddr router) const {return link_state_database.count(router);}
-
-bool LinkStateDatabase::needsFullLinkStateAdvertisementOf(const SummaryLinkStateAdvertisement& summary_lsa) const {
-  const NodeAddr source_of_lsa = summary_lsa.lsa_origin_id;
-  if (!link_state_database.count(source_of_lsa)) return true;
-  if (link_state_database.at(source_of_lsa).lsa_age < summary_lsa.lsa_age) return true;
-  return false;
-}
+bool LinkStateDatabase::hasLinkStateAdvertisementOf(NodeAddr router) const { return link_state_database.count(router); }
 
 int LinkStateDatabase::getGateIndexToNeighbor(NodeAddr src_id, NodeAddr neighbor_id) const {
   if (link_state_database.count(src_id) && link_state_database.at(src_id).neighbor_nodes.count(neighbor_id)) {
     return link_state_database.at(src_id).neighbor_nodes.at(neighbor_id).gate_index;
   }
-  throw omnetpp::cRuntimeError("LinkStateDatabase::getGateIndexToNeighbor neighbor node%d of source node%d", neighbor_id, src_id);
+  throw omnetpp::cRuntimeError("LinkStateDatabase::getGateIndexToNeighbor: either neighbor node%d or source node%d does not exist in link_state_database", neighbor_id, src_id);
 }
 
 NodeAddr LinkStateDatabase::getSecondNodeInPathToDestNode(NodeAddr source_id, NodeAddr dst_id, const VertexMap& vertices) const {
@@ -75,6 +80,8 @@ NodeAddr LinkStateDatabase::getSecondNodeInPathToDestNode(NodeAddr source_id, No
   while (current_node_ptr->prev_node_in_path != source_id) {
     NodeAddr prev_node_id = current_node_ptr->prev_node_in_path;
     current_node_ptr = vertices.at(prev_node_id);
+    if (current_node_ptr->prev_node_in_path == -1)
+      throw omnetpp::cRuntimeError("LinkStateDatabase::getSecondNodeInPathToDestNode: could not find path from node%d to node%d", source_id, dst_id);
   }
   return current_node_ptr->node_id;
 }
@@ -89,8 +96,12 @@ NodeAddr LinkStateDatabase::getSecondNodeInPathToDestNode(NodeAddr source_id, No
  */
 const LinkStateDatabase::VertexMap LinkStateDatabase::dijkstraAlgorithm(NodeAddr source_id) const {
   auto vertices = generateVerticesFromLsdb();
+  if (vertices.count(source_id) == false) throw omnetpp::cRuntimeError("LinkStateDatabase::dijkstraAlgorithm: link_state_database does not have vertex%d", source_id);
+
   vertices[source_id]->distance_from_source = 0;
-  auto Q = initializePriorityQueue(vertices);
+  PriorityQueue Q;
+  Q.emplace(vertices[source_id]);
+
   while (Q.size()) {
     const auto current_vertex = popMinDistanceNode(Q);
     for (const auto& neighbor_entry : link_state_database.at(current_vertex->node_id).neighbor_nodes) {
@@ -99,7 +110,12 @@ const LinkStateDatabase::VertexMap LinkStateDatabase::dijkstraAlgorithm(NodeAddr
       if (!vertices.count(neighbor_node.router_id)) continue;
 
       auto neighbor_vertex = vertices[neighbor_node.router_id];
-      relax(current_vertex, neighbor_vertex);
+      double distance_of_new_path = current_vertex->distance_from_source + weight(current_vertex->node_id, neighbor_vertex->node_id);
+      if (neighbor_vertex->distance_from_source > distance_of_new_path) {
+        neighbor_vertex->distance_from_source = distance_of_new_path;
+        neighbor_vertex->prev_node_in_path = current_vertex->node_id;
+        Q.emplace(neighbor_vertex);
+      }
     }
   }
   return vertices;
@@ -117,40 +133,12 @@ double LinkStateDatabase::weight(NodeAddr node1, NodeAddr node2) const {
   if (link_state_database.count(node1) && link_state_database.at(node1).neighbor_nodes.count(node2)) {
     return link_state_database.at(node1).neighbor_nodes.at(node2).cost;
   }
-  throw omnetpp::cRuntimeError("Dijkstra's algorithm couldn't find an edge between node%d and node%d", node1, node2);
+  throw omnetpp::cRuntimeError("LinkStateDatabase::weight: couldn't find an edge between node%d and node%d", node1, node2);
 }
 
-template <typename Q>
-LinkStateDatabase::VertexSharedPtr LinkStateDatabase::popMinDistanceNode(Q& q) const {
-  auto u = const_cast<LinkStateDatabase::VertexSharedPtr&>(q.top());
+LinkStateDatabase::VertexSharedPtr LinkStateDatabase::popMinDistanceNode(PriorityQueue& q) const {
+  auto u = q.top();
   q.pop();
   return u;
-}
-
-void LinkStateDatabase::relax(const LinkStateDatabase::VertexSharedPtr current_node_ptr, LinkStateDatabase::VertexSharedPtr adjacent_node) const {
-  if (adjacent_node->distance_from_source > current_node_ptr->distance_from_source + weight(current_node_ptr->node_id, adjacent_node->node_id)) {
-    adjacent_node->distance_from_source = current_node_ptr->distance_from_source + weight(current_node_ptr->node_id, adjacent_node->node_id);
-    adjacent_node->prev_node_in_path = current_node_ptr->node_id;
-  }
-}
-
-/**
- * @brief Initializes a priority_queue for Dijkstra's Algorithm
- * @details This function first creates a vector of vertices from the inputted map of vertices (std::transform),
- *          and then initializes a priority queue using the vector vertices in its constructor.
- *          The reason for this workaround is because std::priority_queue does not have a constructor that takes std::map as an input.
- *
- * @param map_vertices
- * @return std::priority_queue<LinkStateDatabase::VertexSharedPtr, std::vector<LinkStateDatabase::VertexSharedPtr>, LinkStateDatabase::VertexMinPriority>
- */
-std::priority_queue<LinkStateDatabase::VertexSharedPtr, std::vector<LinkStateDatabase::VertexSharedPtr>, LinkStateDatabase::VertexMinPriority>
-LinkStateDatabase::initializePriorityQueue(const VertexMap& map_vertices) const {
-
-  std::vector<LinkStateDatabase::VertexSharedPtr> vector_vertices(map_vertices.size());
-
-  std::transform(map_vertices.begin(), map_vertices.end(), vector_vertices.begin(), [](const auto& pair) { return pair.second; });
-
-  std::priority_queue Q(vector_vertices.begin(), vector_vertices.end(), LinkStateDatabase::VertexMinPriority());
-  return Q;
 }
 }  // namespace quisp::modules::ospf

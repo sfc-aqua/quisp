@@ -356,7 +356,7 @@ void Router::ospfUpdateMyAddressLsaInLsdb() {
   LinkStateAdvertisement my_lsa{my_address, my_address, neighbor_table};
   if (link_state_database.hasLinkStateAdvertisementOf(my_address)) {
     int curr_lsa_age = link_state_database.getLinkStateAdvertisementOf(my_address).lsa_age;
-    my_lsa.lsa_age = curr_lsa_age;
+    my_lsa.lsa_age = curr_lsa_age + 1;
   }
   link_state_database.updateLinkStateDatabase(my_lsa);
 }
