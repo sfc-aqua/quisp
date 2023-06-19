@@ -123,7 +123,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
-  } else if (auto *pkt = dynamic_cast<ConnectionTeardownMessage *>(msg)) {
+  } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
   }
 
@@ -224,7 +224,7 @@ void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnecti
   qnode_indices.push_back(dest_addr);
 }
 
-void RuleEngine::handleConnectionTeardownMessage(ConnectionTeardownMessage *msg) {
+void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
   auto ruleset_id = msg->getRuleSet_id();
   runtimes.stopById(ruleset_id);
   for (int i = 0; i < number_of_qnics; i++) {

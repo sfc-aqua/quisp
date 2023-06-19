@@ -83,7 +83,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(messages::PurificationResult *purification_result);
   void handleSwappingResult(messages::SwappingResult *swapping_result);
-  void handleConnectionTeardownMessage(messages::ConnectionTeardownMessage *connection_teardown_message);
+  void handleConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *connection_teardown_message);
   void handleInternalConnectionTeardownInfoForwarding(messages::InternalConnectionTeardownInfoForwarding *connection_teardown_info);
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
