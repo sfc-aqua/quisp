@@ -259,12 +259,14 @@ TEST_F(RuntimeTest, freeQubitFromRuleSet){
   EXPECT_EQ(runtime->qubits.size(), 0);
   runtime->assignQubitToRuleSet(partner_addr, qubit);
   runtime->assignQubitToRuleSet(partner_addr2, qubit2);
+
   runtime->assignQubitToRuleSet(partner_addr2, qubit3);
   runtime->assignQubitToRuleSet(partner_addr, qubit4);
 
-  runtime->freeQubitFromRuleSet(partner_addr, qubit);
-  EXPECT_EQ(runtime->getQubitByPartnerAddr(partner_addr, 0), qubit4);
+  runtime->freeQubitFromRuleSet(partner_addr, qubit4);
+  EXPECT_EQ(runtime->getQubitByPartnerAddr(partner_addr, 0), qubit);
 
+  runtime->rule_id = 1;
   runtime->freeQubitFromRuleSet(partner_addr2, qubit2);
   EXPECT_EQ(runtime->getQubitByPartnerAddr(partner_addr2, 0), qubit3);
 
