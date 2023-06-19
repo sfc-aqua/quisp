@@ -72,9 +72,10 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   IRealTimeController *realtime_controller;
   BellPairStore bell_pair_store;
 
-  void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type);
   void freeConsumedResource(int qnic_index, IStationaryQubit *qubit, QNIC_type qnic_type);
   void ResourceAllocation(int qnic_type, int qnic_index);
+  void freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
+
 
  protected:
   void initialize() override;

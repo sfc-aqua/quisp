@@ -250,6 +250,26 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   }
 }
 
+// Invoked whenever existing resource (entangled with neighbor) need to be released.
+// Frees those resources from a particular ruleset, from top to bottom (all of it).
+void RuleEngine::freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id) {
+  auto runtime = runtimes.findById(ruleset_id);
+  auto &partners = runtime->partners;
+  for (auto &partner_addr : partners) {
+    auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr.val);
+    for (auto it = range.first; it != range.second; ++it) {
+      auto qubit_record = it->second;
+
+      // 3. if the qubit is allocated, and the qubit need to be released from this rule,
+      // if the qubit is not assigned to the rule, the qubit is not releasable from that rule
+      if (qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
+        qubit_record->setAllocated(false);
+        runtime->freeQubitFromRuleSet(partner_addr, qubit_record);
+      }
+    }
+  }
+}
+
 void RuleEngine::executeAllRuleSets() {
   bool terminated = runtimes.exec();
   if (terminated) {

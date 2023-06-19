@@ -156,6 +156,39 @@ TEST_F(RuleEngineTest, resourceAllocation) {
   EXPECT_EQ(rt.qubits.size(), 1);
 }
 
+TEST_F(RuleEngineTest, freeResourceFromRuleSet) {
+  auto logger = std::make_unique<DisabledLogger>();
+  auto* qubit_record0 = new QubitRecord(QNIC_E, 3, 0, logger.get());
+  auto* qubit_record1 = new QubitRecord(QNIC_E, 3, 1, logger.get());
+  auto* qubit_record2 = new QubitRecord(QNIC_E, 3, 2, logger.get());
+  auto rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, nullptr, qnic_specs};
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  rule_engine->setAllResources(0, qubit_record0);
+  rule_engine->setAllResources(1, qubit_record1);
+  rule_engine->setAllResources(2, qubit_record2);
+  int q0 = 0;
+  QNodeAddr partner_addr{1};
+  // this action needs a resource qubit that is entangled with partner 1.
+  Program test_action{"testAction", {quisp::runtime::INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}}}};
+  Program empty_condition{"emptyCondition", {}};
+  auto rs = quisp::runtime::RuleSet{"test rs", {quisp::runtime::Rule{"test", -1, -1, empty_condition, test_action}}};
+  auto runtime = quisp::runtime::Runtime{};
+  rule_engine->runtimes.acceptRuleSet(rs);
+
+  rule_engine->ResourceAllocation(QNIC_E, 3);
+  EXPECT_TRUE(qubit_record1->isAllocated());
+
+  rule_engine->freeResourceFromRuleSet(QNIC_E, 3, rs.id);
+   EXPECT_FALSE(qubit_record1->isAllocated());
+
+  // A qubit allocated to a particular action is now successfully released
+  auto& rt = rule_engine->runtimes.at(0);
+  EXPECT_EQ(rt.ruleset.rules.size(), 1);
+  EXPECT_EQ(rt.qubits.size(), 0);
+
+}
+
 TEST_F(RuleEngineTest, freeConsumedResource) {
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
   sim->registerComponent(rule_engine);
