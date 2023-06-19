@@ -10,6 +10,13 @@ packet ConnectionTeardownMessage extends Header
     unsigned long RuleSet_id;
 }
 
+packet InternalConnectionTeardownMessage extends Header
+{
+    int destAddr;
+    int srcAddr;
+    unsigned long RuleSet_id;
+}
+
 packet InternalConnectionTeardownInfoForwarding extends Header
 {
     int srcAddr;
