@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "IConnectionManager.h"
+#include "messages/connection_teardown_messages_m.h"
 
 #include <messages/classical_messages.h>
 #include <modules/Logger/LoggerBase.h>
@@ -91,6 +92,8 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   void popApplicationRequest(int qnic_address);
 
   void storeTeardownInfo(messages::ConnectionSetupResponse *pk);
+  void storeTeardownMessage(messages::ConnectionTeardownMessage *pk);
+  
   void storeRuleSetForApplication(messages::ConnectionSetupResponse *pk);
   void storeRuleSet(messages::ConnectionSetupResponse *pk);
 

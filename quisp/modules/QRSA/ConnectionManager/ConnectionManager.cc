@@ -7,6 +7,7 @@
 
 #include "ConnectionManager.h"
 #include "RuleSetGenerator.h"
+#include "messages/connection_teardown_messages_m.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -126,6 +127,16 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     delete msg;
     return;
   }
+
+  if (auto *pk = dynamic_cast<ConnectionTeardownMessage *>(msg)) {
+    auto dest_addr = pk->getDestAddr();
+    auto qnic_addr = routing_daemon->findQNicAddrByDestAddr(dest_addr);
+    releaseQnic(qnic_addr);
+
+
+    delete msg;
+    return;
+  }
 }
 
 PurType ConnectionManager::parsePurType(const std::string &pur_type) {
@@ -184,6 +195,7 @@ void ConnectionManager::storeTeardownInfo(ConnectionSetupResponse *pk) {
     send(pk_internal, "RouterPort$o");
   }
 }
+
 
 /**
  * This function is called to handle the ConnectionSetupResponse at the intermediate node.
