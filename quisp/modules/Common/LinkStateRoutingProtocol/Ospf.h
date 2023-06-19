@@ -48,7 +48,7 @@ struct SummaryLinkStateAdvertisement {
 struct LinkStateAdvertisement : SummaryLinkStateAdvertisement {
   NeighborTable neighbor_nodes;
   LinkStateAdvertisement(NodeAddr id, NodeAddr origin_id, NeighborTable neighbor_table) : SummaryLinkStateAdvertisement(id, origin_id, 0), neighbor_nodes(neighbor_table) {}
-  LinkStateAdvertisement(NodeAddr id, NodeAddr origin_id, int age, std::map<NodeAddr, OspfNeighborInfo> neighbor_table)
+  LinkStateAdvertisement(NodeAddr id, NodeAddr origin_id, int age, NeighborTable neighbor_table)
       : SummaryLinkStateAdvertisement(id, origin_id, age), neighbor_nodes(neighbor_table) {}
   LinkStateAdvertisement() = default;
 };
@@ -69,30 +69,39 @@ class LinkStateDatabase {
 
   using VertexSharedPtr = std::shared_ptr<Vertex>;
   using VertexMap = std::map<NodeAddr, VertexSharedPtr>;
+  using PriorityQueue = std::priority_queue<VertexSharedPtr, std::vector<VertexSharedPtr>, VertexMinPriority>;
 
  public:
+  /**
+   * @brief Adds new lsa or updated lsa to link_state_database
+   *        As a sideffect, this function clears lsdb_summary
+   */
   void updateLinkStateDatabase(LinkStateAdvertisement& lsa);
+
+  /**
+   * @brief Get the Link State Database Summary object
+   * @details This function also takes care of generating lsdb_summary when needed
+   *          This is to prevent unnecessary lsdb_summary update, as lsdb_summary is not needed until a router receives LsrPacket
+   * @return lsdb_summary
+   */
   LinkStateDatabaseSummary getLinkStateDatabaseSummary();
 
   std::map<NodeAddr, int> generateRoutingTableFromGraph(NodeAddr source) const;
 
   RouterIds identifyMissingLinkStateAdvertisementId(const LinkStateDatabaseSummary& lsdb_summary_from_neighbor) const;
+  virtual bool needsFullLinkStateAdvertisementOf(const SummaryLinkStateAdvertisement& summary_lsa) const;
   LinkStateUpdate getLinkStateUpdatesFor(const RouterIds& requests, int my_address) const;
-  LinkStateAdvertisement getLinkStateAdvertisementOf(NodeAddr router) const;
+  virtual LinkStateAdvertisement getLinkStateAdvertisementOf(NodeAddr router) const;
   bool hasLinkStateAdvertisementOf(NodeAddr router) const;
-  bool needsFullLinkStateAdvertisementOf(const SummaryLinkStateAdvertisement& summary_lsa) const;
 
  protected:
   int getGateIndexToNeighbor(NodeAddr src, NodeAddr neighbor) const;
   NodeAddr getSecondNodeInPathToDestNode(NodeAddr source_id, NodeAddr dst_id, const VertexMap& vertices) const;
 
-  const VertexMap dijkstraAlgorithm(NodeAddr source_id) const;
+  virtual const VertexMap dijkstraAlgorithm(NodeAddr source_id) const;
   VertexMap generateVerticesFromLsdb() const;
   double weight(NodeAddr node1, NodeAddr node2) const;
-  template <typename Q>
-  VertexSharedPtr popMinDistanceNode(Q& q) const;
-  void relax(const VertexSharedPtr current_node, VertexSharedPtr adjacent_node) const;
-  std::priority_queue<VertexSharedPtr, std::vector<VertexSharedPtr>, VertexMinPriority> initializePriorityQueue(const VertexMap& map_vertices) const;
+  VertexSharedPtr popMinDistanceNode(PriorityQueue& q) const;
 
  protected:
   std::map<NodeAddr, LinkStateAdvertisement> link_state_database;
