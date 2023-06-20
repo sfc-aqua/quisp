@@ -33,20 +33,20 @@ class Router : public omnetpp::cSimpleModule {
   bool ospfNeighborIsRegistered(int address) const;
 
   void ospfHandleDbdPacket(const messages::OspfDbdPacket *const pk);
-  void ospfExStartState(const messages::OspfDbdPacket *const pk);
   /**
-   * @brief Exchange DBD packets to decide who the master or slave is
+   * @brief Exchange packets to decide who the master or slave is
    * @details Master/slave is decided based on the number of router address/ID.
    *          Whichever that has the bigger router address becomes the master
-   * @param neighbor
+   *          Slave sends its Summary LSDB to Master
+   *          Master send empty DBD packet until it receives Summary LSDB from Slave
    */
-  void ospfDecideMaster(int src);
+  void ospfExStartState(const messages::OspfDbdPacket *const pk);
   void ospfSendExstartDbdPacket(NodeAddr neighbor, bool is_master);
-  void ospfInitiateExchangeState(int dest);
-  void ospfRespondToExchangeStateMater(int dest);
+  void ospfSlaveInitiateExchangeState(int dest);
+  void ospfMasterEnterExchangeState(int dest);
   void ospfSendLsdbSummary(int destination, bool i_am_master = false);
 
-  void ospfSendLinkStateRequest(const messages::OspfDbdPacket *const pk);
+  void ospfSendLinkStateRequest(int dst, const RouterIds& missing_lsa_ids);
   void ospfHandleLinkStateRequest(const messages::OspfLsrPacket *const pk);
 
   void ospfHandleLinkStateUpdate(const messages::OspfLsuPacket *const pk);

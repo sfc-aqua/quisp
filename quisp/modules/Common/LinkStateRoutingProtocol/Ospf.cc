@@ -99,13 +99,16 @@ const LinkStateDatabase::VertexMap LinkStateDatabase::dijkstraAlgorithm(NodeAddr
   if (vertices.count(source_id) == false) throw omnetpp::cRuntimeError("LinkStateDatabase::dijkstraAlgorithm: link_state_database does not have vertex%d", source_id);
 
   vertices[source_id]->distance_from_source = 0;
-  PriorityQueue Q;
-  Q.emplace(vertices[source_id]);
+  PriorityQueue queue;
+  queue.emplace(vertices[source_id]);
 
-  while (Q.size()) {
-    const auto current_vertex = popMinDistanceNode(Q);
+  while (queue.size()) {
+    const auto current_vertex = popMinDistanceNode(queue);
     for (const auto& neighbor_entry : link_state_database.at(current_vertex->node_id).neighbor_nodes) {
       const auto neighbor_node = neighbor_entry.second;
+
+      if (current_vertex->node_id == neighbor_node.router_id) throw omnetpp::cRuntimeError("LinkStateDatabase::dijkstraAlgorithm: vertex%d has self as a neighbor, which cannot happen", current_vertex->node_id);
+
       // if we do not have information about this neighbor, skip to next neighbor
       if (!vertices.count(neighbor_node.router_id)) continue;
 
@@ -114,7 +117,7 @@ const LinkStateDatabase::VertexMap LinkStateDatabase::dijkstraAlgorithm(NodeAddr
       if (neighbor_vertex->distance_from_source > distance_of_new_path) {
         neighbor_vertex->distance_from_source = distance_of_new_path;
         neighbor_vertex->prev_node_in_path = current_vertex->node_id;
-        Q.emplace(neighbor_vertex);
+        queue.emplace(neighbor_vertex);
       }
     }
   }

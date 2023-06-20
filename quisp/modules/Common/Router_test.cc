@@ -11,9 +11,15 @@ using namespace quisp_test;
 using namespace quisp_test::utils;
 using namespace quisp::messages;
 using namespace quisp::modules::SharedResource;
+using namespace quisp::modules::ospf;
 using OriginalRouter = quisp::modules::Router;
 
 namespace {
+
+class MockLinkStateDatabase : public LinkStateDatabase {
+ public:
+  using LinkStateDatabase::link_state_database;
+};
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -105,7 +111,7 @@ class RouterTest : public ::testing::Test {
    * Call this function before router->handleMessages
    * when you want to retrieve the info of the arrival gate.
    */
-  void mockMessageArrival(OspfHelloPacket* msg) {
+  void mockMessageArrival(cMessage *msg) {
     int queue_size = 1;
     int arrival_gate_index = 0;
     router->addGateVector("fromQueue", cGate::Type::INPUT, queue_size);
@@ -117,63 +123,33 @@ class RouterTest : public ::testing::Test {
   TestQNode* qnode;
 };
 
-TEST_F(RouterTest, ospfSendHelloPacketAtInitialization) {
-  router->ospfInitializeRouter();
-  auto down_state_msg = router->queueGate->messages.front();
-  auto* down_state_packet = check_and_cast<OspfHelloPacket*>(down_state_msg);
-
-  ASSERT_EQ(down_state_packet->getSrcAddr(), router->my_address);
-  ASSERT_EQ(down_state_packet->getNeighbor_table().size(), 0);
-}
-
-TEST_F(RouterTest, ospfSendHelloPacketWithNeighborInfo) {
-  int src = 1, send_gate_index = 0, arrival_gate_index = 0;
-  router->neighbor_table[src] = OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
-
-  router->ospfSendHelloPacketToNeighbor(send_gate_index);
-  auto msg = router->queueGate->messages.front();
-  auto* pk = check_and_cast<OspfHelloPacket*>(msg);
-
-  ASSERT_EQ(pk->getSrcAddr(), router->my_address);
-  ASSERT_EQ(pk->getNeighbor_table().size(), 1);
-  ASSERT_EQ(pk->getNeighbor_table().at(src).state, OspfState::INIT);
-}
-
 TEST_F(RouterTest, ospfReceiveHelloPacketHandleImpossibleCase) {
-  int src = 1;
+  const NodeAddr src = 1;
   auto msg_from_other_node = new OspfHelloPacket;
   msg_from_other_node->setSrcAddr(src);
+  router->neighbor_table[src] = {};
 
-  int arrival_gate_index = 0;
-  router->neighbor_table[src] = OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
-  ASSERT_THROW(router->handleMessage(msg_from_other_node), cRuntimeError);
-}
-
-TEST_F(RouterTest, ospfReceiveHelloPacketFailedStateTransition) {
-  int src = 1;
-  auto msg_from_other_node = new OspfHelloPacket;
-  msg_from_other_node->setSrcAddr(src);
-
-  int arrival_gate_index = 0;
-  router->neighbor_table[src] = OspfNeighborInfo(arrival_gate_index, OspfState::DOWN);
   ASSERT_THROW(router->handleMessage(msg_from_other_node), cRuntimeError);
 }
 
 TEST_F(RouterTest, ospfReceiveHelloPacketAndEstablishInitState) {
-  int src = 1;
+  const NodeAddr src = 1;
   auto msg_from_other_node = new OspfHelloPacket;
   msg_from_other_node->setSrcAddr(src);
 
   mockMessageArrival(msg_from_other_node);
 
   router->handleMessage(msg_from_other_node);
+  ASSERT_EQ(router->neighbor_table[src].state, OspfState::INIT);
   int arrival_gate_index = 0;
   ASSERT_EQ(router->neighbor_table[src].gate_index, arrival_gate_index);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
+  auto sent_msg = router->queueGate->messages.front();
+  ASSERT_TRUE(dynamic_cast<OspfHelloPacket *>(sent_msg));
 }
 
 TEST_F(RouterTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
-  int src = 1;
+  const NodeAddr src = 1;
   auto msg_from_other_node = new OspfHelloPacket;
   msg_from_other_node->setSrcAddr(src);
   NeighborTable neighbor_table;
@@ -183,13 +159,16 @@ TEST_F(RouterTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
   mockMessageArrival(msg_from_other_node);
 
   router->handleMessage(msg_from_other_node);
-  int arrival_gate_index = 0;
+  ASSERT_EQ(router->neighbor_table[src].state, OspfState::TWO_WAY);
+  const int arrival_gate_index = 0;
   ASSERT_EQ(router->neighbor_table[src].gate_index, arrival_gate_index);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
+  auto sent_msg = router->queueGate->messages.front();
+  ASSERT_TRUE(dynamic_cast<OspfHelloPacket *>(sent_msg));
 }
 
 TEST_F(RouterTest, ospfReceiveHelloPacketAndTransitionFromInitToTwoWayState) {
-  int src = 1;
+  const NodeAddr src = 1;
   auto msg_from_other_node = new OspfHelloPacket;
   msg_from_other_node->setSrcAddr(src);
   NeighborTable neighbor_table;
@@ -198,11 +177,179 @@ TEST_F(RouterTest, ospfReceiveHelloPacketAndTransitionFromInitToTwoWayState) {
 
   mockMessageArrival(msg_from_other_node);
 
-  int arrival_gate_index = 0;
+  const int arrival_gate_index = 0;
   router->neighbor_table[src] = OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
+
   router->handleMessage(msg_from_other_node);
+  ASSERT_EQ(router->neighbor_table[src].state, OspfState::EXSTART);
   ASSERT_EQ(router->neighbor_table[src].gate_index, arrival_gate_index);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
+  auto sent_msg = router->queueGate->messages.front();
+  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(sent_msg);
+  ASSERT_TRUE(dbd_pk);
+  ASSERT_TRUE(dbd_pk->getIs_master());
+}
+
+TEST_F(RouterTest, ospfReceiveHelloPacketButCannotTransitionToTwoWayState) {
+  const NodeAddr src = 1;
+  auto msg_from_other_node = new OspfHelloPacket;
+  msg_from_other_node->setSrcAddr(src);
+  NeighborTable neighbor_table;
+  neighbor_table[router->my_address] = OspfNeighborInfo(router->my_address);
+  msg_from_other_node->setNeighbor_table(neighbor_table);
+
+  mockMessageArrival(msg_from_other_node);
+
+  router->neighbor_table[src] = OspfNeighborInfo(0, OspfState::DOWN);
+
+  ASSERT_ANY_THROW(router->handleMessage(msg_from_other_node));
+}
+
+TEST_F(RouterTest, ospfMasterRespondsToExstartPacketOfSoonToBeSlave) {
+  const NodeAddr src = 1;
+  auto slave_wants_to_be_master_pk = new OspfDbdPacket;
+  slave_wants_to_be_master_pk->setSrcAddr(src);
+  slave_wants_to_be_master_pk->setIs_master(true);
+  slave_wants_to_be_master_pk->setState(OspfState::EXSTART);
+
+  router->handleMessage(slave_wants_to_be_master_pk);
+  ASSERT_EQ(router->queueGate->messages.size(), 1);
+  auto sent_msg = router->queueGate->messages.front();
+  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(sent_msg);
+  ASSERT_TRUE(dbd_pk);
+  ASSERT_TRUE(dbd_pk->getIs_master());
+  ASSERT_EQ(dbd_pk->getLsdb().size(), 0);
+  ASSERT_EQ(dbd_pk->getState(), OspfState::EXSTART);
+}
+
+TEST_F(RouterTest, ospfMasterRespondsToExstartPacketOfSlave) {
+  const NodeAddr src = 1;
+  auto slave_wants_to_be_master_pk = new OspfDbdPacket;
+  slave_wants_to_be_master_pk->setSrcAddr(src);
+  slave_wants_to_be_master_pk->setIs_master(false);
+  slave_wants_to_be_master_pk->setState(OspfState::EXSTART);
+
+  router->handleMessage(slave_wants_to_be_master_pk);
+  ASSERT_EQ(router->queueGate->messages.size(), 1);
+  auto sent_msg = router->queueGate->messages.front();
+  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(sent_msg);
+  ASSERT_TRUE(dbd_pk);
+  ASSERT_TRUE(dbd_pk->getIs_master());
+  ASSERT_EQ(dbd_pk->getState(), OspfState::EXSTART);
+}
+
+TEST_F(RouterTest, ospfSlaveRespondsToExstartPacketOfMaster) {
+  const NodeAddr src = router->my_address + 1;
+  auto msg_from_other_node = new OspfDbdPacket;
+  msg_from_other_node->setSrcAddr(src);
+  msg_from_other_node->setIs_master(true);
+  msg_from_other_node->setState(OspfState::EXSTART);
+  router->neighbor_table[src].state = OspfState::EXSTART;
+
+  router->handleMessage(msg_from_other_node);
+  ASSERT_EQ(router->neighbor_table[src].state, OspfState::EXCHANGE);
+  ASSERT_EQ(router->queueGate->messages.size(), 1);
+  auto sent_msg = router->queueGate->messages.front();
+  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(sent_msg);
+  ASSERT_TRUE(dbd_pk);
+  ASSERT_FALSE(dbd_pk->getIs_master());
+  ASSERT_EQ(dbd_pk->getState(), OspfState::EXCHANGE);
+}
+
+TEST_F(RouterTest, ospfSlaveDoesNotSendExchangePacketTwice) {
+  const NodeAddr src = router->my_address + 1;
+  auto msg_from_other_node = new OspfDbdPacket;
+  msg_from_other_node->setSrcAddr(src);
+  msg_from_other_node->setIs_master(true);
+  msg_from_other_node->setState(OspfState::EXSTART);
+  msg_from_other_node->setLsdb({SummaryLinkStateAdvertisement()});
+  router->neighbor_table[src].state = OspfState::EXCHANGE;
+
+  router->handleMessage(msg_from_other_node);
+  ASSERT_EQ(router->neighbor_table[src].state, OspfState::EXCHANGE);
+  ASSERT_EQ(router->queueGate->messages.size(), 0);
+}
+
+TEST_F(RouterTest, ospfMasterRespondsToExchangePacketOfSlave) {
+  const NodeAddr src = router->my_address - 1;
+  auto msg_from_other_node = new OspfDbdPacket;
+  msg_from_other_node->setSrcAddr(src);
+  msg_from_other_node->setIs_master(false);
+  msg_from_other_node->setState(OspfState::EXCHANGE);
+  msg_from_other_node->setLsdb({SummaryLinkStateAdvertisement()});
+  router->neighbor_table[src].state = OspfState::EXSTART;
+
+  router->handleMessage(msg_from_other_node);
+  ASSERT_EQ(router->neighbor_table[src].state, OspfState::LOADING);
+  ASSERT_EQ(router->queueGate->messages.size(), 2);
+  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(router->queueGate->messages.front());
+  ASSERT_TRUE(dbd_pk);
+  ASSERT_TRUE(dbd_pk->getIs_master());
+  ASSERT_EQ(dbd_pk->getState(), OspfState::EXCHANGE);
+  auto lsr_pk = dynamic_cast<OspfLsrPacket *>(router->queueGate->messages.back());
+  ASSERT_TRUE(lsr_pk);
+}
+
+TEST_F(RouterTest, ospfSlaveRespondsToExchangePacketOfMaster) {
+  const NodeAddr src = router->my_address + 1;
+  auto msg_from_other_node = new OspfDbdPacket;
+  msg_from_other_node->setSrcAddr(src);
+  msg_from_other_node->setIs_master(true);
+  msg_from_other_node->setState(OspfState::EXCHANGE);
+  msg_from_other_node->setLsdb({SummaryLinkStateAdvertisement()});
+
+  router->handleMessage(msg_from_other_node);
+  ASSERT_EQ(router->queueGate->messages.size(), 1);
+  auto sent_msg = router->queueGate->messages.front();
+  ASSERT_TRUE(dynamic_cast<OspfLsrPacket *>(sent_msg));
+}
+
+TEST_F(RouterTest, ospfReceiveDbdPacketWithNoLsdb) {
+  const NodeAddr src = router->my_address + 1;
+  auto msg_from_other_node = new OspfDbdPacket;
+  msg_from_other_node->setSrcAddr(src);
+  msg_from_other_node->setIs_master(true);
+  msg_from_other_node->setState(OspfState::EXCHANGE);
+  auto other_node_lsa = LinkStateAdvertisement(src, src, {});
+  msg_from_other_node->setLsdb({other_node_lsa});
+  MockLinkStateDatabase mock_link_state_database;
+  mock_link_state_database.link_state_database[src] = other_node_lsa;
+  router->link_state_database = mock_link_state_database;
+
+  router->handleMessage(msg_from_other_node);
+  ASSERT_EQ(router->neighbor_table[src].state, OspfState::FULL);
+}
+
+TEST_F(RouterTest, ospfRespondToLsrPacket) {
+  auto msg_from_other_node = new OspfLsrPacket;
+
+  router->handleMessage(msg_from_other_node);
+  ASSERT_EQ(router->queueGate->messages.size(), 1);
+  ASSERT_TRUE(dynamic_cast<OspfLsuPacket *>(router->queueGate->messages.front()));
+}
+
+TEST_F(RouterTest, ospfRespondToLsuPacket) {
+  const NodeAddr other_node = 1;
+  const NodeAddr my_address = router->my_address;
+  auto msg_from_other_node = new OspfLsuPacket;
+
+  MockLinkStateDatabase mock_link_state_database;
+  router->neighbor_table[other_node] = OspfNeighborInfo(other_node, other_node, 0);
+  mock_link_state_database.link_state_database[my_address] = LinkStateAdvertisement(my_address, my_address, router->neighbor_table);
+
+  NeighborTable other_node_neighbor_table;
+  other_node_neighbor_table[my_address] = OspfNeighborInfo(my_address, my_address, 0);
+  mock_link_state_database.link_state_database[other_node] = LinkStateAdvertisement(other_node, other_node, other_node_neighbor_table);
+
+  router->link_state_database = mock_link_state_database;
+
+  router->handleMessage(msg_from_other_node);
+  ASSERT_EQ(router->queueGate->messages.size(), 2);
+  ASSERT_TRUE(dynamic_cast<OspfLsAckPacket *>(router->queueGate->messages[0]));
+  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(router->queueGate->messages[1]);
+  ASSERT_TRUE(dbd_pk);
+  ASSERT_TRUE(dbd_pk->getIs_master());
+  ASSERT_EQ(dbd_pk->getState(), OspfState::EXCHANGE);
 }
 
 TEST_F(RouterTest, handlePacketForUnknownAddr) {
