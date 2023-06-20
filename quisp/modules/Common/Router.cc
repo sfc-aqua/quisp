@@ -18,15 +18,15 @@ void Router::initialize() {
 
   ospfInitializeRouter();
 
-  // Topology creation for routing table
-  auto topo = provider.getTopologyForRouter();
+  // // Topology creation for routing table
+  // auto topo = provider.getTopologyForRouter();
 
-  // If no node with the parameter & value found, do nothing.
-  if (topo->getNumNodes() == 0 || topo == nullptr) {
-    return;
-  }
+  // // If no node with the parameter & value found, do nothing.
+  // if (topo->getNumNodes() == 0 || topo == nullptr) {
+  //   return;
+  // }
 
-  generateRoutingTable(topo);
+  // generateRoutingTable(topo);
 }
 
 void Router::generateRoutingTable(cTopology *topo) {
@@ -151,8 +151,8 @@ void Router::handleMessage(cMessage *msg) {
   }
 
   // Check if packet is reachable
-  auto it = routing_table.find(dest_addr);
-  if (it == routing_table.end()) {
+  auto it = ospf_routing_table.find(dest_addr);
+  if (it == ospf_routing_table.end()) {
     std::cout << "In Node[" << my_address << "]Address... " << dest_addr << " unreachable, discarding packet " << pk->getName() << endl;
     delete pk;
     error("Router couldn’t find the path. Shoudn’t happen. Or maybe the router does not understand the packet.");
@@ -242,37 +242,36 @@ void Router::ospfHandleDbdPacket(const OspfDbdPacket *const pk) {
   } else if (pk->getState() == OspfState::EXCHANGE) {
     const int src = pk->getSrcAddr();
 
-    if (pk->getIs_master()) {
-      ospfRespondToExchangeStateMater(src);
+    if (bool i_am_master = (!pk->getIs_master())) {
+      ospfMasterEnterExchangeState(src);
     }
-    if (pk->getLsdb().empty() == false) {
-      ospfSendLinkStateRequest(pk);
+
+    if (pk->getLsdb().empty()) error("Router::ospfHandleDbdPacket: expected LSDB to be not empty, but it is");
+
+    const RouterIds missing_lsa_ids = link_state_database.identifyMissingLinkStateAdvertisementId(pk->getLsdb());
+    if (missing_lsa_ids.size() > 0) {
+      ospfSendLinkStateRequest(pk->getSrcAddr(), missing_lsa_ids);
+    } else {
+      neighbor_table[pk->getSrcAddr()].state = OspfState::FULL;
     }
+
     return;
   }
 }
 
 void Router::ospfExStartState(const OspfDbdPacket *const pk) {
   const int src = pk->getSrcAddr();
-  if (pk->getIs_master()) {
-    return ospfDecideMaster(src);
-  }
-  // i am master
-  const bool exchange_state_is_initiated = (neighbor_table[src].state == OspfState::EXCHANGE);
-  if (exchange_state_is_initiated) return;
-  ospfInitiateExchangeState(src);
-}
-
-void Router::ospfDecideMaster(int neighbor) {
-  bool i_am_master = false;
-  if (my_address > neighbor) {
-    i_am_master = true;
-  } else if (my_address < neighbor) {
-    i_am_master = false;
+  if (my_address > src) {
+    bool i_am_master = true;
+    ospfSendExstartDbdPacket(src, i_am_master);
+    return;
+  } else if (my_address < src) {
+    const bool exchange_state_is_initiated = (neighbor_table[src].state == OspfState::EXCHANGE);
+    if (exchange_state_is_initiated) return;
+    ospfSlaveInitiateExchangeState(src);
   } else {
     error("Cannot decide master slave relationship");
   }
-  ospfSendExstartDbdPacket(neighbor, i_am_master);
 }
 
 void Router::ospfSendExstartDbdPacket(NodeAddr neighbor, bool is_master) {
@@ -283,14 +282,14 @@ void Router::ospfSendExstartDbdPacket(NodeAddr neighbor, bool is_master) {
   send(msg, "toQueue", neighbor_table[neighbor].gate_index);
 }
 
-void Router::ospfInitiateExchangeState(int dest) {
-  neighbor_table[dest].state = OspfState::EXCHANGE;
-  ospfSendLsdbSummary(dest, true);
-}
-
-void Router::ospfRespondToExchangeStateMater(int dest) {
+void Router::ospfSlaveInitiateExchangeState(int dest) {
   neighbor_table[dest].state = OspfState::EXCHANGE;
   ospfSendLsdbSummary(dest);
+}
+
+void Router::ospfMasterEnterExchangeState(int dest) {
+  neighbor_table[dest].state = OspfState::EXCHANGE;
+  ospfSendLsdbSummary(dest, true);
 }
 
 void Router::ospfSendLsdbSummary(int dest, bool i_am_master) {
@@ -303,18 +302,13 @@ void Router::ospfSendLsdbSummary(int dest, bool i_am_master) {
   send(msg, "toQueue", neighbor_table[dest].gate_index);
 }
 
-void Router::ospfSendLinkStateRequest(const OspfDbdPacket *const pk) {
-  const int src = pk->getSrcAddr();
-  neighbor_table[src].state = OspfState::LOADING;
+void Router::ospfSendLinkStateRequest(int dst, const RouterIds& missing_lsa_ids) {
+  neighbor_table[dst].state = OspfState::LOADING;
 
-  const RouterIds missing_lsa_ids = link_state_database.identifyMissingLinkStateAdvertisementId(pk->getLsdb());
-
-  if (missing_lsa_ids.size() > 0) {
-    OspfLsrPacket *request = new OspfLsrPacket;
-    request->setSrcAddr(my_address);
-    request->setIds_of_requested_lsa(missing_lsa_ids);
-    send(request, "toQueue", neighbor_table[src].gate_index);
-  }
+  OspfLsrPacket *request = new OspfLsrPacket;
+  request->setSrcAddr(my_address);
+  request->setIds_of_requested_lsa(missing_lsa_ids);
+  send(request, "toQueue", neighbor_table[dst].gate_index);
 }
 
 void Router::ospfHandleLinkStateRequest(const OspfLsrPacket *const pk) {
@@ -348,7 +342,7 @@ void Router::ospfSendUpdatedLsdbToNeighboringRouters(int source_of_updated_lsdb)
   for (const auto neighbor_entry : neighbor_table) {
     const int neighbor_id = neighbor_entry.first;
     if (neighbor_id == source_of_updated_lsdb) continue;
-    ospfSendLsdbSummary(neighbor_id);
+    ospfSendLsdbSummary(neighbor_id, true);
   }
 }
 
