@@ -5,6 +5,7 @@ simple Router
 {
     parameters:
         @display("i=block/routing");
+        bool run_ospf = default(true);
     gates:
         input fromQueue[];
         output toQueue[];

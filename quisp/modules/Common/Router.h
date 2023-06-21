@@ -21,7 +21,9 @@ class Router : public omnetpp::cSimpleModule {
   virtual void initialize() override;
   virtual void handleMessage(omnetpp::cMessage *msg) override;
   void generateRoutingTable(cTopology *topo);
-  void generateRoutingTable();
+  virtual void generateRoutingTable();
+  void sendToDestination(messages::Header *pk);
+  void handlePendingMessages();
 
   virtual size_t getNumNeighbors() const;
 
@@ -46,7 +48,7 @@ class Router : public omnetpp::cSimpleModule {
   void ospfMasterEnterExchangeState(int dest);
   void ospfSendLsdbSummary(int destination, bool i_am_master = false);
 
-  void ospfSendLinkStateRequest(int dst, const RouterIds& missing_lsa_ids);
+  void ospfSendLinkStateRequest(int dst, const RouterIds &missing_lsa_ids);
   void ospfHandleLinkStateRequest(const messages::OspfLsrPacket *const pk);
 
   void ospfHandleLinkStateUpdate(const messages::OspfLsuPacket *const pk);
@@ -59,10 +61,12 @@ class Router : public omnetpp::cSimpleModule {
 
   NodeAddr my_address;
   RoutingTable routing_table;
-
-  RoutingTable ospf_routing_table;
   ospf::NeighborTable neighbor_table;
   LinkStateDatabase link_state_database;
+  std::vector<cMessage *> unrecognizable_destination_messages;
+
+ private:
+  bool run_ospf;
 };
 
 Define_Module(Router);

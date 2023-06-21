@@ -16,17 +16,21 @@ Router::Router() : provider(utils::ComponentProvider{this}) {}
 void Router::initialize() {
   my_address = provider.getNodeAddr();
 
-  ospfInitializeRouter();
+  run_ospf = par("run_ospf");
 
-  // // Topology creation for routing table
-  // auto topo = provider.getTopologyForRouter();
+  if (run_ospf) {
+    ospfInitializeRouter();
+  } else {
+    // Topology creation for routing table
+    auto topo = provider.getTopologyForRouter();
 
-  // // If no node with the parameter & value found, do nothing.
-  // if (topo->getNumNodes() == 0 || topo == nullptr) {
-  //   return;
-  // }
+    // If no node with the parameter & value found, do nothing.
+    if (topo->getNumNodes() == 0 || topo == nullptr) {
+      return;
+    }
 
-  // generateRoutingTable(topo);
+    generateRoutingTable(topo);
+  }
 }
 
 void Router::generateRoutingTable(cTopology *topo) {
@@ -61,8 +65,6 @@ void Router::generateRoutingTable(cTopology *topo) {
   }
 }
 
-void Router::generateRoutingTable() { ospf_routing_table = link_state_database.generateRoutingTableFromGraph(my_address); }
-
 void Router::handleMessage(cMessage *msg) {
   if (auto pk = dynamic_cast<OspfHelloPacket *>(msg)) {
     return ospfHandleHelloPacket(pk);
@@ -77,7 +79,10 @@ void Router::handleMessage(cMessage *msg) {
   }
 
   if (auto pk = dynamic_cast<OspfLsuPacket *>(msg)) {
-    return ospfHandleLinkStateUpdate(pk);
+    ospfHandleLinkStateUpdate(pk);
+    // check if pending messages can be sent now that we have new routing_table
+    if (unrecognizable_destination_messages.size()) handlePendingMessages();
+    return;
   }
 
   if (auto pk = dynamic_cast<OspfLsAckPacket *>(msg)) {
@@ -151,17 +156,45 @@ void Router::handleMessage(cMessage *msg) {
   }
 
   // Check if packet is reachable
-  auto it = ospf_routing_table.find(dest_addr);
-  if (it == ospf_routing_table.end()) {
+  if (routing_table.count(dest_addr) == false) {
+    // push back to vecor and see if we can send it later when routing_table is updated
+    unrecognizable_destination_messages.push_back(pk);
+    return;
+  }
+
+  // unrecognizable_destination_messages must be sent when LSDB is updated.
+  // If they are not sent at this point, that means there is some kind of error.
+  if (unrecognizable_destination_messages.size()) {
     std::cout << "In Node[" << my_address << "]Address... " << dest_addr << " unreachable, discarding packet " << pk->getName() << endl;
     delete pk;
     error("Router couldn’t find the path. Shoudn’t happen. Or maybe the router does not understand the packet.");
     return;
   }
 
-  int out_gate_index = (*it).second;
+  sendToDestination(pk);
+}
+
+void Router::generateRoutingTable() { routing_table = link_state_database.generateRoutingTableFromGraph(my_address); }
+
+void Router::sendToDestination(Header *pk) {
+  int dest_addr = pk->getDestAddr();
+  int out_gate_index = routing_table.at(dest_addr);
   pk->setHopCount(pk->getHopCount() + 1);
   send(pk, "toQueue", out_gate_index);
+}
+
+void Router::handlePendingMessages() {
+  auto itr = unrecognizable_destination_messages.begin();
+  while (itr != unrecognizable_destination_messages.end()) {
+    auto msg = (*itr);
+    Header *pk = check_and_cast<Header *>(msg);
+    int dest_addr = pk->getDestAddr();
+    if (routing_table.count(dest_addr)) {
+      sendToDestination(pk);
+      unrecognizable_destination_messages.erase(itr);
+    } else
+      itr++;
+  }
 }
 
 size_t Router::getNumNeighbors() const {
@@ -302,7 +335,7 @@ void Router::ospfSendLsdbSummary(int dest, bool i_am_master) {
   send(msg, "toQueue", neighbor_table[dest].gate_index);
 }
 
-void Router::ospfSendLinkStateRequest(int dst, const RouterIds& missing_lsa_ids) {
+void Router::ospfSendLinkStateRequest(int dst, const RouterIds &missing_lsa_ids) {
   neighbor_table[dst].state = OspfState::LOADING;
 
   OspfLsrPacket *request = new OspfLsrPacket;

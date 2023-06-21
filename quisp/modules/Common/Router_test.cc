@@ -43,6 +43,9 @@ class Router : public OriginalRouter {
   using OriginalRouter::ospfInitializeRouter;
   using OriginalRouter::ospfSendHelloPacketToNeighbor;
   using OriginalRouter::routing_table;
+  using OriginalRouter::unrecognizable_destination_messages;
+  using OriginalRouter::par;
+  using OriginalRouter::generateRoutingTable;
   explicit Router(TestQNode* parent_qnode) : OriginalRouter() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_router"));
@@ -51,6 +54,7 @@ class Router : public OriginalRouter {
     cmPort = new TestGate(this, "cmPort$o");
     queueGate = new TestGate(this, "toQueue");
     routing_table.insert({8, queueGate->getId()});
+    setParBool(this, "run_ospf", true);
   }
 
   TestGate* hmPort;
@@ -68,6 +72,7 @@ class Router : public OriginalRouter {
     return nullptr;
   }
   size_t getNumNeighbors() const override { return 1; }
+  void generateRoutingTable() override {};
 };
 
 class OspfTestGate : public gate::TestGate {
@@ -353,9 +358,29 @@ TEST_F(RouterTest, ospfRespondToLsuPacket) {
 }
 
 TEST_F(RouterTest, handlePacketForUnknownAddr) {
-  auto msg = new ConnectionSetupRequest;
-  msg->setDestAddr(7);
-  EXPECT_THROW({ router->handleMessage(msg); }, cRuntimeError);
+  auto unknown_addr_msg = new ConnectionSetupRequest;
+  unknown_addr_msg->setDestAddr(7);
+  router->handleMessage(unknown_addr_msg);
+  ASSERT_EQ(router->unrecognizable_destination_messages.size(), 1);
+
+  auto known_addr_msg = new ConnectionSetupRequest;
+  known_addr_msg->setDestAddr(8);
+  ASSERT_THROW({ router->handleMessage(known_addr_msg); }, cRuntimeError);
+}
+
+TEST_F(RouterTest, packetForUnknownAddrIsSentAfterRoutingTableUpdate) {
+  const int dest = 7;
+  auto unknown_addr_msg = new LinkTomographyRequest;
+  unknown_addr_msg->setDestAddr(dest);
+  router->handleMessage(unknown_addr_msg);
+  ASSERT_EQ(router->unrecognizable_destination_messages.size(), 1);
+  router->routing_table[dest] = 0;
+
+  auto link_state_update = new OspfLsuPacket;
+  router->handleMessage(link_state_update);
+  ASSERT_EQ(router->queueGate->messages.size(), 2);
+  ASSERT_TRUE(dynamic_cast<OspfLsAckPacket *>(router->queueGate->messages.front()));
+  ASSERT_TRUE(dynamic_cast<LinkTomographyRequest *>(router->queueGate->messages.back()));
 }
 
 TEST_F(RouterTest, handlePacketForOtherNode) {
