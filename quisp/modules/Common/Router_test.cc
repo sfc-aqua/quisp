@@ -35,6 +35,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 
 class Router : public OriginalRouter {
  public:
+  using OriginalRouter::generateRoutingTable;
   using OriginalRouter::handleMessage;
   using OriginalRouter::initialize;
   using OriginalRouter::link_state_database;
@@ -42,10 +43,9 @@ class Router : public OriginalRouter {
   using OriginalRouter::neighbor_table;
   using OriginalRouter::ospfInitializeRouter;
   using OriginalRouter::ospfSendHelloPacketToNeighbor;
+  using OriginalRouter::par;
   using OriginalRouter::routing_table;
   using OriginalRouter::unrecognizable_destination_messages;
-  using OriginalRouter::par;
-  using OriginalRouter::generateRoutingTable;
   explicit Router(TestQNode* parent_qnode) : OriginalRouter() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_router"));
@@ -72,7 +72,7 @@ class Router : public OriginalRouter {
     return nullptr;
   }
   size_t getNumNeighbors() const override { return 1; }
-  void generateRoutingTable() override {};
+  void generateRoutingTable() override{};
 };
 
 class OspfTestGate : public gate::TestGate {
@@ -116,7 +116,7 @@ class RouterTest : public ::testing::Test {
    * Call this function before router->handleMessages
    * when you want to retrieve the info of the arrival gate.
    */
-  void mockMessageArrival(cMessage *msg) {
+  void mockMessageArrival(cMessage* msg) {
     int queue_size = 1;
     int arrival_gate_index = 0;
     router->addGateVector("fromQueue", cGate::Type::INPUT, queue_size);
@@ -150,7 +150,7 @@ TEST_F(RouterTest, ospfReceiveHelloPacketAndEstablishInitState) {
   ASSERT_EQ(router->neighbor_table[src].gate_index, arrival_gate_index);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
   auto sent_msg = router->queueGate->messages.front();
-  ASSERT_TRUE(dynamic_cast<OspfHelloPacket *>(sent_msg));
+  ASSERT_TRUE(dynamic_cast<OspfHelloPacket*>(sent_msg));
 }
 
 TEST_F(RouterTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
@@ -169,7 +169,7 @@ TEST_F(RouterTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
   ASSERT_EQ(router->neighbor_table[src].gate_index, arrival_gate_index);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
   auto sent_msg = router->queueGate->messages.front();
-  ASSERT_TRUE(dynamic_cast<OspfHelloPacket *>(sent_msg));
+  ASSERT_TRUE(dynamic_cast<OspfHelloPacket*>(sent_msg));
 }
 
 TEST_F(RouterTest, ospfReceiveHelloPacketAndTransitionFromInitToTwoWayState) {
@@ -190,7 +190,7 @@ TEST_F(RouterTest, ospfReceiveHelloPacketAndTransitionFromInitToTwoWayState) {
   ASSERT_EQ(router->neighbor_table[src].gate_index, arrival_gate_index);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
   auto sent_msg = router->queueGate->messages.front();
-  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(sent_msg);
+  auto dbd_pk = dynamic_cast<OspfDbdPacket*>(sent_msg);
   ASSERT_TRUE(dbd_pk);
   ASSERT_TRUE(dbd_pk->getIs_master());
 }
@@ -220,7 +220,7 @@ TEST_F(RouterTest, ospfMasterRespondsToExstartPacketOfSoonToBeSlave) {
   router->handleMessage(slave_wants_to_be_master_pk);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
   auto sent_msg = router->queueGate->messages.front();
-  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(sent_msg);
+  auto dbd_pk = dynamic_cast<OspfDbdPacket*>(sent_msg);
   ASSERT_TRUE(dbd_pk);
   ASSERT_TRUE(dbd_pk->getIs_master());
   ASSERT_EQ(dbd_pk->getLsdb().size(), 0);
@@ -237,7 +237,7 @@ TEST_F(RouterTest, ospfMasterRespondsToExstartPacketOfSlave) {
   router->handleMessage(slave_wants_to_be_master_pk);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
   auto sent_msg = router->queueGate->messages.front();
-  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(sent_msg);
+  auto dbd_pk = dynamic_cast<OspfDbdPacket*>(sent_msg);
   ASSERT_TRUE(dbd_pk);
   ASSERT_TRUE(dbd_pk->getIs_master());
   ASSERT_EQ(dbd_pk->getState(), OspfState::EXSTART);
@@ -255,7 +255,7 @@ TEST_F(RouterTest, ospfSlaveRespondsToExstartPacketOfMaster) {
   ASSERT_EQ(router->neighbor_table[src].state, OspfState::EXCHANGE);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
   auto sent_msg = router->queueGate->messages.front();
-  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(sent_msg);
+  auto dbd_pk = dynamic_cast<OspfDbdPacket*>(sent_msg);
   ASSERT_TRUE(dbd_pk);
   ASSERT_FALSE(dbd_pk->getIs_master());
   ASSERT_EQ(dbd_pk->getState(), OspfState::EXCHANGE);
@@ -287,11 +287,11 @@ TEST_F(RouterTest, ospfMasterRespondsToExchangePacketOfSlave) {
   router->handleMessage(msg_from_other_node);
   ASSERT_EQ(router->neighbor_table[src].state, OspfState::LOADING);
   ASSERT_EQ(router->queueGate->messages.size(), 2);
-  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(router->queueGate->messages.front());
+  auto dbd_pk = dynamic_cast<OspfDbdPacket*>(router->queueGate->messages.front());
   ASSERT_TRUE(dbd_pk);
   ASSERT_TRUE(dbd_pk->getIs_master());
   ASSERT_EQ(dbd_pk->getState(), OspfState::EXCHANGE);
-  auto lsr_pk = dynamic_cast<OspfLsrPacket *>(router->queueGate->messages.back());
+  auto lsr_pk = dynamic_cast<OspfLsrPacket*>(router->queueGate->messages.back());
   ASSERT_TRUE(lsr_pk);
 }
 
@@ -306,7 +306,7 @@ TEST_F(RouterTest, ospfSlaveRespondsToExchangePacketOfMaster) {
   router->handleMessage(msg_from_other_node);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
   auto sent_msg = router->queueGate->messages.front();
-  ASSERT_TRUE(dynamic_cast<OspfLsrPacket *>(sent_msg));
+  ASSERT_TRUE(dynamic_cast<OspfLsrPacket*>(sent_msg));
 }
 
 TEST_F(RouterTest, ospfReceiveDbdPacketWithNoLsdb) {
@@ -330,7 +330,7 @@ TEST_F(RouterTest, ospfRespondToLsrPacket) {
 
   router->handleMessage(msg_from_other_node);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
-  ASSERT_TRUE(dynamic_cast<OspfLsuPacket *>(router->queueGate->messages.front()));
+  ASSERT_TRUE(dynamic_cast<OspfLsuPacket*>(router->queueGate->messages.front()));
 }
 
 TEST_F(RouterTest, ospfRespondToLsuPacket) {
@@ -350,8 +350,8 @@ TEST_F(RouterTest, ospfRespondToLsuPacket) {
 
   router->handleMessage(msg_from_other_node);
   ASSERT_EQ(router->queueGate->messages.size(), 2);
-  ASSERT_TRUE(dynamic_cast<OspfLsAckPacket *>(router->queueGate->messages[0]));
-  auto dbd_pk = dynamic_cast<OspfDbdPacket *>(router->queueGate->messages[1]);
+  ASSERT_TRUE(dynamic_cast<OspfLsAckPacket*>(router->queueGate->messages[0]));
+  auto dbd_pk = dynamic_cast<OspfDbdPacket*>(router->queueGate->messages[1]);
   ASSERT_TRUE(dbd_pk);
   ASSERT_TRUE(dbd_pk->getIs_master());
   ASSERT_EQ(dbd_pk->getState(), OspfState::EXCHANGE);
@@ -379,8 +379,8 @@ TEST_F(RouterTest, packetForUnknownAddrIsSentAfterRoutingTableUpdate) {
   auto link_state_update = new OspfLsuPacket;
   router->handleMessage(link_state_update);
   ASSERT_EQ(router->queueGate->messages.size(), 2);
-  ASSERT_TRUE(dynamic_cast<OspfLsAckPacket *>(router->queueGate->messages.front()));
-  ASSERT_TRUE(dynamic_cast<LinkTomographyRequest *>(router->queueGate->messages.back()));
+  ASSERT_TRUE(dynamic_cast<OspfLsAckPacket*>(router->queueGate->messages.front()));
+  ASSERT_TRUE(dynamic_cast<LinkTomographyRequest*>(router->queueGate->messages.back()));
 }
 
 TEST_F(RouterTest, handlePacketForOtherNode) {

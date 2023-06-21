@@ -107,7 +107,8 @@ const LinkStateDatabase::VertexMap LinkStateDatabase::dijkstraAlgorithm(NodeAddr
     for (const auto& neighbor_entry : link_state_database.at(current_vertex->node_id).neighbor_nodes) {
       const auto neighbor_node = neighbor_entry.second;
 
-      if (current_vertex->node_id == neighbor_node.router_id) throw omnetpp::cRuntimeError("LinkStateDatabase::dijkstraAlgorithm: vertex%d has self as a neighbor, which cannot happen", current_vertex->node_id);
+      if (current_vertex->node_id == neighbor_node.router_id)
+        throw omnetpp::cRuntimeError("LinkStateDatabase::dijkstraAlgorithm: vertex%d has self as a neighbor, which cannot happen", current_vertex->node_id);
 
       // if we do not have information about this neighbor, skip to next neighbor
       if (!vertices.count(neighbor_node.router_id)) continue;

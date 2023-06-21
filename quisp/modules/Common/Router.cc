@@ -221,7 +221,7 @@ void Router::ospfHandleHelloPacket(const OspfHelloPacket *const pk) {
     neighbor_table[src].state = OspfState::TWO_WAY;
     neighbor_table[src].state = OspfState::EXSTART;
 
-    ospfSendExstartDbdPacket(src, true);
+    ospfSendExstartDbdPacket(src);
     return;
   }
 
@@ -294,24 +294,25 @@ void Router::ospfHandleDbdPacket(const OspfDbdPacket *const pk) {
 
 void Router::ospfExStartState(const OspfDbdPacket *const pk) {
   const int src = pk->getSrcAddr();
-  if (my_address > src) {
-    bool i_am_master = true;
-    ospfSendExstartDbdPacket(src, i_am_master);
+  if (my_address > src) {  // i am master
+    // Master send empty DBD packet until it receives Summary LSDB from Slave
+    ospfSendExstartDbdPacket(src);
     return;
-  } else if (my_address < src) {
+  } else if (my_address < src) {  // i am slave
     const bool exchange_state_is_initiated = (neighbor_table[src].state == OspfState::EXCHANGE);
     if (exchange_state_is_initiated) return;
+    // Slave sends its Summary LSDB to Master
     ospfSlaveInitiateExchangeState(src);
   } else {
     error("Cannot decide master slave relationship");
   }
 }
 
-void Router::ospfSendExstartDbdPacket(NodeAddr neighbor, bool is_master) {
+void Router::ospfSendExstartDbdPacket(NodeAddr neighbor) {
   OspfDbdPacket *msg = new OspfDbdPacket;
   msg->setSrcAddr(my_address);
   msg->setState(OspfState::EXSTART);
-  msg->setIs_master(is_master);
+  msg->setIs_master(true);
   send(msg, "toQueue", neighbor_table[neighbor].gate_index);
 }
 

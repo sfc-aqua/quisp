@@ -43,7 +43,7 @@ class Router : public omnetpp::cSimpleModule {
    *          Master send empty DBD packet until it receives Summary LSDB from Slave
    */
   void ospfExStartState(const messages::OspfDbdPacket *const pk);
-  void ospfSendExstartDbdPacket(NodeAddr neighbor, bool is_master);
+  void ospfSendExstartDbdPacket(NodeAddr neighbor);
   void ospfSlaveInitiateExchangeState(int dest);
   void ospfMasterEnterExchangeState(int dest);
   void ospfSendLsdbSummary(int destination, bool i_am_master = false);

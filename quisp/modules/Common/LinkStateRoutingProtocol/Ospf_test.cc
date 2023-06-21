@@ -14,15 +14,15 @@ class TestLinkStateDatabase : public LinkStateDatabase {
  public:
   using LinkStateDatabase::link_state_database;
   using LinkStateDatabase::lsdb_summary;
+  using LinkStateDatabase::PriorityQueue;
   using LinkStateDatabase::Vertex;
   using LinkStateDatabase::VertexMap;
-  using LinkStateDatabase::PriorityQueue;
 
   using LinkStateDatabase::dijkstraAlgorithm;
 };
 
 class LinkStateDatabaseTest : public ::testing::Test {
-  protected:
+ protected:
   using Vertex = TestLinkStateDatabase::Vertex;
   using VertexMap = TestLinkStateDatabase::VertexMap;
   using PriorityQueue = TestLinkStateDatabase::PriorityQueue;
@@ -71,7 +71,7 @@ class LinkStateDatabaseTest : public ::testing::Test {
 };
 
 class MockLinkStateDatabase : public LinkStateDatabase {
-public:
+ public:
   using LinkStateDatabase::link_state_database;
 
   MOCK_METHOD(bool, needsFullLinkStateAdvertisementOf, (const SummaryLinkStateAdvertisement& summary_lsa), (const, override));
@@ -111,9 +111,7 @@ TEST_F(LinkStateDatabaseTest, outdatedLsaNotAddedToLinkStateDatabase) {
   ASSERT_EQ(link_state_database.lsdb_summary.size(), 4);
 }
 
-TEST_F(LinkStateDatabaseTest, getCachedLinkStateDatabaseSummary) {
-  ASSERT_EQ(link_state_database.getLinkStateDatabaseSummary().size(), 4);
-}
+TEST_F(LinkStateDatabaseTest, getCachedLinkStateDatabaseSummary) { ASSERT_EQ(link_state_database.getLinkStateDatabaseSummary().size(), 4); }
 
 TEST_F(LinkStateDatabaseTest, generateAndGetLinkStateDatabaseSummary) {
   link_state_database.lsdb_summary.clear();
@@ -180,9 +178,7 @@ TEST_F(LinkStateDatabaseTest, dijkstraAlgorithmWorks) {
   ASSERT_EQ(vertices[4]->distance_from_source, 2.2);
 }
 
-TEST_F(LinkStateDatabaseTest, dijkstraAlgorithmNoSourceVertex) {
-  ASSERT_ANY_THROW(link_state_database.dijkstraAlgorithm(5));
-}
+TEST_F(LinkStateDatabaseTest, dijkstraAlgorithmNoSourceVertex) { ASSERT_ANY_THROW(link_state_database.dijkstraAlgorithm(5)); }
 
 TEST_F(LinkStateDatabaseTest, identifyNoMissingLinkStateAdvertisementId) {
   MockLinkStateDatabase mock_link_state_database;
@@ -235,10 +231,9 @@ TEST_F(LinkStateDatabaseTest, getLinkStateUpdatesForRouter1To3) {
   RouterIds requests{1, 2, 3};
   MockLinkStateDatabase mock_link_state_database;
 
-  EXPECT_CALL(mock_link_state_database, getLinkStateAdvertisementOf(testing::_))
-    .WillRepeatedly([&](NodeAddr router) {
-      return link_state_database.link_state_database.at(router);
-    });
+  EXPECT_CALL(mock_link_state_database, getLinkStateAdvertisementOf(testing::_)).WillRepeatedly([&](NodeAddr router) {
+    return link_state_database.link_state_database.at(router);
+  });
 
   LinkStateUpdate lsu = mock_link_state_database.getLinkStateUpdatesFor(requests, my_address);
   ASSERT_EQ(lsu.size(), requests.size());
@@ -269,9 +264,6 @@ TEST_F(LinkStateDatabaseTest, hasLinkStateAdvertisementOf1To4) {
   }
 }
 
-TEST_F(LinkStateDatabaseTest, noLinkStateAdvertisementOf5) {
-  ASSERT_FALSE(link_state_database.hasLinkStateAdvertisementOf(5));
-}
+TEST_F(LinkStateDatabaseTest, noLinkStateAdvertisementOf5) { ASSERT_FALSE(link_state_database.hasLinkStateAdvertisementOf(5)); }
 
-
-}
+}  // namespace
