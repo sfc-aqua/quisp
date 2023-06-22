@@ -11,6 +11,7 @@
 #include <memory>
 #include <stdexcept>
 #include <utility>
+#include <vector>
 
 #include "QNicStore/QNicStore.h"
 #include "RuntimeCallback.h"
@@ -274,14 +275,17 @@ void RuleEngine::freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned
 }
 
 void RuleEngine::executeAllRuleSets() {
-  bool terminated = runtimes.exec();
-  if (terminated) {
+  auto ruleset_id_list = runtimes.exec();
+  auto is_terminated = ruleset_id_list.size() != 0;
+  if (is_terminated) {
     for (int i = 0; i < int(sizeof(qnode_indices) / sizeof(int)); i++) {
-      ConnectionTeardownMessage *pkt = new ConnectionTeardownMessage("ConnectionTeardownMessage");
-      pkt->setSrcAddr(parentAddress);
-      pkt->setDestAddr(qnode_indices.at(i));
-      pkt->setRuleSet_id(runtimes.end()->ruleset.id);
-      send(pkt, "RouterPort$o");
+      for (int j = 0; j < ruleset_id_list.size(); j++) {
+        ConnectionTeardownMessage *pkt = new ConnectionTeardownMessage("ConnectionTeardownMessage");
+        pkt->setSrcAddr(parentAddress);
+        pkt->setDestAddr(qnode_indices.at(i));
+        pkt->setRuleSet_id(ruleset_id_list[j]);
+        send(pkt, "RouterPort$o");
+      }
     }
   }
 }

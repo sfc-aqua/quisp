@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include "Runtime.h"
 
 namespace quisp::runtime {
@@ -8,7 +9,7 @@ class RuntimeManager {
   RuntimeManager(std::unique_ptr<Runtime::ICallBack>&& callback);
   void acceptRuleSet(const RuleSet&);
   Runtime* findById(unsigned long long ruleset_id);
-  bool exec();
+ std::vector<unsigned long> exec();
   void stopById(unsigned long long ruleset_id);
   std::vector<Runtime>::iterator begin();
   std::vector<Runtime>::iterator end();
