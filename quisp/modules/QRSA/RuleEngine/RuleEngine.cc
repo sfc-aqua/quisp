@@ -270,6 +270,7 @@ void RuleEngine::freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned
       if (qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
         qubit_record->setAllocated(false);
         runtime->freeQubitFromRuleSet(partner_addr, qubit_record);
+        qubit_record_list.push_back(qubit_record);
       }
     }
   }

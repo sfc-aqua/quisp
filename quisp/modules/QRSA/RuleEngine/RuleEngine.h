@@ -67,6 +67,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int number_of_qnics;
   int number_of_qnics_r;
   int number_of_qnics_rp;
+  std::vector<IQubitRecord*> qubit_record_list;
 
   IHardwareMonitor *hardware_monitor;
   IRoutingDaemon *routingdaemon;
