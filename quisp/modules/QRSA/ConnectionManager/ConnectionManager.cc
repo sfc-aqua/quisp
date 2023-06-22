@@ -100,6 +100,9 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 
   if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
+
+    is_a_part_of_connection = true;
+
     int initiator_addr = resp->getActual_destAddr();
     int responder_addr = resp->getActual_srcAddr();
 
@@ -129,11 +132,14 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 
   if (auto *pk = dynamic_cast<ConnectionTeardownMessage *>(msg)) {
-    auto dest_addr = pk->getDestAddr();
-    auto qnic_addr = routing_daemon->findQNicAddrByDestAddr(dest_addr);
-    releaseQnic(qnic_addr);
-
-
+    // Connection is torn down only if the node has not received the ConnectionTeardownMessage
+    // If it has already received it, the incoming message is ignored.
+    if (is_a_part_of_connection) {
+      auto dest_addr = pk->getDestAddr();
+      auto qnic_addr = routing_daemon->findQNicAddrByDestAddr(dest_addr);
+      releaseQnic(qnic_addr);
+      is_a_part_of_connection = false;
+    }
     delete msg;
     return;
   }

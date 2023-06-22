@@ -73,6 +73,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
   bool simultaneous_es_enabled;
   bool es_with_purify = false;
+  bool is_a_part_of_connection = false;
   int num_remote_purification;
   double threshold_fidelity;
   rules::PurType purification_type;
