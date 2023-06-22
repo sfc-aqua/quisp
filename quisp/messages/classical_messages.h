@@ -8,3 +8,4 @@
 #include "link_generation_messages_m.h"
 #include "purification_messages_m.h"
 #include "tomography_messages_m.h"
+#include "barrier_messages_m.h"
