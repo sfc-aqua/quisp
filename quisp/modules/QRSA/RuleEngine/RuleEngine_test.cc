@@ -180,13 +180,12 @@ TEST_F(RuleEngineTest, freeResourceFromRuleSet) {
   EXPECT_TRUE(qubit_record1->isAllocated());
 
   rule_engine->freeResourceFromRuleSet(QNIC_E, 3, rs.id);
-   EXPECT_FALSE(qubit_record1->isAllocated());
+  EXPECT_FALSE(qubit_record1->isAllocated());
 
   // A qubit allocated to a particular action is now successfully released
   auto& rt = rule_engine->runtimes.at(0);
   EXPECT_EQ(rt.ruleset.rules.size(), 1);
   EXPECT_EQ(rt.qubits.size(), 0);
-
 }
 
 TEST_F(RuleEngineTest, freeConsumedResource) {

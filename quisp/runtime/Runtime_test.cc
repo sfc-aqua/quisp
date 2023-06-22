@@ -226,7 +226,7 @@ TEST_F(RuntimeTest, AssignQubit) {
   EXPECT_EQ(runtime->getQubitByPartnerAddr(partner_addr2, 1), qubit3);
 }
 
-TEST_F(RuntimeTest, freeQubitFromRuleSet){
+TEST_F(RuntimeTest, freeQubitFromRuleSet) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
   RuleSet rs{
       "",
@@ -269,7 +269,6 @@ TEST_F(RuntimeTest, freeQubitFromRuleSet){
   runtime->rule_id = 1;
   runtime->freeQubitFromRuleSet(partner_addr2, qubit2);
   EXPECT_EQ(runtime->getQubitByPartnerAddr(partner_addr2, 0), qubit3);
-
 }
 
 }  // namespace

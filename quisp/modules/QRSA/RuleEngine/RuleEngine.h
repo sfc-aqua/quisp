@@ -13,6 +13,7 @@
 #include "IRuleEngine.h"
 #include "QNicStore/IQNicStore.h"
 #include "QubitRecord/IQubitRecord.h"
+#include "messages/barrier_messages_m.h"
 #include "messages/classical_messages.h"
 #include "messages/connection_teardown_messages_m.h"
 #include "modules/Logger/LoggerBase.h"
@@ -75,7 +76,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void freeConsumedResource(int qnic_index, IStationaryQubit *qubit, QNIC_type qnic_type);
   void ResourceAllocation(int qnic_type, int qnic_index);
   void freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
-
 
  protected:
   void initialize() override;

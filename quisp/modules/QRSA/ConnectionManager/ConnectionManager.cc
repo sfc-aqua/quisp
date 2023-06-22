@@ -100,7 +100,6 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 
   if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
-
     is_a_part_of_connection = true;
 
     int initiator_addr = resp->getActual_destAddr();
@@ -216,7 +215,6 @@ void ConnectionManager::storeTeardownMessage(ConnectionTeardownMessage *pk) {
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
   send(pk_internal, "RouterPort$o");
 }
-
 
 /**
  * This function is called to handle the ConnectionSetupResponse at the intermediate node.

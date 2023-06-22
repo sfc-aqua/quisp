@@ -94,7 +94,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
 
   void storeTeardownInfo(messages::ConnectionSetupResponse *pk);
   void storeTeardownMessage(messages::ConnectionTeardownMessage *pk);
-  
+
   void storeRuleSetForApplication(messages::ConnectionSetupResponse *pk);
   void storeRuleSet(messages::ConnectionSetupResponse *pk);
 

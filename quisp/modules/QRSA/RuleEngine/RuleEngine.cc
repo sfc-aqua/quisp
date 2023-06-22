@@ -15,6 +15,7 @@
 
 #include "QNicStore/QNicStore.h"
 #include "RuntimeCallback.h"
+#include "messages/barrier_messages_m.h"
 #include "messages/connection_teardown_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "runtime/RuleSet.h"
