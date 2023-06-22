@@ -95,7 +95,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     setComponentType(new TestModuleType("rule_engine_test"));
     qnic_store = std::make_unique<StrictMock<MockQNicStore>>();
   }
-  // setter function for allResorces[qnic_type][qnic_index]
+  // setter function for allResources[qnic_type][qnic_index]
   void setAllResources(int partner_addr, IQubitRecord* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
 
  private:
