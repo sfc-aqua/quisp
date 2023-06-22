@@ -144,19 +144,19 @@ network topology_dumbell_MIM
         BSA1: BSANode {
             address = 9;
             node_type = "BSA";
-            @dispaly("p=42,150");
+            @display("p=42,150");
             @display("p=105,238");
         }
         BSA2: BSANode {
             address = 10;
             node_type = "BSA";
-            @dispaly("p=52,140");
+            @display("p=52,140");
             @display("p=186,238");
         }
         BSA3: BSANode {
             address = 11;
             node_type = "BSA";
-            @dispaly("p=32,130");
+            @display("p=32,130");
         }
         BSA4: BSANode {
             address = 12;

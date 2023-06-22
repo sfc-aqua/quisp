@@ -93,13 +93,13 @@ network three_node_MIM
         BSA1: BSANode {
             address = 2;
             node_type = "BSA";
-            @dispaly("p=42,150");
+            @display("p=42,150");
             @display("p=158,86");
         }
         BSA2: BSANode {
             address = 4;
             node_type = "BSA";
-            @dispaly("p=42,150");
+            @display("p=42,150");
             @display("p=371,86");
         }
     connections:
