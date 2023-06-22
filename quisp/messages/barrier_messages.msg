@@ -14,9 +14,7 @@ namespace quisp::messages;
 
 packet BarrierMessage extends Header
 {
-    int srcAddr;
-    int destAddr;
-    unsigned long negotiated_ruleset_id;
+    IQubitRecord *photon_record;
     int qubit_index;
     int sequence_number;
 }
