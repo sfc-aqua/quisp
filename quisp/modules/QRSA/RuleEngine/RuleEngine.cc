@@ -283,7 +283,7 @@ void RuleEngine::executeAllRuleSets() {
         ConnectionTeardownMessage *pkt = new ConnectionTeardownMessage("ConnectionTeardownMessage");
         pkt->setSrcAddr(parentAddress);
         pkt->setDestAddr(qnode_indices.at(i));
-        pkt->setRuleSet_id(ruleset_id_list[j]);
+        pkt->setRuleSet_id(ruleset_id_list.at(j));
         send(pkt, "RouterPort$o");
       }
     }
