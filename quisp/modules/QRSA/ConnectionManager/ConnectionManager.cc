@@ -393,7 +393,7 @@ void ConnectionManager::releaseQnic(int qnic_address) {
   if (it == reserved_qnics.end()) {
     error("qnic(addr: %d)  not reserved", qnic_address);
   }
-  // else if the qnic is propery reserved, erase it from vector
+  // else if the qnic is properly reserved, erase it from vector
   reserved_qnics.erase(it);
 }
 
@@ -425,7 +425,7 @@ void ConnectionManager::responder_reject_req_handler(RejectConnectionSetupReques
 
 /**
  *  This function is called during the handling of ConnectionSetupRequest at an
- *  intermediate node (not the initator or responder).
+ *  intermediate node (not the initiator or responder).
  * \param pk pointer to the ConnectionSetupRequest packet itself
  * \returns nothing
  * This function is called when we discover that we can't fulfill the connection request,
