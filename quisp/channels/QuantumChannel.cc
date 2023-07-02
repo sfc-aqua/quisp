@@ -114,7 +114,7 @@ cChannel::Result QuantumChannel::processMessage(cMessage *msg, const SendOptions
     q->setLost(true);
   }
 
-  return cChannel::Result();
+  return {false, getDelay(), 0};
 }
 
 void QuantumChannel::validateParameters() {
