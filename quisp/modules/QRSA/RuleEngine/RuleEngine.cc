@@ -322,7 +322,7 @@ void RuleEngine::AllocateResourceToRuleSet(int qnic_type, int qnic_index, unsign
       // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
       if (!qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
         qubit_record->setAllocated(true);
-        runtime.assignQubitToRuleSet(partner_addr, qubit_record);
+        runtime->assignQubitToRuleSet(partner_addr, qubit_record);
       }
     }
   }
