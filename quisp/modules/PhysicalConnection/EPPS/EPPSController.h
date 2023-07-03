@@ -34,8 +34,18 @@ class EPPSController : public cSimpleModule {
   virtual EPPSTimingNotification *generateNotifier(bool is_left);
 
  private:
+ struct MSMQnicInfo {
+    int address;
+    std::vector<BSAClickResult> left_clicks;
+    std::vector<BSAClickResult> right_clicks;
+  };
+  std::map<std::pair<int, int>, MSMQnicInfo> msm_info_map;
+
+
   double getTravelTimeFromPort(int port);
   int getExternalQNICIndexFromPort(int port);
+  void handleCombinedBatchClickEventResults(CombinedBatchClickEventResults *combined_result);
+  void sendCombinedBSAresults(std::pair<int, int> left_right_addr_pair);
 
   // information for communications
   int address;
