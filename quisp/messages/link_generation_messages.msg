@@ -28,10 +28,7 @@ packet EPPSTimingNotification extends Header
     double interval @setter(setInterval)  @getter(getInterval);
     QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
     int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
-    int qnic_parent_addr     @setter(setQnicParentAddr) @getter(getQnicParentAddr);
-    QNIC_type other_qnic_type @setter(setOtherQnicType)  @getter(getOtherQnicType);
-    int other_qnic_index      @setter(setOtherQnicIndex) @getter(getOtherQnicIndex);
-    int other_qnic_parent_addr     @setter(setOtherQnicParentAddr) @getter(getOtherQnicParentAddr);
+    int epps_address     @setter(setEppsAddr) @getter(getEppsAddr);
     double travel_time @setter(setTravelTime) @getter(getTravelTime);
 }
 
