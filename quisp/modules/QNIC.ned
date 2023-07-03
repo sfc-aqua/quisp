@@ -40,7 +40,6 @@ module QNIC
         }
 
         lens: PhotonicSwitch {
-            address = parent.self_qnic_address;
             @display("i=block/dispatch;p=206.302,825.208");
         }
 
@@ -58,7 +57,7 @@ module QNIC
             @display("p=466.716,794.77");
         }
 
-        gate_closer: dummyModule {}
+        gate_closer: dummyModule;
 
     connections:
         for i=0..num_buffer-1 {
