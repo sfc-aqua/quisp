@@ -137,6 +137,19 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
     sendLinkAllocationUpdateResponse(pkt);
+    auto ruleset_id = pkt->getCurrentRuleSet_id();
+    runtimes.stopById(ruleset_id);
+    for (int i = 0; i < number_of_qnics; i++) {
+      freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
+    }
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateResponse *>(msg)) {
+    auto ruleset_id = pkt->getCurrentRuleSet_id();
+    runtimes.stopById(ruleset_id);
+    for (int i = 0; i < number_of_qnics; i++) {
+      freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
+    }
+  } else if (auto *pkt = dynamic_cast<BarrierMessage *>(msg)) {
+    
   }
 
   for (int i = 0; i < number_of_qnics; i++) {
@@ -290,6 +303,26 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
           qubit_record->setAllocated(true);
           runtime.assignQubitToRuleSet(partner_addr, qubit_record);
         }
+      }
+    }
+  }
+}
+
+// Invoked whenever a new resource (entangled with neighbor) has been created.
+// Allocates those resources to a particular ruleset, from top to bottom (all of it).
+void RuleEngine::AllocateResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id) {
+  auto runtime = runtimes.findById(ruleset_id);
+  auto &partners = runtime->partners;
+  for (auto &partner_addr : partners) {
+    auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr.val);
+    for (auto it = range.first; it != range.second; ++it) {
+      auto qubit_record = it->second;
+
+      // 3. if the qubit is not allocated yet, and the qubit has not been allocated to this rule,
+      // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
+      if (!qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
+        qubit_record->setAllocated(true);
+        runtime.assignQubitToRuleSet(partner_addr, qubit_record);
       }
     }
   }

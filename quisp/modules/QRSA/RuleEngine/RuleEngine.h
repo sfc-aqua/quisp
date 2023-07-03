@@ -78,6 +78,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
 
   void freeConsumedResource(int qnic_index, IStationaryQubit *qubit, QNIC_type qnic_type);
   void ResourceAllocation(int qnic_type, int qnic_index);
+  void AllocateResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
   void freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
 
  protected:
