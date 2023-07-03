@@ -188,14 +188,13 @@ PurType ConnectionManager::parsePurType(const std::string &pur_type) {
  * \param pk the received ConnectionSetupResponse.
  **/
 void ConnectionManager::storeTeardownInfo(ConnectionSetupResponse *pk) {
-  int size = pk->getStack_of_QNodeIndexesArraySize();
-
+  auto size = pk->getStack_of_QNodeIndexesArraySize();
   for (int i = 0; i < size; i++) {
     InternalConnectionTeardownInfoForwarding *pk_internal = new InternalConnectionTeardownInfoForwarding("InternalConnectionTeardownInfoForwarding");
-    pk_internal->setSrcAddr(pk->getSrcAddr());
-    pk_internal->setDestAddr(pk->getSrcAddr());
-    pk_internal->setActual_destAddr(pk->getStack_of_QNodeIndexes(i));
+    pk_internal->setActual_destAddr(my_address);
+    pk_internal->setActual_srcAddr(my_address);
     pk_internal->setKind(4);
+    pk_internal->setNext_destAddr(pk->getStack_of_QNodeIndexes(i));
     pk_internal->setRuleSet_id(pk->getRuleSet_id());
     send(pk_internal, "RouterPort$o");
   }
@@ -209,8 +208,9 @@ void ConnectionManager::storeTeardownInfo(ConnectionSetupResponse *pk) {
  **/
 void ConnectionManager::storeTeardownMessage(ConnectionTeardownMessage *pk) {
   InternalConnectionTeardownMessage *pk_internal = new InternalConnectionTeardownMessage("InternalConnectionTeardownMessage");
-  pk_internal->setSrcAddr(pk->getSrcAddr());
-  pk_internal->setDestAddr(pk->getSrcAddr());
+  pk_internal->setRole(pk->getRole());
+  pk_internal->setSrcAddr(my_address);
+  pk_internal->setDestAddr(my_address);
   pk_internal->setKind(5);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
   send(pk_internal, "RouterPort$o");

@@ -618,21 +618,21 @@ TEST(ConnectionManagerTest, StoreTeardownInfo) {
   res->setStack_of_QNodeIndexesArraySize(3);
   EXPECT_EQ(res->getStack_of_QNodeIndexesArraySize(), 3);
 
-  res->setSrcAddr(1);
-  EXPECT_EQ(res->getSrcAddr(), 1);
+  res->setActual_srcAddr(1);
+  EXPECT_EQ(res->getActual_srcAddr(), 1);
 
-  res->setDestAddr(4);
-  EXPECT_EQ(res->getDestAddr(), 4);
+  res->setActual_destAddr(3);
+  EXPECT_EQ(res->getActual_destAddr(), 3);
 
   res->setRuleSet_id(111);
   EXPECT_EQ(res->getRuleSet_id(), 111);
 
-  res->setStack_of_QNodeIndexes(0, 2);
-  res->setStack_of_QNodeIndexes(1, 3);
-  res->setStack_of_QNodeIndexes(2, 4);
-  EXPECT_EQ(res->getStack_of_QNodeIndexes(0), 2);
-  EXPECT_EQ(res->getStack_of_QNodeIndexes(1), 3);
-  EXPECT_EQ(res->getStack_of_QNodeIndexes(2), 4);
+  res->setStack_of_QNodeIndexes(0, 1);
+  res->setStack_of_QNodeIndexes(1, 2);
+  res->setStack_of_QNodeIndexes(2, 3);
+  EXPECT_EQ(res->getStack_of_QNodeIndexes(0), 1);
+  EXPECT_EQ(res->getStack_of_QNodeIndexes(1), 2);
+  EXPECT_EQ(res->getStack_of_QNodeIndexes(2), 3);
 
   connection_manager->callInitialize();
   sim->setContext(connection_manager);
@@ -644,27 +644,27 @@ TEST(ConnectionManagerTest, StoreTeardownInfo) {
   {
     auto *packetFor1 = dynamic_cast<InternalConnectionTeardownInfoForwarding *>(gate->messages[0]);
     ASSERT_NE(packetFor1, nullptr);
-    EXPECT_EQ(packetFor1->getSrcAddr(), 1);
-    EXPECT_EQ(packetFor1->getDestAddr(), 1);
-    EXPECT_EQ(packetFor1->getActual_destAddr(), 2);
+    EXPECT_EQ(packetFor1->getActual_srcAddr(), 5);
+    EXPECT_EQ(packetFor1->getActual_destAddr(), 5);
+    EXPECT_EQ(packetFor1->getNext_destAddr(), 1);
     EXPECT_EQ(packetFor1->getRuleSet_id(), 111);
   }
 
   {
     auto *packetFor2 = dynamic_cast<InternalConnectionTeardownInfoForwarding *>(gate->messages[1]);
     ASSERT_NE(packetFor2, nullptr);
-    EXPECT_EQ(packetFor2->getSrcAddr(), 1);
-    EXPECT_EQ(packetFor2->getDestAddr(), 1);
-    EXPECT_EQ(packetFor2->getActual_destAddr(), 3);
+    EXPECT_EQ(packetFor2->getActual_srcAddr(), 5);
+    EXPECT_EQ(packetFor2->getActual_destAddr(), 5);
+    EXPECT_EQ(packetFor2->getNext_destAddr(), 2);
     EXPECT_EQ(packetFor2->getRuleSet_id(), 111);
   }
 
   {
     auto *packetFor3 = dynamic_cast<InternalConnectionTeardownInfoForwarding *>(gate->messages[2]);
     ASSERT_NE(packetFor3, nullptr);
-    EXPECT_EQ(packetFor3->getSrcAddr(), 1);
-    EXPECT_EQ(packetFor3->getDestAddr(), 1);
-    EXPECT_EQ(packetFor3->getActual_destAddr(), 4);
+    EXPECT_EQ(packetFor3->getActual_srcAddr(), 5);
+    EXPECT_EQ(packetFor3->getActual_destAddr(), 5);
+    EXPECT_EQ(packetFor3->getNext_destAddr(), 3);
     EXPECT_EQ(packetFor3->getRuleSet_id(), 111);
   }
 }
