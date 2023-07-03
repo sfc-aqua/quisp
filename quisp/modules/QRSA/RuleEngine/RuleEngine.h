@@ -16,6 +16,7 @@
 #include "messages/barrier_messages_m.h"
 #include "messages/classical_messages.h"
 #include "messages/connection_teardown_messages_m.h"
+#include "messages/link_allocation_update_messages_m.h"
 #include "modules/Logger/LoggerBase.h"
 #include "modules/QNIC.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
@@ -27,6 +28,7 @@
 #include "runtime/RuntimeManager.h"
 #include "utils/ComponentProvider.h"
 
+using namespace std;
 using namespace omnetpp;
 using namespace quisp::rules;
 
@@ -85,7 +87,10 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void handlePurificationResult(messages::PurificationResult *purification_result);
   void handleSwappingResult(messages::SwappingResult *swapping_result);
   void handleConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *connection_teardown_message);
-  void handleInternalConnectionTeardownInfoForwarding(messages::InternalConnectionTeardownInfoForwarding *connection_teardown_info);
+  void handleInternalConnectionTeardownInfoForwarding(messages::InternalConnectionTeardownInfoForwarding *connection_teardown_info_forwarding);
+  string getRoleFromInternalConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *msg);
+  void sendLinkAllocationUpdateRequest(messages::InternalConnectionTeardownMessage *msg);
+  void sendLinkAllocationUpdateResponse(messages::LinkAllocationUpdateRequest *msg);
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);

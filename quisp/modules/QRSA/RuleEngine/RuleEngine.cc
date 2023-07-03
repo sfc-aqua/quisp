@@ -10,6 +10,7 @@
 #include <iterator>
 #include <memory>
 #include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -17,12 +18,15 @@
 #include "RuntimeCallback.h"
 #include "messages/barrier_messages_m.h"
 #include "messages/connection_teardown_messages_m.h"
+#include "messages/link_allocation_update_messages_m.h"
+#include "messages/tomography_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "runtime/RuleSet.h"
 #include "runtime/Runtime.h"
 
 namespace quisp::modules {
 
+using namespace std;
 using namespace rules;
 using namespace messages;
 using qnic_store::QNicStore;
@@ -127,6 +131,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
     runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
+    auto role = getRoleFromInternalConnectionTeardownMessage(pkt);
+    if (role == "SENDER"){
+      sendLinkAllocationUpdateRequest(pkt);
+    }
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
+    sendLinkAllocationUpdateResponse(pkt);
   }
 
   for (int i = 0; i < number_of_qnics; i++) {
@@ -221,9 +231,13 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
 }
 
-void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnectionTeardownInfoForwarding *connection_teardown_info) {
-  auto dest_addr = connection_teardown_info->getActual_destAddr();
+void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnectionTeardownInfoForwarding *connection_teardown_info_forwarding) {
+  auto dest_addr = connection_teardown_info_forwarding->getNext_destAddr();
   qnode_indices.push_back(dest_addr);
+}
+
+string RuleEngine::getRoleFromInternalConnectionTeardownMessage(InternalConnectionTeardownMessage *msg){
+  return msg->getRole();
 }
 
 void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
@@ -232,6 +246,32 @@ void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessa
   for (int i = 0; i < number_of_qnics; i++) {
     freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
   }
+}
+
+void RuleEngine::sendLinkAllocationUpdateRequest(InternalConnectionTeardownMessage *msg){
+  LinkAllocationUpdateRequest *pkt = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
+  pkt->setSrcAddr(parentAddress);
+  pkt->setDestAddr(msg->getNext_destAddr());
+  pkt->setCurrentRuleSet_id(msg->getRuleSet_id());
+  pkt->setOffered_ruleset_idsArraySize(runtimes.size());
+  for (auto &runtime : runtimes) {
+    if (runtime.ruleset.id == msg->getRuleSet_id()) {
+      continue;
+    } else {
+      pkt->appendOffered_ruleset_ids(runtime.ruleset.id);
+    }
+  }
+  send(pkt, "RouterPort$o");
+}
+
+void RuleEngine::sendLinkAllocationUpdateResponse(LinkAllocationUpdateRequest *msg){
+  LinkAllocationUpdateResponse *pkt = new LinkAllocationUpdateResponse("LinkAllocationUpdateResponse");
+  pkt->setSrcAddr(msg->getDestAddr());
+  pkt->setDestAddr(msg->getSrcAddr());
+  pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
+  pkt->setNegotiatedRuleset_id(msg->getOfferedRuleSet_ids(0));
+  send(pkt, "RouterPort$o");
+
 }
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
@@ -280,13 +320,29 @@ void RuleEngine::executeAllRuleSets() {
   auto ruleset_id_list = runtimes.exec();
   auto is_terminated = ruleset_id_list.size() != 0;
   if (is_terminated) {
-    for (int i = 0; i < int(sizeof(qnode_indices) / sizeof(int)); i++) {
-      for (int j = 0; j < ruleset_id_list.size(); j++) {
-        ConnectionTeardownMessage *pkt = new ConnectionTeardownMessage("ConnectionTeardownMessage");
-        pkt->setSrcAddr(parentAddress);
-        pkt->setDestAddr(qnode_indices.at(i));
-        pkt->setRuleSet_id(ruleset_id_list.at(j));
-        send(pkt, "RouterPort$o");
+    for (int i = 0; i < ruleset_id_list.size(); i++) {
+      for (int j = 0; j < int(sizeof(qnode_indices) / sizeof(int) - 1); j++) {
+        ConnectionTeardownMessage *pkt1 = new ConnectionTeardownMessage("ConnectionTeardownMessage");
+        if(j % 2 == 0){
+          pkt1->setRole("SENDER");
+        }else{
+          pkt1->setRole("RECEIVER");
+        }
+        pkt1->setSrcAddr(parentAddress);
+        pkt1->setDestAddr(qnode_indices.at(j));
+        pkt1->setRuleSet_id(ruleset_id_list.at(i));
+        send(pkt1, "RouterPort$o");
+
+        ConnectionTeardownMessage *pkt2 = new ConnectionTeardownMessage("ConnectionTeardownMessage");
+        if(j % 2 == 0){
+          pkt2->setRole("RECEIVER");
+        }else{
+          pkt2->setRole("SENDER");
+        }
+        pkt2->setSrcAddr(parentAddress);
+        pkt2->setDestAddr(qnode_indices.at(j+1));
+        pkt2->setRuleSet_id(ruleset_id_list.at(i));
+        send(pkt2, "RouterPort$o");
       }
     }
   }
