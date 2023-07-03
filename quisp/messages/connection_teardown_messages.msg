@@ -5,22 +5,25 @@ namespace quisp::messages;
 
 packet ConnectionTeardownMessage extends Header
 {
-    int destAddr;
-    int srcAddr;
+    string Role;
+    int actual_srcAddr;
+    int actual_destAddr;
     unsigned long RuleSet_id;
 }
 
 packet InternalConnectionTeardownMessage extends Header
 {
-    int destAddr;
-    int srcAddr;
+    string Role;
+    int actual_srcAddr;
+    int actual_destAddr;
+    int next_destAddr;
     unsigned long RuleSet_id;
 }
 
 packet InternalConnectionTeardownInfoForwarding extends Header
 {
-    int srcAddr;
-    int destAddr;
-    int Actual_destAddr;
+    int actual_srcAddr;
+    int actual_destAddr;
+    int next_destAddr;
     unsigned long RuleSet_id;
 }
