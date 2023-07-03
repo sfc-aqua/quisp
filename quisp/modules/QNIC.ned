@@ -58,7 +58,7 @@ module QNIC
             @display("p=466.716,794.77");
         }
 
-        gate_closer: dummyModule {
+        gate_closer: dummyModule {}
 
     connections:
         for i=0..num_buffer-1 {
