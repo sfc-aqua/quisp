@@ -248,6 +248,7 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
       realtime_controller->applyYGate(qubit_record);
     }
   }
+  delete(bsa_result);
 }
 
 void RuleEngine::handlePurificationResult(PurificationResult *result) {
