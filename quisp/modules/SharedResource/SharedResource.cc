@@ -82,6 +82,7 @@ double SharedResource::calculateSecPerBellPair(const cModule *const rd_module, c
 
   auto *some_stationary_qubit_in_qnic = rd_module->findModuleByPath("^.^.qnic[0].statQubit[0]");
   auto *some_stationary_qubit_in_qnic_r = rd_module->findModuleByPath("^.^.qnic_r[0].statQubit[0]");
+  auto *some_stationary_qubit_in_qnic_rp = rd_module->findModuleByPath("^.^.qnic_rp[0].statQubit[0]");
 
   double emission_prob = 1.0;
   // TODO: fix this to read the emission success probability correctly. This is a quick fix!!
@@ -89,6 +90,8 @@ double SharedResource::calculateSecPerBellPair(const cModule *const rd_module, c
     emission_prob = some_stationary_qubit_in_qnic->par("emission_success_probability").doubleValue();
   } else if (some_stationary_qubit_in_qnic_r != nullptr) {
     emission_prob = some_stationary_qubit_in_qnic_r->par("emission_success_probability").doubleValue();
+  } else if (some_stationary_qubit_in_qnic_rp != nullptr) {
+    emission_prob = some_stationary_qubit_in_qnic_rp->par("emission_success_probability").doubleValue();
   } else {
     error("cannot read emission_success_probability from file");
   }
