@@ -84,7 +84,7 @@ EPPSTimingNotification *EPPSController::generateNotifier(bool is_left) {
   pk->setOtherQnicParentAddr(is_left ? right_addr : left_addr);
   pk->setOtherQnicIndex(is_left ? right_qnic_index : left_qnic_index);
   pk->setOtherQnicType(QNIC_RP);
-  pk->setFirstPhotonEmitTime(simTime().dbl() + 2 * (is_left ? left_travel_time : right_travel_time));
+  pk->setFirstPhotonEmitTime(simTime().dbl() + 2 * std::max(left_travel_time, right_travel_time));
   pk->setKind(4);
   pk->setInterval(max_acceptance_rate);
   pk->setSrcAddr(address);
