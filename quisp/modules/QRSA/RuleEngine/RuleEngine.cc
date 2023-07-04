@@ -158,7 +158,7 @@ void RuleEngine::schedulePhotonEmission(QNIC_type type, int qnic_index, BSMTimin
 }
 
 void RuleEngine::scheduleMSMPhotonEmission(QNIC_type type, int qnic_index, EPPSTimingNotification *notification) {
-  auto first_photon_emit_time = notification->getFirstPhotonEmitTime();
+  auto first_photon_emit_time = notification->getFirstPhotonEmitTime() + notification->getTravelTime();
   auto *timer = emit_photon_timer_map[{type, qnic_index}];
   timer->setFirst(true);
   timer->setIntervalBetweenPhotons(notification->getInterval());
@@ -202,7 +202,8 @@ void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventRes
   }
   if (!msm_info_map[qnic_index].parent_clicks.empty() && !msm_info_map[qnic_index].partner_clicks.empty()) {
     CombinedBSAresults *bsa_results = generateCombinedBSAresults(qnic_index);
-    handleLinkGenerationResult(bsa_results);
+    // If I don't use scheduleAt() and call the function handleLinkGenerationResult, the message doesn't get destroyed
+    scheduleAt(simTime(), bsa_results);
   }
 }
 
@@ -248,7 +249,6 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
       realtime_controller->applyYGate(qubit_record);
     }
   }
-  delete(bsa_result);
 }
 
 void RuleEngine::handlePurificationResult(PurificationResult *result) {
