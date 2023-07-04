@@ -1203,7 +1203,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
 
     int address_one = controller->getExternalAdressFromPort(0);
     int address_two = controller->getExternalAdressFromPort(1);
-    int myaddress = par("address");
+    int myaddress = provider.getNodeAddr();
 
     EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
 

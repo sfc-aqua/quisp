@@ -74,6 +74,7 @@ parameters:
 submodules:
     backend: Backend;
     logger: Logger;
+    sharedResource: SharedResource;
     EndNode1: QNode {
         address = 1;
         node_type = "EndNode";
