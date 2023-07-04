@@ -6,7 +6,6 @@
 #include <PhotonicQubit_m.h>
 #include <messages/classical_messages.h>
 #include <omnetpp.h>
-#include <utility>
 #include <vector>
 #include "messages/QNode_ipc_messages_m.h"
 #include "modules/QNIC.h"
@@ -65,8 +64,6 @@ void EPPSController::handleMessage(cMessage *msg) {
       number_of_sent_photons++;
       scheduleAt(simTime() + max_acceptance_rate, msg);
     }
-  } else if (auto combined_result = dynamic_cast<CombinedBatchClickEventResults *>(msg)) {
-    handleCombinedBatchClickEventResults(combined_result);
   } else if (msg == time_out_message) {
     last_result_send_time = simTime();
     EPPSTimingNotification *left_pk = generateNotifier(true);
@@ -79,58 +76,14 @@ void EPPSController::handleMessage(cMessage *msg) {
   return;
 }
 
-void EPPSController::handleCombinedBatchClickEventResults(CombinedBatchClickEventResults *combined_result) {
-  auto left_right_addr_pair = std::make_pair(left_qnic_index, right_qnic_index);
-    if (combined_result->getSrcAddr() == left_addr) {
-    for (int index = 0; index < combined_result->numberOfClicks(); index++) {
-      msm_info_map[left_right_addr_pair].left_clicks.emplace_back(combined_result->getClickResults(index));
-    }
-  } else if (combined_result->getSrcAddr() == right_addr) {
-    for (int index = 0; index < combined_result->numberOfClicks(); index++) {
-      msm_info_map[left_right_addr_pair].right_clicks.emplace_back(combined_result->getClickResults(index));
-    }
-  }
-  if (!msm_info_map[left_right_addr_pair].left_clicks.empty() && !msm_info_map[left_right_addr_pair].right_clicks.empty()) {
-    sendCombinedBSAresults(left_right_addr_pair);
-  }
-  return;
-}
-
-void EPPSController::sendCombinedBSAresults(std::pair<int, int> left_right_addr_pair) {
-  CombinedBSAresults *left_bsa_results = new CombinedBSAresults();
-  left_bsa_results->setSrcAddr(address);
-  left_bsa_results->setDestAddr(left_addr);
-  left_bsa_results->setQnicIndex(left_qnic_index);
-  left_bsa_results->setQnicType(QNIC_RP);
-  left_bsa_results->setNeighborAddress(msm_info_map[left_right_addr_pair].address);
-  left_bsa_results->setIsPureBSAResult(true);
-  CombinedBSAresults *right_bsa_results = new CombinedBSAresults();
-  right_bsa_results->setSrcAddr(address);
-  right_bsa_results->setDestAddr(right_addr);
-  right_bsa_results->setQnicIndex(right_qnic_index);
-  right_bsa_results->setQnicType(QNIC_RP);
-  right_bsa_results->setNeighborAddress(msm_info_map[left_right_addr_pair].address);
-  left_bsa_results->setIsPureBSAResult(true);
-  for (int index = 0; index < msm_info_map[left_right_addr_pair].left_clicks.size(); index++) {
-    if (!msm_info_map[left_right_addr_pair].left_clicks.at(index).success || !msm_info_map[left_right_addr_pair].right_clicks.at(index).success) continue;
-    bool is_phi_minus = msm_info_map[left_right_addr_pair].left_clicks.at(index).correction_operation != msm_info_map[left_right_addr_pair].right_clicks.at(index).correction_operation;
-    left_bsa_results->appendSuccessIndex(index);
-    left_bsa_results->appendCorrectionOperation(is_phi_minus ? PauliOperator::Z : PauliOperator::I);
-    right_bsa_results->appendSuccessIndex(index);
-    right_bsa_results->appendCorrectionOperation(PauliOperator::I);
-  }
-  msm_info_map[left_right_addr_pair].left_clicks.clear();
-  msm_info_map[left_right_addr_pair].right_clicks.clear();
-  send(left_bsa_results, "to_router");
-  send(right_bsa_results, "to_router");
-  return;
-}
-
 EPPSTimingNotification *EPPSController::generateNotifier(bool is_left) {
   EPPSTimingNotification *pk = new EPPSTimingNotification("EPPSTimingNotification");
-  pk->setEppsAddr(address);
+  pk->setQnicParentAddr(is_left ? left_addr : right_addr);
   pk->setQnicIndex(is_left ? left_qnic_index : right_qnic_index);
   pk->setQnicType(QNIC_RP);
+  pk->setOtherQnicParentAddr(is_left ? right_addr : left_addr);
+  pk->setOtherQnicIndex(is_left ? right_qnic_index : left_qnic_index);
+  pk->setOtherQnicType(QNIC_RP);
   pk->setFirstPhotonEmitTime(simTime().dbl() + 2 * (is_left ? left_travel_time : right_travel_time));
   pk->setKind(4);
   pk->setInterval(max_acceptance_rate);

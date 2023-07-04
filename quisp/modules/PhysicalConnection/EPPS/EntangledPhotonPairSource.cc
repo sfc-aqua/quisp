@@ -54,7 +54,6 @@ void EntangledPhotonPairSource::emitPhotons(int pulse) {
   left_photon_ref->noiselessCNOT(right_photon_ref);
   left_photon->setQubit_ref(left_photon_ref);
   right_photon->setQubit_ref(right_photon_ref);
-  // For quantum state debugging, will remove after MSM works properly
   left_photon->setGraphState(left_photon_ref->graphState().c_str());
   right_photon->setGraphState(right_photon_ref->graphState().c_str());
   if (pulse & ENTANGLEDPHOTONPAIRSOURCE_PULSE_BEGIN) {
