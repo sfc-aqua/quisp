@@ -28,7 +28,7 @@ void BSAController::initialize() {
     address = provider.getNodeAddr();
     left_qnic.parent_node_addr = address;
     left_qnic.index = getParentModule()->par("self_qnic_index").intValue();
-    left_qnic.type = strcmp(getParentModule()->getName(),"qnic_r") ? QNIC_R : QNIC_RP;
+    left_qnic.type = strcmp(getParentModule()->getName(),"qnic_r")==0 ? QNIC_R : QNIC_RP;
   } else {
     address = getParentModule()->par("address").intValue();
     left_qnic = getExternalQNICInfoFromPort(0);
