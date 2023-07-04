@@ -98,7 +98,12 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
 
  private:
-  std::map<int, int> epps_addresses;
+  struct MSMQnicInfo {
+    int address;
+    std::vector<BSAClickResult> parent_clicks;
+    std::vector<BSAClickResult> partner_clicks;
+  };
+  std::map<int, MSMQnicInfo> msm_info_map;
 };
 
 Define_Module(RuleEngine);

@@ -106,9 +106,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // and we don't want to delete these messages
     return;
   } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
-    auto epps_address = notification_packet->getEppsAddr();
+    auto address = notification_packet->getOtherQnicParentAddr();
     auto qnic_index = notification_packet->getQnicIndex();
-    epps_addresses[qnic_index] = epps_address;
+    msm_info_map[qnic_index] = MSMQnicInfo{.address = address};
     stopOnGoingPhotonEmission(QNIC_RP, qnic_index);
     freeFailedEntanglementAttemptQubits(QNIC_RP, qnic_index);
     scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
@@ -188,8 +188,40 @@ void RuleEngine::freeFailedEntanglementAttemptQubits(QNIC_type type, int qnic_in
 
 void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventResults *batch_click_pk) {
   auto qnic_index = batch_click_pk->getQnicIndex();
-  batch_click_pk->setDestAddr(epps_addresses[qnic_index]);
-  send(batch_click_pk, "RouterPort$o");
+  if (batch_click_pk->getSrcAddr() == parentAddress) {
+    for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+      msm_info_map[qnic_index].parent_clicks.emplace_back(batch_click_pk->getClickResults(index));
+    }
+    batch_click_pk->setDestAddr(msm_info_map[qnic_index].address);
+    send(batch_click_pk->dup(), "RouterPort$o");
+    // check whether msm_info_map[qnic_index].address is really the partner qnode address
+  } else if (batch_click_pk->getSrcAddr() == msm_info_map[qnic_index].address) {
+    for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+      msm_info_map[qnic_index].partner_clicks.emplace_back(batch_click_pk->getClickResults(index));
+    }
+  }
+  if (!msm_info_map[qnic_index].parent_clicks.empty() && !msm_info_map[qnic_index].partner_clicks.empty()) {
+    CombinedBSAresults *bsa_results = generateCombinedBSAresults(qnic_index);
+    handleLinkGenerationResult(bsa_results);
+  }
+}
+
+CombinedBSAresults *RuleEngine::generateCombinedBSAresults(int qnic_index) {
+  CombinedBSAresults *bsa_results = new CombinedBSAresults();
+  bsa_results->setQnicIndex(qnic_index);
+  bsa_results->setQnicType(QNIC_RP);
+  bsa_results->setNeighborAddress(msm_info_map[qnic_index].address);
+  bsa_results->setIsPureBSAResult(true);
+  for (int index = 0; index < msm_info_map[qnic_index].parent_clicks.size(); index++) {
+    if (!msm_info_map[qnic_index].parent_clicks.at(index).success || !msm_info_map[qnic_index].partner_clicks.at(index).success) continue;
+    bool is_phi_minus = msm_info_map[qnic_index].parent_clicks.at(index).correction_operation != msm_info_map[qnic_index].partner_clicks.at(index).correction_operation;
+    bool is_younger_address = parentAddress < msm_info_map[qnic_index].address;
+    bsa_results->appendSuccessIndex(index);
+    bsa_results->appendCorrectionOperation(is_younger_address && is_phi_minus ? PauliOperator::Z : PauliOperator::I);
+  }
+  msm_info_map[qnic_index].parent_clicks.clear();
+  msm_info_map[qnic_index].partner_clicks.clear();
+  return bsa_results;
 }
 
 void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
