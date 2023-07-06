@@ -56,18 +56,10 @@ void EntangledPhotonPairSource::emitPhotons(int pulse) {
   right_photon->setQubit_ref(right_photon_ref);
   left_photon->setGraphState(left_photon_ref->graphState().c_str());
   right_photon->setGraphState(right_photon_ref->graphState().c_str());
-  if (pulse & ENTANGLEDPHOTONPAIRSOURCE_PULSE_BEGIN) {
-    left_photon->setFirst(true);
-    right_photon->setFirst(true);
-  }
-  if (pulse & ENTANGLEDPHOTONPAIRSOURCE_PULSE_END) {
-    left_photon->setLast(true);
-    right_photon->setLast(true);
-  }
-  if (pulse & ENTANGLEDPHOTONPAIRSOURCE_PULSE_BOUND) {
-    left_photon->setKind(3);
-    right_photon->setKind(3);
-  }
+  left_photon->setFirst(true);
+  right_photon->setFirst(true);
+  left_photon->setLast(true);
+  right_photon->setLast(true);
   float jitter_timing = normal(0, emission_jittering_standard_deviation);
   float abso = fabs(jitter_timing);
   scheduleAt(simTime() + abso, left_photon);
