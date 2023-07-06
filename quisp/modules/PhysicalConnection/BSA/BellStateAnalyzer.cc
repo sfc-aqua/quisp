@@ -25,7 +25,7 @@ void BellStateAnalyzer::initialize() {
   state = BSAState::Idle;
   darkcount_probability = par("darkcount_probability").doubleValue();
   detection_efficiency = par("detection_efficiency").doubleValue();
-  indistinguishability_window = par("indistinguishable_time_window").doubleValue();
+  indistinguishability_window = SimTime(par("indistinguishable_time_window").doubleValue() * 1000, SIMTIME_PS);
   collection_efficiency = par("collection_efficiency").doubleValue();
   backend = provider.getQuantumBackend();
   validateProperties();
