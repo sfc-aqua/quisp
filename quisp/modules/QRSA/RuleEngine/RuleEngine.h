@@ -80,7 +80,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(messages::PurificationResult *purification_result);
   void handleSwappingResult(messages::SwappingResult *swapping_result);
-  void handleCombinedBatchClickEventResults(messages::CombinedBatchClickEventResults *batch_click_pk);
+  void handleSingleClickResult(messages::SingleClickResult *click_result);
   messages::CombinedBSAresults *generateCombinedBSAresults(int qnic_index);
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
@@ -97,15 +97,14 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
 
- private:
   struct MSMInfo {
     int partner_address;
-    // counter of photon coming from EPPS node, has to be
     unsigned long long photon_index_counter;
+    simtime_t interval;
     // [Key: photon_index, Value: qubit_index]
-    std::unordered_map<unsigned long long, int> qubit_memory_map;
+    std::unordered_map<unsigned long long, int> qubit_photon_map;
   };
-  // the qnic id is the
+  // [Key: qnic_index, Value: qubit_index]
   std::unordered_map<int, MSMInfo> msm_info_map;
 
 };

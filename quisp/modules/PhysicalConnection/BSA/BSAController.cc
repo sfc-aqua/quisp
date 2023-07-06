@@ -9,6 +9,7 @@
 #include "messages/BSA_ipc_messages_m.h"
 #include "messages/base_messages_m.h"
 #include "messages/link_generation_messages_m.h"
+#include "omnetpp/cexception.h"
 #include "omnetpp/cmessage.h"
 
 namespace quisp::modules {
@@ -88,14 +89,15 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
     send(rightpk, "to_router");
     scheduleAt(simTime() + 1.1 * offset_time_for_first_photon, time_out_message);
   } else {
-    CombinedBatchClickEventResults *batch_click_pk = new CombinedBatchClickEventResults();
-    for (int index = 0; index < batch_click_msg->numberOfClicks(); index++) {
-      batch_click_pk->appendClickResults(batch_click_msg->getClickResults(index));
+    SingleClickResult *click_result = new SingleClickResult();
+    if(batch_click_msg->numberOfClicks()!=1) {
+      throw cRuntimeError("Number of clicks of BSA should be one");
     }
-    batch_click_pk->setQnicIndex(left_qnic.index);
-    batch_click_pk->setDestAddr(left_qnic.parent_node_addr);
-    batch_click_pk->setSrcAddr(left_qnic.parent_node_addr);
-    send(batch_click_pk, "to_router");
+    click_result->setClickResult(batch_click_msg->getClickResults(0));
+    click_result->setQnicIndex(left_qnic.index);
+    click_result->setDestAddr(left_qnic.parent_node_addr);
+    click_result->setSrcAddr(left_qnic.parent_node_addr);
+    send(click_result, "to_router");
   }
   last_result_send_time = simTime();
 }

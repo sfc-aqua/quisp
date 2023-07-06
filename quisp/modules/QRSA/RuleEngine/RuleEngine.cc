@@ -22,6 +22,7 @@
 #include "modules/QNIC.h"
 #include "omnetpp/csimulation.h"
 #include "omnetpp/errmsg.h"
+#include "omnetpp/simtime_t.h"
 
 namespace quisp::modules {
 
@@ -91,9 +92,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto number_of_free_emitters = qnic_store->countNumFreeQubits(type, qnic_index);
     auto qubit_index = qnic_store->takeFreeQubitIndex(type, qnic_index);
     if (number_of_free_emitters == 0) return;
-    if(pk->isMSM()) {
+    if (pk->isMSM()) {
+      msm_info_map[qnic_index].qubit_photon_map[msm_info_map[qnic_index].photon_index_counter] = qubit_index;
       sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, true, true);
-      scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
     } else {
       auto is_first = pk->isFirst();
       auto is_last = (number_of_free_emitters == 1);
@@ -103,19 +104,19 @@ void RuleEngine::handleMessage(cMessage *msg) {
       if (!is_last) {
         scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
       }
+      // early return since this doesn't affect entangled resource
+      // and we don't want to delete these messages
+      return;
     }
-    // early return since this doesn't affect entangled resource
-    // and we don't want to delete these messages
-    return;
   } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
     auto partner_address = notification_packet->getOtherQnicParentAddr();
     auto qnic_index = notification_packet->getQnicIndex();
-    msm_info_map[qnic_index] = MSMInfo{.partner_address = partner_address};
+    msm_info_map[qnic_index] = MSMInfo{.partner_address = partner_address, .interval = notification_packet->getInterval()};
     stopOnGoingPhotonEmission(QNIC_RP, qnic_index);
     freeFailedEntanglementAttemptQubits(QNIC_RP, qnic_index);
     scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
-  } else if (auto *batch_click_pk = dynamic_cast<CombinedBatchClickEventResults *>(msg)) {
-    handleCombinedBatchClickEventResults(batch_click_pk);
+  } else if (auto *click_result = dynamic_cast<SingleClickResult *>(msg)) {
+    handleSingleClickResult(click_result);
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
@@ -190,26 +191,37 @@ void RuleEngine::freeFailedEntanglementAttemptQubits(QNIC_type type, int qnic_in
   emitted_indices.clear();
 }
 
-void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventResults *batch_click_pk) {
-  // auto qnic_index = batch_click_pk->getQnicIndex();
-  // if (batch_click_pk->getSrcAddr() == parentAddress) {
-  //   for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
-  //     msm_info_map[qnic_index].parent_clicks.emplace_back(batch_click_pk->getClickResults(index));
-  //   }
-  //   batch_click_pk->setDestAddr(msm_info_map[qnic_index].address);
-  //   send(batch_click_pk->dup(), "RouterPort$o");
-  //   // check whether msm_info_map[qnic_index].address is really the partner qnode address
-  // } else if (batch_click_pk->getSrcAddr() == msm_info_map[qnic_index].address) {
-  //   for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
-  //     msm_info_map[qnic_index].partner_clicks.emplace_back(batch_click_pk->getClickResults(index));
-  //   }
-  // }
-  // if (!msm_info_map[qnic_index].parent_clicks.empty() && !msm_info_map[qnic_index].partner_clicks.empty()) {
-  //   CombinedBSAresults *bsa_results = generateCombinedBSAresults(qnic_index);
-  //   // If I don't use scheduleAt() and call the function handleLinkGenerationResult, the message doesn't get destroyed
-  //   scheduleAt(simTime(), bsa_results);
-  // }
-  return;
+void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
+  auto qnic_index = click_result->getQnicIndex();
+  auto partner_address = msm_info_map[qnic_index].partner_address;
+  auto interval = msm_info_map[qnic_index].interval;
+  auto qubit_index = msm_info_map[qnic_index].qubit_photon_map[msm_info_map[qnic_index].photon_index_counter];
+  if(click_result->getClickResult().success) {
+    // TODO: add send success message to other node
+    auto *qubit_record = qnic_store->getQubitRecord(QNIC_RP, qnic_index, qubit_index);
+    // bell_pair_store.insertEntangledQubit(partner_address, qubit_record);
+    auto it = std::find(emitted_photon_order_map[{QNIC_RP, qnic_index}].begin(), emitted_photon_order_map[{QNIC_RP, qnic_index}].end(), qubit_index);
+    emitted_photon_order_map[{QNIC_RP, qnic_index}].erase(it);
+    auto correction_operation = click_result->getClickResult().correction_operation;
+    if (correction_operation == PauliOperator::X) {
+      realtime_controller->applyXGate(qubit_record);
+    } else if (correction_operation == PauliOperator::Z) {
+      realtime_controller->applyZGate(qubit_record);
+    } else if (correction_operation == PauliOperator::Y) {
+      realtime_controller->applyYGate(qubit_record);
+    }
+    msm_info_map[qnic_index].photon_index_counter++;
+  } else {
+   // TODO: add send failure message to other node
+    msm_info_map[qnic_index].qubit_photon_map.erase(msm_info_map[qnic_index].photon_index_counter);
+    realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
+    qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
+  }
+  EmitPhotonRequest *timer = new EmitPhotonRequest();
+  timer->setMSM(true);
+  timer->setQnicIndex(qnic_index);
+  timer->setQnicType(QNIC_RP);
+  scheduleAt(simTime() + interval, timer);
 }
 
 // CombinedBSAresults *RuleEngine::generateCombinedBSAresults(int qnic_index) {
@@ -228,6 +240,24 @@ void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventRes
 //   msm_info_map[qnic_index].parent_clicks.clear();
 //   msm_info_map[qnic_index].partner_clicks.clear();
 //   return bsa_results;
+  // auto qnic_index = batch_click_pk->getQnicIndex();
+  // if (batch_click_pk->getSrcAddr() == parentAddress) {
+  //   for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+  //     msm_info_map[qnic_index].parent_clicks.emplace_back(batch_click_pk->getClickResults(index));
+  //   }
+  //   batch_click_pk->setDestAddr(msm_info_map[qnic_index].address);
+  //   send(batch_click_pk->dup(), "RouterPort$o");
+  //   // check whether msm_info_map[qnic_index].address is really the partner qnode address
+  // } else if (batch_click_pk->getSrcAddr() == msm_info_map[qnic_index].address) {
+  //   for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+  //     msm_info_map[qnic_index].partner_clicks.emplace_back(batch_click_pk->getClickResults(index));
+  //   }
+  // }
+  // if (!msm_info_map[qnic_index].parent_clicks.empty() && !msm_info_map[qnic_index].partner_clicks.empty()) {
+  //   CombinedBSAresults *bsa_results = generateCombinedBSAresults(qnic_index);
+  //   // If I don't use scheduleAt() and call the function handleLinkGenerationResult, the message doesn't get destroyed
+  //   scheduleAt(simTime(), bsa_results);
+  // }
 // }
 
 void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {

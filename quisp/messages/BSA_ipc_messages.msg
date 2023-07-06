@@ -19,8 +19,8 @@ packet BatchClickEvent {
 }
 
 // Used for MSM.
-packet CombinedBatchClickEventResults extends Header {
-    BSAClickResult click_results[] @appender(appendClickResults) @getter(getClickResults) @sizeGetter(numberOfClicks);
+packet SingleClickResult extends Header {
+    BSAClickResult click_result @setter(setClickResult) @getter(getClickResult);
     int qnic_index @getter(getQnicIndex) @setter(setQnicIndex);
 }
 

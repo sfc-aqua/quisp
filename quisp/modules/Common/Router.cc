@@ -79,7 +79,7 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Timing Notifier from EPPS received");
     send(pk, "rePort$o");  // send to Application locally
     return;
-  } else if (dest_addr == my_address && dynamic_cast<CombinedBatchClickEventResults *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<SingleClickResult *>(msg)) {
     bubble("Batch click result from partner BSA received");
     send(pk, "rePort$o");
     return;
