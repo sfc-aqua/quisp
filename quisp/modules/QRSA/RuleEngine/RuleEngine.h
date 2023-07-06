@@ -98,12 +98,16 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
 
  private:
-  struct MSMQnicInfo {
-    int address;
-    std::vector<BSAClickResult> parent_clicks;
-    std::vector<BSAClickResult> partner_clicks;
+  struct MSMInfo {
+    int partner_address;
+    // counter of photon coming from EPPS node, has to be
+    unsigned long long photon_index_counter;
+    // [Key: photon_index, Value: qubit_index]
+    std::unordered_map<unsigned long long, int> qubit_memory_map;
   };
-  std::map<int, MSMQnicInfo> msm_info_map;
+  // the qnic id is the
+  std::unordered_map<int, MSMInfo> msm_info_map;
+
 };
 
 Define_Module(RuleEngine);

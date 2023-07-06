@@ -16,6 +16,7 @@
 #include "QNicStore/QNicStore.h"
 #include "RuntimeCallback.h"
 #include "messages/BSA_ipc_messages_m.h"
+#include "messages/QNode_ipc_messages_m.h"
 #include "messages/link_generation_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "modules/QNIC.h"
@@ -79,36 +80,37 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (auto *bsa_results = dynamic_cast<CombinedBSAresults *>(msg)) {
       handleLinkGenerationResult(bsa_results);
     }
-    if (!notification_packet->getIsPureBSAResult()) {
-      auto type = notification_packet->getQnicType();
-      auto qnic_index = notification_packet->getQnicIndex();
-      stopOnGoingPhotonEmission(type, qnic_index);
-      freeFailedEntanglementAttemptQubits(type, qnic_index);
-      schedulePhotonEmission(type, qnic_index, notification_packet);
-    }
+    auto type = notification_packet->getQnicType();
+    auto qnic_index = notification_packet->getQnicIndex();
+    stopOnGoingPhotonEmission(type, qnic_index);
+    freeFailedEntanglementAttemptQubits(type, qnic_index);
+    schedulePhotonEmission(type, qnic_index, notification_packet);
   } else if (auto *pk = dynamic_cast<EmitPhotonRequest *>(msg)) {
     auto type = pk->getQnicType();
     auto qnic_index = pk->getQnicIndex();
     auto number_of_free_emitters = qnic_store->countNumFreeQubits(type, qnic_index);
-    auto is_first = pk->isFirst();
-    auto is_last = (number_of_free_emitters == 1);
     auto qubit_index = qnic_store->takeFreeQubitIndex(type, qnic_index);
-
     if (number_of_free_emitters == 0) return;
-
-    // need to set is_first to false
-    pk->setFirst(false);
-    sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, is_first, is_last);
-    if (!is_last) {
+    if(pk->isMSM()) {
+      sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, true, true);
       scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
+    } else {
+      auto is_first = pk->isFirst();
+      auto is_last = (number_of_free_emitters == 1);
+      // need to set is_first to false
+      pk->setFirst(false);
+      sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, is_first, is_last);
+      if (!is_last) {
+        scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
+      }
     }
     // early return since this doesn't affect entangled resource
     // and we don't want to delete these messages
     return;
   } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
-    auto address = notification_packet->getOtherQnicParentAddr();
+    auto partner_address = notification_packet->getOtherQnicParentAddr();
     auto qnic_index = notification_packet->getQnicIndex();
-    msm_info_map[qnic_index] = MSMQnicInfo{.address = address};
+    msm_info_map[qnic_index] = MSMInfo{.partner_address = partner_address};
     stopOnGoingPhotonEmission(QNIC_RP, qnic_index);
     freeFailedEntanglementAttemptQubits(QNIC_RP, qnic_index);
     scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
@@ -154,6 +156,7 @@ void RuleEngine::schedulePhotonEmission(QNIC_type type, int qnic_index, BSMTimin
   auto *timer = emit_photon_timer_map[{type, qnic_index}];
   timer->setFirst(true);
   timer->setIntervalBetweenPhotons(notification->getInterval());
+  timer->setMSM(false);
   scheduleAt(first_photon_emit_time, timer);
 }
 
@@ -162,6 +165,7 @@ void RuleEngine::scheduleMSMPhotonEmission(QNIC_type type, int qnic_index, EPPST
   auto *timer = emit_photon_timer_map[{type, qnic_index}];
   timer->setFirst(true);
   timer->setIntervalBetweenPhotons(notification->getInterval());
+  timer->setMSM(true);
   scheduleAt(first_photon_emit_time, timer);
 }
 
@@ -187,43 +191,44 @@ void RuleEngine::freeFailedEntanglementAttemptQubits(QNIC_type type, int qnic_in
 }
 
 void RuleEngine::handleCombinedBatchClickEventResults(CombinedBatchClickEventResults *batch_click_pk) {
-  auto qnic_index = batch_click_pk->getQnicIndex();
-  if (batch_click_pk->getSrcAddr() == parentAddress) {
-    for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
-      msm_info_map[qnic_index].parent_clicks.emplace_back(batch_click_pk->getClickResults(index));
-    }
-    batch_click_pk->setDestAddr(msm_info_map[qnic_index].address);
-    send(batch_click_pk->dup(), "RouterPort$o");
-    // check whether msm_info_map[qnic_index].address is really the partner qnode address
-  } else if (batch_click_pk->getSrcAddr() == msm_info_map[qnic_index].address) {
-    for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
-      msm_info_map[qnic_index].partner_clicks.emplace_back(batch_click_pk->getClickResults(index));
-    }
-  }
-  if (!msm_info_map[qnic_index].parent_clicks.empty() && !msm_info_map[qnic_index].partner_clicks.empty()) {
-    CombinedBSAresults *bsa_results = generateCombinedBSAresults(qnic_index);
-    // If I don't use scheduleAt() and call the function handleLinkGenerationResult, the message doesn't get destroyed
-    scheduleAt(simTime(), bsa_results);
-  }
+  // auto qnic_index = batch_click_pk->getQnicIndex();
+  // if (batch_click_pk->getSrcAddr() == parentAddress) {
+  //   for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+  //     msm_info_map[qnic_index].parent_clicks.emplace_back(batch_click_pk->getClickResults(index));
+  //   }
+  //   batch_click_pk->setDestAddr(msm_info_map[qnic_index].address);
+  //   send(batch_click_pk->dup(), "RouterPort$o");
+  //   // check whether msm_info_map[qnic_index].address is really the partner qnode address
+  // } else if (batch_click_pk->getSrcAddr() == msm_info_map[qnic_index].address) {
+  //   for (int index = 0; index < batch_click_pk->numberOfClicks(); index++) {
+  //     msm_info_map[qnic_index].partner_clicks.emplace_back(batch_click_pk->getClickResults(index));
+  //   }
+  // }
+  // if (!msm_info_map[qnic_index].parent_clicks.empty() && !msm_info_map[qnic_index].partner_clicks.empty()) {
+  //   CombinedBSAresults *bsa_results = generateCombinedBSAresults(qnic_index);
+  //   // If I don't use scheduleAt() and call the function handleLinkGenerationResult, the message doesn't get destroyed
+  //   scheduleAt(simTime(), bsa_results);
+  // }
+  return;
 }
 
-CombinedBSAresults *RuleEngine::generateCombinedBSAresults(int qnic_index) {
-  CombinedBSAresults *bsa_results = new CombinedBSAresults();
-  bsa_results->setQnicIndex(qnic_index);
-  bsa_results->setQnicType(QNIC_RP);
-  bsa_results->setNeighborAddress(msm_info_map[qnic_index].address);
-  bsa_results->setIsPureBSAResult(true);
-  for (int index = 0; index < msm_info_map[qnic_index].parent_clicks.size(); index++) {
-    if (!msm_info_map[qnic_index].parent_clicks.at(index).success || !msm_info_map[qnic_index].partner_clicks.at(index).success) continue;
-    bool is_phi_minus = msm_info_map[qnic_index].parent_clicks.at(index).correction_operation != msm_info_map[qnic_index].partner_clicks.at(index).correction_operation;
-    bool is_younger_address = parentAddress < msm_info_map[qnic_index].address;
-    bsa_results->appendSuccessIndex(index);
-    bsa_results->appendCorrectionOperation(is_younger_address && is_phi_minus ? PauliOperator::Z : PauliOperator::I);
-  }
-  msm_info_map[qnic_index].parent_clicks.clear();
-  msm_info_map[qnic_index].partner_clicks.clear();
-  return bsa_results;
-}
+// CombinedBSAresults *RuleEngine::generateCombinedBSAresults(int qnic_index) {
+//   CombinedBSAresults *bsa_results = new CombinedBSAresults();
+//   bsa_results->setQnicIndex(qnic_index);
+//   bsa_results->setQnicType(QNIC_RP);
+//   bsa_results->setNeighborAddress(msm_info_map[qnic_index].address);
+//   bsa_results->setIsPureBSAResult(true);
+//   for (int index = 0; index < msm_info_map[qnic_index].parent_clicks.size(); index++) {
+//     if (!msm_info_map[qnic_index].parent_clicks.at(index).success || !msm_info_map[qnic_index].partner_clicks.at(index).success) continue;
+//     bool is_phi_minus = msm_info_map[qnic_index].parent_clicks.at(index).correction_operation != msm_info_map[qnic_index].partner_clicks.at(index).correction_operation;
+//     bool is_younger_address = parentAddress < msm_info_map[qnic_index].address;
+//     bsa_results->appendSuccessIndex(index);
+//     bsa_results->appendCorrectionOperation(is_younger_address && is_phi_minus ? PauliOperator::Z : PauliOperator::I);
+//   }
+//   msm_info_map[qnic_index].parent_clicks.clear();
+//   msm_info_map[qnic_index].partner_clicks.clear();
+//   return bsa_results;
+// }
 
 void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
   auto type = bsa_result->getQnicType();

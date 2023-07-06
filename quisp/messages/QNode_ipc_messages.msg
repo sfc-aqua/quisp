@@ -14,6 +14,7 @@ packet EmitPhotonRequest extends Header
     simtime_t interval_between_photons @setter(setIntervalBetweenPhotons) @getter(getIntervalBetweenPhotons);
     bool is_first @getter(isFirst) @setter(setFirst);
     bool is_last  @getter(isLast)  @setter(setLast);
+    bool is_msm @getter(isMSM) @setter(setMSM);
 }
 
 packet StopEmitting extends Header{
