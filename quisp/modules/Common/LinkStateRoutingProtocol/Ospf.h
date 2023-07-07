@@ -25,15 +25,17 @@ enum class OspfState { DOWN = 0, INIT = 1, TWO_WAY = 2, EXSTART = 3, EXCHANGE = 
 
 struct OspfNeighborInfo {
   NodeAddr router_id;
-  int gate_index = -1;
+  // address that router needs in order to send packet to neighbor router
+  // qnic_address in case of Quantum Routing Table
+  int hop_address = -1;
   OspfState state = OspfState::DOWN;
   double cost;
 
-  OspfNeighborInfo(int rid) : router_id(rid) {}
-  OspfNeighborInfo(int idx, OspfState st) : gate_index(idx), state(st) {}
-  OspfNeighborInfo(int idx, OspfState st, double c) : gate_index(idx), state(st), cost(c) {}
-  OspfNeighborInfo(int rid, int idx, double c) : router_id(rid), gate_index(idx), cost(c) {}
-  OspfNeighborInfo(int rid, int idx, OspfState st, double c) : router_id(rid), gate_index(idx), state(st), cost(c) {}
+  OspfNeighborInfo(int _router_id) : router_id(_router_id) {}
+  OspfNeighborInfo(int _hop_address, OspfState _state) : hop_address(_hop_address), state(_state) {}
+  OspfNeighborInfo(int _hop_address, OspfState _state, double _cost) : hop_address(_hop_address), state(_state), cost(_cost) {}
+  OspfNeighborInfo(int _router_id, int _hop_address, double _cost) : router_id(_router_id), hop_address(_hop_address), cost(_cost) {}
+  OspfNeighborInfo(int _router_id, int _hop_address, OspfState _state, double _cost) : router_id(_router_id), hop_address(_hop_address), state(_state), cost(_cost) {}
   OspfNeighborInfo() = default;
 };
 
@@ -85,7 +87,7 @@ class LinkStateDatabase {
   bool hasLinkStateAdvertisementOf(NodeAddr router) const;
 
  protected:
-  int getGateIndexToNeighbor(NodeAddr src, NodeAddr neighbor) const;
+  int getHopAddressToNeighbor(NodeAddr src, NodeAddr neighbor) const;
   NodeAddr getSecondNodeInPathToDestNode(NodeAddr source_id, NodeAddr dst_id, const VertexMap& vertices) const;
 
   virtual const VertexMap dijkstraAlgorithm(NodeAddr source_id) const;

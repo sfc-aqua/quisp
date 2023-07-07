@@ -124,7 +124,7 @@ TEST_F(LinkStateDatabaseTest, noLinkStateDatabaseSummaryForEmptyLinkStateDatabas
   ASSERT_EQ(link_state_database.getLinkStateDatabaseSummary().size(), 0);
 }
 
-TEST_F(LinkStateDatabaseTest, generateRoutingTableFromGraph) {
+TEST_F(LinkStateDatabaseTest, generateQuantumRoutingTableFromGraph) {
   MockLinkStateDatabase mock_link_state_database;
   const int source = 1;
   VertexMap expected_vertices;

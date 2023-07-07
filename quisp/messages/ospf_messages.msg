@@ -47,29 +47,34 @@ class LinkStateUpdate {
 import base_messages;
 namespace quisp::messages;
 
-packet OspfHelloPacket extends Header
+packet OspfPacket extends Header
+{
+    int sending_gate_index;
+}
+
+packet OspfHelloPacket extends OspfPacket
 {
     NeighborTable neighbor_table;
 }
 
-packet OspfDbdPacket extends Header
+packet OspfDbdPacket extends OspfPacket
 {
     OspfState state;
     bool is_master;
     LinkStateDatabaseSummary lsdb;
 }
 
-packet OspfLsrPacket extends Header
+packet OspfLsrPacket extends OspfPacket
 {
     RouterIds ids_of_requested_lsa;
 }
 
-packet OspfLsuPacket extends Header
+packet OspfLsuPacket extends OspfPacket
 {
     LinkStateUpdate lsas;
 }
 
-packet OspfLsAckPacket extends Header
+packet OspfLsAckPacket extends OspfPacket
 {
 
 }

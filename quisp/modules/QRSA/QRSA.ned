@@ -15,7 +15,7 @@ module quantumRoutingSoft
         int number_of_qnics_rp;
         bool simultaneous_es_enabled;
     gates:
-        //inout rdPort;//size will be determined by the number of connections defined at the end of this file
+        inout rdPort; //size will be determined by the number of connections defined at the end of this file
         inout cmPort;
         inout rePort;
         inout hmPort;
@@ -59,6 +59,7 @@ module quantumRoutingSoft
 
         }
     connections:
+        rd.RouterPort <--> rdPort;
         cm.RouterPort <--> cmPort;
         re.RouterPort <--> rePort;
         re.HardwareMonitorPort <--> hm.RuleEnginePort;

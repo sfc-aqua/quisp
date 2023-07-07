@@ -41,7 +41,7 @@ std::map<NodeAddr, int> LinkStateDatabase::generateRoutingTableFromGraph(NodeAdd
     const NodeAddr dst_id = vertex.first;
     if (src_id == dst_id) continue;
     const NodeAddr neighbor_id = getSecondNodeInPathToDestNode(src_id, dst_id, vertices);
-    routing_table[dst_id] = getGateIndexToNeighbor(src_id, neighbor_id);
+    routing_table[dst_id] = getHopAddressToNeighbor(src_id, neighbor_id);
   }
   return routing_table;
 }
@@ -78,9 +78,9 @@ LinkStateAdvertisement LinkStateDatabase::getLinkStateAdvertisementOf(NodeAddr r
 
 bool LinkStateDatabase::hasLinkStateAdvertisementOf(NodeAddr router) const { return link_state_database.count(router); }
 
-int LinkStateDatabase::getGateIndexToNeighbor(NodeAddr src_id, NodeAddr neighbor_id) const {
+int LinkStateDatabase::getHopAddressToNeighbor(NodeAddr src_id, NodeAddr neighbor_id) const {
   if (link_state_database.count(src_id) && link_state_database.at(src_id).neighbor_nodes.count(neighbor_id)) {
-    return link_state_database.at(src_id).neighbor_nodes.at(neighbor_id).gate_index;
+    return link_state_database.at(src_id).neighbor_nodes.at(neighbor_id).hop_address;
   }
   throw omnetpp::cRuntimeError("LinkStateDatabase::getGateIndexToNeighbor: either neighbor node%d or source node%d does not exist in link_state_database", neighbor_id, src_id);
 }
