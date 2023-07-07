@@ -72,18 +72,8 @@ class LinkStateDatabase {
   using PriorityQueue = std::priority_queue<VertexSharedPtr, std::vector<VertexSharedPtr>, VertexMinPriority>;
 
  public:
-  /**
-   * @brief Adds new lsa or updated lsa to link_state_database
-   *        As a sideffect, this function clears lsdb_summary
-   */
   void updateLinkStateDatabase(LinkStateAdvertisement& lsa);
 
-  /**
-   * @brief Get the Link State Database Summary object
-   * @details This function also takes care of generating lsdb_summary when needed
-   *          This is to prevent unnecessary lsdb_summary update, as lsdb_summary is not needed until a router receives LsrPacket
-   * @return lsdb_summary
-   */
   LinkStateDatabaseSummary getLinkStateDatabaseSummary();
 
   std::map<NodeAddr, int> generateRoutingTableFromGraph(NodeAddr source) const;
