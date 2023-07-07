@@ -33,6 +33,7 @@ packet EPPSTimingNotification extends Header
     int other_qnic_index      @setter(setOtherQnicIndex) @getter(getOtherQnicIndex);
     int other_qnic_parent_addr     @setter(setOtherQnicParentAddr) @getter(getOtherQnicParentAddr);
     double travel_time @setter(setTravelTime) @getter(getTravelTime);
+    int epps_addr @setter(setEPPSAddr) @getter(getEPPSAddr);
 }
 
 // Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier
@@ -41,4 +42,18 @@ packet CombinedBSAresults extends BSMTimingNotification
     int neighbor_address @getter(getNeighborAddress) @setter(setNeighborAddress);
     int list_of_succesful_photon_indices[] @appender(appendSuccessIndex) @getter(getSuccessfulPhotonIndices) @sizeGetter(getSuccessCount);
     PauliOperator list_of_correction_operations[] @appender(appendCorrectionOperation) @getter(getCorrectionOperationList) ;
+}
+
+// Used for MSM. Sends the BSA success/failure, correction message to the partner node
+packet MSMBSAresult extends Header
+{
+    QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
+    int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
+    uint64_t photon_index @setter(setPhotonIndex) @getter(getPhotonIndex);
+    bool success @setter(setSuccess) @getter(getSuccess);
+    PauliOperator correction_operation @setter(setCorrectionOperation) @getter(getCorrectionOperation);
+}
+
+packet StopEPPSEmission extends Header
+{
 }

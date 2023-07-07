@@ -44,7 +44,7 @@ void EntangledPhotonPairSource::handleMessage(cMessage *msg) {
   }
 }
 
-void EntangledPhotonPairSource::emitPhotons(int pulse) {
+void EntangledPhotonPairSource::emitPhotons() {
   Enter_Method("emitPhotons()");
   auto *left_photon = new PhotonicQubit("LeftPhoton");
   auto *right_photon = new PhotonicQubit("RightPhoton");
@@ -54,8 +54,10 @@ void EntangledPhotonPairSource::emitPhotons(int pulse) {
   left_photon_ref->noiselessCNOT(right_photon_ref);
   left_photon->setQubit_ref(left_photon_ref);
   right_photon->setQubit_ref(right_photon_ref);
+  // only for debug usage
   left_photon->setGraphState(left_photon_ref->graphState().c_str());
   right_photon->setGraphState(right_photon_ref->graphState().c_str());
+  
   left_photon->setFirst(true);
   right_photon->setFirst(true);
   left_photon->setLast(true);
