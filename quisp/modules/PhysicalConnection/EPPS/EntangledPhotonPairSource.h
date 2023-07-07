@@ -11,9 +11,6 @@
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 
 namespace quisp::modules {
-#define ENTANGLEDPHOTONPAIRSOURCE_PULSE_BEGIN 0x01
-#define ENTANGLEDPHOTONPAIRSOURCE_PULSE_END 0x02
-#define ENTANGLEDPHOTONPAIRSOURCE_PULSE_BOUND (ENTANGLEDPHOTONPAIRSOURCE_PULSE_BEGIN | ENTANGLEDPHOTONPAIRSOURCE_PULSE_END)
 
 class EntangledPhotonPairSource : public omnetpp::cSimpleModule {
  private:
@@ -35,7 +32,7 @@ class EntangledPhotonPairSource : public omnetpp::cSimpleModule {
  public:
   EntangledPhotonPairSource();
   ~EntangledPhotonPairSource();
-  virtual void emitPhotons(int pulse);
+  virtual void emitPhotons();
 };
 
 }  // namespace quisp::modules

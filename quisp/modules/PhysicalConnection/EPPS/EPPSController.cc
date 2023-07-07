@@ -8,6 +8,7 @@
 #include <omnetpp.h>
 #include <vector>
 #include "messages/QNode_ipc_messages_m.h"
+#include "messages/link_generation_messages_m.h"
 #include "modules/QNIC.h"
 #include "omnetpp/cmessage.h"
 #include "omnetpp/csimulation.h"
@@ -34,10 +35,8 @@ void EPPSController::initialize() {
   right_qnic_index = getExternalQNICIndexFromPort(1);
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
-  number_of_sent_photons = 0;
   time_out_count = 0;
   checkNeighborsBSACapacity();
-  checkNeighborsBuffer();
   time_out_message = new EPPSNotificationTimeout();
   first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
   scheduleAt(first_notification_timer, time_out_message);
@@ -45,25 +44,8 @@ void EPPSController::initialize() {
 
 void EPPSController::handleMessage(cMessage *msg) {
   if (dynamic_cast<EmitPhotonRequest *>(msg)) {
-    if (number_of_sent_photons == 0) {
-      epps->emitPhotons(1);
-      number_of_sent_photons++;
-      scheduleAt(simTime() + max_acceptance_rate, msg);
-    } else if (number_of_sent_photons == number_of_photons - 1) {  // sending out last photon
-      epps->emitPhotons(2);
-      delete (msg);
-
-      // Is this intended behavior?
-      // set timeout to be twice the travel time plus number of no response
-      time_out_count++;
-      scheduleAt(simTime() + (2 + time_out_count) * (std::max(left_travel_time, right_travel_time)), time_out_message);
-
-      number_of_sent_photons = 0;
-    } else {
-      epps->emitPhotons(0);
-      number_of_sent_photons++;
-      scheduleAt(simTime() + max_acceptance_rate, msg);
-    }
+    epps->emitPhotons();
+    scheduleAt(simTime() + max_acceptance_rate, msg);
   } else if (msg == time_out_message) {
     last_result_send_time = simTime();
     EPPSTimingNotification *left_pk = generateNotifier(true);
@@ -72,12 +54,20 @@ void EPPSController::handleMessage(cMessage *msg) {
     send(right_pk, "to_router");
     EmitPhotonRequest *emt = new EmitPhotonRequest();
     scheduleAt(simTime() + 2 * std::max(left_travel_time, right_travel_time), emt);
+  } else if (dynamic_cast<StopEPPSEmission *>(msg)) {
+    if (!neighbor_buffer_is_full) {
+      neighbor_buffer_is_full = true;
+    }
+    else {
+      scheduleAt(simTime(), time_out_message);
+    }
   }
   return;
 }
 
 EPPSTimingNotification *EPPSController::generateNotifier(bool is_left) {
   EPPSTimingNotification *pk = new EPPSTimingNotification("EPPSTimingNotification");
+  pk->setEPPSAddr(address);
   pk->setQnicParentAddr(is_left ? left_addr : right_addr);
   pk->setQnicIndex(is_left ? left_qnic_index : right_qnic_index);
   pk->setQnicType(QNIC_RP);
@@ -118,24 +108,6 @@ void EPPSController::checkNeighborsBSACapacity() {
   // if detection rate is better than emission rate.
   double pump_rate = (double)1 / (double)frequency;
   if (pump_rate < max_acceptance_rate) max_acceptance_rate = pump_rate;
-}
-
-void EPPSController::checkNeighborsBuffer() {
-  int left_buffer = getParentModule()
-                        ->getSubmodule("epps")
-                        ->gate("quantum_port$i", 0)
-                        ->getPreviousGate()  // EPPSNode quantum_port
-                        ->getPreviousGate()  // QNode quantum_port
-                        ->getOwnerModule()  // QNode
-                        ->par("buffers");
-  int right_buffer = getParentModule()
-                         ->getSubmodule("epps")
-                         ->gate("quantum_port$i", 1)
-                         ->getPreviousGate()  // EPPSNode quantum_port
-                         ->getPreviousGate()  // QNode quantum_port
-                         ->getOwnerModule()  // QNode
-                         ->par("buffers");
-  number_of_photons = std::min(left_buffer, right_buffer);
 }
 
 double EPPSController::getTravelTimeFromPort(int port) {

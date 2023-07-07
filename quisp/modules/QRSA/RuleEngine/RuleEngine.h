@@ -15,6 +15,7 @@
 #include "QubitRecord/IQubitRecord.h"
 #include "messages/BSA_ipc_messages_m.h"
 #include "messages/classical_messages.h"
+#include "messages/link_generation_messages_m.h"
 #include "modules/Logger/LoggerBase.h"
 #include "modules/QNIC.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
@@ -77,6 +78,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
  protected:
   void initialize() override;
   void handleMessage(cMessage *msg) override;
+  void handleLinkGenerationResult(messages::MSMBSAresult *msm_result);
   void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(messages::PurificationResult *purification_result);
   void handleSwappingResult(messages::SwappingResult *swapping_result);
@@ -97,13 +99,22 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
 
+  struct QubitInfo {
+    PauliOperator pauli = PauliOperator::I;
+    bool success = false;
+    int qubit_index;
+    unsigned long long entangled_photon_index;
+  };
+
   struct MSMInfo {
     int partner_address;
+    int epps_address;
     unsigned long long photon_index_counter;
+    int iteration_number;
     simtime_t interval;
-    // [Key: photon_index, Value: qubit_index]
-    std::unordered_map<unsigned long long, int> qubit_photon_map;
+    std::unordered_map<int, QubitInfo> qubit_info_map;
   };
+
   // [Key: qnic_index, Value: qubit_index]
   std::unordered_map<int, MSMInfo> msm_info_map;
 
