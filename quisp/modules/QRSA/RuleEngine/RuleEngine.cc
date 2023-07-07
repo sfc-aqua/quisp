@@ -255,13 +255,11 @@ void RuleEngine::handleLinkGenerationResult(MSMBSAresult *msm_result) {
       //   stopOnGoingPhotonEmission(type, qnic_index);
       // }
       // after everything goes well
-// if (qnic_store->countNumFreeQubits(QNIC_RP, qnic_index) == 0) {
 //   auto pk = new StopEPPSEmission();
 //   pk->setSrcAddr(parentAddress);
 //   pk->setDestAddr(msm_info.epps_address);
 //   pk->setKind(1);
 //   send(pk, "RouterPort$o");
-// }
 }
 
 
