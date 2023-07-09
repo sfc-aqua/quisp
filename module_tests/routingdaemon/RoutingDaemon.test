@@ -22,6 +22,7 @@ channel MockChannel extends DatarateChannel {
 simple TestRoutingDaemon extends RoutingDaemon {
     parameters:
     @class(TestRoutingDaemon);
+    run_ospf = false;
     gates:
         inout quantum_port;
 }
@@ -169,7 +170,7 @@ class TestRoutingDaemon : public quisp::modules::routing_daemon::RoutingDaemon {
     }
   }
   void finish() override {
-    if (myAddress == 1){
+    if (my_address == 1){
         checkAddress(qrtable[2], 1);
     } else {
         checkAddress(qrtable[1], 2);

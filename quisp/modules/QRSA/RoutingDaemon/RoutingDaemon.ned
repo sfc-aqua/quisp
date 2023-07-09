@@ -6,6 +6,6 @@ simple RoutingDaemon
     parameters:
         bool run_ospf = default(true);
     gates:
-        inout RouterPort;
+        inout RouterPort @loose;
 }
 
