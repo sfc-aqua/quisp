@@ -267,12 +267,12 @@ void RoutingDaemon::ospfHandleDbdPacket(const OspfDbdPacket *const pk) {
 }
 
 /**
-  * @brief Exchange packets to decide who the master or slave is
-  * @details Master/slave is decided based on the number of router address/ID.
-  *          Whichever that has the bigger router address becomes the master
-  *          Slave sends its Summary LSDB to Master
-  *          Master send empty DBD packet until it receives Summary LSDB from Slave
-*/
+ * @brief Exchange packets to decide who the master or slave is
+ * @details Master/slave is decided based on the number of router address/ID.
+ *          Whichever that has the bigger router address becomes the master
+ *          Slave sends its Summary LSDB to Master
+ *          Master send empty DBD packet until it receives Summary LSDB from Slave
+ */
 void RoutingDaemon::ospfExStartState(const OspfDbdPacket *const pk) {
   const int src = pk->getSrcAddr();
   if (my_address > src) {  // i am master

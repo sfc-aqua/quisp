@@ -65,12 +65,8 @@ class Router : public OriginalRouter {
     error("port: %s not found", gatename);
     return nullptr;
   }
-  bool parentModuleIsQNode() override {
-    return dynamic_cast<MockNode*>(provider.getNode())->is_qnode;
-  }
-  void setIsQnode(bool is_qnode) {
-    dynamic_cast<MockNode*>(provider.getNode())->is_qnode = is_qnode;
-  }
+  bool parentModuleIsQNode() override { return dynamic_cast<MockNode*>(provider.getNode())->is_qnode; }
+  void setIsQnode(bool is_qnode) { dynamic_cast<MockNode*>(provider.getNode())->is_qnode = is_qnode; }
 };
 
 class RouterTest : public ::testing::Test {

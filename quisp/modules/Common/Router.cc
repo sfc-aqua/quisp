@@ -130,6 +130,7 @@ void Router::handleMessage(cMessage *msg) {
     return;
   }
 
+  // RoutingDaemon sends hello packet without desination specified
   if (dest_addr == unidentified_destination && dynamic_cast<OspfHelloPacket *>(msg)) {
     handleOspfHelloPacket(msg);
     return;
@@ -148,7 +149,7 @@ void Router::handleMessage(cMessage *msg) {
   send(pk, "toQueue", out_gate_index);
 }
 
-void Router::handleOspfHelloPacket(cMessage* msg) {
+void Router::handleOspfHelloPacket(cMessage *msg) {
   auto pk = dynamic_cast<OspfHelloPacket *>(msg);
   if (parentModuleIsQNode() == false) {
     nonQNodeForwardOspfPacket(pk);
@@ -162,23 +163,25 @@ void Router::handleOspfHelloPacket(cMessage* msg) {
   }
 }
 
-bool Router::parentModuleIsQNode() {
-  return provider.getNode()->getModuleType() == cModuleType::get("modules.QNode");
-}
+bool Router::parentModuleIsQNode() { return provider.getNode()->getModuleType() == cModuleType::get("modules.QNode"); }
 
-void Router::nonQNodeForwardOspfPacket(OspfPacket* pk) {
+/**
+ * @details Unlike QNodes, BSA nodes are connected to only two nodes (at least that is the assumption)
+ *          So this function simulates BSA nodes receiving packets from one node, and sending them to the other node.
+ */
+void Router::nonQNodeForwardOspfPacket(OspfPacket *pk) {
   pk->setHopCount(pk->getHopCount() + 1);
   const int gate_index_to_pk_src = pk->getArrivalGate()->getIndex();
   const int gate_index_to_pk_dst = gate_index_to_pk_src == 0 ? 1 : 0;
   send(pk, "toQueue", gate_index_to_pk_dst);
 }
 
-void Router::sendOspfHelloPacketToQueue(OspfPacket* pk) {
+void Router::sendOspfHelloPacketToQueue(OspfPacket *pk) {
   pk->setHopCount(pk->getHopCount() + 1);
   const int gate_index_to_pk_dst = pk->getSending_gate_index();
   send(pk, "toQueue", gate_index_to_pk_dst);
 }
 
-void Router::redirectOspfHelloPacketToRoutingDaemon(OspfPacket* pk) { send(pk, "rdPort$o"); }
+void Router::redirectOspfHelloPacketToRoutingDaemon(OspfPacket *pk) { send(pk, "rdPort$o"); }
 
 }  // namespace quisp::modules

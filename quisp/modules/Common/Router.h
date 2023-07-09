@@ -18,8 +18,8 @@ class Router : public omnetpp::cSimpleModule {
 
  protected:
   virtual void initialize() override;
-  virtual void handleMessage(omnetpp::cMessage *msg) override;
-  void generateRoutingTable(cTopology *topo);
+  virtual void handleMessage(omnetpp::cMessage* msg) override;
+  void generateRoutingTable(cTopology* topo);
   void handleOspfHelloPacket(omnetpp::cMessage* msg);
 
   utils::ComponentProvider provider;

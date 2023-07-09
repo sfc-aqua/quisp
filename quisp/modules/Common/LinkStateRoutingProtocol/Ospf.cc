@@ -3,9 +3,9 @@
 namespace quisp::modules::ospf {
 
 /**
-  * @brief Adds new lsa or updated lsa to link_state_database
-  *        As a sideffect, this function clears lsdb_summary
-*/
+ * @brief Adds new lsa or updated lsa to link_state_database
+ *        As a sideffect, this function clears lsdb_summary
+ */
 void LinkStateDatabase::updateLinkStateDatabase(LinkStateAdvertisement& lsa) {
   const NodeAddr lsa_origin_id = lsa.lsa_origin_id;
   if (link_state_database.count(lsa_origin_id)) {
@@ -20,11 +20,11 @@ void LinkStateDatabase::updateLinkStateDatabase(LinkStateAdvertisement& lsa) {
 }
 
 /**
-  * @brief Get the Link State Database Summary object
-  * @details This function also takes care of generating lsdb_summary when needed
-  *          This is to prevent unnecessary lsdb_summary update, as lsdb_summary is not needed until a router receives LsrPacket
-  * @return lsdb_summary
-*/
+ * @brief Get the Link State Database Summary object
+ * @details This function also takes care of generating lsdb_summary when needed
+ *          This is to prevent unnecessary lsdb_summary update, as lsdb_summary is not needed until a router receives LsrPacket
+ * @return lsdb_summary
+ */
 LinkStateDatabaseSummary LinkStateDatabase::getLinkStateDatabaseSummary() {
   if (lsdb_summary.empty() == false) return lsdb_summary;
   for (const auto& lsa_entry : link_state_database) {
