@@ -94,12 +94,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto& msm_info = msm_info_map[qnic_index];
     if (number_of_free_emitters == 0) return;
     if (pk->isMSM()) {
-      msm_info.qubit_info_map[msm_info.iteration_number] = QubitInfo{
-        .pauli = PauliOperator::I,
-        .success = false,
-        .qubit_index = qubit_index,
-        .entangled_photon_index = 0
-        };
+      msm_info.qubit_info_map[msm_info.iteration_index] = qubit_index;
       sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, true, true);
     } else {
       auto is_first = pk->isFirst();
@@ -127,8 +122,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
     scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
   } else if (auto *click_result = dynamic_cast<SingleClickResult *>(msg)) {
     handleSingleClickResult(click_result);
-  } else if (auto *msm_result = dynamic_cast<MSMBSAresult *>(msg)) {
-    handleLinkGenerationResult(msm_result);
+  } else if (auto *msm_result = dynamic_cast<MSMResult *>(msg)) {
+    if(msm_result->getSrcAddr() == parentAddress) {
+    handleMSMResultFromSelf(msm_result);
+  } else {
+    handleMSMResultFromPartner(msm_result);
+  }
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
@@ -208,8 +207,8 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   auto& msm_info = msm_info_map[qnic_index];
   auto partner_address = msm_info.partner_address;
   auto interval = msm_info.interval;
-  auto qubit_index = msm_info.qubit_info_map[msm_info.iteration_number].qubit_index;
-  auto msm_bsa_result = new MSMBSAresult();
+  auto qubit_index = msm_info.qubit_info_map[msm_info.iteration_index];
+  auto msm_bsa_result = new MSMResult();
   // the qnic index we need here is the partner's one, isn't it? Might use MSM info map to store partner's qnic index and so on.
   msm_bsa_result->setQnicIndex(qnic_index);
   msm_bsa_result->setQnicType(QNIC_RP);
@@ -220,10 +219,10 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   msm_bsa_result->setSrcAddr(parentAddress);
   send(msm_bsa_result, "RouterPort$o");
   if(click_result->getClickResult().success) {
-    msm_info.qubit_info_map[msm_info.iteration_number].pauli = click_result->getClickResult().correction_operation;
-    msm_info.qubit_info_map[msm_info.iteration_number].success = true;
-    msm_info.qubit_info_map[msm_info.iteration_number].entangled_photon_index = msm_info.photon_index_counter;
-    msm_info.iteration_number++;
+    msm_info.qubit_postprocess_info[msm_info.photon_index_counter].qubit_index = qubit_index;
+    msm_info.qubit_postprocess_info[msm_info.photon_index_counter].correction_operation = click_result->getClickResult().correction_operation;
+    msm_info.qubit_postprocess_info[msm_info.photon_index_counter].success = true;
+    msm_info.iteration_index++;
   } else {
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
@@ -236,30 +235,63 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   scheduleAt(simTime() + interval, timer);
 }
 
-void RuleEngine::handleLinkGenerationResult(MSMBSAresult *msm_result) {
+void RuleEngine::handleMSMResultFromPartner(MSMResult *msm_result) {
  // find out whether msm_result.success is included in msm_info
+  auto qnic_index = msm_result->getQnicIndex();
+  auto& msm_info = msm_info_map[qnic_index];
+  auto qubit_itr = msm_info.qubit_postprocess_info.find(msm_result->getPhotonIndex());
+  QubitInfo qubit_info = qubit_itr->second;
 
- // If it is, apply qubit postprocessing
-// auto *qubit_record = qnic_store->getQubitRecord(QNIC_RP, qnic_index, qubit_index);
-//      if ( != msm_result->correction_operation) {
+  // generate msm result to send back
+  MSMResult *new_msm_result = new MSMResult();
+  new_msm_result->setQnicIndex(qnic_index);
+  new_msm_result->setPhotonIndex(msm_result->getPhotonIndex());
+  new_msm_result->setSrcAddr(parentAddress);
+  new_msm_result->setDestAddr(msm_info.partner_address);
+  if (qubit_itr == msm_info.qubit_postprocess_info.end()) {
+    // send failure message to original node
+    new_msm_result->setSuccess(false);
+  } else if (!msm_result->getSuccess()) {
+    // free qubit at qubit_info.qubit_index
+    new_msm_result->setSuccess(false);
+    auto qubit_index = qubit_info.qubit_index;
+    realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
+    qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
+  } else {
+    new_msm_result->setSuccess(true);
+    new_msm_result->setCorrectionOperation(qubit_info.correction_operation);
+  }
+  send(new_msm_result, "RouterPort$o");
+}
 
-//  //, detect if it is the last memory, if so,
-//  // add as bell state resource (might add it after every postprcesses, depends on the not more buggy one)
-//  //
- // If not, free that qubit
-      // {
-      //   for (int qubit_index : emitted_photon_order_map[{type, qnic_index}]) {
-      //     auto *qubit_record = qnic_store->getQubitRecord(type, qnic_index, qubit_index);
-      //     bell_pair_store.insertEntangledQubit(msm_info.partner_address, qubit_record);
-      //   }
-      //   stopOnGoingPhotonEmission(type, qnic_index);
-      // }
-      // after everything goes well
-//   auto pk = new StopEPPSEmission();
-//   pk->setSrcAddr(parentAddress);
-//   pk->setDestAddr(msm_info.epps_address);
-//   pk->setKind(1);
-//   send(pk, "RouterPort$o");
+void RuleEngine::handleMSMResultFromSelf(MSMResult *msm_result) {
+ // find out whether msm_result.success is included in msm_info
+  auto qnic_index = msm_result->getQnicIndex();
+  auto& msm_info = msm_info_map[qnic_index];
+  auto qubit_itr = msm_info.qubit_postprocess_info.find(msm_result->getPhotonIndex());
+  QubitInfo qubit_info = qubit_itr->second;
+  auto qubit_index = qubit_info.qubit_index;
+  if (!msm_result->getSuccess()) {
+    // free qubit at qubit_info.qubit_index
+    realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
+    qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
+  } else {
+    // apply qubit postprocessing
+    bool is_phi_minus = qubit_info.correction_operation != msm_result->getCorrectionOperation();
+    bool is_younger_address = parentAddress < msm_info.partner_address;
+    auto *qubit_record = qnic_store->getQubitRecord(QNIC_RP, qnic_index, qubit_index);
+    bell_pair_store.insertEntangledQubit(msm_info.partner_address, qubit_record);
+    if (is_phi_minus && is_younger_address) realtime_controller->applyXGate(qubit_record);
+
+    // if it is the last photon, send the result to the epps node and stop the emission train
+    if(qnic_store->countNumFreeQubits(QNIC_RP, qnic_index)){
+      auto pk = new StopEPPSEmission();
+      pk->setSrcAddr(parentAddress);
+      pk->setDestAddr(msm_info.epps_address);
+      pk->setKind(1);
+      send(pk, "RouterPort$o");
+    }
+  }
 }
 
 
