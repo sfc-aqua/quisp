@@ -6,6 +6,7 @@
 #include "Router.h"
 #include "messages/BSA_ipc_messages_m.h"
 #include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
+#include "messages/link_generation_messages_m.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -83,7 +84,7 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Single click result from BSA received");
     send(pk, "rePort$o");
     return;
-  } else if (dest_addr == my_address && dynamic_cast<MSMBSAresult *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<MSMResult *>(msg)) {
     bubble("MSM BSA result from partner RE received");
     send(pk, "rePort$o");
     return;

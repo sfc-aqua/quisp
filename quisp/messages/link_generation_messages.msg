@@ -45,7 +45,7 @@ packet CombinedBSAresults extends BSMTimingNotification
 }
 
 // Used for MSM. Sends the BSA success/failure, correction message to the partner node
-packet MSMBSAresult extends Header
+packet MSMResult extends Header
 {
     QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
     int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
