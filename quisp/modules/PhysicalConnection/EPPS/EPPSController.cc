@@ -36,6 +36,7 @@ void EPPSController::initialize() {
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
   time_out_count = 0;
+  neighbor_buffer_is_full = false;
   checkNeighborsBSACapacity();
   time_out_message = new EPPSNotificationTimeout();
   first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
@@ -44,6 +45,11 @@ void EPPSController::initialize() {
 
 void EPPSController::handleMessage(cMessage *msg) {
   if (dynamic_cast<EmitPhotonRequest *>(msg)) {
+    if(stopping_epps_emission){
+      delete msg;
+      stopping_epps_emission = false;
+      return;
+    }
     epps->emitPhotons();
     scheduleAt(simTime() + max_acceptance_rate, msg);
   } else if (msg == time_out_message) {
@@ -59,7 +65,10 @@ void EPPSController::handleMessage(cMessage *msg) {
       neighbor_buffer_is_full = true;
     }
     else {
-      scheduleAt(simTime(), time_out_message);
+      neighbor_buffer_is_full = false;
+      stopping_epps_emission = true;
+      time_out_count++;
+      scheduleAt(simTime() + (4 + time_out_count)* std::max(left_travel_time,right_travel_time), time_out_message);
     }
   }
   return;
