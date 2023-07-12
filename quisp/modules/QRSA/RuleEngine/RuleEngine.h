@@ -78,9 +78,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
  protected:
   void initialize() override;
   void handleMessage(cMessage *msg) override;
-  void handleMSMResultFromSelf(messages::MSMResult *msm_result);
-  void handleMSMResultFromPartner(messages::MSMResult *msm_result);
-  void handleLinkGenerationResultFromPartner(messages::MSMResult *msm_result);
+  void handleMSMResult(messages::MSMResult *msm_result);
   void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(messages::PurificationResult *purification_result);
   void handleSwappingResult(messages::SwappingResult *swapping_result);
@@ -104,7 +102,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   struct QubitInfo {
     int qubit_index;
     PauliOperator correction_operation = PauliOperator::I;
-    bool success = false;
   };
 
   struct MSMInfo {

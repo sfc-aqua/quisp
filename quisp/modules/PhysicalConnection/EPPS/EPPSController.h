@@ -50,6 +50,7 @@ class EPPSController : public cSimpleModule {
   int time_out_count;
   simtime_t last_result_send_time;
   bool neighbor_buffer_is_full = false;
+  bool stopping_epps_emission = false;
 
   // EPPS characteristics
   EntangledPhotonPairSource *epps;
