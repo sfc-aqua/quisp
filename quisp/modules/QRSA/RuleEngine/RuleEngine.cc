@@ -212,7 +212,6 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   msm_result->setSrcAddr(parentAddress);
   msm_result->setDestAddr(msm_info.partner_address);
   msm_result->setKind(6);
-  msm_result->setIsResponse(false);
   if(click_result->getClickResult().success) {
     msm_info.qubit_postprocess_info[msm_info.photon_index_counter].qubit_index = qubit_index;
     msm_info.qubit_postprocess_info[msm_info.photon_index_counter].correction_operation = click_result->getClickResult().correction_operation;
