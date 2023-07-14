@@ -96,6 +96,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (pk->isMSM()) {
       msm_info.qubit_info_map[msm_info.iteration_index] = qubit_index;
       sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, true, true);
+      scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
       return;
     } else {
       auto is_first = pk->isFirst();
@@ -209,6 +210,7 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   msm_result->setQnicType(QNIC_RP);
   msm_result->setPhotonIndex(msm_info.photon_index_counter);
   msm_result->setSuccess(click_result->getClickResult().success);
+  msm_result->setCorrectionOperation(click_result->getClickResult().correction_operation);
   msm_result->setSrcAddr(parentAddress);
   msm_result->setDestAddr(msm_info.partner_address);
   msm_result->setKind(6);
@@ -222,8 +224,6 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   }
   msm_info.photon_index_counter++;
   send(msm_result, "RouterPort$o");
-  auto *timer = emit_photon_timer_map[{QNIC_RP, qnic_index}];
-  scheduleAt(simTime() + interval, timer);
 }
 
 void RuleEngine::handleMSMResult(MSMResult *msm_result) {
@@ -242,12 +242,14 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
   } else {
     // qubit on photon index is included in msm_info and the partner succeeded
+    // postprocess conditions
     bool is_phi_minus = qubit_info.correction_operation != msm_result->getCorrectionOperation();
+    // apply correction on only one side of the node
     bool is_younger_address = parentAddress < msm_info.partner_address;
 
     auto *qubit_record = qnic_store->getQubitRecord(QNIC_RP, qnic_index, qubit_index);
-    bell_pair_store.insertEntangledQubit(msm_info.partner_address, qubit_record);
     if (is_phi_minus && is_younger_address) realtime_controller->applyZGate(qubit_record);
+    bell_pair_store.insertEntangledQubit(msm_info.partner_address, qubit_record);
   }
 }
 
