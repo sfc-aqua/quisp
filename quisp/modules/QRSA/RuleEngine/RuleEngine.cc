@@ -232,31 +232,22 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
   auto qubit_itr = msm_info.qubit_postprocess_info.find(msm_result->getPhotonIndex());
   if (qubit_itr == msm_info.qubit_postprocess_info.end()) {
     // qubit on photon index is not included in msm_info
-  } else if (!msm_result->getSuccess()) {
+    return;
+  }
+  QubitInfo qubit_info = qubit_itr->second;
+  auto qubit_index = qubit_info.qubit_index;
+  if (!msm_result->getSuccess()) {
     // qubit on photon index is included in msm_info but the partner failed
-    QubitInfo qubit_info = qubit_itr->second;
-    auto qubit_index = qubit_info.qubit_index;
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
   } else {
     // qubit on photon index is included in msm_info and the partner succeeded
-    QubitInfo qubit_info = qubit_itr->second;
-    auto qubit_index = qubit_info.qubit_index;
     bool is_phi_minus = qubit_info.correction_operation != msm_result->getCorrectionOperation();
     bool is_younger_address = parentAddress < msm_info.partner_address;
 
     auto *qubit_record = qnic_store->getQubitRecord(QNIC_RP, qnic_index, qubit_index);
-    // bell_pair_store.insertEntangledQubit(msm_info.partner_address, qubit_record);
+    bell_pair_store.insertEntangledQubit(msm_info.partner_address, qubit_record);
     if (is_phi_minus && is_younger_address) realtime_controller->applyZGate(qubit_record);
-
-    // if it is the last photon, send the result to the epps node and stop the emission train
-    if(qnic_store->countNumFreeQubits(QNIC_RP, qnic_index)==0){
-      auto pk = new StopEPPSEmission();
-      pk->setSrcAddr(parentAddress);
-      pk->setDestAddr(msm_info.epps_address);
-      pk->setKind(1);
-      send(pk, "RouterPort$o");
-    }
   }
 }
 
