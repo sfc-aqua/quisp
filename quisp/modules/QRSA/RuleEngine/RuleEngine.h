@@ -110,9 +110,9 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
     unsigned long long photon_index_counter;
     int iteration_index;
     simtime_t interval;
-    // map of iteration_index and qubit_index
+    // map of iteration index and qubit index
     std::unordered_map<int, int> qubit_info_map;
-    // map of photon_index and qubit_info
+    // map of photon index and qubit info
     std::unordered_map<int, QubitInfo> qubit_postprocess_info;
   };
 
