@@ -3,7 +3,7 @@
 <area shape="rect" id="node2" href="$_gs__multi__qubit__test_8cc.html" title=" " alt="" coords="947,1142,1130,1182"/>
 <area shape="rect" id="node3" href="$_gs__single__qubit__test_8cc.html" title=" " alt="" coords="350,1142,533,1182"/>
 <area shape="rect" id="node4" href="$_qubit_8cc.html" title=" " alt="" coords="467,269,650,309"/>
-<area shape="rect" id="node5" href="$backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="429,93,611,133"/>
+<area shape="rect" id="node5" href="$backends_2_graph_state_2_q_u_b_i_t_8h.html" title=" " alt="" coords="429,93,611,133"/>
 <area shape="rect" id="node9" href="$_qubit__test_8cc.html" title=" " alt="" coords="557,1142,739,1182"/>
 <area shape="rect" id="node6" href="$backends_2_graph_state_2_backend_8cc.html" title=" " alt="" coords="3591,658,3774,698"/>
 <area shape="rect" id="node7" href="$backends_2_graph_state_2_backend_8h.html" title=" " alt="" coords="403,181,586,221"/>
@@ -37,7 +37,7 @@
 <area shape="rect" id="node30" href="$_real_time_controller__test_8cc.html" title=" " alt="" coords="2767,1135,2950,1189"/>
 <area shape="rect" id="node31" href="$_routing_daemon__test_8cc.html" title=" " alt="" coords="2529,1135,2743,1189"/>
 <area shape="rect" id="node32" href="$_rule_engine__photon__shooting__test_8cc.html" title=" " alt="" coords="2975,1135,3145,1189"/>
-<area shape="rect" id="node33" href="$modules_2_qubit_8h.html" title="QUBIT." alt="" coords="2549,959,2710,984"/>
+<area shape="rect" id="node33" href="$modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="2549,959,2710,984"/>
 <area shape="rect" id="node34" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="2837,951,3059,991"/>
 <area shape="rect" id="node35" href="$_rule_engine__test_8cc.html" title=" " alt="" coords="3423,1135,3583,1189"/>
 <area shape="rect" id="node36" href="$_test_utils_8h.html" title=" " alt="" coords="2017,1054,2194,1079"/>
