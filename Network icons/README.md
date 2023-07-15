@@ -15,7 +15,7 @@ End node icons have square borders.
 <img src="./icons_COMP_white.png" alt="computational node icon" style="height: 100px; width:100px;"/>
 
 Computational end node capable of measuring quantum states as well as storing them in a quantum memory. 
-This greatly enhances the nodes functionality and leads to advanced applications such as blind quantum computation. This node may vary in its processing abilities. Simple clients may be only able to generate, store and manipulate single-qubit states while advanced quantum servers may be able to create large multi-qubit entangled states and hence be capable of universal fault-tolerant quantum computation.
+This greatly enhances the node's functionality and leads to advanced applications such as blind quantum computation. This node may vary in its processing abilities. Simple clients may be only able to generate, store and manipulate single-qubit states while advanced quantum servers may be able to create large multi-qubit entangled states and hence be capable of universal fault-tolerant quantum computation.
 
 ### Measurement Node (MEAS)
 
@@ -27,7 +27,13 @@ A node that can only measure received photons (in at least two different ways) a
 
 <img src="./icons_SNSR_white.png" alt="sensor node icon" style="height: 100px; width:100px;"/>
 
-A sensor node uses the entangled states in a cyber-physical operation, e.g. as a reference frame for interferometry or clock synchronization. For these nodes in particular, recall that time is part of the service.
+A sensor node uses entangled states in a cyber-physical operation, e.g. as a reference frame for interferometry or clock synchronization. For these nodes in particular, recall that time is part of the service.
+
+### Memory Node (MEM)
+
+<img src="./icons_MEM_white.png" alt="memory node icon" style="height: 100px; width:100px;"/>
+
+A memory node's primary function is long-term storage of quantum states. It may have some basic functionality to process states but is not meant for full quantum computation like the COMP node. It may be advanced enough to be capable of quantum error correction.
 
 ## Quantum Repeater Nodes
 
