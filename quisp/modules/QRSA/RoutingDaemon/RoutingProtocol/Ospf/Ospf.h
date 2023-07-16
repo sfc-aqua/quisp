@@ -1,4 +1,18 @@
 #pragma once
+
+/**
+ * @file Ospf.h
+ * @author Tatsuhiro Nakamori
+ * @brief
+ * This file contains the declaration of the LinkStateDatabase
+ * and classes and structs which LinkStateDatabase depends on.
+ * These classes are necessary in RoutingDaemon.cc in order to
+ * conduct OSPF Routing Protocol.
+ * Please refer to https://tech.pjin.jp/blog/2021/03/03/ospf_4/
+ * for description of OSPF
+ * @date 2023-07-16
+ */
+
 #include <omnetpp.h>
 #include <algorithm>
 #include <limits>
@@ -9,11 +23,11 @@
 
 namespace quisp::modules::ospf {
 
-enum class OspfState;
-struct OspfNeighborInfo;
-struct SummaryLinkStateAdvertisement;
-struct LinkStateAdvertisement;
 class LinkStateDatabase;
+struct LinkStateAdvertisement;
+struct SummaryLinkStateAdvertisement;
+struct OspfNeighborInfo;
+enum class OspfState;
 
 using NodeAddr = int;
 using RouterIds = std::vector<int>;
@@ -39,22 +53,38 @@ struct OspfNeighborInfo {
   OspfNeighborInfo() = default;
 };
 
+/**
+ * @brief
+ * This struct is used in DBD packet exchange for two nodes to communicate
+ * what link-state advertisements are missing from one or the other.
+ */
 struct SummaryLinkStateAdvertisement {
   NodeAddr lsa_id;
   NodeAddr lsa_origin_id;
   int lsa_age;
-  SummaryLinkStateAdvertisement(NodeAddr id, NodeAddr origin_id, int age) : lsa_id(id), lsa_origin_id(origin_id), lsa_age(age){};
+  SummaryLinkStateAdvertisement(NodeAddr _id, NodeAddr _origin_id, int _age) : lsa_id(_id), lsa_origin_id(_origin_id), lsa_age(_age){};
   SummaryLinkStateAdvertisement() = default;
 };
 
+/**
+ * @brief
+ * Full link-state advertisement that holds info of neighbor_nodes.
+ * Element that makes up the LinkStateDatabase topology information.
+ */
 struct LinkStateAdvertisement : SummaryLinkStateAdvertisement {
   NeighborTable neighbor_nodes;
-  LinkStateAdvertisement(NodeAddr id, NodeAddr origin_id, NeighborTable neighbor_table) : SummaryLinkStateAdvertisement(id, origin_id, 0), neighbor_nodes(neighbor_table) {}
-  LinkStateAdvertisement(NodeAddr id, NodeAddr origin_id, int age, NeighborTable neighbor_table)
-      : SummaryLinkStateAdvertisement(id, origin_id, age), neighbor_nodes(neighbor_table) {}
+  LinkStateAdvertisement(NodeAddr _id, NodeAddr _origin_id, NeighborTable _neighbor_table) : SummaryLinkStateAdvertisement(_id, _origin_id, 0), neighbor_nodes(_neighbor_table) {}
+  LinkStateAdvertisement(NodeAddr _id, NodeAddr _origin_id, int _age, NeighborTable _neighbor_table)
+      : SummaryLinkStateAdvertisement(_id, _origin_id, _age), neighbor_nodes(_neighbor_table) {}
   LinkStateAdvertisement() = default;
 };
 
+/**
+ * @brief
+ * Represents the database that holds link-state advertisements of nodes.
+ * Effectively, link_state_database is the topology information of a network.
+ * This class holds several public methods that enable easy execution of OSPF.
+ */
 class LinkStateDatabase {
  protected:
   /**
@@ -103,7 +133,8 @@ class LinkStateDatabase {
     NodeAddr node_id;
     double distance_from_source;
     NodeAddr prev_node_in_path;
-    Vertex(LinkStateAdvertisement lsa) : node_id(lsa.lsa_origin_id), distance_from_source(std::numeric_limits<double>::max()), prev_node_in_path(-1) {}
+    static constexpr int no_prev_node = -1;
+    Vertex(LinkStateAdvertisement _lsa) : node_id(_lsa.lsa_origin_id), distance_from_source(std::numeric_limits<double>::max()), prev_node_in_path(no_prev_node) {}
     Vertex() = default;
   };
 

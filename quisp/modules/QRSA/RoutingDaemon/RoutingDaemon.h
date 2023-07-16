@@ -9,8 +9,8 @@
 
 #include "IRoutingDaemon.h"
 #include "messages/classical_messages.h"
-#include "modules/Common/LinkStateRoutingProtocol/Ospf.h"
 #include "modules/QNIC.h"
+#include "modules/QRSA/RoutingDaemon/RoutingProtocol/Ospf/Ospf.h"
 #include "utils/ComponentProvider.h"
 
 /** \class RoutingDaemon RoutingDaemon.cc

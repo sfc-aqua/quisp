@@ -22,7 +22,7 @@ channel MockChannel extends DatarateChannel {
 simple TestRoutingDaemon extends RoutingDaemon {
     parameters:
     @class(TestRoutingDaemon);
-    run_ospf = false;
+    run_ospf = default(false);
     gates:
         inout quantum_port;
 }

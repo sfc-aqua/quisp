@@ -173,28 +173,18 @@ size_t RoutingDaemon::getNumNeighbors() { return provider.getNode()->gateSize("p
 void RoutingDaemon::ospfHandleHelloPacket(const OspfHelloPacket *const pk) {
   const int src = pk->getSrcAddr();
 
-  if (ospfMyAddressIsRecognizedByNeighbor(pk) == false && ospfNeighborIsRegistered(src)) {
-    error(
-        "OspfHelloPacket error: Router%d does not recognize Router%d, \
-         but Router%d is already registered by Router %d, this should not happen",
-        src, my_address, src, my_address);
-  }
-
-  if (ospfMyAddressIsRecognizedByNeighbor(pk) && ospfNeighborIsRegistered(src)) {
-    if (neighbor_table[src].state != OspfState::INIT) {
-      error("neighbor_table[%d].state expected to be OspfState::INIT or 1, but it’s %d", src, neighbor_table[src].state);
-    }
-
+  if (!ospfMyAddressIsRecognizedByNeighbor(pk) && ospfNeighborIsRegistered(src)) {
+    error("OspfHelloPacket error: Router%d does not recognize Router%d, but Router%d is already registered by Router %d, this should not happen", src, my_address, src, my_address);
+  } else if (ospfMyAddressIsRecognizedByNeighbor(pk) && ospfNeighborIsRegistered(src)) {
+    if (neighbor_table[src].state != OspfState::INIT) error("neighbor_table[%d].state expected to be OspfState::INIT or 1, but it’s %d", src, neighbor_table[src].state);
     neighbor_table[src].state = OspfState::TWO_WAY;
     neighbor_table[src].state = OspfState::EXSTART;
 
     ospfSendExstartDbdPacket(src);
     return;
-  }
-
-  if (ospfMyAddressIsRecognizedByNeighbor(pk) == false && ospfNeighborIsRegistered(src) == false) {
+  } else if (!ospfMyAddressIsRecognizedByNeighbor(pk) && !ospfNeighborIsRegistered(src)) {
     ospfRegisterNeighbor(pk, OspfState::INIT);
-  } else if (ospfMyAddressIsRecognizedByNeighbor(pk) && ospfNeighborIsRegistered(src) == false) {
+  } else if (ospfMyAddressIsRecognizedByNeighbor(pk) && !ospfNeighborIsRegistered(src)) {
     ospfRegisterNeighbor(pk, OspfState::TWO_WAY);
   }
 

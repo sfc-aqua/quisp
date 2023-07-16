@@ -67,26 +67,13 @@ class RoutingDaemonTestTarget : public RoutingDaemon {
   TestGate* RouterPort;
 };
 
-/**
- * @brief Gate class with channel installed, for future use
- * @details This gate class can return the cost of the channel
- *          It might be useful for cost calculation
- */
-class OspfTestGate : public gate::TestGate {
- public:
-  OspfTestGate(cModule* mod, const char* name) : TestGate(mod, name) { installChannel(&channel); };
-
- private:
-  channel::TestDatarateChannel channel;
-};
-
 class OspfTestQNode : public qnode::TestQNode {
  public:
   OspfTestQNode(int addr, int mass, bool is_initiator) : TestQNode(addr, mass, is_initiator) {
     const int num_port = 1;
     addGateVector("port", cGate::Type::INPUT, num_port);
   }
-  OspfTestQNode(int addr, int mass, bool is_initiator, std::string s) : TestQNode(addr, mass, is_initiator) { port = std::make_unique<OspfTestGate>(this, s.c_str()); }
+  OspfTestQNode(int addr, int mass, bool is_initiator, std::string s) : TestQNode(addr, mass, is_initiator) { port = std::make_unique<TestGate>(this, s.c_str()); }
   cGate* gate(const char* gatename, int index = -1) override {
     if (strcmp(gatename, "port$o") == 0) return port.get();
     throw cRuntimeError("port: %s not found", gatename);
@@ -94,7 +81,7 @@ class OspfTestQNode : public qnode::TestQNode {
   }
 
  private:
-  std::unique_ptr<OspfTestGate> port;
+  std::unique_ptr<TestGate> port;
 };
 
 class RoutingDaemonTest : public ::testing::Test {

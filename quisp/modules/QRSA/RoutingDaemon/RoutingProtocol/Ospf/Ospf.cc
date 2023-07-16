@@ -90,7 +90,7 @@ NodeAddr LinkStateDatabase::getSecondNodeInPathToDestNode(NodeAddr source_id, No
   while (current_node_ptr->prev_node_in_path != source_id) {
     NodeAddr prev_node_id = current_node_ptr->prev_node_in_path;
     current_node_ptr = vertices.at(prev_node_id);
-    if (current_node_ptr->prev_node_in_path == -1)
+    if (current_node_ptr->prev_node_in_path == Vertex::no_prev_node)
       throw omnetpp::cRuntimeError("LinkStateDatabase::getSecondNodeInPathToDestNode: could not find path from node%d to node%d", source_id, dst_id);
   }
   return current_node_ptr->node_id;
