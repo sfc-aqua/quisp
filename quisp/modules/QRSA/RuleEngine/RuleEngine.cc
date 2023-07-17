@@ -113,12 +113,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
     auto partner_address = notification_packet->getOtherQnicParentAddr();
+    auto partner_qnic_index = notification_packet->getOtherQnicIndex();
     auto epps_address = notification_packet->getEPPSAddr();
     auto qnic_index = notification_packet->getQnicIndex();
     auto& msm_info = msm_info_map[qnic_index];
     msm_info.partner_address = partner_address;
     msm_info.epps_address = epps_address;
-    msm_info.interval = notification_packet->getInterval();
+    msm_info.partner_qnic_index = partner_qnic_index;
     stopOnGoingPhotonEmission(QNIC_RP, qnic_index);
     scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
   } else if (auto *click_result = dynamic_cast<SingleClickResult *>(msg)) {
@@ -205,8 +206,7 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   auto interval = msm_info.interval;
   auto qubit_index = msm_info.qubit_info_map[msm_info.iteration_index];
   MSMResult *msm_result = new MSMResult();
-  // the qnic index we need here is the partner's one, isn't it? Might use MSM info map to store partner's qnic index and so on.
-  msm_result->setQnicIndex(qnic_index);
+  msm_result->setQnicIndex(msm_info.partner_qnic_index);
   msm_result->setQnicType(QNIC_RP);
   msm_result->setPhotonIndex(msm_info.photon_index_counter);
   msm_result->setSuccess(click_result->getClickResult().success);
