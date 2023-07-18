@@ -103,6 +103,8 @@ void BellStateAnalyzer::processPhotonRecords() {
       batch_click_msg->appendClickResults(processIndistinguishPhotons(p, q));
     } else {
       batch_click_msg->appendClickResults({.success = false, .correction_operation = PauliOperator::I});
+      discardPhoton(p);
+      discardPhoton(q);
     }
   }
   first_port_records.clear();
