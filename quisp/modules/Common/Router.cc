@@ -137,7 +137,7 @@ void Router::handleMessage(cMessage *msg) {
   }
 
   // Check if packet is reachable
-  if (routing_table.count(dest_addr) == false) {
+  if (!routing_table.count(dest_addr)) {
     std::cout << "In Node[" << my_address << "]Address... " << dest_addr << " unreachable, discarding packet " << pk->getName() << endl;
     delete pk;
     error("Router couldn't find the path. Shoudn't happen. Or maybe the router does not understand the packet.");
@@ -151,15 +151,16 @@ void Router::handleMessage(cMessage *msg) {
 
 void Router::handleOspfHelloPacket(cMessage *msg) {
   auto pk = dynamic_cast<OspfHelloPacket *>(msg);
-  if (parentModuleIsQNode() == false) {
+  if (!parentModuleIsQNode()) {
     nonQNodeForwardOspfPacket(pk);
     return;
   }
 
-  if (pk->getSrcAddr() == my_address) {
-    sendOspfHelloPacketToQueue(pk);
-  } else {
+  const bool dst_is_this_node = (pk->getSrcAddr() != my_address);
+  if (dst_is_this_node) {
     redirectOspfHelloPacketToRoutingDaemon(pk);
+  } else {
+    sendOspfHelloPacketToQueue(pk);
   }
 }
 
