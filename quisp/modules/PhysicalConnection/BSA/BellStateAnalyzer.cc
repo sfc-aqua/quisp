@@ -140,7 +140,7 @@ BSAClickResult BellStateAnalyzer::processIndistinguishPhotons(PhotonRecord &p, P
   }
 
   // we assume that only Psi+/- can de distinguished while we can't for Phi+/-
-  bool isPsi = dblrand() < 0.5;
+  bool isPsi = true;
   bool left_click = dblrand() < detection_efficiency;
   bool right_click = dblrand() < detection_efficiency;
   if (!p.is_lost && !q.is_lost && isPsi && left_click && right_click) {
@@ -211,6 +211,6 @@ void BellStateAnalyzer::finish() {
   std::cout << "    " << no_error_count << ' ' << x_error_count << ' ' << y_error_count << ' ' << z_error_count << '\n';
 }
 
-void BellStateAnalyzer::discardPhoton(PhotonRecord &photon) { photon.qubit_ref->noiselessMeasureZ(); };
+void BellStateAnalyzer::discardPhoton(PhotonRecord &photon) { photon.qubit_ref->relaseBackToPool(); };
 
 }  // namespace quisp::modules
