@@ -92,13 +92,15 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto number_of_free_emitters = qnic_store->countNumFreeQubits(type, qnic_index);
     auto qubit_index = qnic_store->takeFreeQubitIndex(type, qnic_index);
     auto& msm_info = msm_info_map[qnic_index];
-    if (number_of_free_emitters == 0) return;
     if (pk->isMSM()) {
+      if (!(number_of_free_emitters == 0)) {
       msm_info.qubit_info_map[msm_info.iteration_index] = qubit_index;
       sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, true, true);
+      }
       scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
       return;
-    } else {
+  } else {
+      if (number_of_free_emitters == 0) return;
       auto is_first = pk->isFirst();
       auto is_last = (number_of_free_emitters == 1);
       // need to set is_first to false
