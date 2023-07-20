@@ -142,7 +142,7 @@ BSAClickResult BellStateAnalyzer::processIndistinguishPhotons(PhotonRecord &p, P
   }
 
   // we assume that only Psi+/- can de distinguished while we can't for Phi+/-
-  bool isPsi = true;
+  bool isPsi = dblrand() < 0.5;
   bool left_click = dblrand() < detection_efficiency;
   bool right_click = dblrand() < detection_efficiency;
   if (!p.is_lost && !q.is_lost && isPsi && left_click && right_click) {
