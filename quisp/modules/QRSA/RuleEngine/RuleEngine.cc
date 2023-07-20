@@ -135,7 +135,22 @@ void RuleEngine::handleMessage(cMessage *msg) {
     handlePurificationResult(pkt);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
     handleSwappingResult(pkt);
+  } else if (auto *pkt = dynamic_cast<MSMResultArrivalCheck *>(msg)) {
+    handleMSMResultArrivalCheck(pkt);
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
+    // add actual process
+    auto serialized_ruleset = pkt->getRuleSet();
+    RuleSet ruleset(0, 0);
+    ruleset.deserialize_json(serialized_ruleset);
+    runtimes.acceptRuleSet(ruleset.construct());
+  } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
+    if (pkt->getApplication_type() != 0) error("This application is not recognized yet");
+    auto serialized_ruleset = pkt->getRuleSet();
+    RuleSet ruleset(0, 0);
+    ruleset.deserialize_json(serialized_ruleset);
+    runtimes.acceptRuleSet(ruleset.construct());
+  }
+  else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto serialized_ruleset = pkt->getRuleSet();
     RuleSet ruleset(0, 0);
@@ -205,7 +220,6 @@ void RuleEngine::freeFailedEntanglementAttemptQubits(QNIC_type type, int qnic_in
 void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   auto qnic_index = click_result->getQnicIndex();
   auto& msm_info = msm_info_map[qnic_index];
-  auto interval = msm_info.interval;
   auto qubit_index = msm_info.qubit_info_map[msm_info.iteration_index];
   MSMResult *msm_result = new MSMResult();
   msm_result->setQnicIndex(msm_info.partner_qnic_index);
@@ -226,23 +240,33 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   }
   msm_info.photon_index_counter++;
   send(msm_result, "RouterPort$o");
+  // start countdown
+  MSMResultArrivalCheck* msm_result_arrival_check = new MSMResultArrivalCheck;
+  msm_result_arrival_check->setQnicIndex(qnic_index);
+  msm_result_arrival_check->setQubitIndex(qubit_index);
+  scheduleAt(simTime() + 1, msm_result_arrival_check);
 }
 
 void RuleEngine::handleMSMResult(MSMResult *msm_result) {
   auto qnic_index = msm_result->getQnicIndex();
   auto& msm_info = msm_info_map[qnic_index];
   auto qubit_itr = msm_info.qubit_postprocess_info.find(msm_result->getPhotonIndex());
+  // local failure partner success/failure
   if (qubit_itr == msm_info.qubit_postprocess_info.end()) {
     // qubit on photon index is not included in msm_info
     return;
   }
   QubitInfo qubit_info = qubit_itr->second;
   auto qubit_index = qubit_info.qubit_index;
+  msm_info.qubit_postprocess_info[qubit_index].handled = true;
+  // partner failure local success
   if (!msm_result->getSuccess()) {
     // qubit on photon index is included in msm_info but the partner failed
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
-  } else {
+  }
+  // partner success local success
+  else {
     // qubit on photon index is included in msm_info and the partner succeeded
     // postprocess conditions
     bool is_phi_minus = qubit_info.correction_operation != msm_result->getCorrectionOperation();
@@ -253,6 +277,15 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
     if (is_phi_minus && is_younger_address) realtime_controller->applyZGate(qubit_record);
     bell_pair_store.insertEntangledQubit(msm_info.partner_address, qubit_record);
   }
+}
+
+void RuleEngine::handleMSMResultArrivalCheck(MSMResultArrivalCheck *msm_result_arrival_check) {
+  auto qnic_index = msm_result_arrival_check->getQnicIndex();
+  auto& msm_info = msm_info_map[msm_result_arrival_check->getQnicIndex()];
+  if(msm_info.qubit_postprocess_info[msm_result_arrival_check->getQubitIndex()].handled) return;
+  realtime_controller->ReInitialize_StationaryQubit(qnic_index, msm_result_arrival_check->getQubitIndex(), QNIC_RP, false);
+  qnic_store->setQubitBusy(QNIC_RP, qnic_index, msm_result_arrival_check->getQubitIndex(), false);
+  return;
 }
 
 void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
