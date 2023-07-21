@@ -54,6 +54,12 @@ packet MSMResult extends Header
     PauliOperator correction_operation @setter(setCorrectionOperation) @getter(getCorrectionOperation);
 }
 
+packet MSMResultArrivalCheck extends Header
+{
+    int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
+    int qubit_index @setter(setQubitIndex) @getter(getQubitIndex);
+}
+
 packet StopEPPSEmission extends Header
 {
 }
