@@ -239,7 +239,7 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
     MSMResultArrivalCheck* msm_result_arrival_check = new MSMResultArrivalCheck;
     msm_result_arrival_check->setQnicIndex(qnic_index);
     msm_result_arrival_check->setQubitIndex(qubit_index);
-    scheduleAt(simTime() + 1, msm_result_arrival_check);
+    scheduleAt(simTime() + 0.0000049, msm_result_arrival_check);
   } else {
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
@@ -281,10 +281,12 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
 
 void RuleEngine::handleMSMResultArrivalCheck(MSMResultArrivalCheck *msm_result_arrival_check) {
   auto qnic_index = msm_result_arrival_check->getQnicIndex();
-  auto& msm_info = msm_info_map[msm_result_arrival_check->getQnicIndex()];
-  if(msm_info.qubit_postprocess_info[msm_result_arrival_check->getQubitIndex()].handled) return;
-  realtime_controller->ReInitialize_StationaryQubit(qnic_index, msm_result_arrival_check->getQubitIndex(), QNIC_RP, false);
-  qnic_store->setQubitBusy(QNIC_RP, qnic_index, msm_result_arrival_check->getQubitIndex(), false);
+  auto qubit_index = msm_result_arrival_check->getQubitIndex();
+  auto& msm_info = msm_info_map[qnic_index];
+  if(!msm_info.qubit_postprocess_info[qubit_index].handled) {
+    realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
+    qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
+  }
   return;
 }
 
