@@ -168,7 +168,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       IQubitRecord *qubit_record = (IQubitRecord *) pkt->getPhotonRecord();
       pkt2->setPhotonRecord(qubit_record);
       pkt2->setRole("ACK");
-      pkt2->setSequence_number(1);
+      pkt2->setSequence_number(pkt->getSequence_number());
       send(pkt2, "RouterPort$o");
     }
   }
