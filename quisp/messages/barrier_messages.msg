@@ -16,8 +16,8 @@ packet BarrierMessage extends Header
 {
     int srcAddr;
     int destAddr;
-    unsigned long negotiatedRuleset_id  @setter(setNegotiatedRuleset_id) @getter(getNegotiatedRuleset_id);
-    IQubitRecord *photon_record;
+    unsigned long negotiatedRuleset_id @setter(setNegotiatedRuleset_id) @getter(getNegotiatedRuleset_id);
+    IQubitRecord *photon_record @setter(setPhotonRecord) @getter(getPhotonRecord);
     int sequence_number;
     string role;
 }
