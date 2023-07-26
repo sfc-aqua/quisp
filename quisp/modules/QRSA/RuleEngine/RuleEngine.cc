@@ -147,10 +147,30 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto ruleset_id = pkt->getCurrentRuleSet_id();
     runtimes.stopById(ruleset_id);
     for (int i = 0; i < number_of_qnics; i++) {
-      freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
+      qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, i, ruleset_id);
+      for(IQubitRecord *qubit_record : qubit_record_list) {
+        BarrierMessage *pkt2 = new BarrierMessage("BarrierMessage");
+        pkt2->setDestAddr(pkt->getSrcAddr());
+        pkt2->setSrcAddr(pkt->getDestAddr());
+        pkt2->setNegotiatedRuleset_id(pkt->getNegotiatedRuleset_id());
+        pkt2->setPhotonRecord(qubit_record);
+        pkt2->setRole("SEND");
+        pkt2->setSequence_number(1);
+        send(pkt2, "RouterPort$o");
+      }
     }
   } else if (auto *pkt = dynamic_cast<BarrierMessage *>(msg)) {
-    
+    if (strcmp(pkt->getRole(), "SEND")) {
+      BarrierMessage *pkt2 = new BarrierMessage("BarrierMessage");
+      pkt2->setDestAddr(pkt->getSrcAddr());
+      pkt2->setSrcAddr(pkt->getDestAddr());
+      pkt2->setNegotiatedRuleset_id(pkt->getNegotiatedRuleset_id());
+      IQubitRecord *qubit_record = (IQubitRecord *) pkt->getPhotonRecord();
+      pkt2->setPhotonRecord(qubit_record);
+      pkt2->setRole("ACK");
+      pkt2->setSequence_number(1);
+      send(pkt2, "RouterPort$o");
+    }
   }
 
   for (int i = 0; i < number_of_qnics; i++) {
