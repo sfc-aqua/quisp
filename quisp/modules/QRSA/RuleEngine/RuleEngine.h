@@ -80,6 +80,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void ResourceAllocation(int qnic_type, int qnic_index);
   void AllocateResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
   void freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
+  std::vector<IQubitRecord*> getAllocatedResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
 
  protected:
   void initialize() override;
