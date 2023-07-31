@@ -277,9 +277,6 @@ string RuleEngine::getRoleFromInternalConnectionTeardownMessage(InternalConnecti
 void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
   auto ruleset_id = msg->getRuleSet_id();
   runtimes.stopById(ruleset_id);
-  for (int i = 0; i < number_of_qnics; i++) {
-    freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
-  }
 }
 
 void RuleEngine::sendLinkAllocationUpdateDecisionRequest(InternalConnectionTeardownMessage *msg){
@@ -305,7 +302,6 @@ void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDe
   pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
   pkt->setNegotiatedRuleset_id(msg->getOfferedRuleSet_ids(0));
   send(pkt, "RouterPort$o");
-
 }
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
