@@ -134,16 +134,16 @@ void RuleEngine::handleMessage(cMessage *msg) {
     handleConnectionTeardownMessage(pkt);
     auto role = getRoleFromInternalConnectionTeardownMessage(pkt);
     if (role == "SENDER"){
-      sendLinkAllocationUpdateRequest(pkt);
+      sendLinkAllocationUpdateDecisionRequest(pkt);
     }
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
-    sendLinkAllocationUpdateResponse(pkt);
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
+    sendLinkAllocationUpdateDecisionResponse(pkt);
     auto ruleset_id = pkt->getCurrentRuleSet_id();
     runtimes.stopById(ruleset_id);
     for (int i = 0; i < number_of_qnics; i++) {
       freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
     }
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateResponse *>(msg)) {
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
     auto ruleset_id = pkt->getCurrentRuleSet_id();
     runtimes.stopById(ruleset_id);
     for (int i = 0; i < number_of_qnics; i++) {
@@ -282,8 +282,8 @@ void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessa
   }
 }
 
-void RuleEngine::sendLinkAllocationUpdateRequest(InternalConnectionTeardownMessage *msg){
-  LinkAllocationUpdateRequest *pkt = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
+void RuleEngine::sendLinkAllocationUpdateDecisionRequest(InternalConnectionTeardownMessage *msg){
+  LinkAllocationUpdateDecisionRequest *pkt = new LinkAllocationUpdateDecisionRequest("LinkAllocationUpdateDecisionRequest");
   pkt->setSrcAddr(parentAddress);
   pkt->setDestAddr(msg->getNext_destAddr());
   pkt->setCurrentRuleSet_id(msg->getRuleSet_id());
@@ -298,8 +298,8 @@ void RuleEngine::sendLinkAllocationUpdateRequest(InternalConnectionTeardownMessa
   send(pkt, "RouterPort$o");
 }
 
-void RuleEngine::sendLinkAllocationUpdateResponse(LinkAllocationUpdateRequest *msg){
-  LinkAllocationUpdateResponse *pkt = new LinkAllocationUpdateResponse("LinkAllocationUpdateResponse");
+void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDecisionRequest *msg){
+  LinkAllocationUpdateDecisionResponse *pkt = new LinkAllocationUpdateDecisionResponse("LinkAllocationUpdateDecisionResponse");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
   pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());

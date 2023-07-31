@@ -91,8 +91,8 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void handleConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *connection_teardown_message);
   void handleInternalConnectionTeardownInfoForwarding(messages::InternalConnectionTeardownInfoForwarding *connection_teardown_info_forwarding);
   string getRoleFromInternalConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *msg);
-  void sendLinkAllocationUpdateRequest(messages::InternalConnectionTeardownMessage *msg);
-  void sendLinkAllocationUpdateResponse(messages::LinkAllocationUpdateRequest *msg);
+  void sendLinkAllocationUpdateDecisionRequest(messages::InternalConnectionTeardownMessage *msg);
+  void sendLinkAllocationUpdateDecisionResponse(messages::LinkAllocationUpdateDecisionRequest *msg);
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);
