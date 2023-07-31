@@ -171,7 +171,7 @@ void RoutingDaemon::handleMessage(cMessage *msg) {
 size_t RoutingDaemon::getNumNeighbors() { return provider.getNode()->gateSize("port"); }
 
 void RoutingDaemon::ospfHandleHelloPacket(const OspfHelloPacket *const pk) {
-  const int src = pk->getSrcAddr();
+  const NodeAddr src = pk->getSrcAddr();
 
   if (!ospfMyAddressIsRecognizedByNeighbor(pk) && ospfNeighborIsRegistered(src)) {
     error("OspfHelloPacket error: Router%d does not recognize Router%d, but Router%d is already registered by Router %d, this should not happen", src, my_address, src, my_address);
@@ -194,7 +194,7 @@ void RoutingDaemon::ospfHandleHelloPacket(const OspfHelloPacket *const pk) {
 
 void RoutingDaemon::ospfInitializeRoutingDaemon() {
   const size_t num_neighbors = getNumNeighbors();
-  const int unidentified_destination = -1;
+  const NodeAddr unidentified_destination = -1;
 
   for (size_t i = 0; i < num_neighbors; i++) {
     OspfHelloPacket *msg = new OspfHelloPacket;
@@ -216,14 +216,14 @@ void RoutingDaemon::ospfSendHelloPacketToNeighbor(NodeAddr neighbor) {
 
 bool RoutingDaemon::ospfMyAddressIsRecognizedByNeighbor(const OspfHelloPacket *const msg) {
   for (const auto neighbor_entry : msg->getNeighbor_table()) {
-    int neighbor_id = neighbor_entry.first;
+    NodeAddr neighbor_id = neighbor_entry.first;
     if (my_address == neighbor_id) return true;
   }
   return false;
 }
 
 void RoutingDaemon::ospfRegisterNeighbor(const OspfPacket *const pk, OspfState state) {
-  const int src = pk->getSrcAddr();
+  const NodeAddr src = pk->getSrcAddr();
   const auto qnic_interface = provider.getHardwareMonitor()->findInterfaceByNeighborAddr(src);
   const int qnic_address = qnic_interface->qnic.address;
   const double link_cost = qnic_interface->link_cost;
@@ -231,28 +231,28 @@ void RoutingDaemon::ospfRegisterNeighbor(const OspfPacket *const pk, OspfState s
   ospfUpdateMyAddressLsaInLsdb();
 }
 
-bool RoutingDaemon::ospfNeighborIsRegistered(int address) const { return static_cast<bool>(neighbor_table.count(address)); }
+bool RoutingDaemon::ospfNeighborIsRegistered(NodeAddr address) const { return static_cast<bool>(neighbor_table.count(address)); }
 
 void RoutingDaemon::ospfHandleDbdPacket(const OspfDbdPacket *const pk) {
   if (pk->getState() == OspfState::EXSTART) {
     return ospfExStartState(pk);
-  } else if (pk->getState() == OspfState::EXCHANGE) {
-    const int src = pk->getSrcAddr();
+  }
 
-    if (bool i_am_master = (!pk->getIs_master())) {
-      ospfMasterEnterExchangeState(src);
-    }
+  const NodeAddr src = pk->getSrcAddr();
 
-    if (pk->getLsdb().empty()) error("RoutingDaemon::ospfHandleDbdPacket: expected LSDB to be not empty, but it is");
+  if (pk->getState() != OspfState::EXCHANGE) error("RoutingDaemon::ospfHandleDbdPacket: Node%d expected to be in EXCHANGE state, but it's not", src);
 
-    const RouterIds missing_lsa_ids = link_state_database.identifyMissingLinkStateAdvertisementId(pk->getLsdb());
-    if (missing_lsa_ids.size() > 0) {
-      ospfSendLinkStateRequest(pk->getSrcAddr(), missing_lsa_ids);
-    } else {
-      neighbor_table[pk->getSrcAddr()].state = OspfState::FULL;
-    }
+  if (pk->getLsdb().empty()) error("RoutingDaemon::ospfHandleDbdPacket: expected LSDB to be not empty, but it is");
 
-    return;
+  if (bool i_am_master = (!pk->getIs_master())) {
+    ospfMasterEnterExchangeState(src);
+  }
+
+  const RouterIds missing_lsa_ids = link_state_database.identifyMissingLinkStateAdvertisementId(pk->getLsdb());
+  if (missing_lsa_ids.size() > 0) {
+    ospfSendLinkStateRequest(src, missing_lsa_ids);
+  } else {
+    neighbor_table[src].state = OspfState::FULL;
   }
 }
 
@@ -264,7 +264,7 @@ void RoutingDaemon::ospfHandleDbdPacket(const OspfDbdPacket *const pk) {
  *          Master send empty DBD packet until it receives Summary LSDB from Slave
  */
 void RoutingDaemon::ospfExStartState(const OspfDbdPacket *const pk) {
-  const int src = pk->getSrcAddr();
+  const NodeAddr src = pk->getSrcAddr();
   if (my_address > src) {  // i am master
     // Master send empty DBD packet until it receives Summary LSDB from Slave
     ospfSendExstartDbdPacket(src);
@@ -288,12 +288,12 @@ void RoutingDaemon::ospfSendExstartDbdPacket(NodeAddr neighbor) {
   send(msg, "RouterPort$o");
 }
 
-void RoutingDaemon::ospfSlaveInitiateExchangeState(int dest) {
+void RoutingDaemon::ospfSlaveInitiateExchangeState(NodeAddr dest) {
   neighbor_table[dest].state = OspfState::EXCHANGE;
   ospfSendLsdbSummary(dest);
 }
 
-void RoutingDaemon::ospfMasterEnterExchangeState(int dest) {
+void RoutingDaemon::ospfMasterEnterExchangeState(NodeAddr dest) {
   neighbor_table[dest].state = OspfState::EXCHANGE;
   ospfSendLsdbSummary(dest, true);
 }
@@ -349,9 +349,9 @@ void RoutingDaemon::ospfUpdateLinkStateDatabase(const OspfLsuPacket *const pk) {
   }
 }
 
-void RoutingDaemon::ospfSendUpdatedLsdbToNeighboringRouters(int source_of_updated_lsdb) {
+void RoutingDaemon::ospfSendUpdatedLsdbToNeighboringRouters(NodeAddr source_of_updated_lsdb) {
   for (const auto neighbor_entry : neighbor_table) {
-    const int neighbor_id = neighbor_entry.first;
+    const NodeAddr neighbor_id = neighbor_entry.first;
     if (neighbor_id == source_of_updated_lsdb) continue;
     ospfSendLsdbSummary(neighbor_id, true);
   }

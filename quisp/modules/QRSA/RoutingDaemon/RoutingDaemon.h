@@ -51,21 +51,21 @@ class RoutingDaemon : public IRoutingDaemon {
   void ospfSendHelloPacketToNeighbor(NodeAddr neighbor);
   bool ospfMyAddressIsRecognizedByNeighbor(const OspfHelloPacket *const msg);
   void ospfRegisterNeighbor(const OspfPacket *const pk, OspfState state);
-  bool ospfNeighborIsRegistered(int address) const;
+  bool ospfNeighborIsRegistered(NodeAddr address) const;
 
   void ospfHandleDbdPacket(const OspfDbdPacket *const pk);
   void ospfExStartState(const OspfDbdPacket *const pk);
   void ospfSendExstartDbdPacket(NodeAddr neighbor);
-  void ospfSlaveInitiateExchangeState(int dest);
-  void ospfMasterEnterExchangeState(int dest);
-  void ospfSendLsdbSummary(int destination, bool i_am_master = false);
+  void ospfSlaveInitiateExchangeState(NodeAddr dest);
+  void ospfMasterEnterExchangeState(NodeAddr dest);
+  void ospfSendLsdbSummary(NodeAddr destination, bool i_am_master = false);
 
-  void ospfSendLinkStateRequest(int dst, const RouterIds &missing_lsa_ids);
+  void ospfSendLinkStateRequest(NodeAddr dst, const RouterIds &missing_lsa_ids);
   void ospfHandleLinkStateRequest(const OspfLsrPacket *const pk);
 
   void ospfHandleLinkStateUpdate(const OspfLsuPacket *const pk);
   void ospfUpdateLinkStateDatabase(const OspfLsuPacket *const msg);
-  void ospfSendUpdatedLsdbToNeighboringRouters(int source_of_updated_lsdb);
+  void ospfSendUpdatedLsdbToNeighboringRouters(NodeAddr source_of_updated_lsdb);
 
   void ospfUpdateMyAddressLsaInLsdb();
 
