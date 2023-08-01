@@ -18,6 +18,7 @@
 #include "modules/PhysicalConnection/BSA/BSAController.h"
 #include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
 #include "rules/RuleSet.h"
+#include "utils/TomographyManager.h"
 
 using namespace quisp::messages;
 using namespace quisp::rules;
@@ -26,7 +27,7 @@ using Eigen::Vector4cd;
 
 namespace quisp::modules {
 
-HardwareMonitor::HardwareMonitor() : provider(utils::ComponentProvider{this}) {}
+HardwareMonitor::HardwareMonitor() : provider(utils::ComponentProvider{this}), tomography_manager(utils::TomographyManager()) {}
 HardwareMonitor::~HardwareMonitor() {}
 
 // HardwareMonitor is also responsible for calculating the rssi/oka's protocol/fidelity calculate and give it to the RoutingDaemon

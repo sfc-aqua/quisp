@@ -10,6 +10,7 @@
 
 #include "rules/Rule.h"
 #include "utils/ComponentProvider.h"
+#include "utils/TomographyManager.h"
 
 namespace quisp::modules {
 
@@ -28,6 +29,7 @@ class HardwareMonitor : public IHardwareMonitor {
 
  protected:
   utils::ComponentProvider provider;
+  utils::TomographyManager tomography_manager;
 
  private:
   // Matrices of single qubit errors. Used when conducting tomography.
