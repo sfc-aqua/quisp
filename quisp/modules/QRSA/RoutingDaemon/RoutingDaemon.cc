@@ -199,8 +199,8 @@ void RoutingDaemon::ospfInitializeRoutingDaemon() {
   for (size_t i = 0; i < num_neighbors; i++) {
     OspfHelloPacket *msg = new OspfHelloPacket;
     msg->setSrcAddr(this->my_address);
-    msg->setNeighbor_table(neighbor_table);
-    msg->setSending_gate_index(i);
+    msg->setNeighborTable(neighbor_table);
+    msg->setSendingGateIndex(i);
     msg->setDestAddr(unidentified_destination);
     send(msg, "RouterPort$o");
   }
@@ -209,13 +209,13 @@ void RoutingDaemon::ospfInitializeRoutingDaemon() {
 void RoutingDaemon::ospfSendHelloPacketToNeighbor(NodeAddr neighbor) {
   OspfHelloPacket *msg = new OspfHelloPacket;
   msg->setSrcAddr(this->my_address);
-  msg->setNeighbor_table(neighbor_table);
+  msg->setNeighborTable(neighbor_table);
   msg->setDestAddr(neighbor);
   send(msg, "RouterPort$o");
 }
 
 bool RoutingDaemon::ospfMyAddressIsRecognizedByNeighbor(const OspfHelloPacket *const msg) {
-  for (const auto neighbor_entry : msg->getNeighbor_table()) {
+  for (const auto neighbor_entry : msg->getNeighborTable()) {
     NodeAddr neighbor_id = neighbor_entry.first;
     if (my_address == neighbor_id) return true;
   }
@@ -244,7 +244,7 @@ void RoutingDaemon::ospfHandleDbdPacket(const OspfDbdPacket *const pk) {
 
   if (pk->getLsdb().empty()) error("RoutingDaemon::ospfHandleDbdPacket: expected LSDB to be not empty, but it is");
 
-  if (bool i_am_master = (!pk->getIs_master())) {
+  if (bool i_am_master = (!pk->isMaster())) {
     ospfMasterEnterExchangeState(src);
   }
 
@@ -283,7 +283,7 @@ void RoutingDaemon::ospfSendExstartDbdPacket(NodeAddr neighbor) {
   OspfDbdPacket *msg = new OspfDbdPacket;
   msg->setSrcAddr(my_address);
   msg->setState(OspfState::EXSTART);
-  msg->setIs_master(true);
+  msg->setIsMaster(true);
   msg->setDestAddr(neighbor);
   send(msg, "RouterPort$o");
 }
@@ -304,7 +304,7 @@ void RoutingDaemon::ospfSendLsdbSummary(NodeAddr dest, bool i_am_master) {
   msg->setState(OspfState::EXCHANGE);
   LinkStateDatabaseSummary lsdb_summary = link_state_database.getLinkStateDatabaseSummary();
   msg->setLsdb(lsdb_summary);
-  msg->setIs_master(i_am_master);
+  msg->setIsMaster(i_am_master);
   msg->setDestAddr(dest);
   send(msg, "RouterPort$o");
 }
@@ -314,7 +314,7 @@ void RoutingDaemon::ospfSendLinkStateRequest(NodeAddr dst, const RouterIds &miss
 
   OspfLsrPacket *request = new OspfLsrPacket;
   request->setSrcAddr(my_address);
-  request->setIds_of_requested_lsa(missing_lsa_ids);
+  request->setIDsOfRequestedLsa(missing_lsa_ids);
   request->setDestAddr(dst);
   send(request, "RouterPort$o");
 }
@@ -323,7 +323,7 @@ void RoutingDaemon::ospfHandleLinkStateRequest(const OspfLsrPacket *const pk) {
   OspfLsuPacket *lsu = new OspfLsuPacket;
   lsu->setSrcAddr(my_address);
 
-  const RouterIds ids_of_requested_lsa = pk->getIds_of_requested_lsa();
+  const RouterIds ids_of_requested_lsa = pk->getIDsOfRequestedLsa();
   const LinkStateUpdate lsas = link_state_database.getLinkStateUpdatesFor(ids_of_requested_lsa, my_address);
   lsu->setLsas(lsas);
   lsu->setDestAddr(pk->getSrcAddr());

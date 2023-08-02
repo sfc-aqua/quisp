@@ -153,7 +153,7 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
   msg_from_other_node->setSrcAddr(src);
   NeighborTable neighbor_table;
   neighbor_table[routing_daemon->my_address] = OspfNeighborInfo(routing_daemon->my_address);
-  msg_from_other_node->setNeighbor_table(neighbor_table);
+  msg_from_other_node->setNeighborTable(neighbor_table);
 
   auto expected_qnic = std::make_unique<InterfaceInfo>();
   expected_qnic->qnic.address = 0;
@@ -176,7 +176,7 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketAndTransitionFromInitToTwoWaySta
   msg_from_other_node->setSrcAddr(src);
   NeighborTable neighbor_table;
   neighbor_table[routing_daemon->my_address] = OspfNeighborInfo(routing_daemon->my_address);
-  msg_from_other_node->setNeighbor_table(neighbor_table);
+  msg_from_other_node->setNeighborTable(neighbor_table);
 
   const int arrival_gate_index = 0;
   routing_daemon->neighbor_table[src] = OspfNeighborInfo(arrival_gate_index, OspfState::INIT);
@@ -188,7 +188,7 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketAndTransitionFromInitToTwoWaySta
   auto sent_msg = routing_daemon->RouterPort->messages.front();
   auto dbd_pk = dynamic_cast<OspfDbdPacket*>(sent_msg);
   ASSERT_TRUE(dbd_pk);
-  ASSERT_TRUE(dbd_pk->getIs_master());
+  ASSERT_TRUE(dbd_pk->isMaster());
 }
 
 TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketButCannotTransitionToTwoWayState) {
@@ -197,7 +197,7 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketButCannotTransitionToTwoWayState
   msg_from_other_node->setSrcAddr(src);
   NeighborTable neighbor_table;
   neighbor_table[routing_daemon->my_address] = OspfNeighborInfo(routing_daemon->my_address);
-  msg_from_other_node->setNeighbor_table(neighbor_table);
+  msg_from_other_node->setNeighborTable(neighbor_table);
 
   routing_daemon->neighbor_table[src] = OspfNeighborInfo(0, OspfState::DOWN);
 
@@ -208,7 +208,7 @@ TEST_F(RoutingDaemonTest, ospfMasterRespondsToExstartPacketOfSoonToBeSlave) {
   const NodeAddr src = 1;
   auto slave_wants_to_be_master_pk = new OspfDbdPacket;
   slave_wants_to_be_master_pk->setSrcAddr(src);
-  slave_wants_to_be_master_pk->setIs_master(true);
+  slave_wants_to_be_master_pk->setIsMaster(true);
   slave_wants_to_be_master_pk->setState(OspfState::EXSTART);
 
   routing_daemon->handleMessage(slave_wants_to_be_master_pk);
@@ -216,7 +216,7 @@ TEST_F(RoutingDaemonTest, ospfMasterRespondsToExstartPacketOfSoonToBeSlave) {
   auto sent_msg = routing_daemon->RouterPort->messages.front();
   auto dbd_pk = dynamic_cast<OspfDbdPacket*>(sent_msg);
   ASSERT_TRUE(dbd_pk);
-  ASSERT_TRUE(dbd_pk->getIs_master());
+  ASSERT_TRUE(dbd_pk->isMaster());
   ASSERT_EQ(dbd_pk->getLsdb().size(), 0);
   ASSERT_EQ(dbd_pk->getState(), OspfState::EXSTART);
 }
@@ -225,7 +225,7 @@ TEST_F(RoutingDaemonTest, ospfMasterRespondsToExstartPacketOfSlave) {
   const NodeAddr src = 1;
   auto slave_wants_to_be_master_pk = new OspfDbdPacket;
   slave_wants_to_be_master_pk->setSrcAddr(src);
-  slave_wants_to_be_master_pk->setIs_master(false);
+  slave_wants_to_be_master_pk->setIsMaster(false);
   slave_wants_to_be_master_pk->setState(OspfState::EXSTART);
 
   routing_daemon->handleMessage(slave_wants_to_be_master_pk);
@@ -233,7 +233,7 @@ TEST_F(RoutingDaemonTest, ospfMasterRespondsToExstartPacketOfSlave) {
   auto sent_msg = routing_daemon->RouterPort->messages.front();
   auto dbd_pk = dynamic_cast<OspfDbdPacket*>(sent_msg);
   ASSERT_TRUE(dbd_pk);
-  ASSERT_TRUE(dbd_pk->getIs_master());
+  ASSERT_TRUE(dbd_pk->isMaster());
   ASSERT_EQ(dbd_pk->getState(), OspfState::EXSTART);
 }
 
@@ -241,7 +241,7 @@ TEST_F(RoutingDaemonTest, ospfSlaveRespondsToExstartPacketOfMaster) {
   const NodeAddr src = routing_daemon->my_address + 1;
   auto msg_from_other_node = new OspfDbdPacket;
   msg_from_other_node->setSrcAddr(src);
-  msg_from_other_node->setIs_master(true);
+  msg_from_other_node->setIsMaster(true);
   msg_from_other_node->setState(OspfState::EXSTART);
   routing_daemon->neighbor_table[src].state = OspfState::EXSTART;
 
@@ -251,7 +251,7 @@ TEST_F(RoutingDaemonTest, ospfSlaveRespondsToExstartPacketOfMaster) {
   auto sent_msg = routing_daemon->RouterPort->messages.front();
   auto dbd_pk = dynamic_cast<OspfDbdPacket*>(sent_msg);
   ASSERT_TRUE(dbd_pk);
-  ASSERT_FALSE(dbd_pk->getIs_master());
+  ASSERT_FALSE(dbd_pk->isMaster());
   ASSERT_EQ(dbd_pk->getState(), OspfState::EXCHANGE);
 }
 
@@ -259,7 +259,7 @@ TEST_F(RoutingDaemonTest, ospfSlaveDoesNotSendExchangePacketTwice) {
   const NodeAddr src = routing_daemon->my_address + 1;
   auto msg_from_other_node = new OspfDbdPacket;
   msg_from_other_node->setSrcAddr(src);
-  msg_from_other_node->setIs_master(true);
+  msg_from_other_node->setIsMaster(true);
   msg_from_other_node->setState(OspfState::EXSTART);
   msg_from_other_node->setLsdb({SummaryLinkStateAdvertisement()});
   routing_daemon->neighbor_table[src].state = OspfState::EXCHANGE;
@@ -273,7 +273,7 @@ TEST_F(RoutingDaemonTest, ospfMasterRespondsToExchangePacketOfSlave) {
   const NodeAddr src = routing_daemon->my_address - 1;
   auto msg_from_other_node = new OspfDbdPacket;
   msg_from_other_node->setSrcAddr(src);
-  msg_from_other_node->setIs_master(false);
+  msg_from_other_node->setIsMaster(false);
   msg_from_other_node->setState(OspfState::EXCHANGE);
   msg_from_other_node->setLsdb({SummaryLinkStateAdvertisement()});
   routing_daemon->neighbor_table[src].state = OspfState::EXSTART;
@@ -283,7 +283,7 @@ TEST_F(RoutingDaemonTest, ospfMasterRespondsToExchangePacketOfSlave) {
   ASSERT_EQ(routing_daemon->RouterPort->messages.size(), 2);
   auto dbd_pk = dynamic_cast<OspfDbdPacket*>(routing_daemon->RouterPort->messages.front());
   ASSERT_TRUE(dbd_pk);
-  ASSERT_TRUE(dbd_pk->getIs_master());
+  ASSERT_TRUE(dbd_pk->isMaster());
   ASSERT_EQ(dbd_pk->getState(), OspfState::EXCHANGE);
   auto lsr_pk = dynamic_cast<OspfLsrPacket*>(routing_daemon->RouterPort->messages.back());
   ASSERT_TRUE(lsr_pk);
@@ -293,7 +293,7 @@ TEST_F(RoutingDaemonTest, ospfSlaveRespondsToExchangePacketOfMaster) {
   const NodeAddr src = routing_daemon->my_address + 1;
   auto msg_from_other_node = new OspfDbdPacket;
   msg_from_other_node->setSrcAddr(src);
-  msg_from_other_node->setIs_master(true);
+  msg_from_other_node->setIsMaster(true);
   msg_from_other_node->setState(OspfState::EXCHANGE);
   msg_from_other_node->setLsdb({SummaryLinkStateAdvertisement()});
 
@@ -307,7 +307,7 @@ TEST_F(RoutingDaemonTest, ospfReceiveDbdPacketWithNoLsdb) {
   const NodeAddr src = routing_daemon->my_address + 1;
   auto msg_from_other_node = new OspfDbdPacket;
   msg_from_other_node->setSrcAddr(src);
-  msg_from_other_node->setIs_master(true);
+  msg_from_other_node->setIsMaster(true);
   msg_from_other_node->setState(OspfState::EXCHANGE);
   auto other_node_lsa = LinkStateAdvertisement(src, src, {});
   msg_from_other_node->setLsdb({other_node_lsa});
@@ -347,7 +347,7 @@ TEST_F(RoutingDaemonTest, ospfRespondToLsuPacket) {
   ASSERT_TRUE(dynamic_cast<OspfLsAckPacket*>(routing_daemon->RouterPort->messages[0]));
   auto dbd_pk = dynamic_cast<OspfDbdPacket*>(routing_daemon->RouterPort->messages[1]);
   ASSERT_TRUE(dbd_pk);
-  ASSERT_TRUE(dbd_pk->getIs_master());
+  ASSERT_TRUE(dbd_pk->isMaster());
   ASSERT_EQ(dbd_pk->getState(), OspfState::EXCHANGE);
 }
 }  // namespace

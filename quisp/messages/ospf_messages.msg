@@ -49,24 +49,24 @@ namespace quisp::messages;
 
 packet OspfPacket extends Header
 {
-    int sending_gate_index;
+    int sending_gate_index @getter(getSendingGateIndex) @setter(setSendingGateIndex);
 }
 
 packet OspfHelloPacket extends OspfPacket
 {
-    NeighborTable neighbor_table;
+    NeighborTable neighbor_table @getter(getNeighborTable) @setter(setNeighborTable);
 }
 
 packet OspfDbdPacket extends OspfPacket
 {
     OspfState state;
-    bool is_master;
+    bool is_master @getter(isMaster) @setter(setIsMaster);
     LinkStateDatabaseSummary lsdb;
 }
 
 packet OspfLsrPacket extends OspfPacket
 {
-    RouterIds ids_of_requested_lsa;
+    RouterIds ids_of_requested_lsa @getter(getIDsOfRequestedLsa) @setter(setIDsOfRequestedLsa);
 }
 
 packet OspfLsuPacket extends OspfPacket

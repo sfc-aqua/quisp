@@ -179,7 +179,7 @@ void Router::nonQNodeForwardOspfPacket(OspfPacket *pk) {
 
 void Router::sendOspfHelloPacketToQueue(OspfPacket *pk) {
   pk->setHopCount(pk->getHopCount() + 1);
-  const int gate_index_to_pk_dst = pk->getSending_gate_index();
+  const int gate_index_to_pk_dst = pk->getSendingGateIndex();
   send(pk, "toQueue", gate_index_to_pk_dst);
 }
 

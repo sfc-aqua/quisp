@@ -243,7 +243,7 @@ TEST_F(RouterTest, handleOspfPacket) {
 TEST_F(RouterTest, nonQNodeForwardOspfPacket) {
   auto msg = new OspfHelloPacket;
   msg->setSrcAddr(10);
-  msg->setSending_gate_index(0);
+  msg->setSendingGateIndex(0);
   msg->setDestAddr(-1);
   router->setIsQnode(false);
 
@@ -255,7 +255,7 @@ TEST_F(RouterTest, nonQNodeForwardOspfPacket) {
 TEST_F(RouterTest, sendOspfHelloPacketToQueue) {
   auto msg = new OspfHelloPacket;
   msg->setSrcAddr(10);
-  msg->setSending_gate_index(0);
+  msg->setSendingGateIndex(0);
   msg->setDestAddr(-1);
 
   router->handleMessage(msg);
