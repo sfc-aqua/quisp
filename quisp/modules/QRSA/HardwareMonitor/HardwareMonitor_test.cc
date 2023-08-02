@@ -10,6 +10,7 @@
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
 #include "test_utils/TestUtils.h"
+#include "utils/TomographyManager.h"
 
 namespace {
 
