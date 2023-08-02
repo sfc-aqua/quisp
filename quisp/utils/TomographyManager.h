@@ -45,10 +45,8 @@ class TomographyManager {
     bool get_self_outcome() const { return self_record.output_is_plus; }
     bool get_partner_outcome() const { return partner_record.output_is_plus; }
   };
-  // Since the size of map is detemined when the simulation start.
-  // Just in case, use unique_ptr to dynamically allocate the memory.
   // <qnic_id, partner> -> <tomography_round, TomographyRecord> -> TomographyRecord
-  std::unique_ptr<std::map<std::tuple<int, int>, std::map<int, TomographyRecord>>> tomography_records;
+  std::map<std::tuple<int, int>, std::map<int, TomographyRecord>> tomography_records;
   // <tomography_round, TomographyRecord>
   double get_stokes_parameter(const std::map<int, TomographyRecord> tomography_records, const std::string basis_combination, const std::tuple<char, char, char> operators);
 

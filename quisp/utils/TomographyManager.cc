@@ -29,8 +29,8 @@ void TomographyManager::addLocalResult(int qnic_id, int partner, int tomography_
   // Key to get the i th record
   auto partner_key = std::make_tuple(qnic_id, partner);
 
-  // Check if the partner key has already been prepared
-  if (!tomography_records->count(partner_key)) {
+  // Check if the partner record has already been prepared
+  if (!tomography_records.count(partner_key)) {
     // Tomography record for this partner cannot be found.
     // Even if the tomography round is 0, there might be existing partner key
     // since there is a possibility that the partner node perform measurement
@@ -49,10 +49,10 @@ void TomographyManager::addLocalResult(int qnic_id, int partner, int tomography_
     // round -> record
     std::map<int, TomographyRecord> tomography_round_record;
     tomography_round_record.insert(std::make_pair(tomography_round, tomography_record));
-    tomography_records->insert(std::make_pair(partner_key, tomography_round_record));
+    tomography_records.insert(std::make_pair(partner_key, tomography_round_record));
   } else {
     // Partner key found in the map, add this round of record to the existing parter record.
-    auto tomography_record = tomography_records->at(partner_key);
+    auto tomography_record = tomography_records.at(partner_key);
     // Find i th tomography record
     if (!tomography_record.count(tomography_round)) {
       // No i th tomography record found
@@ -80,10 +80,10 @@ void TomographyManager::addPartnerResult(int self_qnic_id, int partner, int tomo
 /// @return density_matrix in Eigen::Matrix4cd
 Matrix4cd TomographyManager::reconstructDensityMatrix(int qnic_id, int partner) {
   // Get tomography records for this partner
-  if (!tomography_records->count(std::make_tuple(qnic_id, partner))) {
+  if (!tomography_records.count(std::make_tuple(qnic_id, partner))) {
     throw cRuntimeError("Tomography record for this partner is not found.");
   }
-  auto data = tomography_records->at(std::make_tuple(qnic_id, partner));
+  auto data = tomography_records.at(std::make_tuple(qnic_id, partner));
 
   // II
   double S00 = 1.0;
