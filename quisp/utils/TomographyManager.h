@@ -1,11 +1,16 @@
 #pragma once
+
 #include <map>
 #include <memory>
 #include <tuple>
 #include <unsupported/Eigen/KroneckerProduct>
 #include "Eigen/src/Core/Matrix.h"
+#include "modules/QNIC.h"
 #include "omnetpp/cexception.h"
 
+#include "rules/RuleSet.h"
+
+using namespace quisp::rules;
 using Eigen::Matrix2cd;
 using Eigen::Matrix4cd;
 
@@ -17,6 +22,10 @@ class TomographyManager {
   ~TomographyManager();
 
   // Link Tomography RuleSet Generator (deprecated)
+  [[deprecated("Link Tomography RuleSet is integrated to Connection Manager.")]] RuleSet *createLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type,
+                                                                                                                      int qnic_index, unsigned long ruleset_id,
+                                                                                                                      int num_purification, int purification_type,
+                                                                                                                      bool x_purification, bool z_purification, int num_measure);
 
   // Tomography Calculation
   void addLocalResult(int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
@@ -52,6 +61,12 @@ class TomographyManager {
   double getStokesParameter(std::tuple<int, int> partner_key, const std::string basis_combination, const std::tuple<char, char, char> operators);
 
   void appendTomographyRecord(std::tuple<int, int> partner_key, int tomography_round, TomographyOutput tomography_output, bool is_self_record);
+
+  [[deprecated]] std::unique_ptr<Rule> constructPurifyRule(int my_address, const std::string &rule_name, const rules::PurType pur_type, const int partner_address,
+                                                           const QNIC_type qnic_type, const int qnic_index, const int send_tag) const;
+
+  [[deprecated]] std::unique_ptr<Rule> constructCorrelationCheckRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address,
+                                                                     const QNIC_type qnic_type, const int qnic_index, const int receive_tag) const;
 
  private:
   struct SingleQubitError {

@@ -29,7 +29,7 @@ class HardwareMonitor : public IHardwareMonitor {
 
  protected:
   utils::ComponentProvider provider;
-  // utils::TomographyManager tomography_manager;
+  utils::TomographyManager tomography_manager;
 
  private:
   // Matrices of single qubit errors. Used when conducting tomography.
