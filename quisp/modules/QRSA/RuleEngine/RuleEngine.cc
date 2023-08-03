@@ -313,6 +313,14 @@ void RuleEngine::sendBarrierMessageAck(BarrierMessage *msg) {
   send(pkt, "RouterPort$o");
 }
 
+void RuleEngine::sendLinkAllocationUpdateRequest(BarrierMessage *msg) {
+  LinkAllocationUpdateRequest *pkt = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
+  pkt->setSrcAddr(msg->getDestAddr());
+  pkt->setDestAddr(msg->getSrcAddr());
+  pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleset_id());
+  send(pkt, "RouterPort$o");
+}
+
 // Invoked whenever a new resource (entangled with neighbor) has been created.
 // Allocates those resources to a particular ruleset, from top to bottom (all of it).
 void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
