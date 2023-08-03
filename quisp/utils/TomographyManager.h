@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <memory>
+#include <tuple>
 #include <unsupported/Eigen/KroneckerProduct>
 #include "Eigen/src/Core/Matrix.h"
 #include "omnetpp/cexception.h"
@@ -19,7 +20,7 @@ class TomographyManager {
 
   // Tomography Calculation
   void addLocalResult(int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
-  void addPartnerResult(int self_qnic_id, int partner, int tomography_round);
+  void addPartnerResult(int self_qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
   Matrix4cd reconstructDensityMatrix(int qnic_id, int partner);
 
  protected:
@@ -30,25 +31,27 @@ class TomographyManager {
   };
   // Store one round result of tomography
   struct TomographyRecord {
-    TomographyOutput self_record;
-    TomographyOutput partner_record;
+    TomographyOutput self_output;
+    TomographyOutput partner_output;
     // return basis combination
-    std::string get_basis_combination() const {
-      if (!self_record.basis || !partner_record.basis) {
+    std::string getBasisCombination() const {
+      if (!self_output.basis || !partner_output.basis) {
         throw omnetpp::cRuntimeError("TomographyRecord is not complete.");
       }
       std::string basis_combination;
-      basis_combination.push_back(self_record.basis);
-      basis_combination.push_back(partner_record.basis);
+      basis_combination.push_back(self_output.basis);
+      basis_combination.push_back(partner_output.basis);
       return basis_combination;
     };
-    bool get_self_outcome() const { return self_record.output_is_plus; }
-    bool get_partner_outcome() const { return partner_record.output_is_plus; }
+    bool getSelfOutcome() const { return self_output.output_is_plus; }
+    bool getPartnerOutcome() const { return partner_output.output_is_plus; }
   };
   // <qnic_id, partner> -> <tomography_round, TomographyRecord> -> TomographyRecord
   std::map<std::tuple<int, int>, std::map<int, TomographyRecord>> tomography_records;
   // <tomography_round, TomographyRecord>
-  double get_stokes_parameter(const std::map<int, TomographyRecord> tomography_records, const std::string basis_combination, const std::tuple<char, char, char> operators);
+  double getStokesParameter(std::tuple<int, int> partner_key, const std::string basis_combination, const std::tuple<char, char, char> operators);
+
+  void appendTomographyRecord(std::tuple<int, int> partner_key, int tomography_round, TomographyOutput tomography_output, bool is_self_record);
 
  private:
   struct SingleQubitError {

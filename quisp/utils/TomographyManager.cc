@@ -26,10 +26,21 @@ void TomographyManager::addLocalResult(int qnic_id, int partner, int tomography_
   self_record.output_is_plus = is_plus;
   self_record.my_GOD_clean = my_GOD_clean;
 
-  // Key to get the i th record
-  auto partner_key = std::make_tuple(qnic_id, partner);
+  appendTomographyRecord(std::make_tuple(qnic_id, partner), tomography_round, self_record, true);
+}
 
+void TomographyManager::addPartnerResult(int self_qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean) {
+  TomographyOutput partner_record;
+  partner_record.basis = measurement_basis;
+  partner_record.output_is_plus = is_plus;
+  partner_record.my_GOD_clean = my_GOD_clean;
+
+  appendTomographyRecord(std::make_tuple(self_qnic_id, partner), tomography_round, partner_record, false);
+}
+
+void TomographyManager::appendTomographyRecord(std::tuple<int, int> partner_key, int tomography_round, TomographyOutput tomography_output, bool is_self_record) {
   // Check if the partner record has already been prepared
+
   if (!tomography_records.count(partner_key)) {
     // Tomography record for this partner cannot be found.
     // Even if the tomography round is 0, there might be existing partner key
@@ -42,36 +53,53 @@ void TomographyManager::addLocalResult(int qnic_id, int partner, int tomography_
     }
 
     // Prepare the first record for this partner.
+    // auto tomography_record = std::make_unique<TomographyRecord>();
     TomographyRecord tomography_record;
-    tomography_record.self_record = self_record;
-    // Leave partner_record empty here
+    if (is_self_record) {
+      // Self record is added, leave partner_record empty here
+      tomography_record.self_output = tomography_output;
+    } else {
+      // Partner record is added, leave self_record empty here
+      tomography_record.partner_output = tomography_output;
+    }
 
     // round -> record
+    // std::map<int, std::unique_ptr<TomographyRecord>> tomography_round_record;
     std::map<int, TomographyRecord> tomography_round_record;
     tomography_round_record.insert(std::make_pair(tomography_round, tomography_record));
     tomography_records.insert(std::make_pair(partner_key, tomography_round_record));
   } else {
     // Partner key found in the map, add this round of record to the existing parter record.
-    auto tomography_record = tomography_records.at(partner_key);
     // Find i th tomography record
-    if (!tomography_record.count(tomography_round)) {
+    if (!tomography_records.at(partner_key).count(tomography_round)) {
       // No i th tomography record found
       // Add new tomography record as i th record
+      // auto new_tomography_record = std::make_unique<TomographyRecord>();
       TomographyRecord new_tomography_record;
-      new_tomography_record.self_record = self_record;
+      if (is_self_record) {
+        // Self record is added, leave partner_record empty here
+        new_tomography_record.self_output = tomography_output;
+      } else {
+        // Partner record is added, leave self_record empty here
+        new_tomography_record.partner_output = tomography_output;
+      }
       // Leave partner_record empty here
-      tomography_record.insert(std::make_pair(tomography_round, new_tomography_record));
+      tomography_records.at(partner_key).insert(std::make_pair(tomography_round, std::move(new_tomography_record)));
 
     } else {
-      // i th tomography record found
-      // Partner result is already recorded. Add self result to the existing record.
-      auto existing_record = tomography_record[tomography_round];
-      existing_record.TomographyRecord::self_record = self_record;
+      // i th tomography record found, get reference and update it.
+      auto& ith_tomography_record = tomography_records.at(partner_key).at(tomography_round);
+      if (is_self_record) {
+        // Partner record already exists. Add self record to the existing record.
+        ith_tomography_record.self_output = tomography_output;
+        // existing_record.setSelfOutput(tomography_output);
+      } else {
+        // Self record already exists. Add partner record to the existing record.
+        ith_tomography_record.partner_output = tomography_output;
+      }
     }
   }
-}
-
-void TomographyManager::addPartnerResult(int self_qnic_id, int partner, int tomography_round) {}
+};
 
 /// Reconstruct density matrix from tomogrpahy records
 /// Data is recorded with qnic_id since there are multiple paths from this node to partner node
@@ -83,33 +111,33 @@ Matrix4cd TomographyManager::reconstructDensityMatrix(int qnic_id, int partner) 
   if (!tomography_records.count(std::make_tuple(qnic_id, partner))) {
     throw cRuntimeError("Tomography record for this partner is not found.");
   }
-  auto data = tomography_records.at(std::make_tuple(qnic_id, partner));
 
+  auto partner_key = std::make_tuple(qnic_id, partner);
   // II
   double S00 = 1.0;
-  double S01 = get_stokes_parameter(data, "XX", std::make_tuple('m', 'p', 'm'));
-  double S02 = get_stokes_parameter(data, "YY", std::make_tuple('m', 'p', 'm'));
-  double S03 = get_stokes_parameter(data, "ZZ", std::make_tuple('m', 'p', 'm'));
+  double S01 = getStokesParameter(partner_key, "XX", std::make_tuple('m', 'p', 'm'));
+  double S02 = getStokesParameter(partner_key, "YY", std::make_tuple('m', 'p', 'm'));
+  double S03 = getStokesParameter(partner_key, "ZZ", std::make_tuple('m', 'p', 'm'));
 
   // XX
-  double S10 = get_stokes_parameter(data, "XX", std::make_tuple('p', 'm', 'm'));
-  double S11 = get_stokes_parameter(data, "XX", std::make_tuple('m', 'm', 'p'));
-  double S12 = get_stokes_parameter(data, "XY", std::make_tuple('m', 'm', 'p'));
-  double S13 = get_stokes_parameter(data, "XZ", std::make_tuple('m', 'm', 'p'));
+  double S10 = getStokesParameter(partner_key, "XX", std::make_tuple('p', 'm', 'm'));
+  double S11 = getStokesParameter(partner_key, "XX", std::make_tuple('m', 'm', 'p'));
+  double S12 = getStokesParameter(partner_key, "XY", std::make_tuple('m', 'm', 'p'));
+  double S13 = getStokesParameter(partner_key, "XZ", std::make_tuple('m', 'm', 'p'));
 
   // YY
-  double S20 = get_stokes_parameter(data, "YY", std::make_tuple('p', 'm', 'm'));
-  double S21 = get_stokes_parameter(data, "YX", std::make_tuple('m', 'm', 'p'));
-  double S22 = get_stokes_parameter(data, "YY", std::make_tuple('m', 'm', 'p'));
-  double S23 = get_stokes_parameter(data, "YZ", std::make_tuple('m', 'm', 'p'));
+  double S20 = getStokesParameter(partner_key, "YY", std::make_tuple('p', 'm', 'm'));
+  double S21 = getStokesParameter(partner_key, "YX", std::make_tuple('m', 'm', 'p'));
+  double S22 = getStokesParameter(partner_key, "YY", std::make_tuple('m', 'm', 'p'));
+  double S23 = getStokesParameter(partner_key, "YZ", std::make_tuple('m', 'm', 'p'));
 
   // ZZ
-  double S30 = get_stokes_parameter(data, "ZZ", std::make_tuple('p', 'm', 'm'));
-  double S31 = get_stokes_parameter(data, "ZX", std::make_tuple('m', 'm', 'p'));
-  double S32 = get_stokes_parameter(data, "ZY", std::make_tuple('m', 'm', 'p'));
-  double S33 = get_stokes_parameter(data, "ZZ", std::make_tuple('m', 'm', 'p'));
+  double S30 = getStokesParameter(partner_key, "ZZ", std::make_tuple('p', 'm', 'm'));
+  double S31 = getStokesParameter(partner_key, "ZX", std::make_tuple('m', 'm', 'p'));
+  double S32 = getStokesParameter(partner_key, "ZY", std::make_tuple('m', 'm', 'p'));
+  double S33 = getStokesParameter(partner_key, "ZZ", std::make_tuple('m', 'm', 'p'));
 
-  double S = get_stokes_parameter(data, "XX", std::make_tuple('p', 'p', 'p'));
+  double S = getStokesParameter(partner_key, "XX", std::make_tuple('p', 'p', 'p'));
 
   Matrix4cd reconstructed_density_matrix = (double)1 / (double)4 *
                                            (S01 * kroneckerProduct(Pauli.I, Pauli.X).eval() +  // IX
@@ -132,9 +160,9 @@ Matrix4cd TomographyManager::reconstructDensityMatrix(int qnic_id, int partner) 
 }
 
 // Altepeter, Joseph B., Evan R. Jeffrey, and Paul G. Kwiat. "Photonic state tomography." Advances in atomic, molecular, and optical physics 52 (2005): 105-159.
-double TomographyManager::get_stokes_parameter(const std::map<int, TomographyRecord> tomography_records, const std::string basis_combination,
-                                               const std::tuple<char, char, char> operators) {
-  if (tomography_records.size() == 0) {
+double TomographyManager::getStokesParameter(const std::tuple<int, int> partner_key, const std::string basis_combination, const std::tuple<char, char, char> operators) {
+  auto tomography_record = std::move(tomography_records.at(partner_key));
+  if (tomography_record.size() == 0) {
     throw cRuntimeError("No tomography result found.");
   }
   int total_count = 0;
@@ -143,10 +171,12 @@ double TomographyManager::get_stokes_parameter(const std::map<int, TomographyRec
   int minus_plus = 0;
   int minus_minus = 0;
   // Go through all the records and count the number of each outcome
-  for (const auto& record : tomography_records) {
-    if (record.second.get_basis_combination() == basis_combination) {
-      auto self_output = record.second.get_self_outcome();
-      auto partner_output = record.second.get_partner_outcome();
+  for (const auto& record : tomography_record) {
+    if (record.second.getBasisCombination() == basis_combination) {
+      auto self_output = record.second.getSelfOutcome();
+      auto partner_output = record.second.getPartnerOutcome();
+      // If there is missing record, ignore it and go next record
+
       if (self_output && partner_output) {
         plus_plus += 1;
       } else if (self_output && !partner_output) {
