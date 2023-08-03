@@ -84,7 +84,7 @@ void TomographyManager::appendTomographyRecord(std::tuple<int, int> partner_key,
         new_tomography_record.partner_output = tomography_output;
       }
       // Leave partner_record empty here
-      tomography_records.at(partner_key).insert(std::make_pair(tomography_round, std::move(new_tomography_record)));
+      tomography_records.at(partner_key).insert(std::make_pair(tomography_round, new_tomography_record));
 
     } else {
       // i th tomography record found, get reference and update it.
@@ -161,7 +161,7 @@ Matrix4cd TomographyManager::reconstructDensityMatrix(int qnic_id, int partner) 
 
 // Altepeter, Joseph B., Evan R. Jeffrey, and Paul G. Kwiat. "Photonic state tomography." Advances in atomic, molecular, and optical physics 52 (2005): 105-159.
 double TomographyManager::getStokesParameter(const std::tuple<int, int> partner_key, const std::string basis_combination, const std::tuple<char, char, char> operators) {
-  auto tomography_record = std::move(tomography_records.at(partner_key));
+  auto tomography_record = tomography_records.at(partner_key);
   if (tomography_record.size() == 0) {
     throw cRuntimeError("No tomography result found.");
   }
