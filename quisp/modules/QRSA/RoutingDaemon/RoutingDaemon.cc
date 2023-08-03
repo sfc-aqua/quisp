@@ -244,7 +244,8 @@ void RoutingDaemon::ospfHandleDbdPacket(const OspfDbdPacket *const pk) {
 
   if (pk->getLsdb().empty()) error("RoutingDaemon::ospfHandleDbdPacket: expected LSDB to be not empty, but it is");
 
-  if (bool i_am_master = (!pk->isMaster())) {
+  bool i_am_master = !pk->isMaster();
+  if (i_am_master) {
     ospfMasterEnterExchangeState(src);
   }
 
