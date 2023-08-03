@@ -146,33 +146,20 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
     auto ruleset_id = pkt->getCurrentRuleSet_id();
     runtimes.stopById(ruleset_id);
+
+    auto sequence_number = 0;
     for (int i = 0; i < number_of_qnics; i++) {
       qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, i, ruleset_id);
       for(IQubitRecord *qubit_record : qubit_record_list) {
-        BarrierMessage *pkt2 = new BarrierMessage("BarrierMessage");
-        pkt2->setDestAddr(pkt->getSrcAddr());
-        pkt2->setSrcAddr(pkt->getDestAddr());
-        pkt2->setNegotiatedRuleset_id(pkt->getNegotiatedRuleset_id());
-        pkt2->setPhotonRecord(qubit_record);
-        pkt2->setRole("SEND");
-        pkt2->setSequence_number(1);
-        send(pkt2, "RouterPort$o");
+        sendBarrierMessageSend(pkt, qubit_record, sequence_number);
+        sequence_number += 1;
       }
     }
-  } else if (auto *pkt = dynamic_cast<BarrierMessage *>(msg)) {
+  } else if (auto *pkt = dynamic_cast<BarrierMessage *>(msg)) { 
     if (strcmp(pkt->getRole(), "SEND")) {
-      BarrierMessage *pkt2 = new BarrierMessage("BarrierMessage");
-      pkt2->setDestAddr(pkt->getSrcAddr());
-      pkt2->setSrcAddr(pkt->getDestAddr());
-      pkt2->setNegotiatedRuleset_id(pkt->getNegotiatedRuleset_id());
-      IQubitRecord *qubit_record = (IQubitRecord *) pkt->getPhotonRecord();
-      pkt2->setPhotonRecord(qubit_record);
-      pkt2->setRole("ACK");
-      pkt2->setSequence_number(pkt->getSequence_number());
-      send(pkt2, "RouterPort$o");
+     sendBarrierMessageAck(pkt);
     }
   }
-
   for (int i = 0; i < number_of_qnics; i++) {
     ResourceAllocation(QNIC_E, i);
   }
@@ -270,7 +257,7 @@ void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnecti
   qnode_indices.push_back(dest_addr);
 }
 
-string RuleEngine::getRoleFromInternalConnectionTeardownMessage(InternalConnectionTeardownMessage *msg){
+string RuleEngine::getRoleFromInternalConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
   return msg->getRole();
 }
 
@@ -279,7 +266,7 @@ void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessa
   runtimes.stopById(ruleset_id);
 }
 
-void RuleEngine::sendLinkAllocationUpdateDecisionRequest(InternalConnectionTeardownMessage *msg){
+void RuleEngine::sendLinkAllocationUpdateDecisionRequest(InternalConnectionTeardownMessage *msg) {
   LinkAllocationUpdateDecisionRequest *pkt = new LinkAllocationUpdateDecisionRequest("LinkAllocationUpdateDecisionRequest");
   pkt->setSrcAddr(parentAddress);
   pkt->setDestAddr(msg->getNext_destAddr());
@@ -295,12 +282,34 @@ void RuleEngine::sendLinkAllocationUpdateDecisionRequest(InternalConnectionTeard
   send(pkt, "RouterPort$o");
 }
 
-void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDecisionRequest *msg){
+void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDecisionRequest *msg) {
   LinkAllocationUpdateDecisionResponse *pkt = new LinkAllocationUpdateDecisionResponse("LinkAllocationUpdateDecisionResponse");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
   pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
   pkt->setNegotiatedRuleset_id(msg->getOfferedRuleSet_ids(0));
+  send(pkt, "RouterPort$o");
+}
+
+void RuleEngine::sendBarrierMessageSend(LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number) {
+  BarrierMessage *pkt = new BarrierMessage("BarrierMessage");
+  pkt->setSrcAddr(msg->getDestAddr());
+  pkt->setDestAddr(msg->getSrcAddr());
+  pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleset_id());
+  pkt->setQubitRecord(qubit_record);
+  pkt->setSequence_number(sequence_number);
+  pkt->setRole("SEND");
+  send(pkt, "RouterPort$o");
+}
+
+void RuleEngine::sendBarrierMessageAck(BarrierMessage *msg) {
+  BarrierMessage *pkt = new BarrierMessage("BarrierMessage");
+  pkt->setSrcAddr(msg->getDestAddr());
+  pkt->setDestAddr(msg->getSrcAddr());
+  pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleset_id());
+  pkt->setQubitRecord((IQubitRecord *)msg->getQubitRecord());
+  pkt->setSequence_number(msg->getSequence_number() + 1);
+  pkt->setRole("ACK");
   send(pkt, "RouterPort$o");
 }
 
