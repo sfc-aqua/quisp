@@ -93,6 +93,10 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   string getRoleFromInternalConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *msg);
   void sendLinkAllocationUpdateDecisionRequest(messages::InternalConnectionTeardownMessage *msg);
   void sendLinkAllocationUpdateDecisionResponse(messages::LinkAllocationUpdateDecisionRequest *msg);
+  void sendBarrierMessageSend(messages::LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number);
+  void sendBarrierMessageAck(messages::BarrierMessage *msg);
+  void sendLinkAllocationUpdateRequest(messages::BarrierMessage *msg);
+  void sendLinkAllocationUpdateResponse(messages::LinkAllocationUpdateRequest *msg);
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);
