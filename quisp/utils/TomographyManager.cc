@@ -19,7 +19,8 @@ TomographyManager::TomographyManager() {
   Pauli.I << 1, 0, 0, 1;
 }
 
-TomographyManager::~TomographyManager() {}
+TomographyManager::~TomographyManager() {
+}
 
 void TomographyManager::addLocalResult(int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean) {
   // Local measurement result

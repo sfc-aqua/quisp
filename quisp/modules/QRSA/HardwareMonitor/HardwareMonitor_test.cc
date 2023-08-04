@@ -23,6 +23,7 @@ using namespace testing;
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy(TestQNode* _qnode) : mockQubit(nullptr), routingDaemon(nullptr), parent_qnode(_qnode) {}
+  // We could prepare mock for tomography manager if we need
   Strategy(MockQubit* qubit, MockRoutingDaemon* routing_daemon) : mockQubit(qubit), routingDaemon(routing_daemon) {}
   ~Strategy() {
     delete mockQubit;
@@ -35,6 +36,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
     if (mockQubit == nullptr) mockQubit = new MockQubit();
     return mockQubit;
   };
+  TomographyManager* tomography_manager;
   IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
 
  private:
