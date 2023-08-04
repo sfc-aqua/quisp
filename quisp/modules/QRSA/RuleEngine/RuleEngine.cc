@@ -91,16 +91,16 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto qnic_index = pk->getQnicIndex();
     auto number_of_free_emitters = qnic_store->countNumFreeQubits(type, qnic_index);
     auto qubit_index = qnic_store->takeFreeQubitIndex(type, qnic_index);
-    auto& msm_info = msm_info_map[qnic_index];
+    auto &msm_info = msm_info_map[qnic_index];
     if (pk->isMSM()) {
       msm_info.photon_index_counter++;
-      if (!(number_of_free_emitters == 0)) {
-      msm_info.qubit_info_map[msm_info.iteration_index] = qubit_index;
-      sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, true, true);
+      if (number_of_free_emitters != 0) {
+        msm_info.qubit_info_map[msm_info.iteration_index] = qubit_index;
+        sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, true, true);
       }
       scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
       return;
-  } else {
+    } else {
       if (number_of_free_emitters == 0) return;
       auto is_first = pk->isFirst();
       auto is_last = (number_of_free_emitters == 1);
@@ -119,7 +119,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto partner_qnic_index = notification_packet->getOtherQnicIndex();
     auto epps_address = notification_packet->getEPPSAddr();
     auto qnic_index = notification_packet->getQnicIndex();
-    auto& msm_info = msm_info_map[qnic_index];
+    auto &msm_info = msm_info_map[qnic_index];
     msm_info.partner_address = partner_address;
     msm_info.epps_address = epps_address;
     msm_info.partner_qnic_index = partner_qnic_index;
@@ -150,8 +150,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
-  }
-  else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
+  } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto serialized_ruleset = pkt->getRuleSet();
     RuleSet ruleset(0, 0);
@@ -220,7 +219,7 @@ void RuleEngine::freeFailedEntanglementAttemptQubits(QNIC_type type, int qnic_in
 
 void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   auto qnic_index = click_result->getQnicIndex();
-  auto& msm_info = msm_info_map[qnic_index];
+  auto &msm_info = msm_info_map[qnic_index];
   auto qubit_index = msm_info.qubit_info_map[msm_info.iteration_index];
   MSMResult *msm_result = new MSMResult();
   msm_result->setQnicIndex(msm_info.partner_qnic_index);
@@ -231,12 +230,12 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
   msm_result->setSrcAddr(parentAddress);
   msm_result->setDestAddr(msm_info.partner_address);
   msm_result->setKind(6);
-  if(click_result->getClickResult().success) {
+  if (click_result->getClickResult().success) {
     msm_info.qubit_postprocess_info[msm_info.photon_index_counter].qubit_index = qubit_index;
     msm_info.qubit_postprocess_info[msm_info.photon_index_counter].correction_operation = click_result->getClickResult().correction_operation;
     msm_info.iteration_index++;
     // start countdown
-    MSMResultArrivalCheck* msm_result_arrival_check = new MSMResultArrivalCheck;
+    MSMResultArrivalCheck *msm_result_arrival_check = new MSMResultArrivalCheck;
     msm_result_arrival_check->setQnicIndex(qnic_index);
     msm_result_arrival_check->setQubitIndex(qubit_index);
     scheduleAt(simTime() + 0.0000049, msm_result_arrival_check);
@@ -249,7 +248,7 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
 
 void RuleEngine::handleMSMResult(MSMResult *msm_result) {
   auto qnic_index = msm_result->getQnicIndex();
-  auto& msm_info = msm_info_map[qnic_index];
+  auto &msm_info = msm_info_map[qnic_index];
   auto qubit_itr = msm_info.qubit_postprocess_info.find(msm_result->getPhotonIndex());
   // local failure partner success/failure
   if (qubit_itr == msm_info.qubit_postprocess_info.end()) {
@@ -282,11 +281,12 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
 void RuleEngine::handleMSMResultArrivalCheck(MSMResultArrivalCheck *msm_result_arrival_check) {
   auto qnic_index = msm_result_arrival_check->getQnicIndex();
   auto qubit_index = msm_result_arrival_check->getQubitIndex();
-  auto& msm_info = msm_info_map[qnic_index];
-  if(!msm_info.qubit_postprocess_info[qubit_index].handled) {
+  auto &msm_info = msm_info_map[qnic_index];
+  if (!msm_info.qubit_postprocess_info[qubit_index].handled) {
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
   }
+  msm_info.qubit_postprocess_info[qubit_index].handled = false;
   return;
 }
 
