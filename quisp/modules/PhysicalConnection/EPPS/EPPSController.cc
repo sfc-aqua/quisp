@@ -89,6 +89,7 @@ EPPSTimingNotification *EPPSController::generateNotifier(bool is_left) {
   pk->setSrcAddr(address);
   pk->setDestAddr(is_left ? left_addr : right_addr);
   pk->setTravelTime(is_left ? left_travel_time : right_travel_time);
+  pk->setTotalTravelTime(left_travel_time + right_travel_time);
   return pk;
 }
 

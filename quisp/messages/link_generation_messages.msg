@@ -33,6 +33,7 @@ packet EPPSTimingNotification extends Header
     int other_qnic_index      @setter(setOtherQnicIndex) @getter(getOtherQnicIndex);
     int other_qnic_parent_addr     @setter(setOtherQnicParentAddr) @getter(getOtherQnicParentAddr);
     double travel_time @setter(setTravelTime) @getter(getTravelTime);
+    double total_travel_time @setter(setTotalTravelTime) @getter(getTotalTravelTime);
     int epps_addr @setter(setEPPSAddr) @getter(getEPPSAddr);
 }
 
