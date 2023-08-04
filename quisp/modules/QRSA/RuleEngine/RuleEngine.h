@@ -112,6 +112,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
     int epps_address;
     unsigned long long photon_index_counter;
     int iteration_index;
+    simtime_t total_travel_time;
     // map of iteration index and qubit index
     std::unordered_map<int, int> qubit_info_map;
     // map of photon index and qubit info

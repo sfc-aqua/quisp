@@ -123,6 +123,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     msm_info.partner_address = partner_address;
     msm_info.epps_address = epps_address;
     msm_info.partner_qnic_index = partner_qnic_index;
+    msm_info.total_travel_time = notification_packet->getTotalTravelTime();
     stopOnGoingPhotonEmission(QNIC_RP, qnic_index);
     scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
   } else if (auto *click_result = dynamic_cast<SingleClickResult *>(msg)) {
@@ -238,7 +239,7 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
     MSMResultArrivalCheck *msm_result_arrival_check = new MSMResultArrivalCheck;
     msm_result_arrival_check->setQnicIndex(qnic_index);
     msm_result_arrival_check->setQubitIndex(qubit_index);
-    scheduleAt(simTime() + 0.0000049, msm_result_arrival_check);
+    scheduleAt(simTime() + 1.1 * msm_info.total_travel_time, msm_result_arrival_check);
   } else {
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
