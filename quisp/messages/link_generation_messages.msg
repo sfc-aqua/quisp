@@ -24,16 +24,15 @@ packet BSMTimingNotification extends Header
 
 packet EPPSTimingNotification extends Header
 {
-    double first_photon_emit_time  @setter(setFirstPhotonEmitTime) @getter(getFirstPhotonEmitTime);
-    double interval @setter(setInterval)  @getter(getInterval);
+    simtime_t first_photon_emit_time  @setter(setFirstPhotonEmitTime) @getter(getFirstPhotonEmitTime);
+    simtime_t interval @setter(setInterval)  @getter(getInterval);
     QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
     int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
     int qnic_parent_addr     @setter(setQnicParentAddr) @getter(getQnicParentAddr);
     QNIC_type other_qnic_type @setter(setOtherQnicType)  @getter(getOtherQnicType);
     int other_qnic_index      @setter(setOtherQnicIndex) @getter(getOtherQnicIndex);
     int other_qnic_parent_addr     @setter(setOtherQnicParentAddr) @getter(getOtherQnicParentAddr);
-    double travel_time @setter(setTravelTime) @getter(getTravelTime);
-    double total_travel_time @setter(setTotalTravelTime) @getter(getTotalTravelTime);
+    simtime_t total_travel_time @setter(setTotalTravelTime) @getter(getTotalTravelTime);
     int epps_addr @setter(setEPPSAddr) @getter(getEPPSAddr);
 }
 

@@ -51,15 +51,16 @@ void EPPSController::handleMessage(cMessage *msg) {
       return;
     }
     epps->emitPhotons();
-    scheduleAt(simTime() + max_acceptance_rate, msg);
+    scheduleAt(simTime() + time_interval_between_photons, msg);
   } else if (msg == time_out_message) {
     last_result_send_time = simTime();
+    emit_time = simTime() + 2 * std::max(left_travel_time, right_travel_time);
     EPPSTimingNotification *left_pk = generateNotifier(true);
     EPPSTimingNotification *right_pk = generateNotifier(false);
     send(left_pk, "to_router");
     send(right_pk, "to_router");
     EmitPhotonRequest *emt = new EmitPhotonRequest();
-    scheduleAt(simTime() + 2 * std::max(left_travel_time, right_travel_time), emt);
+    scheduleAt(emit_time, emt);
   } else if (dynamic_cast<StopEPPSEmission *>(msg)) {
     if (!neighbor_buffer_is_full) {
       neighbor_buffer_is_full = true;
@@ -83,12 +84,11 @@ EPPSTimingNotification *EPPSController::generateNotifier(bool is_left) {
   pk->setOtherQnicParentAddr(is_left ? right_addr : left_addr);
   pk->setOtherQnicIndex(is_left ? right_qnic_index : left_qnic_index);
   pk->setOtherQnicType(QNIC_RP);
-  pk->setFirstPhotonEmitTime(simTime().dbl() + 2 * std::max(left_travel_time, right_travel_time));
+  pk->setFirstPhotonEmitTime(emit_time + (is_left ? left_travel_time : right_travel_time));
   pk->setKind(4);
-  pk->setInterval(max_acceptance_rate);
+  pk->setInterval(time_interval_between_photons);
   pk->setSrcAddr(address);
   pk->setDestAddr(is_left ? left_addr : right_addr);
-  pk->setTravelTime(is_left ? left_travel_time : right_travel_time);
   pk->setTotalTravelTime(left_travel_time + right_travel_time);
   return pk;
 }
@@ -113,11 +113,11 @@ void EPPSController::checkNeighborsBSACapacity() {
                                               ->getSubmodule("bsa")  // BellStateAnalyzer
                                               ->par("photon_detection_per_second");
   int min_photon_detection_per_second = std::min(left_photon_detection_per_second, right_photon_detection_per_second);
-  max_acceptance_rate = (double)1 / (double)min_photon_detection_per_second;
-  // Adjust pump frequency to the lower BSA detection rate by neighbors.
-  // if detection rate is better than emission rate.
-  double pump_rate = (double)1 / (double)frequency;
-  if (pump_rate < max_acceptance_rate) max_acceptance_rate = pump_rate;
+  time_interval_between_photons = (double)1 / (double)min_photon_detection_per_second;
+  // If the frequency is higher than the capacity of the neighbor's BSA, the time interval between photons is adjusted to the capacity of the neighbor's BSA.
+  // If not, the time interval between photons is adjusted to the frequency.
+  simtime_t pump_rate = (double)1 / (double)frequency;
+  if (pump_rate > time_interval_between_photons) time_interval_between_photons = pump_rate;
 }
 
 double EPPSController::getTravelTimeFromPort(int port) {

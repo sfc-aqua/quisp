@@ -189,7 +189,7 @@ void RuleEngine::schedulePhotonEmission(QNIC_type type, int qnic_index, BSMTimin
 }
 
 void RuleEngine::scheduleMSMPhotonEmission(QNIC_type type, int qnic_index, EPPSTimingNotification *notification) {
-  auto first_photon_emit_time = notification->getFirstPhotonEmitTime() + notification->getTravelTime();
+  auto first_photon_emit_time = notification->getFirstPhotonEmitTime();
   auto *timer = emit_photon_timer_map[{type, qnic_index}];
   timer->setFirst(true);
   timer->setIntervalBetweenPhotons(notification->getInterval());

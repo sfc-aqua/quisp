@@ -42,10 +42,11 @@ class EPPSController : public cSimpleModule {
   int left_qnic_index;
   int right_addr;
   int right_qnic_index;
-  double left_travel_time;
-  double right_travel_time;
-  double max_acceptance_rate;
+  simtime_t left_travel_time;
+  simtime_t right_travel_time;
+  simtime_t time_interval_between_photons;
   double frequency;
+  simtime_t emit_time;
   EPPSNotificationTimeout *time_out_message;
   int time_out_count;
   simtime_t last_result_send_time;
