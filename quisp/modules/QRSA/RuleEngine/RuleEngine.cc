@@ -304,6 +304,7 @@ void RuleEngine::sendBarrierMessage(LinkAllocationUpdateDecisionResponse *msg, I
   pkt->setQubitRecord(qubit_record);
   pkt->setSequence_number(sequence_number);
   pkt->setRole("SEND");
+  pkt->setIs_last(false);
   send(pkt, "RouterPort$o");
 }
 
