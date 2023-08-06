@@ -296,7 +296,7 @@ void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDe
   send(pkt, "RouterPort$o");
 }
 
-void RuleEngine::sendBarrierMessage(LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number) {
+void RuleEngine::sendBarrierMessage(LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number, bool is_last) {
   BarrierMessage *pkt = new BarrierMessage("BarrierMessage");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
@@ -304,7 +304,7 @@ void RuleEngine::sendBarrierMessage(LinkAllocationUpdateDecisionResponse *msg, I
   pkt->setQubitRecord(qubit_record);
   pkt->setSequence_number(sequence_number);
   pkt->setRole("SEND");
-  pkt->setIs_last(false);
+  pkt->setIs_last(is_last);
   send(pkt, "RouterPort$o");
 }
 
