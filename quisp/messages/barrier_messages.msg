@@ -20,4 +20,5 @@ packet BarrierMessage extends Header
     IQubitRecord *qubit_record @setter(setQubitRecord) @getter(getQubitRecord);
     int sequence_number;
     string role;
+    bool is_last;
 }
