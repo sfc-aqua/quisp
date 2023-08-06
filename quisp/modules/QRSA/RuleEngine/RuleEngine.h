@@ -93,7 +93,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   string getRoleFromInternalConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *msg);
   void sendLinkAllocationUpdateDecisionRequest(messages::InternalConnectionTeardownMessage *msg);
   void sendLinkAllocationUpdateDecisionResponse(messages::LinkAllocationUpdateDecisionRequest *msg);
-  void sendBarrierMessageSend(messages::LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number);
+  void sendBarrierMessage(messages::LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number);
   void sendBarrierMessageAck(messages::BarrierMessage *msg);
   void sendLinkAllocationUpdateRequest(messages::BarrierMessage *msg);
   void sendLinkAllocationUpdateResponse(messages::LinkAllocationUpdateRequest *msg);

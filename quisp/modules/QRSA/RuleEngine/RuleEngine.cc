@@ -151,7 +151,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
     for (int i = 0; i < number_of_qnics; i++) {
       qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, i, ruleset_id);
       for(IQubitRecord *qubit_record : qubit_record_list) {
-        sendBarrierMessageSend(pkt, qubit_record, sequence_number);
+        if (qubit_record_list.size() == sequence_number) {
+
+        }
+        sendBarrierMessage(pkt, qubit_record, sequence_number);
         sequence_number += 1;
       }
     }
@@ -293,7 +296,7 @@ void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDe
   send(pkt, "RouterPort$o");
 }
 
-void RuleEngine::sendBarrierMessageSend(LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number) {
+void RuleEngine::sendBarrierMessage(LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number) {
   BarrierMessage *pkt = new BarrierMessage("BarrierMessage");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
