@@ -159,7 +159,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (strcmp(pkt->getRole(), "SEND")) {
      sendBarrierMessageAck(pkt);
     }
-  }
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) { 
+    sendLinkAllocationUpdateResponse(pkt);
+  } 
   for (int i = 0; i < number_of_qnics; i++) {
     ResourceAllocation(QNIC_E, i);
   }
@@ -318,6 +320,14 @@ void RuleEngine::sendLinkAllocationUpdateRequest(BarrierMessage *msg) {
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
   pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleset_id());
+  send(pkt, "RouterPort$o");
+}
+
+void RuleEngine::sendLinkAllocationUpdateResponse(LinkAllocationUpdateRequest *msg) {
+  LinkAllocationUpdateResponse *pkt = new LinkAllocationUpdateResponse("LinkAllocationUpdateResponse");
+  pkt->setSrcAddr(msg->getDestAddr());
+  pkt->setDestAddr(msg->getSrcAddr());
+  pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
   send(pkt, "RouterPort$o");
 }
 
