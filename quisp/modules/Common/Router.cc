@@ -122,9 +122,6 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Purification result received");
     send(pk, "rePort$o");
     return;
-  } else if (dest_addr == my_address && dynamic_cast<StopEmitting *>(msg)) {
-    send(pk, "rePort$o");
-    return;
   } else if (dest_addr == my_address && dynamic_cast<OspfPacket *>(msg)) {
     send(pk, "rdPort$o");
     return;
