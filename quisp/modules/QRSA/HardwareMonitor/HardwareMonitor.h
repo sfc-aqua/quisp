@@ -57,8 +57,9 @@ class HardwareMonitor : public IHardwareMonitor {
   int num_measure;
   int num_end_nodes;
 
-  // in the case of retry connection setup, the partner could be changed.
-  std::map<int, int> qnic_partner_map;
+  // record all the partner information that perform tomography with this node.
+  // Vector<Tuple<qnic_index, partner_address>>
+  std::vector<std::tuple<int, int>> tomography_partners;
 
   IRoutingDaemon *routing_daemon;
 
@@ -82,7 +83,7 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
   virtual cModule *getQNodeWithAddress(int address);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
-  virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
+  virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id);
   virtual Eigen::Matrix4cd reconstruct_density_matrix(int qnic_id, int partner);
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);

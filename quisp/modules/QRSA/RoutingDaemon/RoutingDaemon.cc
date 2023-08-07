@@ -108,7 +108,6 @@ int RoutingDaemon::findQNicAddrByDestAddr(int destAddr) {
   return it->second;
 }
 
-
 /**
  * Once we begin using dynamic routing protocols, this is where the messages
  * will be handled.  This perhaps will also be how we communicate with the
