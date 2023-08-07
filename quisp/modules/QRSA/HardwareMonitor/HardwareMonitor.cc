@@ -204,35 +204,12 @@ void HardwareMonitor::finish() {
     auto partner = std::get<1>(partner_key);
     Matrix4cd extended_density_matrix_reconstructed = tomography_manager.reconstructDensityMatrix(qnic_id, partner);
 
-    Vector4cd Bellpair;
-    Bellpair << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
-    Matrix4cd density_matrix_ideal = Bellpair * Bellpair.adjoint();
-    double fidelity = (extended_density_matrix_reconstructed.real() * density_matrix_ideal.real()).trace();
-
-    Vector4cd Bellpair_X;
-    Bellpair_X << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
-    Matrix4cd density_matrix_X = Bellpair_X * Bellpair_X.adjoint();
-    double Xerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_X.real()).trace();
-    EV << "Xerr = " << Xerr_rate << "\n";
-
-    Vector4cd Bellpair_Z;
-    Bellpair_Z << 1 / sqrt(2), 0, 0, -1 / sqrt(2);
-    Matrix4cd density_matrix_Z = Bellpair_Z * Bellpair_Z.adjoint();
-    double Zerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_Z.real()).trace();
-    std::complex<double> checkZ = Bellpair_Z.adjoint() * extended_density_matrix_reconstructed * Bellpair_Z;
-    EV << "Zerr = " << Zerr_rate << " or, " << checkZ.real() << "+" << checkZ.imag() << "\n";
-
-    Vector4cd Bellpair_Y;
-    Bellpair_Y << 0, std::complex<double>(0, 1 / sqrt(2)), std::complex<double>(0, -1 / sqrt(2)), 0;
-    Matrix4cd density_matrix_Y = Bellpair_Y * Bellpair_Y.adjoint();
-    double Yerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_Y.real()).trace();
-    EV << "Yerr = " << Yerr_rate << "\n";
-
+    auto fidelity = tomography_manager.calcFidelity(qnic_id, partner);
+    auto [x_error, y_error, z_error] = tomography_manager.calcErrorRate(qnic_id, partner);
     auto tomography_stats = tomography_manager.getStats(qnic_id, partner);
-    // FIXME should be updated
-    double denom = fidelity * fidelity * tomography_stats.bell_pair_per_sec;
     double link_cost;
     // TODO currently, it's just placed. consider how to culculate this
+    double denom = fidelity * fidelity * tomography_stats.bell_pair_per_sec;
     if (denom != 0) {
       link_cost = (double)1 / denom;
     } else {
@@ -245,30 +222,27 @@ void HardwareMonitor::finish() {
     // outputs
     InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
     cModule *this_node = this->getParentModule()->getParentModule();
-    cModule *partner_node = getQNodeWithAddress(partner_address);
     cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
     double dis = channel->par("distance");
-    if (partner_node == nullptr) {
-      error("here, partner node is null");
-    }
     // density matrix output
-    tomography_dm << this_node->getFullName() << "<--->" << partner_node->getFullName() << "\n";
+    tomography_dm << "Node (Address: " << my_address << ") <--->"
+                  << "Node (Address: " << partner << ")\n";
     tomography_dm << "REAL\n";
     tomography_dm << extended_density_matrix_reconstructed.real() << "\n";
     tomography_dm << "IMAGINARY\n";
     tomography_dm << extended_density_matrix_reconstructed.imag() << "\n";
 
     // link stats output
-    tomography_stats << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
+    tomography_stats << "Node (Address: " << my_address << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
                      << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";tomography_time=" << tomography_stats.tomography_time << ";tomography_measurements="
                      << tomography_stats.total_measurement_count
-                     //  << "; GOD_clean_pair_total=" << GOD_clean_pair_total << "; GOD_X_pair_total=" << GOD_X_pair_total << "; GOD_Y_pair_total=" << GOD_Y_pair_total
+                     // << "; GOD_clean_pair_total=" << GOD_clean_pair_total << "; GOD_X_pair_total=" << GOD_X_pair_total << "; GOD_Y_pair_total=" << GOD_Y_pair_total
                      //  << "; GOD_Z_pair_total=" << GOD_Z_pair_total << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
-                     << "; Y=" << Yerr_rate << endl;
+                     << "; Y=" << y_error << endl;
     // this is a temporary implementation so that the e2e-test can read fidelity and error rates
     std::cout << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
-              << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";}<-->" << partner_node->getFullName() << "; Fidelity=" << fidelity << "; Xerror=" << Xerr_rate
-              << "; Zerror=" << Zerr_rate << "; Yerror=" << Yerr_rate << endl;
+              << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";}<-->"
+              << "Node (Address: " << my_address << "; Fidelity=" << fidelity << "; Xerror=" << x_error << "; Zerror=" << z_error << "; Yerror=" << y_error << endl;
   }
   tomography_stats.close();
   tomography_dm.close();

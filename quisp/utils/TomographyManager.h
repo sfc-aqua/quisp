@@ -13,6 +13,7 @@
 using namespace quisp::rules;
 using Eigen::Matrix2cd;
 using Eigen::Matrix4cd;
+using Eigen::Vector4cd;
 
 namespace quisp::utils {
 
@@ -38,6 +39,8 @@ class TomographyManager {
   void addLocalResult(int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
   void addPartnerResult(int self_qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
   void setStats(int qnic_id, int partner, simtime_t tomography_time, double bell_pair_per_sec, int total_measurement_count);
+  std::tuple<double, double, double> calcErrorRate(int qnic_id, int partner);
+  double calcFidelity(int qnic_id, int partner);
   TomographyStats getStats(int qnic_id, int partner) { return tomography_stats[std::make_tuple(qnic_id, partner)]; };
   Matrix4cd reconstructDensityMatrix(int qnic_id, int partner);
 
@@ -45,7 +48,7 @@ class TomographyManager {
   struct TomographyOutput {
     char basis;
     bool output_is_plus;
-    char my_GOD_clean;
+    char my_god_clean;
   };
   // Store one round result of tomography
   struct TomographyRecord {

@@ -111,7 +111,7 @@ void TomographyManager::appendTomographyRecord(std::tuple<int, int> partner_key,
       }
     }
   }
-};
+}
 
 void TomographyManager::setStats(int qnic_id, int partner, simtime_t tomography_time, double bell_pair_per_sec, int total_measurement_count) {
   auto partner_key = std::make_tuple(qnic_id, partner);
@@ -124,7 +124,53 @@ void TomographyManager::setStats(int qnic_id, int partner, simtime_t tomography_
   partner_stat.tomography_time = tomography_time;
   partner_stat.bell_pair_per_sec = bell_pair_per_sec;
   partner_stat.total_measurement_count = total_measurement_count;
-};
+}
+
+std::tuple<double, double, double> TomographyManager::calcErrorRate(int qnic_id, int partner) {
+  auto partner_key = std::make_tuple(qnic_id, partner);
+
+  if (!tomography_records.count(partner_key)) {
+    throw cRuntimeError("Tomography record for this partner is not found.");
+  }
+
+  // get density matrix
+  auto density_matrix = reconstructDensityMatrix(qnic_id, partner);
+
+  // X error rate
+  Vector4cd bell_pair_x;
+  bell_pair_x << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
+  Matrix4cd density_matrix_x = bell_pair_x * bell_pair_x.adjoint();
+  double x_error_rate = (density_matrix.real() * density_matrix_x.real()).trace();
+
+  // Y error rate
+  Vector4cd bell_pair_y;
+  bell_pair_y << 0, std::complex<double>(0, 1 / sqrt(2)), std::complex<double>(0, -1 / sqrt(2)), 0;
+  Matrix4cd density_matrix_y = bell_pair_y * bell_pair_y.adjoint();
+  double y_error_rate = (density_matrix.real() * density_matrix_y.real()).trace();
+
+  // Z error rate
+  Vector4cd bell_pair_z;
+  bell_pair_z << 1 / sqrt(2), 0, 0, -1 / sqrt(2);
+  Matrix4cd density_matrix_z = bell_pair_z * bell_pair_z.adjoint();
+  double z_error_rate = (density_matrix.real() * density_matrix_z.real()).trace();
+
+  return {x_error_rate, y_error_rate, z_error_rate};
+}
+
+double TomographyManager::calcFidelity(int qnic_id, int partner) {
+  auto partner_key = std::make_tuple(qnic_id, partner);
+  if (!tomography_records.count(partner_key)) {
+    throw cRuntimeError("Tomography record for this partner is not found.");
+  }
+
+  // get density matrix
+  auto density_matrix = reconstructDensityMatrix(qnic_id, partner);
+  Vector4cd Bellpair;
+  Bellpair << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
+  Matrix4cd density_matrix_ideal = Bellpair * Bellpair.adjoint();
+  double fidelity = (density_matrix.real() * density_matrix_ideal.real()).trace();
+  return fidelity;
+}
 
 /// Reconstruct density matrix from tomogrpahy records
 /// Data is recorded with qnic_id since there are multiple paths from this node to partner node
