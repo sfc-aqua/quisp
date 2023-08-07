@@ -39,12 +39,14 @@ class TomographyManager {
   void addLocalResult(int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
   void addPartnerResult(int self_qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
   void setStats(int qnic_id, int partner, simtime_t tomography_time, double bell_pair_per_sec, int total_measurement_count);
-  std::tuple<double, double, double> calcErrorRate(int qnic_id, int partner);
   double calcFidelity(int qnic_id, int partner);
+  std::tuple<double, double, double> calcErrorRate(int qnic_id, int partner);
+  std::tuple<int, int, int, int> calcGodPairCount(int qnic_id, int partner);
   TomographyStats getStats(int qnic_id, int partner) { return tomography_stats[std::make_tuple(qnic_id, partner)]; };
   Matrix4cd reconstructDensityMatrix(int qnic_id, int partner);
 
  protected:
+  // using enum would be easier to handle instead of using char
   struct TomographyOutput {
     char basis;
     bool output_is_plus;
@@ -66,6 +68,20 @@ class TomographyManager {
     };
     bool getSelfOutcome() const { return self_output.output_is_plus; }
     bool getPartnerOutcome() const { return partner_output.output_is_plus; }
+    bool isCleanPair() const {
+      if (self_output.my_god_clean == partner_output.my_god_clean) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    bool isErrorPair(char pauli_basis) const {
+      if (self_output.my_god_clean == pauli_basis && partner_output.my_god_clean == 'F' || self_output.my_god_clean == 'F' && partner_output.my_god_clean == pauli_basis) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   };
 
   // <qnic_id, partner> -> <tomography_round, TomographyRecord> -> TomographyRecord

@@ -35,11 +35,6 @@ void HardwareMonitor::initialize(int stage) {
   EV_INFO << "HardwareMonitor booted\n";
   routing_daemon = provider.getRoutingDaemon();
 
-  Pauli.X << 0, 1, 1, 0;
-  Pauli.Y << 0, std::complex<double>(0, -1), std::complex<double>(0, 1), 0;
-  Pauli.Z << 1, 0, 0, -1;
-  Pauli.I << 1, 0, 0, 1;
-
   num_qnic_rp = par("number_of_qnics_rp");
   num_qnic_r = par("number_of_qnics_r");
   num_qnic = par("number_of_qnics");
@@ -165,6 +160,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     auto measurement_basis = result->getBasis();
     auto tomography_outcome = result->getOutput_is_plus();
     auto god_clean = result->getGOD_clean();
+    tomography_partners.insert(std::make_tuple(qnic_id, partner));
     if (result->getSrcAddr() == my_address) {
       // Result from my self
       // Pass result to the tomography manager
@@ -195,7 +191,7 @@ void HardwareMonitor::finish() {
     std::cout << df << "!=" << file_name << "\n";
   }
   std::string file_name_dm = file_name + std::string("_dm");
-  std::ofstream tomography_stats(file_name, std::ios_base::app);
+  std::ofstream tomography_stats_file(file_name, std::ios_base::app);
   std::ofstream tomography_dm(file_name_dm, std::ios_base::app);
   std::cout << "Opened new file to write.\n";
 
@@ -232,21 +228,21 @@ void HardwareMonitor::finish() {
     tomography_dm << "IMAGINARY\n";
     tomography_dm << extended_density_matrix_reconstructed.imag() << "\n";
 
+    auto [god_clean_pair_total, god_x_pair_total, god_y_pair_total, god_z_pair_total] = tomography_manager.calcGodPairCount(qnic_id, partner);
     // link stats output
-    tomography_stats << "Node (Address: " << my_address << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
-                     << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";tomography_time=" << tomography_stats.tomography_time << ";tomography_measurements="
-                     << tomography_stats.total_measurement_count
-                     // << "; GOD_clean_pair_total=" << GOD_clean_pair_total << "; GOD_X_pair_total=" << GOD_X_pair_total << "; GOD_Y_pair_total=" << GOD_Y_pair_total
-                     //  << "; GOD_Z_pair_total=" << GOD_Z_pair_total << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
-                     << "; Y=" << y_error << endl;
+    tomography_stats_file << "Node (Address: " << my_address << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
+                          << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";tomography_time=" << tomography_stats.tomography_time
+                          << ";tomography_measurements=" << tomography_stats.total_measurement_count << "; GOD_clean_pair_total=" << god_clean_pair_total
+                          << "; GOD_X_pair_total=" << god_x_pair_total << "; GOD_Y_pair_total=" << god_y_pair_total << "; GOD_Z_pair_total=" << god_z_pair_total << ";}<-->"
+                          << "Node (Address: " << my_address << ")"
+                          << "; F=" << fidelity << "; X=" << x_error << "; Z=" << z_error << "; Y=" << y_error << endl;
     // this is a temporary implementation so that the e2e-test can read fidelity and error rates
     std::cout << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
               << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";}<-->"
               << "Node (Address: " << my_address << "; Fidelity=" << fidelity << "; Xerror=" << x_error << "; Zerror=" << z_error << "; Yerror=" << y_error << endl;
   }
-  tomography_stats.close();
+  tomography_stats_file.close();
   tomography_dm.close();
-  std::cout << "Closed file to write.\n";
 }
 
 void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec) {
@@ -418,24 +414,6 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
   }
   auto neighbor_info = createNeighborInfo(*neighbor_node);
   return neighbor_info;
-}
-
-cModule *HardwareMonitor::getQNodeWithAddress(int address) {
-  cTopology *topo = new cTopology("topo");
-  // veryfication?
-  topo->extractByParameter("included_in_topology", "\"yes\"");
-  int addr;
-  for (int i = 0; i < topo->getNumNodes(); i++) {
-    cTopology::Node *node = topo->getNode(i);
-    addr = (int)node->getModule()->par("address");
-    EV_DEBUG << "End node address is " << addr << "\n";
-    if (addr == address) {
-      auto *mod = node->getModule();
-      delete topo;
-      return mod;
-    }
-  }
-  delete topo;
 }
 
 std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {

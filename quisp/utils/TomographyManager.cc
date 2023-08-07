@@ -28,7 +28,7 @@ void TomographyManager::addLocalResult(int qnic_id, int partner, int tomography_
   TomographyOutput self_record;
   self_record.basis = measurement_basis;
   self_record.output_is_plus = is_plus;
-  self_record.my_GOD_clean = my_GOD_clean;
+  self_record.my_god_clean = my_GOD_clean;
 
   appendTomographyRecord(std::make_tuple(qnic_id, partner), tomography_round, self_record, true);
 }
@@ -37,7 +37,7 @@ void TomographyManager::addPartnerResult(int self_qnic_id, int partner, int tomo
   TomographyOutput partner_record;
   partner_record.basis = measurement_basis;
   partner_record.output_is_plus = is_plus;
-  partner_record.my_GOD_clean = my_GOD_clean;
+  partner_record.my_god_clean = my_GOD_clean;
 
   appendTomographyRecord(std::make_tuple(self_qnic_id, partner), tomography_round, partner_record, false);
 }
@@ -126,6 +126,21 @@ void TomographyManager::setStats(int qnic_id, int partner, simtime_t tomography_
   partner_stat.total_measurement_count = total_measurement_count;
 }
 
+double TomographyManager::calcFidelity(int qnic_id, int partner) {
+  auto partner_key = std::make_tuple(qnic_id, partner);
+  if (!tomography_records.count(partner_key)) {
+    throw cRuntimeError("Tomography record for this partner is not found.");
+  }
+
+  // get density matrix
+  auto density_matrix = reconstructDensityMatrix(qnic_id, partner);
+  Vector4cd Bellpair;
+  Bellpair << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
+  Matrix4cd density_matrix_ideal = Bellpair * Bellpair.adjoint();
+  double fidelity = (density_matrix.real() * density_matrix_ideal.real()).trace();
+  return fidelity;
+}
+
 std::tuple<double, double, double> TomographyManager::calcErrorRate(int qnic_id, int partner) {
   auto partner_key = std::make_tuple(qnic_id, partner);
 
@@ -157,19 +172,31 @@ std::tuple<double, double, double> TomographyManager::calcErrorRate(int qnic_id,
   return {x_error_rate, y_error_rate, z_error_rate};
 }
 
-double TomographyManager::calcFidelity(int qnic_id, int partner) {
+/// Return underline Bell pair information that should not be accessed by simulation layer.
+/// This output can only be visible from GOD layer (user's view)
+/// This output is used for checking total number of pairs with specific errors in this simulator.
+std::tuple<int, int, int, int> TomographyManager::calcGodPairCount(int qnic_id, int partner) {
   auto partner_key = std::make_tuple(qnic_id, partner);
-  if (!tomography_records.count(partner_key)) {
-    throw cRuntimeError("Tomography record for this partner is not found.");
-  }
+  auto partner_records = tomography_records.at(partner_key);
 
-  // get density matrix
-  auto density_matrix = reconstructDensityMatrix(qnic_id, partner);
-  Vector4cd Bellpair;
-  Bellpair << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
-  Matrix4cd density_matrix_ideal = Bellpair * Bellpair.adjoint();
-  double fidelity = (density_matrix.real() * density_matrix_ideal.real()).trace();
-  return fidelity;
+  int god_clean_pair_total = 0;
+  int god_x_error_pair_total = 0;
+  int god_y_error_pair_total = 0;
+  int god_z_error_pair_total = 0;
+
+  for (const auto &record : partner_records) {
+    auto tomography_output = record.second;
+    if (tomography_output.isCleanPair()) {
+      god_clean_pair_total++;
+    } else if (tomography_output.isErrorPair('X')) {
+      god_x_error_pair_total++;
+    } else if (tomography_output.isErrorPair('Y')) {
+      god_y_error_pair_total++;
+    } else if (tomography_output.isErrorPair('Z')) {
+      god_z_error_pair_total++;
+    }
+  }
+  return {god_clean_pair_total, god_x_error_pair_total, god_y_error_pair_total, god_z_error_pair_total};
 }
 
 /// Reconstruct density matrix from tomogrpahy records

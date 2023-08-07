@@ -37,39 +37,8 @@ const ConnectionSetupInfo NULL_CONNECTION_SETUP_INFO{.qnic =
                                                      .neighbor_address = -1,
                                                      .quantum_link_cost = -1};
 
-struct TomographyOutcome {
-  char my_basis;
-  bool my_output_is_plus;
-  char my_GOD_clean;
-  char partner_basis;
-  bool partner_output_is_plus;
-  char partner_GOD_clean;
-};
-
-struct OutputCount {
-  int total_count;
-  int plus_plus;
-  int plus_minus;
-  int minus_plus;
-  int minus_minus;
-};
-
-struct LinkCost {
-  simtime_t tomography_time;
-  int tomography_measurements;
-  double Bellpair_per_sec;
-};
-
 // qnic_index -> InterfaceInfo
 using NeighborTable = std::map<int, InterfaceInfo>;
-
-// basis combination -> raw output count
-// e.g.
-// "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50},
-// "XY" -> {....
-using RawData = std::map<int, std::map<std::string, OutputCount>>;  // qnic -> partner . basis string . output
-using LinkCostMap = std::map<int, LinkCost>;
-using TomographyOutcomeTable = std::map<int, std::map<int, TomographyOutcome>>;  // partner -> <count_id, outcome>
 
 class IHardwareMonitor : public cSimpleModule {
  public:

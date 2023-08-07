@@ -31,14 +31,6 @@ class HardwareMonitor : public IHardwareMonitor {
   utils::TomographyManager tomography_manager;
 
  private:
-  // Matrices of single qubit errors. Used when conducting tomography.
-  struct SingleQubitError {
-    Eigen::Matrix2cd X;  // double 2*2 matrix
-    Eigen::Matrix2cd Y;  // complex double 2*2 matrix
-    Eigen::Matrix2cd Z;
-    Eigen::Matrix2cd I;
-  };
-
   int my_address;
 
   // number of qnics connected to stand alone BSA or internal hom in the neighbor.
@@ -59,17 +51,13 @@ class HardwareMonitor : public IHardwareMonitor {
 
   // record all the partner information that perform tomography with this node.
   // Vector<Tuple<qnic_index, partner_address>>
-  std::vector<std::tuple<int, int>> tomography_partners;
+  std::set<std::tuple<int, int>> tomography_partners;
 
   IRoutingDaemon *routing_daemon;
 
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
   NeighborTable neighbor_table;
-  RawData *tomography_data;
-  SingleQubitError Pauli;
 
-  TomographyOutcomeTable *temporal_tomography_output;  // qnic address -> partner . count_id . outcome
-  LinkCostMap *tomography_runningtime_holder;
   std::string tomography_output_filename;
   std::string file_dir_name;
 
@@ -81,10 +69,8 @@ class HardwareMonitor : public IHardwareMonitor {
   void prepareNeighborTable();
   virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
-  virtual cModule *getQNodeWithAddress(int address);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id);
-  virtual Eigen::Matrix4cd reconstruct_density_matrix(int qnic_id, int partner);
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
 };
