@@ -23,7 +23,6 @@ class HardwareMonitor : public IHardwareMonitor {
  public:
   HardwareMonitor();
   ~HardwareMonitor();
-  int getQnicNumQubits(int qnic_index, QNIC_type qnic_type) override;
   std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) override;
   std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) override;
 
@@ -87,12 +86,6 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual Eigen::Matrix4cd reconstruct_density_matrix(int qnic_id, int partner);
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
-
-  std::unique_ptr<quisp::rules::Rule> constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address, const QNIC_type qnic_type,
-                                                          const int qnic_index, const int send_tag) const;
-
-  std::unique_ptr<quisp::rules::Rule> constructCorrelationCheckRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address,
-                                                                    const QNIC_type qnic_type, const int qnic_index, const int receive_tag) const;
 };
 
 Define_Module(HardwareMonitor);

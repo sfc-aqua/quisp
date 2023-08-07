@@ -74,7 +74,6 @@ using TomographyOutcomeTable = std::map<int, std::map<int, TomographyOutcome>>; 
 class IHardwareMonitor : public cSimpleModule {
  public:
   virtual ~IHardwareMonitor(){};
-  virtual int getQnicNumQubits(int qnic_index, QNIC_type qnic_type) = 0;
   virtual std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) = 0;
   virtual std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) = 0;
 };

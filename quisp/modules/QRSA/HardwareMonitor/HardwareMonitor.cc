@@ -166,83 +166,24 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     InterfaceInfo inter_info = getQnicInterfaceByQnicAddr(local_qnic_info->qnic.index, local_qnic_info->qnic.type);
     QNIC local_qnic = inter_info.qnic;
 
-    // 1. find partner
-    auto partner_outputs_iter = temporal_tomography_output[local_qnic.address].find(partner_addr);
-    if (partner_outputs_iter != temporal_tomography_output[local_qnic.address].end()) {
-      // partner info found in this output
-      auto partner_output_iter = temporal_tomography_output[local_qnic.address][partner_addr].find(result->getCount_id());
-      if (partner_output_iter != temporal_tomography_output[local_qnic.address][partner_addr].end()) {
-        EV << "Tomography data already found. Updating with result from partner\n";
-        TomographyOutcome temp = partner_output_iter->second;
-        if (result->getSrcAddr() == my_address) {
-          temp.my_basis = result->getBasis();
-          temp.my_output_is_plus = result->getOutput_is_plus();
-          temp.my_GOD_clean = result->getGOD_clean();
-        } else {
-          temp.partner_basis = result->getBasis();
-          temp.partner_output_is_plus = result->getOutput_is_plus();
-          temp.partner_GOD_clean = result->getGOD_clean();
-        }
-        partner_output_iter->second = temp;
-      } else {
-        EV << "Fresh tomography data with partner :" << partner_addr << "\n";
-        TomographyOutcome temp;
-        if (result->getSrcAddr() == my_address) {
-          temp.my_basis = result->getBasis();
-          temp.my_output_is_plus = result->getOutput_is_plus();
-          temp.my_GOD_clean = result->getGOD_clean();
-        } else {
-          temp.partner_basis = result->getBasis();
-          temp.partner_output_is_plus = result->getOutput_is_plus();
-          temp.partner_GOD_clean = result->getGOD_clean();
-        }
-        temporal_tomography_output[local_qnic.address][partner_addr].insert(std::make_pair(result->getCount_id(), temp));
-      }
+    auto qnic_id = local_qnic.index;
+    auto partner = partner_addr;
+    auto tomography_round = result->getCount_id();
+    auto measurement_basis = result->getBasis();
+    auto tomography_outcome = result->getOutput_is_plus();
+    auto god_clean = result->getGOD_clean();
+    if (result->getSrcAddr() == my_address) {
+      // Result from my self
+      // Pass result to the tomography manager
+      tomography_manager.addLocalResult(qnic_id, partner, tomography_round, measurement_basis, tomography_outcome, god_clean);
     } else {
-      // no partner info found in this output
-      EV << "No partner information found with partner: " << partner_addr << "\n";
-      TomographyOutcome temp;
-      if (result->getSrcAddr() == my_address) {
-        temp.my_basis = result->getBasis();
-        temp.my_output_is_plus = result->getOutput_is_plus();
-        temp.my_GOD_clean = result->getGOD_clean();
-      } else {
-        temp.partner_basis = result->getBasis();
-        temp.partner_output_is_plus = result->getOutput_is_plus();
-        temp.partner_GOD_clean = result->getGOD_clean();
-      }
-      // If this partner is new, then initialize tables
-      std::map<int, TomographyOutcome> temp_result;
-      temp_result.insert(std::make_pair(result->getCount_id(), temp));
-      /* temporal_tomography_output is filled in, those data are summarized into basis based measurement outcome table.
-       * This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
-      temporal_tomography_output[local_qnic.address].insert(std::make_pair(partner_addr, temp_result));
-      // NOTE: if you do buffer based multiplex and tomogrpahy need hack here
-      qnic_partner_map.insert(std::make_pair(local_qnic.address, partner_addr));
-
-      // initialize link cost
-      LinkCost temp_cost;
-      temp_cost.Bellpair_per_sec = -1;
-      temp_cost.tomography_measurements = -1;
-      temp_cost.tomography_time = -1;
-      tomography_runningtime_holder[local_qnic.address].insert(std::make_pair(partner_addr, temp_cost));
+      // Result from partner
+      tomography_manager.addPartnerResult(qnic_id, partner, tomography_round, measurement_basis, tomography_outcome, god_clean);
     }
 
     if (result->getFinish() != -1) {
-      EV << "finish? " << result->getFinish() << "\n";
-      EV << "tomography_time: " << tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time << std::endl;
-      // Pick the slower tomography time MIN(self,partner).
-      if (tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time < result->getFinish()) {
-        tomography_runningtime_holder[local_qnic.address][partner_addr].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
-        tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_measurements = result->getMax_count();
-        tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time = result->getFinish();
-
-        StopEmitting *pk = new StopEmitting("StopEmitting");
-        pk->setQnic_address(local_qnic.address);
-        pk->setDestAddr(my_address);
-        pk->setSrcAddr(my_address);
-        send(pk, "RouterPort$o");
-      }
+      // Finish tomography and record tomography stats
+      tomography_manager.setStats(qnic_id, partner, result->getFinish(), (double)result->getMax_count() / result->getFinish().dbl(), result->getMax_count());
     }
     delete result;
     return;
@@ -606,65 +547,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                                                                 Z_Purification, num_measure);
   pk->setRuleSet(ruleset);
   send(pk, "RouterPort$o");
-}
-
-std::unique_ptr<Rule> HardwareMonitor::constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address, const QNIC_type qnic_type,
-                                                           const int qnic_index, const int send_tag) const {
-  int required_qubits = 0;
-  switch (pur_type) {
-    case PurType::SINGLE_X:
-    case PurType::SINGLE_Z:
-    case PurType::SINGLE_Y:
-      required_qubits = 2;
-      break;
-    case PurType::DOUBLE:
-    case PurType::DOUBLE_INV:
-    case PurType::DSSA:
-    case PurType::DSSA_INV:
-      required_qubits = 3;
-      break;
-    case PurType::DSDA:
-    case PurType::DSDA_INV:
-      required_qubits = 5;
-      break;
-    case PurType::DSDA_SECOND:
-    case PurType::DSDA_SECOND_INV:
-      required_qubits = 4;
-      break;
-    case PurType::INVALID:
-    default:
-      error("got invalid purification type");
-  }
-  auto rule = std::make_unique<Rule>(my_address, send_tag, -1);
-  rule->setName(rule_name);
-  auto condition = std::make_unique<Condition>();
-  auto resource_clause = std::make_unique<EnoughResourceConditionClause>(required_qubits, partner_address);
-  condition->addClause(std::move(resource_clause));
-  rule->setCondition(std::move(condition));
-  auto purify_action = std::make_unique<Purification>(pur_type, partner_address, send_tag);
-  rule->setAction(std::move(purify_action));
-  return rule;
-}
-
-std::unique_ptr<Rule> HardwareMonitor::constructCorrelationCheckRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address,
-                                                                     const QNIC_type qnic_type, const int qnic_index, const int receive_tag) const {
-  auto correlation_rule = std::make_unique<Rule>(partner_address, -1, receive_tag);
-
-  auto condition = std::make_unique<Condition>();
-  auto correlation_clause = std::make_unique<PurificationCorrelationClause>(partner_address, receive_tag);
-  condition->addClause(std::move(correlation_clause));
-
-  auto action = std::make_unique<PurificationCorrelation>(partner_address, receive_tag);
-
-  correlation_rule->setCondition(std::move(condition));
-  correlation_rule->setAction(std::move(action));
-  return correlation_rule;
-}
-
-int HardwareMonitor::getQnicNumQubits(int qnic_index, QNIC_type qnic_type) {
-  Enter_Method("checkNumBuff()");
-  auto qnic = getQnic(qnic_index, qnic_type);
-  return qnic->par("num_buffer");
 }
 
 cModule *HardwareMonitor::getQnic(int qnic_index, QNIC_type qnic_type) {

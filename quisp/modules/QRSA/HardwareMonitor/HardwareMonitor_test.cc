@@ -5,11 +5,14 @@
 
 #include "HardwareMonitor.h"
 
+#include "messages/tomography_messages_m.h"
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
+#include "test_utils/TestUtilFunctions.h"
 #include "test_utils/TestUtils.h"
+#include "test_utils/mock_modules/MockRoutingDaemon.h"
 #include "utils/TomographyManager.h"
 
 namespace {
@@ -19,23 +22,16 @@ using namespace quisp::utils;
 using namespace quisp::modules;
 using namespace quisp_test;
 using namespace testing;
+using namespace quisp::messages;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
-  Strategy(TestQNode* _qnode) : mockQubit(nullptr), routingDaemon(nullptr), parent_qnode(_qnode) {}
+  Strategy(TestQNode* _qnode) : routingDaemon(nullptr), parent_qnode(_qnode) {}
   // We could prepare mock for tomography manager if we need
-  Strategy(MockQubit* qubit, MockRoutingDaemon* routing_daemon) : mockQubit(qubit), routingDaemon(routing_daemon) {}
-  ~Strategy() {
-    delete mockQubit;
-    delete routingDaemon;
-  }
+  Strategy(MockRoutingDaemon* routing_daemon) : routingDaemon(routing_daemon) {}
+  ~Strategy() { delete routingDaemon; }
   cModule* getQNode() override { return parent_qnode; }
-  MockQubit* mockQubit = nullptr;
   MockRoutingDaemon* routingDaemon = nullptr;
-  IStationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
-    if (mockQubit == nullptr) mockQubit = new MockQubit();
-    return mockQubit;
-  };
   TomographyManager* tomography_manager;
   IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
 
@@ -47,7 +43,8 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
  public:
   using quisp::modules::HardwareMonitor::initialize;
   using quisp::modules::HardwareMonitor::par;
-  HardwareMonitorTestTarget(MockQubit* mock_qubit, MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
+  using quisp::modules::HardwareMonitor::tomography_manager;
+  HardwareMonitorTestTarget(MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
     setParInt(this, "address", 123);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 0);
@@ -62,18 +59,57 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
     setParInt(this, "num_measure", 0);
 
     this->setName("hardware_monitor_test_target");
-    this->provider.setStrategy(std::make_unique<Strategy>(mock_qubit, routing_daemon));
+    this->provider.setStrategy(std::make_unique<Strategy>(routing_daemon));
   }
+};
+
+class HardwareMonitorTest : public testing::Test {
+ protected:
+  void SetUp() {
+    sim = prepareSimulation();
+    routing_daemon = new MockRoutingDaemon;
+  }
+  void TearDown() { delete routing_daemon; }
+  utils::TestSimulation* sim;
+  HardwareMonitorTestTarget* hardware_montior;
+  MockRoutingDaemon* routing_daemon;
 };
 
 TEST(HardwareMonitorTestTarget, Init) {
   prepareSimulation();
   auto* mock_routing_daemon = new MockRoutingDaemon;
-  auto* mock_qubit = new MockQubit;
-  EXPECT_CALL(*mock_routing_daemon, getNumEndNodes()).WillOnce(Return(1));
-  HardwareMonitorTestTarget c{mock_qubit, mock_routing_daemon};
+  HardwareMonitorTestTarget c{mock_routing_daemon};
 
   c.initialize(0);
   ASSERT_EQ(c.par("address").intValue(), 123);
 }
+
+TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
+  // Test for accepting tomography result from my self and put it to tomography manager
+  // Situation:
+  // Node 0 (qnic_id: 1) <--> (qnic_id: 0)Node 1
+
+  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
+  sim->registerComponent(hardware_monitor);
+  hardware_monitor->initialize(0);
+
+  auto* self_link_tomography_result = new LinkTomographyResult{"LinkTomographyResult"};
+  // packet for myself 0 --> -
+  self_link_tomography_result->setDestAddr(0);
+  self_link_tomography_result->setSrcAddr(0);
+
+  // first tomography round
+  self_link_tomography_result->setCount_id(0);
+  self_link_tomography_result->setBasis('X');
+  self_link_tomography_result->setOutput_is_plus(true);
+
+  // ASSERT_EQ()
+  // EXP
+}
+
+// Should be deprecated in the future
+TEST_F(HardwareMonitorTest, sendLinkTomgraphyRuleSet) {}
+
+TEST_F(HardwareMonitorTest, reconstructDensityMatrix) {}
+
 }  // namespace

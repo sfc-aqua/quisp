@@ -13,14 +13,15 @@ using quisp::utils::TomographyManager;
 namespace quisp::utils {
 
 TomographyManager::TomographyManager() {
+  // Initialize Pauli matrices
   Pauli.X << 0, 1, 1, 0;
   Pauli.Y << 0, std::complex<double>(0, -1), std::complex<double>(0, 1), 0;
   Pauli.Z << 1, 0, 0, -1;
   Pauli.I << 1, 0, 0, 1;
+  tomography_records = {};
 }
 
-TomographyManager::~TomographyManager() {
-}
+TomographyManager::~TomographyManager() {}
 
 void TomographyManager::addLocalResult(int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean) {
   // Local measurement result
@@ -71,6 +72,14 @@ void TomographyManager::appendTomographyRecord(std::tuple<int, int> partner_key,
     std::map<int, TomographyRecord> tomography_round_record;
     tomography_round_record.insert(std::make_pair(tomography_round, tomography_record));
     tomography_records.insert(std::make_pair(partner_key, tomography_round_record));
+
+    // prepare empty tomography states for this pair
+    TomographyStats tomography_stat{
+        .tomography_time = 0,
+        .bell_pair_per_sec = 0,
+        .total_measurement_count = 0,
+    };
+    tomography_stats.insert(std::make_pair(partner_key, tomography_stat));
   } else {
     // Partner key found in the map, add this round of record to the existing parter record.
     // Find i th tomography record
@@ -102,6 +111,19 @@ void TomographyManager::appendTomographyRecord(std::tuple<int, int> partner_key,
       }
     }
   }
+};
+
+void TomographyManager::setStats(int qnic_id, int partner, simtime_t tomography_time, double bell_pair_per_sec, int total_measurement_count) {
+  auto partner_key = std::make_tuple(qnic_id, partner);
+
+  if (!tomography_stats.count(partner_key)) {
+    throw cRuntimeError("Tomography record for this partner is not found.");
+  }
+
+  auto &partner_stat = tomography_stats.at(partner_key);
+  partner_stat.tomography_time = tomography_time;
+  partner_stat.bell_pair_per_sec = bell_pair_per_sec;
+  partner_stat.total_measurement_count = total_measurement_count;
 };
 
 /// Reconstruct density matrix from tomogrpahy records

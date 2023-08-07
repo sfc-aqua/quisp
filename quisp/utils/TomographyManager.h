@@ -4,10 +4,10 @@
 #include <memory>
 #include <tuple>
 #include <unsupported/Eigen/KroneckerProduct>
-#include "Eigen/src/Core/Matrix.h"
 #include "modules/QNIC.h"
 #include "omnetpp/cexception.h"
 
+#include "omnetpp/simtime_t.h"
 #include "rules/RuleSet.h"
 
 using namespace quisp::rules;
@@ -22,14 +22,16 @@ class TomographyManager {
   ~TomographyManager();
 
   // Link Tomography RuleSet Generator (deprecated)
-  [[deprecated("Link Tomography RuleSet is integrated to Connection Manager.")]] RuleSet *createLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type,
-                                                                                                                      int qnic_index, unsigned long ruleset_id,
-                                                                                                                      int num_purification, int purification_type,
-                                                                                                                      bool x_purification, bool z_purification, int num_measure);
+  [[deprecated("Link Tomography RuleSet creation will be integrated to RuleSet Factory.")]] RuleSet *createLinkTomographyRuleSet(int my_address, int partner_address,
+                                                                                                                                 QNIC_type qnic_type, int qnic_index,
+                                                                                                                                 unsigned long ruleset_id, int num_purification,
+                                                                                                                                 int purification_type, bool x_purification,
+                                                                                                                                 bool z_purification, int num_measure);
 
   // Tomography Calculation
   void addLocalResult(int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
   void addPartnerResult(int self_qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
+  void setStats(int qnic_id, int partner, simtime_t tomography_time, double bell_pair_per_sec, int total_measurement_count);
   Matrix4cd reconstructDensityMatrix(int qnic_id, int partner);
 
  protected:
@@ -55,8 +57,20 @@ class TomographyManager {
     bool getSelfOutcome() const { return self_output.output_is_plus; }
     bool getPartnerOutcome() const { return partner_output.output_is_plus; }
   };
+
+  // Performance result of tomography
+  struct TomographyStats {
+    simtime_t tomography_time;
+    double bell_pair_per_sec;
+    int total_measurement_count;
+  };
+
   // <qnic_id, partner> -> <tomography_round, TomographyRecord> -> TomographyRecord
   std::map<std::tuple<int, int>, std::map<int, TomographyRecord>> tomography_records;
+
+  // <qnic_id, partner> -> TomographyStats
+  std::map<std::tuple<int, int>, TomographyStats> tomography_stats;
+
   // <tomography_round, TomographyRecord>
   double getStokesParameter(std::tuple<int, int> partner_key, const std::string basis_combination, const std::tuple<char, char, char> operators);
 
