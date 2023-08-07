@@ -4,9 +4,8 @@
 #include <test_utils/TestUtils.h>
 
 #include "Router.h"
-#include "messages/connection_setup_messages_m.h"
 #include "modules/SharedResource/SharedResource.h"
-#include "test_utils/Gate.h"
+
 using namespace quisp_test;
 using namespace quisp_test::utils;
 using namespace quisp::messages;
@@ -15,15 +14,22 @@ using OriginalRouter = quisp::modules::Router;
 
 namespace {
 
+class MockNode : public quisp_test::TestQNode {
+ public:
+  MockNode(int addr, int mass, bool is_initiator, bool i_am_qnode) : TestQNode(addr, mass, is_initiator), is_qnode(i_am_qnode) {}
+  MockNode(int addr, int mass, bool is_initiator) : TestQNode(addr, mass, is_initiator), is_qnode(true) {}
+  bool is_qnode;
+};
+
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
-  Strategy(TestQNode* _qnode) : parent_qnode(_qnode) {}
+  Strategy(MockNode* _qnode) : parent_qnode(_qnode) {}
   cModule* getNode() override { return parent_qnode; }
   int getNodeAddr() override { return parent_qnode->address; }
   SharedResource* getSharedResource() override { return &shared_resource; }
 
  private:
-  TestQNode* parent_qnode;
+  MockNode* parent_qnode;
   SharedResource shared_resource;
 };
 
@@ -32,12 +38,13 @@ class Router : public OriginalRouter {
   using OriginalRouter::handleMessage;
   using OriginalRouter::initialize;
   using OriginalRouter::routing_table;
-  explicit Router(TestQNode* parent_qnode) : OriginalRouter() {
+  explicit Router(MockNode* parent_qnode) : OriginalRouter() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_router"));
     hmPort = new TestGate(this, "hmPort$o");
     rePort = new TestGate(this, "rePort$o");
     cmPort = new TestGate(this, "cmPort$o");
+    rdPort = new TestGate(this, "rdPort$o");
     queueGate = new TestGate(this, "toQueue");
     routing_table.insert({8, queueGate->getId()});
   }
@@ -45,34 +52,51 @@ class Router : public OriginalRouter {
   TestGate* hmPort;
   TestGate* rePort;
   TestGate* cmPort;
+  TestGate* rdPort;
   TestGate* queueGate;
 
   std::map<const char*, cGate*> ports{};
-  cGate* gate(const char* gatename, int index = -1) {
+  cGate* gate(const char* gatename, int index = -1) override {
     if (strcmp(gatename, "hmPort$o") == 0) return hmPort;
     if (strcmp(gatename, "cmPort$o") == 0) return cmPort;
     if (strcmp(gatename, "rePort$o") == 0) return rePort;
+    if (strcmp(gatename, "rdPort$o") == 0) return rdPort;
     if (strcmp(gatename, "toQueue") == 0) return queueGate;
     error("port: %s not found", gatename);
     return nullptr;
   }
+  bool parentModuleIsQNode() override { return dynamic_cast<MockNode*>(provider.getNode())->is_qnode; }
+  void setIsQnode(bool is_qnode) { dynamic_cast<MockNode*>(provider.getNode())->is_qnode = is_qnode; }
 };
 
 class RouterTest : public ::testing::Test {
  protected:
   void SetUp() {
     sim = prepareSimulation();
-    qnode = new TestQNode(10, 0, true);
-    router = new Router(qnode);
+    node = new MockNode(10, 0, true);
+    router = new Router(node);
     sim->registerComponent(router);
     sim->setContext(router);
     router->callInitialize();
   }
   void TearDown() {}
 
+  /**
+   * This function mimics the behavior of Omnet++ internals
+   * that sets up the message arrival to Router module.
+   * Call this function before router->handleMessages
+   * when you want to retrieve the info of the arrival gate.
+   */
+  void mockMessageArrival(cMessage* msg) {
+    int queue_size = 1;
+    int arrival_gate_index = 0;
+    router->addGateVector("fromQueue", cGate::Type::INPUT, queue_size);
+    msg->setArrival(router->getId(), router->findGate("fromQueue", arrival_gate_index));
+  }
+
   TestSimulation* sim;
   Router* router;
-  TestQNode* qnode;
+  MockNode* node;
 };
 
 TEST_F(RouterTest, handlePacketForUnknownAddr) {
@@ -177,4 +201,73 @@ TEST_F(RouterTest, handlePurificationResult) {
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
+TEST_F(RouterTest, handleStopEmitting) {
+  auto msg = new StopEmitting;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rePort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleOspfPacket) {
+  auto msg = new OspfPacket;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rdPort->messages.size(), 1);
+
+  auto elo = new OspfHelloPacket;
+  elo->setDestAddr(10);
+  router->handleMessage(elo);
+  ASSERT_EQ(router->rdPort->messages.size(), 2);
+
+  auto dbd = new OspfDbdPacket;
+  dbd->setDestAddr(10);
+  router->handleMessage(dbd);
+  ASSERT_EQ(router->rdPort->messages.size(), 3);
+
+  auto lsr = new OspfLsrPacket;
+  lsr->setDestAddr(10);
+  router->handleMessage(lsr);
+  ASSERT_EQ(router->rdPort->messages.size(), 4);
+
+  auto lsu = new OspfLsuPacket;
+  lsu->setDestAddr(10);
+  router->handleMessage(lsu);
+  ASSERT_EQ(router->rdPort->messages.size(), 5);
+
+  auto ack = new OspfLsAckPacket;
+  ack->setDestAddr(10);
+  router->handleMessage(ack);
+  ASSERT_EQ(router->rdPort->messages.size(), 6);
+}
+
+TEST_F(RouterTest, nonQNodeForwardOspfPacket) {
+  auto msg = new OspfHelloPacket;
+  msg->setSrcAddr(10);
+  msg->setSendingGateIndex(0);
+  msg->setDestAddr(-1);
+  router->setIsQnode(false);
+
+  mockMessageArrival(msg);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->queueGate->messages.size(), 1);
+}
+
+TEST_F(RouterTest, sendOspfHelloPacketToQueue) {
+  auto msg = new OspfHelloPacket;
+  msg->setSrcAddr(10);
+  msg->setSendingGateIndex(0);
+  msg->setDestAddr(-1);
+
+  router->handleMessage(msg);
+  ASSERT_EQ(router->queueGate->messages.size(), 1);
+}
+
+TEST_F(RouterTest, redirectOspfHelloPacketToRoutingDaemon) {
+  auto msg = new OspfHelloPacket;
+  msg->setSrcAddr(8);
+  msg->setDestAddr(-1);
+
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rdPort->messages.size(), 1);
+}
 }  // namespace

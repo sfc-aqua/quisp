@@ -211,15 +211,6 @@ void HardwareMonitor::finish() {
     } else {
       link_cost = 1;
     }
-    // auto info = findConnectionInfoByQnicAddr(qnic);
-    // if (info == nullptr) {
-    //   error("info not found");
-    // }
-    // // outputs
-    // InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
-    // cModule *this_node = this->getParentModule()->getParentModule();
-    // cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
-    // double dis = channel->par("distance");
     // density matrix output
     tomography_dm << "Node (Address: " << my_address << ") <--->"
                   << "Node (Address: " << partner << ")\n";
