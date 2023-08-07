@@ -5,6 +5,7 @@
 
 #include "HardwareMonitor.h"
 
+#include "gmock/gmock-spec-builders.h"
 #include "messages/tomography_messages_m.h"
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
@@ -41,6 +42,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 
 class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
  public:
+  using quisp::modules::HardwareMonitor::handleMessage;
   using quisp::modules::HardwareMonitor::initialize;
   using quisp::modules::HardwareMonitor::par;
   using quisp::modules::HardwareMonitor::tomography_manager;
@@ -63,16 +65,29 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
   }
 };
 
+class MockTomographyManager : public TomographyManager {
+ public:
+  MOCK_METHOD(void, addLocalResult, (int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean));
+  MOCK_METHOD(void, addPartnerResult, (int self_qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean));
+  MOCK_METHOD(void, setStats, (int qnic_id, int partner, simtime_t tomography_time, double bell_pair_per_sec, int total_measurement_count));
+  MOCK_METHOD(Matrix4cd, reconstructDensityMatrix, (int qnic_id, int partner));
+};
+
 class HardwareMonitorTest : public testing::Test {
  protected:
   void SetUp() {
     sim = prepareSimulation();
     routing_daemon = new MockRoutingDaemon;
+    tomography_manager = new MockTomographyManager;
   }
-  void TearDown() { delete routing_daemon; }
+  void TearDown() {
+    delete routing_daemon;
+    delete tomography_manager;
+  }
   utils::TestSimulation* sim;
   HardwareMonitorTestTarget* hardware_montior;
   MockRoutingDaemon* routing_daemon;
+  MockTomographyManager* tomography_manager;
 };
 
 TEST(HardwareMonitorTestTarget, Init) {
@@ -89,6 +104,8 @@ TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
   // Situation:
   // Node 0 (qnic_id: 1) <--> (qnic_id: 0)Node 1
 
+  EXPECT_CALL(*tomography_manager, addLocalResult).Times(1);
+
   auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
   sim->registerComponent(hardware_monitor);
   hardware_monitor->initialize(0);
@@ -103,8 +120,8 @@ TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
   self_link_tomography_result->setBasis('X');
   self_link_tomography_result->setOutput_is_plus(true);
 
-  // ASSERT_EQ()
-  // EXP
+  // handle tomography result
+  hardware_monitor->handleMessage(self_link_tomography_result);
 }
 
 // Should be deprecated in the future

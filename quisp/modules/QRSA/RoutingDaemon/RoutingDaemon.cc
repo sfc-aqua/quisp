@@ -108,20 +108,6 @@ int RoutingDaemon::findQNicAddrByDestAddr(int destAddr) {
   return it->second;
 }
 
-int RoutingDaemon::getNumEndNodes() {
-  cTopology *topo = new cTopology("topo");
-  topo->extractByParameter("included_in_topology", "\"yes\"");
-  int num_end_nodes = 0;
-  for (int i = 0; i < topo->getNumNodes(); i++) {
-    cTopology::Node *node = topo->getNode(i);
-    std::string node_type = node->getModule()->par("node_type");
-    if (node_type == "EndNode") {  // ignore myself
-      num_end_nodes++;
-    }
-  }
-  delete topo;
-  return num_end_nodes;
-};
 
 /**
  * Once we begin using dynamic routing protocols, this is where the messages

@@ -37,7 +37,6 @@ class RoutingDaemon : public IRoutingDaemon {
   int numInitStages() const override { return 3; };
 
  public:
-  int getNumEndNodes() override;
   int findQNicAddrByDestAddr(int destAddr) override;
 };
 

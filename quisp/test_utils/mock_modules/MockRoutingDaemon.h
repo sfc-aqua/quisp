@@ -9,7 +9,6 @@ namespace routing_daemon {
 class MockRoutingDaemon : public quisp::modules::IRoutingDaemon {
  public:
   MOCK_METHOD(int, findQNicAddrByDestAddr, (int destAddr), (override));
-  MOCK_METHOD(int, getNumEndNodes, (), (override));
 };
 
 }  // namespace routing_daemon
