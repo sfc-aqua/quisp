@@ -8,11 +8,16 @@ var searchData=
   ['left_5fqubit_5findex_5',['left_qubit_index',['../structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback.html#abf8cf632d8a432a81c89a8f3fc8df332',1,'quisp::modules::runtime_callback::RuntimeCallback']]],
   ['left_5ftravel_5ftime_6',['left_travel_time',['../classquisp_1_1modules_1_1_b_s_a_controller.html#a9b751f37c7e5bdcdac840166f3cc6c65',1,'quisp::modules::BSAController']]],
   ['link_5fcost_7',['link_cost',['../structquisp_1_1modules_1_1_interface_info.html#a5e71e0ef116f3129f74b34a9ff0659f9',1,'quisp::modules::InterfaceInfo']]],
-  ['locked_8',['locked',['../classquisp_1_1modules_1_1_stationary_qubit.html#ac3182ca1d7ea586bc9079b373414b338',1,'quisp::modules::StationaryQubit']]],
-  ['locked_5frule_5fid_9',['locked_rule_id',['../classquisp_1_1modules_1_1_stationary_qubit.html#ac136bb29e7a0aad3b6c994e0c51d0eea',1,'quisp::modules::StationaryQubit']]],
-  ['locked_5fruleset_5fid_10',['locked_ruleset_id',['../classquisp_1_1modules_1_1_stationary_qubit.html#a90539861e5f9451e435bf43dcc9f1355',1,'quisp::modules::StationaryQubit']]],
-  ['logger_11',['logger',['../classquisp_1_1modules_1_1_logger_1_1_logger_base.html#ab0e218b86937c9d19a75c5511604824b',1,'quisp::modules::Logger::LoggerBase::logger()'],['../classquisp_1_1modules_1_1_bell_pair_store.html#a0d850b190583d9e6741073ee5f3d5c84',1,'quisp::modules::BellPairStore::logger()'],['../classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#ac0a9b3419c336176154cd857e7091ba4',1,'quisp::modules::qubit_record::QubitRecord::logger()']]],
-  ['logger_5ftype_12',['logger_type',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#a925d8a6102f4678b641ba47538eb3d2d',1,'quisp::modules::Logger::LoggerModule']]],
-  ['loss_5frate_13',['loss_rate',['../structquisp_1_1channels_1_1channel__error__model.html#a66f3426a9615fb1d281c21dcbe6eab94',1,'quisp::channels::channel_error_model']]],
-  ['lres_14',['lres',['../struct_swapping_config.html#a1e46873030558351cc3c5982a36e5e20',1,'SwappingConfig']]]
+  ['link_5fstate_5fdatabase_8',['link_state_database',['../classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#ad32715f9fc1c32eda75b08997e8455e3',1,'quisp::modules::routing_daemon::RoutingDaemon::link_state_database()'],['../classquisp_1_1modules_1_1ospf_1_1_link_state_database.html#ab77269b9911436596bf5b4583f6355d0',1,'quisp::modules::ospf::LinkStateDatabase::link_state_database()']]],
+  ['locked_9',['locked',['../classquisp_1_1modules_1_1_stationary_qubit.html#ac3182ca1d7ea586bc9079b373414b338',1,'quisp::modules::StationaryQubit']]],
+  ['locked_5frule_5fid_10',['locked_rule_id',['../classquisp_1_1modules_1_1_stationary_qubit.html#ac136bb29e7a0aad3b6c994e0c51d0eea',1,'quisp::modules::StationaryQubit']]],
+  ['locked_5fruleset_5fid_11',['locked_ruleset_id',['../classquisp_1_1modules_1_1_stationary_qubit.html#a90539861e5f9451e435bf43dcc9f1355',1,'quisp::modules::StationaryQubit']]],
+  ['logger_12',['logger',['../classquisp_1_1modules_1_1_logger_1_1_logger_base.html#ab0e218b86937c9d19a75c5511604824b',1,'quisp::modules::Logger::LoggerBase::logger()'],['../classquisp_1_1modules_1_1_bell_pair_store.html#a0d850b190583d9e6741073ee5f3d5c84',1,'quisp::modules::BellPairStore::logger()'],['../classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#ac0a9b3419c336176154cd857e7091ba4',1,'quisp::modules::qubit_record::QubitRecord::logger()']]],
+  ['logger_5ftype_13',['logger_type',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#a925d8a6102f4678b641ba47538eb3d2d',1,'quisp::modules::Logger::LoggerModule']]],
+  ['loss_5frate_14',['loss_rate',['../structquisp_1_1channels_1_1channel__error__model.html#a66f3426a9615fb1d281c21dcbe6eab94',1,'quisp::channels::channel_error_model']]],
+  ['lres_15',['lres',['../struct_swapping_config.html#a1e46873030558351cc3c5982a36e5e20',1,'SwappingConfig']]],
+  ['lsa_5fage_16',['lsa_age',['../structquisp_1_1modules_1_1ospf_1_1_summary_link_state_advertisement.html#a4efa5fa43be3a4cbb24830d38603f1b1',1,'quisp::modules::ospf::SummaryLinkStateAdvertisement']]],
+  ['lsa_5fid_17',['lsa_id',['../structquisp_1_1modules_1_1ospf_1_1_summary_link_state_advertisement.html#aabbb7bcc90dc3e76249658082827a57a',1,'quisp::modules::ospf::SummaryLinkStateAdvertisement']]],
+  ['lsa_5forigin_5fid_18',['lsa_origin_id',['../structquisp_1_1modules_1_1ospf_1_1_summary_link_state_advertisement.html#a88ad9daba47bd9e633db4fd39032a78b',1,'quisp::modules::ospf::SummaryLinkStateAdvertisement']]],
+  ['lsdb_5fsummary_19',['lsdb_summary',['../classquisp_1_1modules_1_1ospf_1_1_link_state_database.html#a9885db9d875a2287ed91aa01a00b10ef',1,'quisp::modules::ospf::LinkStateDatabase']]]
 ];

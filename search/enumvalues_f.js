@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['value_0',['Value',['../structquisp_1_1runtime_1_1_op.html#aeaf74403f14e440d4d2caa6ba76922d7a8c05ffabc3dd12e3bd56342eb505a2c0',1,'quisp::runtime::Op']]]
+  ['two_5fway_0',['TWO_WAY',['../namespacequisp_1_1modules_1_1ospf.html#a8f2a5b04abd62934a86757a0e801d4c2abc16ac4301729813972ba8e77489817a',1,'quisp::modules::ospf']]]
 ];

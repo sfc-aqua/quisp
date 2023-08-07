@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['measurement_5foutcome_0',['MEASUREMENT_OUTCOME',['../namespacequisp_1_1runtime.html#a26ed411782aba743676e85bbe9cc2ba4a7a75b5ee71bb4e685c8e9f1df421aafc',1,'quisp::runtime']]],
-  ['minus_5fone_1',['MINUS_ONE',['../namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0da25725c81fc4f00fa5b881c17af6a2a3e',1,'quisp::backends::abstract']]]
+  ['loading_0',['LOADING',['../namespacequisp_1_1modules_1_1ospf.html#a8f2a5b04abd62934a86757a0e801d4c2af9f6955ebca09a484157c05f80acd65e',1,'quisp::modules::ospf']]]
 ];

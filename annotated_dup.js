@@ -40,6 +40,12 @@ var annotated_dup =
           [ "LoggerBase", "classquisp_1_1modules_1_1_logger_1_1_logger_base.html", "classquisp_1_1modules_1_1_logger_1_1_logger_base" ],
           [ "LoggerModule", "classquisp_1_1modules_1_1_logger_1_1_logger_module.html", "classquisp_1_1modules_1_1_logger_1_1_logger_module" ]
         ] ],
+        [ "ospf", "namespacequisp_1_1modules_1_1ospf.html", [
+          [ "LinkStateAdvertisement", "structquisp_1_1modules_1_1ospf_1_1_link_state_advertisement.html", "structquisp_1_1modules_1_1ospf_1_1_link_state_advertisement" ],
+          [ "LinkStateDatabase", "classquisp_1_1modules_1_1ospf_1_1_link_state_database.html", "classquisp_1_1modules_1_1ospf_1_1_link_state_database" ],
+          [ "OspfNeighborInfo", "structquisp_1_1modules_1_1ospf_1_1_ospf_neighbor_info.html", "structquisp_1_1modules_1_1ospf_1_1_ospf_neighbor_info" ],
+          [ "SummaryLinkStateAdvertisement", "structquisp_1_1modules_1_1ospf_1_1_summary_link_state_advertisement.html", "structquisp_1_1modules_1_1ospf_1_1_summary_link_state_advertisement" ]
+        ] ],
         [ "qnic_record", "namespacequisp_1_1modules_1_1qnic__record.html", [
           [ "IQNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record" ],
           [ "QNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record" ]

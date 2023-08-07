@@ -25,5 +25,6 @@ var searchData=
   ['controlled_5fz_5flookup_5fnode_5f1_22',['controlled_z_lookup_node_1',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#ace7cda481b4bcefc015a61c3d85fe76c',1,'quisp::backends::graph_state::GraphStateQubit']]],
   ['controlled_5fz_5flookup_5fnode_5f2_23',['controlled_z_lookup_node_2',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#aa2d625c7d146a06235689ca309f13f7d',1,'quisp::backends::graph_state::GraphStateQubit']]],
   ['correction_5foperation_24',['correction_operation',['../structquisp_1_1physical_1_1types_1_1_b_s_a_click_result.html#aabd1da1283331aaf0886f2f7afa0c5b0',1,'quisp::physical::types::BSAClickResult']]],
-  ['current_5ftime_25',['current_time',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#af9f1ed80b14e23a7adf1528c88700f6c',1,'quisp::backends::graph_state::GraphStateBackend']]]
+  ['cost_25',['cost',['../structquisp_1_1modules_1_1ospf_1_1_ospf_neighbor_info.html#a340784eed09cab7e45d0a599fcc412d8',1,'quisp::modules::ospf::OspfNeighborInfo']]],
+  ['current_5ftime_26',['current_time',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#af9f1ed80b14e23a7adf1528c88700f6c',1,'quisp::backends::graph_state::GraphStateBackend']]]
 ];

@@ -1,0 +1,4 @@
+<map id="quisp::modules::ospf::SummaryLinkStateAdvertisement" name="quisp::modules::ospf::SummaryLinkStateAdvertisement">
+<area shape="rect" id="node1" title="This struct is used in DBD packet exchange for two nodes to communicate what link&#45;state advertisement..." alt="" coords="5,5,228,45"/>
+<area shape="rect" id="node2" href="$structquisp_1_1modules_1_1ospf_1_1_link_state_advertisement.html" title="Full link&#45;state advertisement that holds info of neighbor_nodes. Element that makes up the LinkStateD..." alt="" coords="33,93,201,133"/>
+</map>

@@ -7,8 +7,9 @@ var searchData=
   ['staticenv_4',['StaticEnv',['../classquisp__test_1_1env_1_1_static_env.html',1,'quisp_test::env']]],
   ['stationaryqubit_5',['StationaryQubit',['../classquisp_1_1modules_1_1_stationary_qubit.html',1,'quisp::modules']]],
   ['stationaryqubitconfiguration_6',['StationaryQubitConfiguration',['../classquisp_1_1backends_1_1_stationary_qubit_configuration.html',1,'quisp::backends']]],
-  ['swappingconfig_7',['SwappingConfig',['../struct_swapping_config.html',1,'']]],
-  ['swappingcorrection_8',['SwappingCorrection',['../classquisp_1_1rules_1_1_swapping_correction.html',1,'quisp::rules']]],
-  ['swappingcorrectionclause_9',['SwappingCorrectionClause',['../classquisp_1_1rules_1_1_swapping_correction_clause.html',1,'quisp::rules']]],
-  ['swappingresultdata_10',['SwappingResultData',['../structquisp_1_1modules_1_1_swapping_result_data.html',1,'quisp::modules']]]
+  ['summarylinkstateadvertisement_7',['SummaryLinkStateAdvertisement',['../structquisp_1_1modules_1_1ospf_1_1_summary_link_state_advertisement.html',1,'quisp::modules::ospf']]],
+  ['swappingconfig_8',['SwappingConfig',['../struct_swapping_config.html',1,'']]],
+  ['swappingcorrection_9',['SwappingCorrection',['../classquisp_1_1rules_1_1_swapping_correction.html',1,'quisp::rules']]],
+  ['swappingcorrectionclause_10',['SwappingCorrectionClause',['../classquisp_1_1rules_1_1_swapping_correction_clause.html',1,'quisp::rules']]],
+  ['swappingresultdata_11',['SwappingResultData',['../structquisp_1_1modules_1_1_swapping_result_data.html',1,'quisp::modules']]]
 ];

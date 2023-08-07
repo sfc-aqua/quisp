@@ -93,6 +93,7 @@ $(document).ready(function(){initNavTree('classquisp_1_1modules_1_1routing__daem
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">quisp::modules::routing_daemon::RoutingDaemon Class Reference</div></div>
 </div><!--header-->
@@ -114,10 +115,11 @@ Collaboration diagram for quisp::modules::routing_daemon::RoutingDaemon:</div>
 <div class="dyncontent">
 <div class="center"><img src="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon__coll__graph.png" border="0" usemap="#aquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon_coll__map" alt="Collaboration graph"/></div>
 <map name="aquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon_coll__map" id="aquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon_coll__map">
-<area shape="rect" title=" " alt="" coords="155,183,328,223"/>
-<area shape="rect" href="classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="5,80,168,120"/>
-<area shape="rect" title=" " alt="" coords="31,5,142,31"/>
-<area shape="rect" href="classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="192,87,395,113"/>
+<area shape="rect" title=" " alt="" coords="536,63,709,103"/>
+<area shape="rect" href="classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="185,5,348,45"/>
+<area shape="rect" title=" " alt="" coords="5,13,116,38"/>
+<area shape="rect" href="classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="165,70,368,95"/>
+<area shape="rect" href="classquisp_1_1modules_1_1ospf_1_1_link_state_database.html" title="Represents the database that holds link&#45;state advertisements of nodes. Effectively,..." alt="" coords="197,120,336,160"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -137,6 +139,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:aa110e37bf348c80f0b4631fc8f6c4337"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#aa110e37bf348c80f0b4631fc8f6c4337">generateRoutingTable</a> ()</td></tr>
+<tr class="separator:aa110e37bf348c80f0b4631fc8f6c4337"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fb207c650238f446c2abc90be8582e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a2fb207c650238f446c2abc90be8582e2">generateRoutingTable</a> (cTopology *topo)</td></tr>
 <tr class="separator:a2fb207c650238f446c2abc90be8582e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a010c5f2624bdf4af851eae7361be9a11"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a010c5f2624bdf4af851eae7361be9a11">getQNicAddr</a> (const cGate *const parentModuleGate)</td></tr>
@@ -147,15 +151,64 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a16f78f12814695f48b391b604fc6d393"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02dde95558d89c4b09c2299f3808fb2f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a02dde95558d89c4b09c2299f3808fb2f">numInitStages</a> () const override</td></tr>
 <tr class="separator:a02dde95558d89c4b09c2299f3808fb2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d0115b7d040bc3b76fe2cf31abb888d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a5d0115b7d040bc3b76fe2cf31abb888d">getNumNeighbors</a> ()</td></tr>
+<tr class="memdesc:a5d0115b7d040bc3b76fe2cf31abb888d"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the number of neighbors of this node  <a href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a5d0115b7d040bc3b76fe2cf31abb888d">More...</a><br /></td></tr>
+<tr class="separator:a5d0115b7d040bc3b76fe2cf31abb888d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ce67a9750b56d2782739021bbd114a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a0ce67a9750b56d2782739021bbd114a7">ospfHandleHelloPacket</a> (const OspfHelloPacket *const pk)</td></tr>
+<tr class="separator:a0ce67a9750b56d2782739021bbd114a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaaabd96b699728edb4c88d4aa16ddb26"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#aaaabd96b699728edb4c88d4aa16ddb26">ospfInitializeRoutingDaemon</a> ()</td></tr>
+<tr class="separator:aaaabd96b699728edb4c88d4aa16ddb26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a723b71ce7d8509e8f896ebddb6a601c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a723b71ce7d8509e8f896ebddb6a601c0">ospfSendHelloPacketToNeighbor</a> (<a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a> neighbor)</td></tr>
+<tr class="separator:a723b71ce7d8509e8f896ebddb6a601c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e8835871c638f8b5e3de66b8e87f1d0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a2e8835871c638f8b5e3de66b8e87f1d0">ospfMyAddressIsRecognizedByNeighbor</a> (const OspfHelloPacket *const msg)</td></tr>
+<tr class="separator:a2e8835871c638f8b5e3de66b8e87f1d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc97e01c54a106496aa0b7ee3c394bdb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#abc97e01c54a106496aa0b7ee3c394bdb">ospfRegisterNeighbor</a> (const OspfPacket *const pk, <a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8f2a5b04abd62934a86757a0e801d4c2">OspfState</a> state)</td></tr>
+<tr class="separator:abc97e01c54a106496aa0b7ee3c394bdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24861723e391632d37cff6c7e686ba2d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a24861723e391632d37cff6c7e686ba2d">ospfNeighborIsRegistered</a> (<a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a> address) const</td></tr>
+<tr class="separator:a24861723e391632d37cff6c7e686ba2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86ca46c68b875ced1986c2919e39c0af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a86ca46c68b875ced1986c2919e39c0af">ospfHandleDbdPacket</a> (const OspfDbdPacket *const pk)</td></tr>
+<tr class="separator:a86ca46c68b875ced1986c2919e39c0af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e406de61c65ee54dda4015b1f17a409"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a8e406de61c65ee54dda4015b1f17a409">ospfExStartState</a> (const OspfDbdPacket *const pk)</td></tr>
+<tr class="memdesc:a8e406de61c65ee54dda4015b1f17a409"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exchange packets to decide who the master or slave is.  <a href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a8e406de61c65ee54dda4015b1f17a409">More...</a><br /></td></tr>
+<tr class="separator:a8e406de61c65ee54dda4015b1f17a409"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61c7164fee5fce50d5e8ae380b8e806b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a61c7164fee5fce50d5e8ae380b8e806b">ospfSendExstartDbdPacket</a> (<a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a> neighbor)</td></tr>
+<tr class="separator:a61c7164fee5fce50d5e8ae380b8e806b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cfc7925c66190874fca8ecbd6898f91"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a0cfc7925c66190874fca8ecbd6898f91">ospfSlaveInitiateExchangeState</a> (<a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a> dest)</td></tr>
+<tr class="separator:a0cfc7925c66190874fca8ecbd6898f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29662c106f9b22f4a2a5684f31e6e634"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a29662c106f9b22f4a2a5684f31e6e634">ospfMasterEnterExchangeState</a> (<a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a> dest)</td></tr>
+<tr class="separator:a29662c106f9b22f4a2a5684f31e6e634"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2beacf0011ef606248426d92f8e6710b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a2beacf0011ef606248426d92f8e6710b">ospfSendLsdbSummary</a> (<a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a> destination, bool i_am_master=false)</td></tr>
+<tr class="separator:a2beacf0011ef606248426d92f8e6710b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af22272bf249c315a3b7fbbebfd3fcc06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#af22272bf249c315a3b7fbbebfd3fcc06">ospfSendLinkStateRequest</a> (<a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a> dst, const <a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a24e7fd8aa5f45c453a8300701214fe23">RouterIds</a> &amp;missing_lsa_ids)</td></tr>
+<tr class="separator:af22272bf249c315a3b7fbbebfd3fcc06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1efc52702a4d72f4bcfae0bbe04bf2ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a1efc52702a4d72f4bcfae0bbe04bf2ba">ospfHandleLinkStateRequest</a> (const OspfLsrPacket *const pk)</td></tr>
+<tr class="separator:a1efc52702a4d72f4bcfae0bbe04bf2ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10f564459eae646a1de92d000ecbb3f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a10f564459eae646a1de92d000ecbb3f3">ospfHandleLinkStateUpdate</a> (const OspfLsuPacket *const pk)</td></tr>
+<tr class="separator:a10f564459eae646a1de92d000ecbb3f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b1304a849d403dd33c9c82f147e6489"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a6b1304a849d403dd33c9c82f147e6489">ospfUpdateLinkStateDatabase</a> (const OspfLsuPacket *const msg)</td></tr>
+<tr class="separator:a6b1304a849d403dd33c9c82f147e6489"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af038f37a22a39fbbab5e7b9a734d3b73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#af038f37a22a39fbbab5e7b9a734d3b73">ospfSendUpdatedLsdbToNeighboringRouters</a> (<a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a> source_of_updated_lsdb)</td></tr>
+<tr class="separator:af038f37a22a39fbbab5e7b9a734d3b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93ad62d9fccb3f0c2c804a670695e44e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a93ad62d9fccb3f0c2c804a670695e44e">ospfUpdateMyAddressLsaInLsdb</a> ()</td></tr>
+<tr class="separator:a93ad62d9fccb3f0c2c804a670695e44e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a844eade71050e4899d1fc09c8d38a7fa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a844eade71050e4899d1fc09c8d38a7fa">myAddress</a></td></tr>
-<tr class="separator:a844eade71050e4899d1fc09c8d38a7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb8ad68e64a69a1e24ea5d953e286aa8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#adb8ad68e64a69a1e24ea5d953e286aa8">my_address</a></td></tr>
+<tr class="separator:adb8ad68e64a69a1e24ea5d953e286aa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3f19447402f0c745ee2d5035496629b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1modules_1_1routing__daemon.html#afe0fff7bb75f97983581c3b534832b18">RoutingTable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#ac3f19447402f0c745ee2d5035496629b">qrtable</a></td></tr>
 <tr class="separator:ac3f19447402f0c745ee2d5035496629b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9ca0ce543512c09bbbd56d4daee1480"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html">utils::ComponentProvider</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#aa9ca0ce543512c09bbbd56d4daee1480">provider</a></td></tr>
 <tr class="separator:aa9ca0ce543512c09bbbd56d4daee1480"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96005fc18f476e732c58e2b885e2aa55"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8b2b7209533028b185e4839e472c7298">ospf::NeighborTable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a96005fc18f476e732c58e2b885e2aa55">neighbor_table</a></td></tr>
+<tr class="separator:a96005fc18f476e732c58e2b885e2aa55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad32715f9fc1c32eda75b08997e8455e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1modules_1_1ospf_1_1_link_state_database.html">LinkStateDatabase</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#ad32715f9fc1c32eda75b08997e8455e3">link_state_database</a></td></tr>
+<tr class="separator:ad32715f9fc1c32eda75b08997e8455e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a65b9f0c0dda36ffb06ee9866d7f6301c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html#a65b9f0c0dda36ffb06ee9866d7f6301c">run_ospf</a></td></tr>
+<tr class="separator:a65b9f0c0dda36ffb06ee9866d7f6301c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad159a02078c61dd70ab8243e9535cf46" name="ad159a02078c61dd70ab8243e9535cf46"></a>
@@ -213,8 +266,33 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa110e37bf348c80f0b4631fc8f6c4337" name="aa110e37bf348c80f0b4631fc8f6c4337"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa110e37bf348c80f0b4631fc8f6c4337">&#9670;&#160;</a></span>generateRoutingTable() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::generateRoutingTable </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2fb207c650238f446c2abc90be8582e2" name="a2fb207c650238f446c2abc90be8582e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2fb207c650238f446c2abc90be8582e2">&#9670;&#160;</a></span>generateRoutingTable()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fb207c650238f446c2abc90be8582e2">&#9670;&#160;</a></span>generateRoutingTable() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,6 +341,34 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html#a9b51f81cdd6f05aa22e735bc7b6165e3">quisp::modules::IRoutingDaemon</a>.</p>
+
+</div>
+</div>
+<a id="a5d0115b7d040bc3b76fe2cf31abb888d" name="a5d0115b7d040bc3b76fe2cf31abb888d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d0115b7d040bc3b76fe2cf31abb888d">&#9670;&#160;</a></span>getNumNeighbors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t RoutingDaemon::getNumNeighbors </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>returns the number of neighbors of this node </p>
+<p >we are assuming two nodes are connected by quantum channel if and only if they are connected by classical channel TODO: we need to change this function if above assumption no longer holds </p><dl class="section return"><dt>Returns</dt><dd>size_t </dd></dl>
 
 </div>
 </div>
@@ -370,9 +476,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a844eade71050e4899d1fc09c8d38a7fa" name="a844eade71050e4899d1fc09c8d38a7fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a844eade71050e4899d1fc09c8d38a7fa">&#9670;&#160;</a></span>myAddress</h2>
+<a id="a8e406de61c65ee54dda4015b1f17a409" name="a8e406de61c65ee54dda4015b1f17a409"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e406de61c65ee54dda4015b1f17a409">&#9670;&#160;</a></span>ospfExStartState()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -381,7 +486,551 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int quisp::modules::routing_daemon::RoutingDaemon::myAddress</td>
+          <td class="memname">void RoutingDaemon::ospfExStartState </td>
+          <td>(</td>
+          <td class="paramtype">const OspfDbdPacket *const&#160;</td>
+          <td class="paramname"><em>pk</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Exchange packets to decide who the master or slave is. </p>
+<p >Master/slave is decided based on the number of router address/ID. Whichever that has the bigger router address becomes the master Slave sends its Summary LSDB to Master Master send empty DBD packet until it receives Summary LSDB from Slave </p>
+
+</div>
+</div>
+<a id="a86ca46c68b875ced1986c2919e39c0af" name="a86ca46c68b875ced1986c2919e39c0af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86ca46c68b875ced1986c2919e39c0af">&#9670;&#160;</a></span>ospfHandleDbdPacket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfHandleDbdPacket </td>
+          <td>(</td>
+          <td class="paramtype">const OspfDbdPacket *const&#160;</td>
+          <td class="paramname"><em>pk</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0ce67a9750b56d2782739021bbd114a7" name="a0ce67a9750b56d2782739021bbd114a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ce67a9750b56d2782739021bbd114a7">&#9670;&#160;</a></span>ospfHandleHelloPacket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfHandleHelloPacket </td>
+          <td>(</td>
+          <td class="paramtype">const OspfHelloPacket *const&#160;</td>
+          <td class="paramname"><em>pk</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1efc52702a4d72f4bcfae0bbe04bf2ba" name="a1efc52702a4d72f4bcfae0bbe04bf2ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1efc52702a4d72f4bcfae0bbe04bf2ba">&#9670;&#160;</a></span>ospfHandleLinkStateRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfHandleLinkStateRequest </td>
+          <td>(</td>
+          <td class="paramtype">const OspfLsrPacket *const&#160;</td>
+          <td class="paramname"><em>pk</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a10f564459eae646a1de92d000ecbb3f3" name="a10f564459eae646a1de92d000ecbb3f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10f564459eae646a1de92d000ecbb3f3">&#9670;&#160;</a></span>ospfHandleLinkStateUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfHandleLinkStateUpdate </td>
+          <td>(</td>
+          <td class="paramtype">const OspfLsuPacket *const&#160;</td>
+          <td class="paramname"><em>pk</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaaabd96b699728edb4c88d4aa16ddb26" name="aaaabd96b699728edb4c88d4aa16ddb26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaaabd96b699728edb4c88d4aa16ddb26">&#9670;&#160;</a></span>ospfInitializeRoutingDaemon()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfInitializeRoutingDaemon </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a29662c106f9b22f4a2a5684f31e6e634" name="a29662c106f9b22f4a2a5684f31e6e634"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29662c106f9b22f4a2a5684f31e6e634">&#9670;&#160;</a></span>ospfMasterEnterExchangeState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfMasterEnterExchangeState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a>&#160;</td>
+          <td class="paramname"><em>dest</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2e8835871c638f8b5e3de66b8e87f1d0" name="a2e8835871c638f8b5e3de66b8e87f1d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e8835871c638f8b5e3de66b8e87f1d0">&#9670;&#160;</a></span>ospfMyAddressIsRecognizedByNeighbor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool RoutingDaemon::ospfMyAddressIsRecognizedByNeighbor </td>
+          <td>(</td>
+          <td class="paramtype">const OspfHelloPacket *const&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a24861723e391632d37cff6c7e686ba2d" name="a24861723e391632d37cff6c7e686ba2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24861723e391632d37cff6c7e686ba2d">&#9670;&#160;</a></span>ospfNeighborIsRegistered()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool RoutingDaemon::ospfNeighborIsRegistered </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a>&#160;</td>
+          <td class="paramname"><em>address</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abc97e01c54a106496aa0b7ee3c394bdb" name="abc97e01c54a106496aa0b7ee3c394bdb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc97e01c54a106496aa0b7ee3c394bdb">&#9670;&#160;</a></span>ospfRegisterNeighbor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfRegisterNeighbor </td>
+          <td>(</td>
+          <td class="paramtype">const OspfPacket *const&#160;</td>
+          <td class="paramname"><em>pk</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8f2a5b04abd62934a86757a0e801d4c2">OspfState</a>&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a61c7164fee5fce50d5e8ae380b8e806b" name="a61c7164fee5fce50d5e8ae380b8e806b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61c7164fee5fce50d5e8ae380b8e806b">&#9670;&#160;</a></span>ospfSendExstartDbdPacket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfSendExstartDbdPacket </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a>&#160;</td>
+          <td class="paramname"><em>neighbor</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a723b71ce7d8509e8f896ebddb6a601c0" name="a723b71ce7d8509e8f896ebddb6a601c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a723b71ce7d8509e8f896ebddb6a601c0">&#9670;&#160;</a></span>ospfSendHelloPacketToNeighbor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfSendHelloPacketToNeighbor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a>&#160;</td>
+          <td class="paramname"><em>neighbor</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af22272bf249c315a3b7fbbebfd3fcc06" name="af22272bf249c315a3b7fbbebfd3fcc06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af22272bf249c315a3b7fbbebfd3fcc06">&#9670;&#160;</a></span>ospfSendLinkStateRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfSendLinkStateRequest </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a>&#160;</td>
+          <td class="paramname"><em>dst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a24e7fd8aa5f45c453a8300701214fe23">RouterIds</a> &amp;&#160;</td>
+          <td class="paramname"><em>missing_lsa_ids</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2beacf0011ef606248426d92f8e6710b" name="a2beacf0011ef606248426d92f8e6710b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2beacf0011ef606248426d92f8e6710b">&#9670;&#160;</a></span>ospfSendLsdbSummary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfSendLsdbSummary </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a>&#160;</td>
+          <td class="paramname"><em>destination</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>i_am_master</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af038f37a22a39fbbab5e7b9a734d3b73" name="af038f37a22a39fbbab5e7b9a734d3b73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af038f37a22a39fbbab5e7b9a734d3b73">&#9670;&#160;</a></span>ospfSendUpdatedLsdbToNeighboringRouters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfSendUpdatedLsdbToNeighboringRouters </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a>&#160;</td>
+          <td class="paramname"><em>source_of_updated_lsdb</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0cfc7925c66190874fca8ecbd6898f91" name="a0cfc7925c66190874fca8ecbd6898f91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cfc7925c66190874fca8ecbd6898f91">&#9670;&#160;</a></span>ospfSlaveInitiateExchangeState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfSlaveInitiateExchangeState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a>&#160;</td>
+          <td class="paramname"><em>dest</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6b1304a849d403dd33c9c82f147e6489" name="a6b1304a849d403dd33c9c82f147e6489"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b1304a849d403dd33c9c82f147e6489">&#9670;&#160;</a></span>ospfUpdateLinkStateDatabase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfUpdateLinkStateDatabase </td>
+          <td>(</td>
+          <td class="paramtype">const OspfLsuPacket *const&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a93ad62d9fccb3f0c2c804a670695e44e" name="a93ad62d9fccb3f0c2c804a670695e44e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93ad62d9fccb3f0c2c804a670695e44e">&#9670;&#160;</a></span>ospfUpdateMyAddressLsaInLsdb()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::ospfUpdateMyAddressLsaInLsdb </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ad32715f9fc1c32eda75b08997e8455e3" name="ad32715f9fc1c32eda75b08997e8455e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad32715f9fc1c32eda75b08997e8455e3">&#9670;&#160;</a></span>link_state_database</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classquisp_1_1modules_1_1ospf_1_1_link_state_database.html">LinkStateDatabase</a> quisp::modules::routing_daemon::RoutingDaemon::link_state_database</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adb8ad68e64a69a1e24ea5d953e286aa8" name="adb8ad68e64a69a1e24ea5d953e286aa8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb8ad68e64a69a1e24ea5d953e286aa8">&#9670;&#160;</a></span>my_address</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8c71fa3e6d7552853870a16ec30fa2c9">NodeAddr</a> quisp::modules::routing_daemon::RoutingDaemon::my_address</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a96005fc18f476e732c58e2b885e2aa55" name="a96005fc18f476e732c58e2b885e2aa55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96005fc18f476e732c58e2b885e2aa55">&#9670;&#160;</a></span>neighbor_table</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacequisp_1_1modules_1_1ospf.html#a8b2b7209533028b185e4839e472c7298">ospf::NeighborTable</a> quisp::modules::routing_daemon::RoutingDaemon::neighbor_table</td>
         </tr>
       </table>
   </td>
@@ -431,6 +1080,28 @@ Protected Attributes</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a65b9f0c0dda36ffb06ee9866d7f6301c" name="a65b9f0c0dda36ffb06ee9866d7f6301c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65b9f0c0dda36ffb06ee9866d7f6301c">&#9670;&#160;</a></span>run_ospf</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool quisp::modules::routing_daemon::RoutingDaemon::run_ospf</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

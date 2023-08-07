@@ -1,18 +1,14 @@
 var searchData=
 [
-  ['s_0',['S',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034a5dbc98dcc983a70728bd082d1a47546e',1,'quisp::backends::graph_state::types']]],
-  ['s_5finv_1',['S_INV',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034a263c1ac5e30fdef351d5c91b4470c9e6',1,'quisp::backends::graph_state::types']]],
-  ['s_5finv_5frx_2',['S_INV_RX',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034a20c8c8d72be701928b59754d55627825',1,'quisp::backends::graph_state::types']]],
-  ['s_5finv_5frx_5finv_3',['S_INV_RX_INV',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034a7a4dcdc03a7845b85b4d185243994cae',1,'quisp::backends::graph_state::types']]],
-  ['s_5finv_5fry_4',['S_INV_RY',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034aba063a32e79c5196256f62d4f2575d2c',1,'quisp::backends::graph_state::types']]],
-  ['s_5finv_5fry_5finv_5',['S_INV_RY_INV',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034a0ec7dee37e337701ea743bbdbd996db6',1,'quisp::backends::graph_state::types']]],
-  ['s_5frx_6',['S_RX',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034a27a0684003735392aef2020518dc0d20',1,'quisp::backends::graph_state::types']]],
-  ['s_5frx_5finv_7',['S_RX_INV',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034a398e2a39cc03f41ad6761e6f365ac49e',1,'quisp::backends::graph_state::types']]],
-  ['s_5fry_8',['S_RY',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034afe08f643cc4b0892bd114667748831b7',1,'quisp::backends::graph_state::types']]],
-  ['s_5fry_5finv_9',['S_RY_INV',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034aecc02c6ea51551582cfc2a4300ab40c0',1,'quisp::backends::graph_state::types']]],
-  ['second_10',['Second',['../_bell_state_analyzer_8h.html#aec12feba722653d82dc8b4bb5342480eac22cf8376b1893dcfcef0649fe1a7d87',1,'BellStateAnalyzer.h']]],
-  ['secondportarrive_11',['SecondPortArrive',['../_bell_state_analyzer_8h.html#a613fdd4a3be14072fc6240ab6d8cf0cea65906228e5a9994bd8781fb087fecd65',1,'BellStateAnalyzer.h']]],
-  ['single_5fx_12',['SINGLE_X',['../namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066da65eeead068a36831adbb2aa61e7513b1',1,'quisp::rules']]],
-  ['single_5fy_13',['SINGLE_Y',['../namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066da050db8f23a0a9c970de8c3b6c0384d26',1,'quisp::rules']]],
-  ['single_5fz_14',['SINGLE_Z',['../namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066daec7ccc4b9ca43c2b37ceafd93d0b16eb',1,'quisp::rules']]]
+  ['random_0',['RANDOM',['../namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5a170e02e86972c2be8559884cc3c12254',1,'quisp::runtime']]],
+  ['reg0_1',['REG0',['../namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9aa067d1252ccdab4114b7a0374d2a1316',1,'quisp::runtime']]],
+  ['reg1_2',['REG1',['../namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9a323c3a8e9706fb3c82441f22d85095dc',1,'quisp::runtime']]],
+  ['reg2_3',['REG2',['../namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9a63ca1464c3480896c1b78a5eac5a6e97',1,'quisp::runtime']]],
+  ['reg3_4',['REG3',['../namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9ae29b5655158702099625e4095b8f1d17',1,'quisp::runtime']]],
+  ['reg4_5',['REG4',['../namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9a95b3a7be9c8d3addb18b0319caeec75f',1,'quisp::runtime']]],
+  ['rs_5fterminated_6',['RS_TERMINATED',['../namespacequisp_1_1runtime.html#ae2ae5b8cff907336aa60cd237a49c02fab39ad71df87d9a85502002c0eaf46846',1,'quisp::runtime']]],
+  ['rx_7',['RX',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034af9c24782c24c237d16e79f18e2fa9046',1,'quisp::backends::graph_state::types']]],
+  ['rx_5finv_8',['RX_INV',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034ac6c5572791a83468f4540b22461c1cf6',1,'quisp::backends::graph_state::types']]],
+  ['ry_9',['RY',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034accb21680cb44cbc3715ed8acc0145efe',1,'quisp::backends::graph_state::types']]],
+  ['ry_5finv_10',['RY_INV',['../namespacequisp_1_1backends_1_1graph__state_1_1types.html#a84180114d7f1fea9612a4d38b1e82034a5c1f2e6ab420faca44be7cc77dc7177a',1,'quisp::backends::graph_state::types']]]
 ];

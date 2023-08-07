@@ -5,10 +5,11 @@ var searchData=
   ['decomposition_5ftable_2',['decomposition_table',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a3dda9a46ebcc2573e6ad6114e2069250',1,'quisp::backends::graph_state::GraphStateQubit']]],
   ['detection_5fefficiency_3',['detection_efficiency',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#a0414482dc5b1d486e7e0a8aa8c10a4b1',1,'quisp::modules::BellStateAnalyzer']]],
   ['distance_4',['distance',['../classquisp_1_1channels_1_1_quantum_channel.html#abb820a173df04694781585132ad2a2c4',1,'quisp::channels::QuantumChannel']]],
-  ['distance_5fto_5fneighbor_5',['distance_to_neighbor',['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#a013d054e50c8405f65bb96820f126e00',1,'quisp::modules::SPDC_Controller']]],
-  ['distance_5fto_5fneighbor_5ftwo_6',['distance_to_neighbor_two',['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#aa12e81a38fd434d96247844dce9101d6',1,'quisp::modules::SPDC_Controller']]],
-  ['do_5flink_5flevel_5ftomography_7',['do_link_level_tomography',['../classquisp_1_1modules_1_1_hardware_monitor.html#a7d4fe634c45410802ddbae2c6e49ca40',1,'quisp::modules::HardwareMonitor']]],
-  ['double_5fvalue_8',['double_value',['../classquisp__test_1_1backends_1_1graph__state_1_1_test_r_n_g.html#a02c7f9b9a1e2e3eb400a8b0f2996d841',1,'quisp_test::backends::graph_state::TestRNG']]],
-  ['doublevalue_9',['doubleValue',['../classquisp__test_1_1rng_1_1_test_r_n_g.html#ae7cd2905c2517d4079117a2c15ea14d6',1,'quisp_test::rng::TestRNG']]],
-  ['drop_5fsignal_10',['drop_signal',['../classquisp_1_1modules_1_1_queue.html#a1523a99e527eb2c8994bb591772bf615',1,'quisp::modules::Queue']]]
+  ['distance_5ffrom_5fsource_5',['distance_from_source',['../structquisp_1_1modules_1_1ospf_1_1_link_state_database_1_1_vertex.html#a17547d8fdccb35cc89466f4e9224ec1d',1,'quisp::modules::ospf::LinkStateDatabase::Vertex']]],
+  ['distance_5fto_5fneighbor_6',['distance_to_neighbor',['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#a013d054e50c8405f65bb96820f126e00',1,'quisp::modules::SPDC_Controller']]],
+  ['distance_5fto_5fneighbor_5ftwo_7',['distance_to_neighbor_two',['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#aa12e81a38fd434d96247844dce9101d6',1,'quisp::modules::SPDC_Controller']]],
+  ['do_5flink_5flevel_5ftomography_8',['do_link_level_tomography',['../classquisp_1_1modules_1_1_hardware_monitor.html#a7d4fe634c45410802ddbae2c6e49ca40',1,'quisp::modules::HardwareMonitor']]],
+  ['double_5fvalue_9',['double_value',['../classquisp__test_1_1backends_1_1graph__state_1_1_test_r_n_g.html#a02c7f9b9a1e2e3eb400a8b0f2996d841',1,'quisp_test::backends::graph_state::TestRNG']]],
+  ['doublevalue_10',['doubleValue',['../classquisp__test_1_1rng_1_1_test_r_n_g.html#ae7cd2905c2517d4079117a2c15ea14d6',1,'quisp_test::rng::TestRNG']]],
+  ['drop_5fsignal_11',['drop_signal',['../classquisp_1_1modules_1_1_queue.html#a1523a99e527eb2c8994bb591772bf615',1,'quisp::modules::Queue']]]
 ];

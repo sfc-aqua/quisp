@@ -10,8 +10,9 @@ var searchData=
   ['updatechannelweightsintopology_7',['updateChannelWeightsInTopology',['../classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html#a5b1580ad93853b7df101e0a9f6f4378b',1,'quisp::modules::SharedResource::SharedResource']]],
   ['updatechannelweightsofnode_8',['updateChannelWeightsOfNode',['../classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html#a433cb4c3e7eb042b110a53200bc43a99',1,'quisp::modules::SharedResource::SharedResource']]],
   ['updated_5ftime_9',['updated_time',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a12b48cbd5182d6ab7a92721d88c6c1ff',1,'quisp::backends::graph_state::GraphStateQubit']]],
-  ['usetestrng_10',['useTestRNG',['../namespacequisp__test_1_1utils.html#ac9608fdc54533daf8f1d6f999bce6e56',1,'quisp_test::utils']]],
-  ['utilfunctions_2eh_11',['UtilFunctions.h',['../_util_functions_8h.html',1,'']]],
-  ['utilfunctions_5ftest_2ecc_12',['UtilFunctions_test.cc',['../_util_functions__test_8cc.html',1,'']]],
-  ['utils_2eh_13',['utils.h',['../utils_8h.html',1,'']]]
+  ['updatelinkstatedatabase_10',['updateLinkStateDatabase',['../classquisp_1_1modules_1_1ospf_1_1_link_state_database.html#af197758f7c49f7e6194109b6e74c0e88',1,'quisp::modules::ospf::LinkStateDatabase']]],
+  ['usetestrng_11',['useTestRNG',['../namespacequisp__test_1_1utils.html#ac9608fdc54533daf8f1d6f999bce6e56',1,'quisp_test::utils']]],
+  ['utilfunctions_2eh_12',['UtilFunctions.h',['../_util_functions_8h.html',1,'']]],
+  ['utilfunctions_5ftest_2ecc_13',['UtilFunctions_test.cc',['../_util_functions__test_8cc.html',1,'']]],
+  ['utils_2eh_14',['utils.h',['../utils_8h.html',1,'']]]
 ];

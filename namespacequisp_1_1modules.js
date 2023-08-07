@@ -10,6 +10,7 @@ var namespacequisp_1_1modules =
       [ "QubitIndex", "namespacequisp_1_1modules_1_1common.html#ae40fc279e2dc158039aa95bb2ad5e007", null ]
     ] ],
     [ "Logger", "namespacequisp_1_1modules_1_1_logger.html", "namespacequisp_1_1modules_1_1_logger" ],
+    [ "ospf", "namespacequisp_1_1modules_1_1ospf.html", "namespacequisp_1_1modules_1_1ospf" ],
     [ "qnic_record", "namespacequisp_1_1modules_1_1qnic__record.html", "namespacequisp_1_1modules_1_1qnic__record" ],
     [ "qnic_store", "namespacequisp_1_1modules_1_1qnic__store.html", "namespacequisp_1_1modules_1_1qnic__store" ],
     [ "qrsa", "namespacequisp_1_1modules_1_1qrsa.html", "namespacequisp_1_1modules_1_1qrsa" ],
@@ -61,7 +62,7 @@ var namespacequisp_1_1modules =
     [ "QNodeAddr", "namespacequisp_1_1modules.html#a0f71b198c963a11406c9846dc8062c8c", null ],
     [ "RawData", "namespacequisp_1_1modules.html#ab731abd52206390b81eeb978834e4821", null ],
     [ "ResourceKey", "namespacequisp_1_1modules.html#ac2ba3b50171b853416c32771dd1ab2cd", null ],
-    [ "RoutingTable", "namespacequisp_1_1modules.html#a6ed397618ce66c3adc03cc39b964c4a7", null ],
+    [ "RoutingTable", "namespacequisp_1_1modules.html#af6933f3b6b49a6973b2defad27f42d63", null ],
     [ "TomographyOutcomeTable", "namespacequisp_1_1modules.html#aa5ce0d988a17bbaa92eb0d15d7e9dd55", null ],
     [ "QNIC_type", "namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d", [
       [ "QNIC_E", "namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3da045495d91222801283ae27e8a0913da7", null ],

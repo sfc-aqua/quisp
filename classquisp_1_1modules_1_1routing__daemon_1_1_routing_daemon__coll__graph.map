@@ -1,6 +1,7 @@
 <map id="quisp::modules::routing_daemon::RoutingDaemon" name="quisp::modules::routing_daemon::RoutingDaemon">
-<area shape="rect" id="node1" title=" " alt="" coords="155,183,328,223"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="5,80,168,120"/>
-<area shape="rect" id="node3" title=" " alt="" coords="31,5,142,31"/>
-<area shape="rect" id="node4" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="192,87,395,113"/>
+<area shape="rect" id="node1" title=" " alt="" coords="536,63,709,103"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="185,5,348,45"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,13,116,38"/>
+<area shape="rect" id="node4" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="165,70,368,95"/>
+<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1ospf_1_1_link_state_database.html" title="Represents the database that holds link&#45;state advertisements of nodes. Effectively,..." alt="" coords="197,120,336,160"/>
 </map>

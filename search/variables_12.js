@@ -15,7 +15,7 @@ var searchData=
   ['spdlog_5flogger_12',['spdlog_logger',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#aaf22aaa1fab6cf4a93a44e940973382c',1,'quisp::modules::Logger::LoggerModule']]],
   ['speed_5fof_5flight_5fin_5fchannel_13',['speed_of_light_in_channel',['../classquisp_1_1modules_1_1_b_s_a_controller.html#a68cd79f3f0fd3743e7ae7a39348f44e1',1,'quisp::modules::BSAController::speed_of_light_in_channel()'],['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#acd4bbcb234be6ef5f0630b2536e8f8bc',1,'quisp::modules::SPDC_Controller::speed_of_light_in_channel()']]],
   ['start_5ftime_14',['start_time',['../classquisp_1_1rules_1_1_tomography.html#a004c9af6a18ecc6890256a201a3946d1',1,'quisp::rules::Tomography']]],
-  ['state_15',['state',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#ac2797e126f76785b8e9efe4d0b98759c',1,'quisp::modules::BellStateAnalyzer']]],
+  ['state_15',['state',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#ac2797e126f76785b8e9efe4d0b98759c',1,'quisp::modules::BellStateAnalyzer::state()'],['../structquisp_1_1modules_1_1ospf_1_1_ospf_neighbor_info.html#a9b7f480bf7b6c54978b2b773d76c5c75',1,'quisp::modules::ospf::OspfNeighborInfo::state()']]],
   ['stationary_5fqubit_5faddress_16',['stationary_qubit_address',['../classquisp_1_1modules_1_1_stationary_qubit.html#aa9e385eb871c4e317a4feed6cd60339e',1,'quisp::modules::StationaryQubit']]],
   ['strategy_17',['strategy',['../classquisp_1_1utils_1_1_component_provider.html#ad9f4a1cc768e0bce2f11c4309df6b5e0',1,'quisp::utils::ComponentProvider']]],
   ['success_18',['success',['../structquisp_1_1physical_1_1types_1_1_b_s_a_click_result.html#ae9ac505f61e1b8c27f4b62efc367b66f',1,'quisp::physical::types::BSAClickResult']]]
