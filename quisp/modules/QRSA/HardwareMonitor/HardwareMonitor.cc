@@ -211,15 +211,15 @@ void HardwareMonitor::finish() {
     } else {
       link_cost = 1;
     }
-    auto info = findConnectionInfoByQnicAddr(qnic);
-    if (info == nullptr) {
-      error("info not found");
-    }
-    // outputs
-    InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
-    cModule *this_node = this->getParentModule()->getParentModule();
-    cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
-    double dis = channel->par("distance");
+    // auto info = findConnectionInfoByQnicAddr(qnic);
+    // if (info == nullptr) {
+    //   error("info not found");
+    // }
+    // // outputs
+    // InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
+    // cModule *this_node = this->getParentModule()->getParentModule();
+    // cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
+    // double dis = channel->par("distance");
     // density matrix output
     tomography_dm << "Node (Address: " << my_address << ") <--->"
                   << "Node (Address: " << partner << ")\n";
@@ -230,16 +230,16 @@ void HardwareMonitor::finish() {
 
     auto [god_clean_pair_total, god_x_pair_total, god_y_pair_total, god_z_pair_total] = tomography_manager.calcGodPairCount(qnic_id, partner);
     // link stats output
-    tomography_stats_file << "Node (Address: " << my_address << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
+    tomography_stats_file << "Node (Address: " << my_address << "<-->QuantumChannel{cost=" << link_cost << ";fidelity=" << fidelity
                           << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";tomography_time=" << tomography_stats.tomography_time
                           << ";tomography_measurements=" << tomography_stats.total_measurement_count << "; GOD_clean_pair_total=" << god_clean_pair_total
                           << "; GOD_X_pair_total=" << god_x_pair_total << "; GOD_Y_pair_total=" << god_y_pair_total << "; GOD_Z_pair_total=" << god_z_pair_total << ";}<-->"
                           << "Node (Address: " << my_address << ")"
                           << "; F=" << fidelity << "; X=" << x_error << "; Z=" << z_error << "; Y=" << y_error << endl;
     // this is a temporary implementation so that the e2e-test can read fidelity and error rates
-    std::cout << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
+    std::cout << "Node (Address: "<<my_address << "<-->QuantumChannel{cost=" << link_cost << ";fidelity=" << fidelity
               << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";}<-->"
-              << "Node (Address: " << my_address << "; Fidelity=" << fidelity << "; Xerror=" << x_error << "; Zerror=" << z_error << "; Yerror=" << y_error << endl;
+              << "Node (Address: " << partner << "); Fidelity=" << fidelity << "; Xerror=" << x_error << "; Zerror=" << z_error << "; Yerror=" << y_error << endl;
   }
   tomography_stats_file.close();
   tomography_dm.close();
