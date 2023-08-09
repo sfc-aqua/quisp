@@ -29,6 +29,8 @@ class RoutingDaemon : public IRoutingDaemon {
  public:
   RoutingDaemon();
 
+  // cModule *getQnic();
+
  protected:
   NodeAddr my_address;
   RoutingTable qrtable;
@@ -46,6 +48,7 @@ class RoutingDaemon : public IRoutingDaemon {
 
   size_t getNumNeighbors();
 
+  // OSPF functions
   void ospfHandleHelloPacket(const OspfHelloPacket *const pk);
   void ospfInitializeRoutingDaemon();
   void ospfSendHelloPacketToNeighbor(NodeAddr neighbor);

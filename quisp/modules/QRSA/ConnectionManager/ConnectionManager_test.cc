@@ -9,9 +9,9 @@
 #include "modules/QNIC.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
+#include "omnetpp/crng.h"
 #include "rules/Action.h"
 #include "test_utils/TestUtils.h"
-#include "utils/UniqueIdCreator.h"
 
 using json = nlohmann::json;
 namespace {
@@ -24,7 +24,7 @@ using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_R;
 using quisp::modules::QNIC_type;
 using quisp::rules::PurType;
-using quisp::utils::createUniqueId;
+using quisp::utils::HelperFunctions;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -80,14 +80,10 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
   TestGate *toRouterGate;
 };
 
-class HelperFuncs {
- public:
-  virtual unsigned long createUniqueId() { return createUniqueId(); }
-};
 
-class MockHelperFunctions : public HelperFuncs {
+class MockHelperFunctions : public HelperFunctions {
  public:
-  MOCK_METHOD(unsigned long, createUniqueId, (), (override));
+  MOCK_METHOD(unsigned long, createUniqueId, (cRNG* rng, int node_address, simtime_t sim_time));
 };
 
 TEST(ConnectionManagerTest, Init) {
@@ -132,8 +128,9 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   auto *routing_daemon = new MockRoutingDaemon();
   auto *hardware_monitor = new MockHardwareMonitor();
   auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
-  auto *helper_funcs = new MockHelperFunctions();
-  EXPECT_CALL(*helper_funcs, createUniqueId()).WillRepeatedly(Return(1234));
+  auto *mock_helper_functions = new MockHelperFunctions();
+  EXPECT_CALL(*mock_helper_functions, createUniqueId).WillRepeatedly(Return(1234));
+
   sim->registerComponent(connection_manager);
   connection_manager->par("address") = 5;
   connection_manager->par("entanglement_swapping_with_purification") = true;
@@ -582,7 +579,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   }
   delete routing_daemon;
   delete hardware_monitor;
-  delete helper_funcs;
+  delete mock_helper_functions;
 }
 
 TEST(ConnectionManagerTest, QnicReservation) {

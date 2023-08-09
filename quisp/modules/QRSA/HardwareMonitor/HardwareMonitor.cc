@@ -19,13 +19,12 @@
 #include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
 #include "rules/RuleSet.h"
 #include "utils/TomographyManager.h"
-#include "utils/UniqueIdCreator.h"
 
 using namespace quisp::messages;
 using namespace quisp::rules;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
-using quisp::utils::createUniqueId;
+using quisp::utils::HelperFunctions;
 
 namespace quisp::modules {
 
@@ -40,7 +39,6 @@ void HardwareMonitor::initialize(int stage) {
   num_qnic_rp = par("number_of_qnics_rp");
   num_qnic_r = par("number_of_qnics_r");
   num_qnic = par("number_of_qnics");
-  num_qnic_total = num_qnic + num_qnic_r + num_qnic_rp;
 
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
@@ -54,6 +52,7 @@ void HardwareMonitor::initialize(int stage) {
   purification_type = par("purification_type");
   num_measure = par("num_measure");
   my_address = provider.getNodeAddr();
+  helper_func = std::make_unique<HelperFunctions>();
 
   if (stage == 0) {
     return;
@@ -122,7 +121,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     }
 
     // RuleSets sent for this node and the partner node.
-    long ruleset_id = createUniqueId(this->getRNG(0), my_address, simTime());
+    long ruleset_id = helper_func->createUniqueId(this->getRNG(0), my_address, simTime());
     sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info->qnic.type, my_qnic_info->qnic.index, ruleset_id);
 
     QNIC_type partner_qnic_type = ack->getQnic_type();

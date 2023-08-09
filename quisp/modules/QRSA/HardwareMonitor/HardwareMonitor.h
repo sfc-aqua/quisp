@@ -7,10 +7,12 @@
 #include "IHardwareMonitor.h"
 
 #include <complex>
+#include <memory>
 
 #include "rules/Rule.h"
 #include "utils/ComponentProvider.h"
 #include "utils/TomographyManager.h"
+#include "utils/HelperFunctions.h"
 
 namespace quisp::modules {
 
@@ -60,6 +62,7 @@ class HardwareMonitor : public IHardwareMonitor {
 
   std::string tomography_output_filename;
   std::string file_dir_name;
+  std::unique_ptr<utils::HelperFunctions> helper_func;
 
  protected:
   void initialize(int stage) override;
