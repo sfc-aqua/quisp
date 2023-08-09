@@ -201,7 +201,6 @@ TEST_F(RouterTest, handlePurificationResult) {
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
-
 TEST_F(RouterTest, handleOspfPacket) {
   auto msg = new OspfPacket;
   msg->setDestAddr(10);

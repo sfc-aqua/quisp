@@ -28,7 +28,7 @@ class TomographyManagerTest : public testing::Test {
   // tomography results
   char measurement_basis = 'X';
   bool is_plus = true;
-  char my_GOD_clean = 'I';
+  char my_god_clean = 'I';
 };
 
 TEST_F(TomographyManagerTest, addLocalResult) {
@@ -38,12 +38,12 @@ TEST_F(TomographyManagerTest, addLocalResult) {
 
   int tomography_round = 0;  // first round
 
-  tomography_manager->addLocalResult(qnic_id, partner_addr, tomography_round, measurement_basis, is_plus, my_GOD_clean);
+  tomography_manager->addLocalResult(qnic_id, partner_addr, tomography_round, measurement_basis, is_plus, my_god_clean);
   EXPECT_EQ(tomography_manager->tomography_records.size(), 1);
   auto stored_record = tomography_manager->tomography_records.at(std::make_tuple(qnic_id, partner_addr));
   EXPECT_EQ(stored_record.at(tomography_round).self_output.basis, measurement_basis);
   EXPECT_EQ(stored_record.at(tomography_round).self_output.output_is_plus, is_plus);
-  EXPECT_EQ(stored_record.at(tomography_round).self_output.my_GOD_clean, my_GOD_clean);
+  EXPECT_EQ(stored_record.at(tomography_round).self_output.my_god_clean, my_god_clean);
 }
 
 TEST_F(TomographyManagerTest, addPartnerResult) {
@@ -53,12 +53,12 @@ TEST_F(TomographyManagerTest, addPartnerResult) {
 
   int tomography_round = 0;  // first round
 
-  tomography_manager->addPartnerResult(self_qnic_id, partner_addr, tomography_round, measurement_basis, is_plus, my_GOD_clean);
+  tomography_manager->addPartnerResult(self_qnic_id, partner_addr, tomography_round, measurement_basis, is_plus, my_god_clean);
   EXPECT_EQ(tomography_manager->tomography_records.size(), 1);
   auto stored_record = tomography_manager->tomography_records.at(std::make_tuple(self_qnic_id, partner_addr));
   EXPECT_EQ(stored_record.at(tomography_round).partner_output.basis, measurement_basis);
   EXPECT_EQ(stored_record.at(tomography_round).partner_output.output_is_plus, is_plus);
-  EXPECT_EQ(stored_record.at(tomography_round).partner_output.my_GOD_clean, my_GOD_clean);
+  EXPECT_EQ(stored_record.at(tomography_round).partner_output.my_god_clean, my_god_clean);
 }
 
 TEST_F(TomographyManagerTest, acceptPartnerResultToExistingSelfRecord) {
@@ -69,23 +69,23 @@ TEST_F(TomographyManagerTest, acceptPartnerResultToExistingSelfRecord) {
 
   int tomography_round = 0;
 
-  tomography_manager->addLocalResult(qnic_id, partner_addr, tomography_round, measurement_basis, is_plus, my_GOD_clean);
+  tomography_manager->addLocalResult(qnic_id, partner_addr, tomography_round, measurement_basis, is_plus, my_god_clean);
   EXPECT_EQ(tomography_manager->tomography_records.size(), 1);
 
   // add partner record
   int self_qnic_id = 0;  // qnic used to communicate with node 2
 
-  tomography_manager->addPartnerResult(self_qnic_id, partner_addr, tomography_round, measurement_basis, is_plus, my_GOD_clean);
+  tomography_manager->addPartnerResult(self_qnic_id, partner_addr, tomography_round, measurement_basis, is_plus, my_god_clean);
   // Since local result is already stored, this should not create new record
   EXPECT_EQ(tomography_manager->tomography_records.size(), 1);
   auto stored_record = tomography_manager->tomography_records.at(std::make_tuple(qnic_id, partner_addr));
   // // Check self output
   EXPECT_EQ(stored_record.at(tomography_round).self_output.basis, measurement_basis);
   EXPECT_EQ(stored_record.at(tomography_round).self_output.output_is_plus, is_plus);
-  EXPECT_EQ(stored_record.at(tomography_round).self_output.my_GOD_clean, my_GOD_clean);
+  EXPECT_EQ(stored_record.at(tomography_round).self_output.my_god_clean, my_god_clean);
   // // Check partner output
   EXPECT_EQ(stored_record.at(tomography_round).partner_output.basis, measurement_basis);
   EXPECT_EQ(stored_record.at(tomography_round).partner_output.output_is_plus, is_plus);
-  EXPECT_EQ(stored_record.at(tomography_round).partner_output.my_GOD_clean, my_GOD_clean);
+  EXPECT_EQ(stored_record.at(tomography_round).partner_output.my_god_clean, my_god_clean);
 }
 }  // namespace

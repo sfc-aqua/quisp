@@ -19,11 +19,13 @@
 #include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
 #include "rules/RuleSet.h"
 #include "utils/TomographyManager.h"
+#include "utils/UniqueIdCreator.h"
 
 using namespace quisp::messages;
 using namespace quisp::rules;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
+using quisp::utils::createUniqueId;
 
 namespace quisp::modules {
 
@@ -76,18 +78,6 @@ void HardwareMonitor::initialize(int stage) {
   }
 }
 
-unsigned long HardwareMonitor::createUniqueId() {
-  auto time = SimTime().str();
-  auto address = std::to_string(my_address);
-  auto random = std::to_string(intuniform(0, 10000000));
-  auto hash_seed = address + time + random;
-  std::hash<std::string> hash_fn;
-  size_t t = hash_fn(hash_seed);
-  unsigned long ruleset_id = static_cast<long>(t);
-  std::cout << "Hash is " << hash_seed << ", t = " << t << ", long = " << ruleset_id << "\n";
-  return ruleset_id;
-}
-
 std::unique_ptr<InterfaceInfo> HardwareMonitor::findInterfaceByNeighborAddr(int neighbor_address) {
   for (auto it = neighbor_table.cbegin(); it != neighbor_table.cend(); ++it) {
     if (it->second.neighborQNode_address == neighbor_address) {
@@ -132,7 +122,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     }
 
     // RuleSets sent for this node and the partner node.
-    long ruleset_id = createUniqueId();
+    long ruleset_id = createUniqueId(this->getRNG(0), my_address, simTime());
     sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info->qnic.type, my_qnic_info->qnic.index, ruleset_id);
 
     QNIC_type partner_qnic_type = ack->getQnic_type();
@@ -228,7 +218,7 @@ void HardwareMonitor::finish() {
                           << "Node (Address: " << my_address << ")"
                           << "; F=" << fidelity << "; X=" << x_error << "; Z=" << z_error << "; Y=" << y_error << endl;
     // this is a temporary implementation so that the e2e-test can read fidelity and error rates
-    std::cout << "Node (Address: "<<my_address << "<-->QuantumChannel{cost=" << link_cost << ";fidelity=" << fidelity
+    std::cout << "Node (Address: " << my_address << "<-->QuantumChannel{cost=" << link_cost << ";fidelity=" << fidelity
               << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";}<-->"
               << "Node (Address: " << partner << "); Fidelity=" << fidelity << "; Xerror=" << x_error << "; Zerror=" << z_error << "; Yerror=" << y_error << endl;
   }

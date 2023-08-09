@@ -7,10 +7,13 @@
 
 #include "ConnectionManager.h"
 #include "RuleSetGenerator.h"
+#include "utils/UniqueIdCreator.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
 using namespace quisp::rules;
+using quisp::utils::createUniqueId;
+
 using quisp::modules::ruleset_gen::RuleSetGenerator;
 
 namespace quisp::modules {
@@ -246,7 +249,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   }
 
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
-  auto rulesets = ruleset_gen.generateRuleSets(req, createUniqueId());
+  auto rulesets = ruleset_gen.generateRuleSets(req, createUniqueId(this->getRNG(0), my_address, simTime()));
 
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
@@ -382,17 +385,6 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 
   releaseQnic(outbound_qnic_address);
   releaseQnic(inbound_qnic_address);
-}
-
-unsigned long ConnectionManager::createUniqueId() {
-  std::string time = SimTime().str();
-  std::string address = std::to_string(my_address);
-  std::string random = std::to_string(intuniform(0, 10000000));
-  std::string hash_seed = address + time + random;
-  std::hash<std::string> hash_fn;
-  size_t t = hash_fn(hash_seed);
-  unsigned long ruleset_id = static_cast<long>(t);
-  return ruleset_id;
 }
 
 void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {

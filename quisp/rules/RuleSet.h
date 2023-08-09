@@ -24,7 +24,6 @@ class RuleSet {
   Rule *addRule(std::unique_ptr<Rule> rule);
   json serialize_json();
   void deserialize_json(json serialized);
-  unsigned long createUniqueId();
   runtime::RuleSet construct() const;
 };
 

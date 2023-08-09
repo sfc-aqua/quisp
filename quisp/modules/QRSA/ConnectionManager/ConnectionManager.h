@@ -100,8 +100,6 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   bool isQnicBusy(int qnic_address);
 
   static rules::PurType parsePurType(const std::string &pur_type);
-
-  unsigned long createUniqueId() override;
 };
 
 }  // namespace quisp::modules

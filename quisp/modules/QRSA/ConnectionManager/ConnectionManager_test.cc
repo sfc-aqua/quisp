@@ -11,6 +11,7 @@
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
 #include "rules/Action.h"
 #include "test_utils/TestUtils.h"
+#include "utils/UniqueIdCreator.h"
 
 using json = nlohmann::json;
 namespace {
@@ -23,6 +24,7 @@ using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_R;
 using quisp::modules::QNIC_type;
 using quisp::rules::PurType;
+using quisp::utils::createUniqueId;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -76,7 +78,16 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
     return toRouterGate;
   };
   TestGate *toRouterGate;
-  unsigned long createUniqueId() override { return 1234; };
+};
+
+class HelperFuncs {
+ public:
+  virtual unsigned long createUniqueId() { return createUniqueId(); }
+};
+
+class MockHelperFunctions : public HelperFuncs {
+ public:
+  MOCK_METHOD(unsigned long, createUniqueId, (), (override));
 };
 
 TEST(ConnectionManagerTest, Init) {
@@ -85,7 +96,6 @@ TEST(ConnectionManagerTest, Init) {
 }
 
 TEST(ConnectionManagerTest, parsePurType) {
-  prepareSimulation();
   auto *routing_daemon = new MockRoutingDaemon();
   auto *hardware_monitor = new MockHardwareMonitor();
   auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
@@ -122,6 +132,8 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   auto *routing_daemon = new MockRoutingDaemon();
   auto *hardware_monitor = new MockHardwareMonitor();
   auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
+  auto *helper_funcs = new MockHelperFunctions();
+  EXPECT_CALL(*helper_funcs, createUniqueId()).WillRepeatedly(Return(1234));
   sim->registerComponent(connection_manager);
   connection_manager->par("address") = 5;
   connection_manager->par("entanglement_swapping_with_purification") = true;
@@ -570,6 +582,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   }
   delete routing_daemon;
   delete hardware_monitor;
+  delete helper_funcs;
 }
 
 TEST(ConnectionManagerTest, QnicReservation) {
