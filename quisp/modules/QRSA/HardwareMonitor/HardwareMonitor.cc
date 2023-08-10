@@ -66,7 +66,6 @@ void HardwareMonitor::initialize(int stage) {
       // You don't want 2 separate tomography processes to run for each link.
       // Not a very good solution, but makes sure that only 1 request per link is generated.
       if (my_address > it->second.neighborQNode_address) {
-        EV << "Generating tomography rules... for node " << it->second.neighborQNode_address << "\n";
         LinkTomographyRequest *pk = new LinkTomographyRequest("LinkTomographyRequest");
         pk->setDestAddr(it->second.neighborQNode_address);
         pk->setSrcAddr(my_address);
@@ -121,7 +120,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     }
 
     // RuleSets sent for this node and the partner node.
-    long ruleset_id = utils::HelperFunctions::createUniqueId(this->getRNG(0), my_address, simTime());
+    long ruleset_id = HelperFunctions::createUniqueId(this->getRNG(0), my_address, simTime());
     sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info->qnic.type, my_qnic_info->qnic.index, ruleset_id);
 
     QNIC_type partner_qnic_type = ack->getQnic_type();

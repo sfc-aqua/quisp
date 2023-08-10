@@ -8,6 +8,7 @@
 
 #include "ConnectionManager.h"
 #include "RuleSetGenerator.h"
+#include "utils/HelperFunctions.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;

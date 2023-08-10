@@ -29,7 +29,8 @@ class RoutingDaemon : public IRoutingDaemon {
  public:
   RoutingDaemon();
 
-  // cModule *getQnic();
+  std::vector<int> getNeighborAddresses();
+  std::vector<int> neighbor_addresses;
 
  protected:
   NodeAddr my_address;
@@ -45,6 +46,10 @@ class RoutingDaemon : public IRoutingDaemon {
   void initialize(int stage) override;
   void handleMessage(cMessage *msg) override;
   int numInitStages() const override { return 3; };
+
+  int getNeighborAddressFromQnicModule(const cModule *qnic_module);
+  cModule *getQnicPointerFromQnicTypeIndex(QNIC_type qnic_type, int qnic_index);
+  void prepareNeighborAddressTableWithTopologyInfo();
 
   size_t getNumNeighbors();
 
@@ -77,6 +82,9 @@ class RoutingDaemon : public IRoutingDaemon {
 
  private:
   bool run_ospf;
+  int num_qnic;
+  int num_qnic_r;
+  int num_qnic_rp;
 };
 
 }  // namespace quisp::modules::routing_daemon

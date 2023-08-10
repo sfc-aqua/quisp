@@ -46,6 +46,7 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
   using quisp::modules::HardwareMonitor::initialize;
   using quisp::modules::HardwareMonitor::par;
   using quisp::modules::HardwareMonitor::tomography_manager;
+  using quisp::modules::HardwareMonitor::createUniqueId;
   HardwareMonitorTestTarget(MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
     setParInt(this, "address", 123);
     setParInt(this, "number_of_qnics_rp", 0);

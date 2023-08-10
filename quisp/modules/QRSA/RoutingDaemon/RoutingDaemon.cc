@@ -8,6 +8,8 @@
 #include <vector>
 
 #include "messages/classical_messages.h"
+#include "modules/PhysicalConnection/BSA/BSAController.h"
+#include "modules/QNIC.h"
 
 using namespace omnetpp;
 
@@ -66,6 +68,12 @@ void RoutingDaemon::initialize(int stage) {
     }
 
     generateRoutingTable(topo);
+
+    // Prepare neighbor table
+    num_qnic = par("number_of_qnics");
+    num_qnic_r = par("number_of_qnics_r");
+    num_qnic_rp = par("number_of_qnics_rp");
+    prepareNeighborAddressTableWithTopologyInfo();
   }
 }
 
@@ -95,6 +103,107 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
     if (!strstr(parentModuleGate->getFullName(), "quantum")) {
       error("Quantum routing table referring to classical gates...");
     }
+  }
+}
+
+std::vector<int> RoutingDaemon::getNeighborAddresses() {
+  std::vector<int> neighbors;
+  if (run_ospf) {
+    for (const auto &neighbor : neighbor_table) {
+      neighbors.push_back(neighbor.first);
+    }
+  } else {
+    neighbors = neighbor_addresses;
+  }
+  return neighbors;
+}
+
+void RoutingDaemon::prepareNeighborAddressTableWithTopologyInfo() {
+  for (int index = 0; index < num_qnic; index++) {
+    auto *qnic = getQnicPointerFromQnicTypeIndex(QNIC_E, index);
+    auto neighbor_address = getNeighborAddressFromQnicModule(qnic);
+    neighbor_addresses.push_back(neighbor_address);
+  }
+  for (int index = 0; index < num_qnic_r; index++) {
+    auto *qnic_r = getQnicPointerFromQnicTypeIndex(QNIC_R, index);
+    auto neighbor_address = getNeighborAddressFromQnicModule(qnic_r);
+    neighbor_addresses.push_back(neighbor_address);
+  }
+  for (int index = 0; index < num_qnic_rp; index++) {
+    auto *qnic_rp = getQnicPointerFromQnicTypeIndex(QNIC_RP, index);
+    auto neighbor_address = getNeighborAddressFromQnicModule(qnic_rp);
+    neighbor_addresses.push_back(neighbor_address);
+  }
+}
+
+/**
+ * Get QNIC pointer from its qnic_type and index
+ */
+cModule *RoutingDaemon::getQnicPointerFromQnicTypeIndex(QNIC_type qnic_type, int qnic_index) {
+  if (qnic_type >= QNIC_N) {
+    error("invalid qnic type: %d", qnic_type);
+  }
+
+  cModule *qnic = provider.getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
+  if (qnic == nullptr) {
+    error("qnic(index: %d) not found.", qnic_index);
+  }
+  return qnic;
+}
+
+/**
+ * This function gets topology information from omnet module.
+ * This process should be done by proper routing process in the future.
+ * This function get qnic module pointer and get its neighbor address.
+ */
+int RoutingDaemon::getNeighborAddressFromQnicModule(const cModule *qnic_module) {
+  // qnic_quantum_port$o is connected to the node's outermost quantum_port
+  cGate *gate = qnic_module->gate("qnic_quantum_port$o")->getNextGate();
+  cGate *neighbor_gate = gate->getNextGate();
+
+  // neighbor node could be BSA, EPPS, QNode
+  const cModule *neighbor_node = neighbor_gate->getOwnerModule();
+  if (neighbor_node == nullptr) {
+    error("neighbor node not found.");
+  }
+
+  // Check neighbor node
+  cModuleType *neighbor_node_type = neighbor_node->getModuleType();
+
+  // Based on node type, prepare neighbor table
+  if (provider.isQNodeType(neighbor_node_type)) {
+    // QNode (Just take address fro neighbor_node)
+    return neighbor_node->par("address").intValue();
+  } else if (provider.isBSANodeType(neighbor_node_type)) {
+    // BSA needs to be skipped and find one more hop further neighbor since
+    // BSA is not treated as a node.
+    // Get BSA controller module
+    auto *bsa_controller = dynamic_cast<BSAController *>(neighbor_node->getSubmodule("bsa_controller"));
+    if (bsa_controller == nullptr) {
+      error("No BSA controller found");
+    }
+
+    // BSA has two ports, one for this node the other is one hop distant node.
+    // This node < -- > BSA (neighbor_node) < -- > Genuine neighbor node
+    int left_address = bsa_controller->getExternalAdressFromPort(0);
+    int right_address = bsa_controller->getExternalAdressFromPort(1);
+
+    // Check which port corresponds to my address
+    if (left_address == my_address) {
+      // port 0 corresponds to my address, means conponent on port 1 is my neighbor
+      return right_address;
+    } else {
+      // port 1 corresponds to my address, means conponent on port 0 is my neighbor
+      return left_address;
+    }
+  } else if (provider.isSPDCNodeType(neighbor_node_type)) {
+    // SPDC
+    error("To be implemented");
+  } else {
+    error(
+        "This simulator only recognizes the following network level node "
+        "types: QNode, EPPS and BSA. Not %s",
+        neighbor_node->getClassName());
   }
 }
 
