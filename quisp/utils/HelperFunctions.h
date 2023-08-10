@@ -1,3 +1,4 @@
+#pragma once
 #include "omnetpp/ccomponent.h"
 #include "omnetpp/cenvir.h"
 #include "omnetpp/simtime.h"
@@ -11,6 +12,6 @@ using omnetpp::simtime_t;
 
 class HelperFunctions {
  public:
-  unsigned long createUniqueId(cRNG *rng, int node_address, simtime_t sim_time);
+  static unsigned long createUniqueId(cRNG *rng, int node_address, simtime_t sim_time);
 };
 }  // namespace quisp::utils

@@ -18,6 +18,7 @@
 #include "modules/PhysicalConnection/BSA/BSAController.h"
 #include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
 #include "rules/RuleSet.h"
+#include "utils/HelperFunctions.h"
 #include "utils/TomographyManager.h"
 
 using namespace quisp::messages;
@@ -47,12 +48,11 @@ void HardwareMonitor::initialize(int stage) {
   file_dir_name = par("file_dir_name").str();
   do_link_level_tomography = par("link_tomography");
   num_purification = par("initial_purification");
-  X_Purification = par("x_purification");
-  Z_Purification = par("z_purification");
+  x_purification = par("x_purification");
+  z_purification = par("z_purification");
   purification_type = par("purification_type");
   num_measure = par("num_measure");
   my_address = provider.getNodeAddr();
-  helper_func = std::make_unique<HelperFunctions>();
 
   if (stage == 0) {
     return;
@@ -121,7 +121,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     }
 
     // RuleSets sent for this node and the partner node.
-    long ruleset_id = helper_func->createUniqueId(this->getRNG(0), my_address, simTime());
+    long ruleset_id = utils::HelperFunctions::createUniqueId(this->getRNG(0), my_address, simTime());
     sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info->qnic.type, my_qnic_info->qnic.index, ruleset_id);
 
     QNIC_type partner_qnic_type = ack->getQnic_type();
@@ -300,8 +300,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   pk->setNumber_of_measuring_resources(num_measure);
   pk->setKind(6);
 
-  auto ruleset = tomography_manager.createLinkTomographyRuleSet(my_address, partner_address, qnic_type, qnic_index, ruleset_id, num_purification, purification_type, X_Purification,
-                                                                Z_Purification, num_measure);
+  auto ruleset = tomography_manager.createLinkTomographyRuleSet(my_address, partner_address, qnic_type, qnic_index, ruleset_id, num_purification, purification_type, x_purification,
+                                                                z_purification, num_measure);
   pk->setRuleSet(ruleset);
   send(pk, "RouterPort$o");
 }

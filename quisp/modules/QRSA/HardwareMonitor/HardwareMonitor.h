@@ -7,12 +7,10 @@
 #include "IHardwareMonitor.h"
 
 #include <complex>
-#include <memory>
 
 #include "rules/Rule.h"
 #include "utils/ComponentProvider.h"
 #include "utils/TomographyManager.h"
-#include "utils/HelperFunctions.h"
 
 namespace quisp::modules {
 
@@ -45,8 +43,8 @@ class HardwareMonitor : public IHardwareMonitor {
 
   bool do_link_level_tomography = false;
   int num_purification = 0;
-  bool X_Purification = false;
-  bool Z_Purification = false;
+  bool x_purification = false;
+  bool z_purification = false;
   int purification_type = -1;
   int num_measure;
   int num_end_nodes;
@@ -62,7 +60,6 @@ class HardwareMonitor : public IHardwareMonitor {
 
   std::string tomography_output_filename;
   std::string file_dir_name;
-  std::unique_ptr<utils::HelperFunctions> helper_func;
 
  protected:
   void initialize(int stage) override;
@@ -74,6 +71,7 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id);
+  virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
 };
 

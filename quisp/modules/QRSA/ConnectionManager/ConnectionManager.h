@@ -75,7 +75,6 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   rules::PurType purification_type;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
-  std::unique_ptr<utils::HelperFunctions> helper_func;
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;

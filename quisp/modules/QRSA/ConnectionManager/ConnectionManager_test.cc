@@ -80,12 +80,6 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
   TestGate *toRouterGate;
 };
 
-
-class MockHelperFunctions : public HelperFunctions {
- public:
-  MOCK_METHOD(unsigned long, createUniqueId, (cRNG* rng, int node_address, simtime_t sim_time));
-};
-
 TEST(ConnectionManagerTest, Init) {
   ConnectionManagerTestTarget c;
   ASSERT_EQ(c.par("address").intValue(), 5);
@@ -128,8 +122,6 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   auto *routing_daemon = new MockRoutingDaemon();
   auto *hardware_monitor = new MockHardwareMonitor();
   auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
-  auto *mock_helper_functions = new MockHelperFunctions();
-  EXPECT_CALL(*mock_helper_functions, createUniqueId).WillRepeatedly(Return(1234));
 
   sim->registerComponent(connection_manager);
   connection_manager->par("address") = 5;
@@ -166,6 +158,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor2->getApplicationId(), 1);
     EXPECT_EQ(packetFor2->getDestAddr(), 2);
     auto ruleset = packetFor2->getRuleSet();  // json serialized ruleset
+    ruleset["ruleset_id"] = 1234;
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 2);
     auto expected_ruleset = R"({
@@ -263,6 +256,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor3->getApplicationId(), 1);
     EXPECT_EQ(packetFor3->getDestAddr(), 3);
     auto ruleset = packetFor3->getRuleSet();  // json serialized ruleset
+    ruleset["ruleset_id"] = 1234;
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 2);
 
@@ -374,6 +368,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor4->getApplicationId(), 1);
     EXPECT_EQ(packetFor4->getDestAddr(), 4);
     auto ruleset = packetFor4->getRuleSet();  // json serialized ruleset
+    ruleset["ruleset_id"] = 1234;
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 1);
 
@@ -452,6 +447,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor5->getApplicationId(), 1);
     EXPECT_EQ(packetFor5->getDestAddr(), 5);
     auto ruleset = packetFor5->getRuleSet();  // json serialized ruleset
+    ruleset["ruleset_id"] = 1234;
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 3);
 
@@ -579,7 +575,6 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   }
   delete routing_daemon;
   delete hardware_monitor;
-  delete mock_helper_functions;
 }
 
 TEST(ConnectionManagerTest, QnicReservation) {

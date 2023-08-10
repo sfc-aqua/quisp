@@ -24,7 +24,6 @@ using namespace quisp::modules;
 using namespace quisp_test;
 using namespace testing;
 using namespace quisp::messages;
-using quisp::utils::HelperFunctions;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -74,28 +73,20 @@ class MockTomographyManager : public TomographyManager {
   MOCK_METHOD(Matrix4cd, reconstructDensityMatrix, (int qnic_id, int partner));
 };
 
-class MockHelperFunctions : public HelperFunctions {
- public:
-  MOCK_METHOD(unsigned long, createUniqueId, (cRNG *rng, int node_address, simtime_t sim_time));
-};
-
 class HardwareMonitorTest : public testing::Test {
  protected:
   void SetUp() {
     sim = prepareSimulation();
     routing_daemon = new MockRoutingDaemon;
     tomography_manager = new MockTomographyManager;
-    mock_helper_functions = new MockHelperFunctions;
   }
   void TearDown() {
     delete routing_daemon;
     delete tomography_manager;
-    delete mock_helper_functions;
   }
   utils::TestSimulation* sim;
   MockRoutingDaemon* routing_daemon;
   MockTomographyManager* tomography_manager;
-  MockHelperFunctions* mock_helper_functions;
 };
 
 TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {

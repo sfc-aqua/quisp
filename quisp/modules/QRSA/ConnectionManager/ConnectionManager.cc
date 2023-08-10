@@ -39,7 +39,6 @@ void ConnectionManager::initialize() {
   routing_daemon = provider.getRoutingDaemon();
   hardware_monitor = provider.getHardwareMonitor();
   my_address = provider.getNodeAddr();
-  helper_func = std::make_unique<HelperFunctions>();
   num_of_qnics = par("total_number_of_qnics");
   simultaneous_es_enabled = par("simultaneous_es_enabled");
   num_remote_purification = par("num_remote_purification");
@@ -250,7 +249,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   }
 
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
-  auto rulesets = ruleset_gen.generateRuleSets(req, helper_func->createUniqueId(this->getRNG(0), my_address, simTime()));
+  auto rulesets = ruleset_gen.generateRuleSets(req, HelperFunctions::createUniqueId(this->getRNG(0), my_address, simTime()));
 
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
