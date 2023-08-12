@@ -23,7 +23,6 @@ class HardwareMonitor : public IHardwareMonitor {
  public:
   HardwareMonitor();
   ~HardwareMonitor();
-  std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) override;
   std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) override;
 
  protected:
@@ -53,6 +52,9 @@ class HardwareMonitor : public IHardwareMonitor {
   // Vector<Tuple<qnic_index, partner_address>>
   std::set<std::tuple<int, int>> tomography_partners;
 
+  // Store link cost information and routing daemon read this.
+  std::map<int, double> link_cost_table;
+
   IRoutingDaemon *routing_daemon;
 
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
@@ -67,6 +69,7 @@ class HardwareMonitor : public IHardwareMonitor {
   void handleMessage(cMessage *msg) override;
   int numInitStages() const override { return 2; };
   void prepareNeighborTable();
+  double getLinkCost(int neighbor_addr);
   virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);

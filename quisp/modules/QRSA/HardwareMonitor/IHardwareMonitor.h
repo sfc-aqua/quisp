@@ -43,7 +43,7 @@ using NeighborTable = std::map<int, InterfaceInfo>;
 class IHardwareMonitor : public cSimpleModule {
  public:
   virtual ~IHardwareMonitor(){};
-  virtual std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) = 0;
+  virtual double getLinkCost(int neighbor_address) = 0;
   virtual std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) = 0;
 };
 }  // namespace quisp::modules

@@ -21,7 +21,7 @@ using quisp_test::utils::setParInt;
 
 class MockHardwareMonitor : public IHardwareMonitor {
  public:
-  MOCK_METHOD(std::unique_ptr<InterfaceInfo>, findInterfaceByNeighborAddr, (int neighbor_address), (override));
+  MOCK_METHOD(double, getLinkCost, (int neighbor_addr), (override));
   MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
 };
 }  // namespace hardware_monitor

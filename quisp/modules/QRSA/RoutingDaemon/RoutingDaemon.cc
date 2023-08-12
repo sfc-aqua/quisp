@@ -173,7 +173,7 @@ QuantumInterfaceInfo RoutingDaemon::prepareQuantumInterfaceInfo(const cGate *con
   info.qnic.address = qnic_address;
   info.qnic.pointer = module;
   info.buffer_size = buffer_size;
-  info.link_cost = 100;  // This value should be updated by link tomography in the future
+  info.link_cost = 1;  // This value should be updated by link tomography in the future
   info.neighbor_address = getNeighborAddressFromQnicModule(module);
   return info;
 }
@@ -251,6 +251,10 @@ int RoutingDaemon::findQNicAddrByDestAddr(int destAddr) {
     return -1;
   }
   return it->second;
+}
+
+int RoutingDaemon::findQnicAddrByNeighborAddr(int neighbor_addr) {
+  // cModule *qnic = provider.getQNode()->getSubmodule();
 }
 
 /**
@@ -344,9 +348,8 @@ bool RoutingDaemon::ospfMyAddressIsRecognizedByNeighbor(const OspfHelloPacket *c
 
 void RoutingDaemon::ospfRegisterNeighbor(const OspfPacket *const pk, OspfState state) {
   const NodeAddr src = pk->getSrcAddr();
-  const auto qnic_interface = provider.getHardwareMonitor()->findInterfaceByNeighborAddr(src);
-  const int qnic_address = qnic_interface->qnic.address;
-  const double link_cost = qnic_interface->link_cost;
+  const int qnic_address = findQnicAddrByNeighborAddr(src);
+  const double link_cost = provider.getHardwareMonitor()->getLinkCost(src);
   neighbor_table[src] = OspfNeighborInfo(src, qnic_address, state, link_cost);
   ospfUpdateMyAddressLsaInLsdb();
 }

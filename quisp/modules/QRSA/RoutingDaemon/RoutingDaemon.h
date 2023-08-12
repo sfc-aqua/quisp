@@ -54,6 +54,7 @@ class RoutingDaemon : public IRoutingDaemon {
   std::vector<int> getNeighborAddresses() override;
   std::vector<int> neighbor_addresses;
   QuantumInterfaceInfo prepareQuantumInterfaceInfo(const cGate *const module_gate);
+  int findQnicAddrByNeighborAddr(int neighbor_addr);
 
   size_t getNumNeighbors();
 

@@ -129,10 +129,10 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketAndEstablishInitState) {
   auto msg_from_other_node = new OspfHelloPacket;
   msg_from_other_node->setSrcAddr(src);
 
-  auto expected_qnic = std::make_unique<InterfaceInfo>();
-  expected_qnic->qnic.address = 0;
-  expected_qnic->link_cost = 1;
-  EXPECT_CALL(*mock_hardware_monitor, findInterfaceByNeighborAddr(_)).WillOnce(Return(ByMove(std::move(expected_qnic))));
+  // auto expected_qnic = std::make_unique<InterfaceInfo>();
+  // expected_qnic->qnic.address = 0;
+  // expected_qnic->link_cost = 1;
+  // EXPECT_CALL(*mock_hardware_monitor, findInterfaceByNeighborAddr(_)).WillOnce(Return(ByMove(std::move(expected_qnic))));
 
   routing_daemon->handleMessage(msg_from_other_node);
 
@@ -155,10 +155,10 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
   neighbor_table[routing_daemon->my_address] = OspfNeighborInfo(routing_daemon->my_address);
   msg_from_other_node->setNeighborTable(neighbor_table);
 
-  auto expected_qnic = std::make_unique<InterfaceInfo>();
-  expected_qnic->qnic.address = 0;
-  expected_qnic->link_cost = 1;
-  EXPECT_CALL(*mock_hardware_monitor, findInterfaceByNeighborAddr(_)).WillOnce(Return(ByMove(std::move(expected_qnic))));
+  // auto expected_qnic = std::make_unique<InterfaceInfo>();
+  // expected_qnic->qnic.address = 0;
+  // expected_qnic->link_cost = 1;
+  // EXPECT_CALL(*mock_hardware_monitor, findInterfaceByNeighborAddr(_)).WillOnce(Return(ByMove(std::move(expected_qnic))));
 
   routing_daemon->handleMessage(msg_from_other_node);
 

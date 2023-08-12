@@ -63,6 +63,12 @@ void HardwareMonitor::initialize(int stage) {
 
   auto neighbor_addresses = routing_daemon->getNeighborAddresses();
 
+  // Initialize link costs
+  for (auto neighbor : neighbor_addresses) {
+    // Values will be updated after link tomography
+    link_cost_table[neighbor] = 1;
+  }
+
   if (do_link_level_tomography) {
     for (auto neighbor_address : neighbor_addresses) {
       if (my_address > neighbor_address) {
@@ -76,14 +82,11 @@ void HardwareMonitor::initialize(int stage) {
   }
 }
 
-std::unique_ptr<InterfaceInfo> HardwareMonitor::findInterfaceByNeighborAddr(int neighbor_address) {
-  for (auto it = neighbor_table.cbegin(); it != neighbor_table.cend(); ++it) {
-    if (it->second.neighborQNode_address == neighbor_address) {
-      // return unique_ptr<InterfaceInfo>(new InterfaceInfo(it->second));
-      return std::make_unique<InterfaceInfo>(it->second);
-    }
+double HardwareMonitor::getLinkCost(int neighbor_address) {
+  if (!link_cost_table.count(neighbor_address)) {
+    error("Link cost for neighbor %d not found", neighbor_address);
   }
-  return nullptr;
+  return link_cost_table[neighbor_address];
 }
 
 void HardwareMonitor::handleMessage(cMessage *msg) {
