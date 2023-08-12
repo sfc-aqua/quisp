@@ -14,6 +14,7 @@
 #include "test_utils/TestUtilFunctions.h"
 #include "test_utils/TestUtils.h"
 #include "test_utils/mock_modules/MockRoutingDaemon.h"
+#include "utils/HelperFunctions.h"
 #include "utils/TomographyManager.h"
 
 namespace {
@@ -24,6 +25,7 @@ using namespace quisp::modules;
 using namespace quisp_test;
 using namespace testing;
 using namespace quisp::messages;
+using quisp::utils::HelperFunctions;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -46,7 +48,6 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
   using quisp::modules::HardwareMonitor::initialize;
   using quisp::modules::HardwareMonitor::par;
   using quisp::modules::HardwareMonitor::tomography_manager;
-  using quisp::modules::HardwareMonitor::createUniqueId;
   HardwareMonitorTestTarget(MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
     setParInt(this, "address", 123);
     setParInt(this, "number_of_qnics_rp", 0);

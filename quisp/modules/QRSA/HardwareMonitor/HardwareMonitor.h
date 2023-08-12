@@ -71,7 +71,6 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id);
-  virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
 };
 
