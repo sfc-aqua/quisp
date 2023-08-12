@@ -21,6 +21,8 @@ namespace quisp::modules::routing_daemon {
 
 // destaddr -> {self_qnic_address (unique)}
 using RoutingTable = std::map<int, int>;
+// destaddr -> QuantumInterfaceInfo (more information than qnic_address)
+using InterfaceTable = std::map<int, std::unique_ptr<QuantumInterfaceInfo>>;
 
 using namespace ospf;
 using namespace quisp::messages;
@@ -29,15 +31,13 @@ class RoutingDaemon : public IRoutingDaemon {
  public:
   RoutingDaemon();
 
-  std::vector<int> getNeighborAddresses();
-  std::vector<int> neighbor_addresses;
-
  protected:
   NodeAddr my_address;
   RoutingTable qrtable;
   utils::ComponentProvider provider;
   ospf::NeighborTable neighbor_table;
   LinkStateDatabase link_state_database;
+  InterfaceTable interface_table;
 
   void generateRoutingTable();
   void generateRoutingTable(cTopology *topo);
@@ -46,10 +46,14 @@ class RoutingDaemon : public IRoutingDaemon {
   void initialize(int stage) override;
   void handleMessage(cMessage *msg) override;
   int numInitStages() const override { return 3; };
+  std::unique_ptr<QuantumInterfaceInfo> getQuantumInterfaceInfo(int dest_addr) override;
 
   int getNeighborAddressFromQnicModule(const cModule *qnic_module);
   cModule *getQnicPointerFromQnicTypeIndex(QNIC_type qnic_type, int qnic_index);
   void prepareNeighborAddressTableWithTopologyInfo();
+  std::vector<int> getNeighborAddresses() override;
+  std::vector<int> neighbor_addresses;
+  QuantumInterfaceInfo prepareQuantumInterfaceInfo(const cGate *const module_gate);
 
   size_t getNumNeighbors();
 

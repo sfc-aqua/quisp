@@ -10,6 +10,8 @@
 #include "messages/classical_messages.h"
 #include "modules/PhysicalConnection/BSA/BSAController.h"
 #include "modules/QNIC.h"
+#include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
+#include "omnetpp/cexception.h"
 
 using namespace omnetpp;
 
@@ -96,9 +98,10 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
     }
     // Returns the next link/gate in the ith shortest paths towards the target node.
     cGate *parentModuleGate = this_node->getPath(0)->getLocalGate();
-    int destAddr = node->getModule()->par("address");
+    int dest_addr = node->getModule()->par("address");
 
-    qrtable[destAddr] = getQNicAddr(parentModuleGate);
+    qrtable[dest_addr] = getQNicAddr(parentModuleGate);
+    interface_table[dest_addr] = std::make_unique<QuantumInterfaceInfo>(prepareQuantumInterfaceInfo(parentModuleGate));
 
     if (!strstr(parentModuleGate->getFullName(), "quantum")) {
       error("Quantum routing table referring to classical gates...");
@@ -136,6 +139,13 @@ void RoutingDaemon::prepareNeighborAddressTableWithTopologyInfo() {
   }
 }
 
+std::unique_ptr<QuantumInterfaceInfo> RoutingDaemon::getQuantumInterfaceInfo(int dest_addr) {
+  if (!interface_table.count(dest_addr)) {
+    error("Interface information for destination address %d not found.", dest_addr);
+  }
+  return std::move(interface_table[dest_addr]);
+}
+
 /**
  * Get QNIC pointer from its qnic_type and index
  */
@@ -151,6 +161,22 @@ cModule *RoutingDaemon::getQnicPointerFromQnicTypeIndex(QNIC_type qnic_type, int
   return qnic;
 }
 
+QuantumInterfaceInfo RoutingDaemon::prepareQuantumInterfaceInfo(const cGate *const module_gate) {
+  const auto module = module_gate->getPreviousGate()->getOwnerModule();
+  auto qnic_address = getQNicAddr(module_gate);
+  auto qnic_type = static_cast<QNIC_type>(module->par("self_qnic_type").intValue());
+  auto qnic_index = module->par("self_qnic_index").intValue();
+  auto buffer_size = module->par("num_buffer").intValue();
+  QuantumInterfaceInfo info;
+  info.qnic.type = qnic_type;
+  info.qnic.index = qnic_index;
+  info.qnic.address = qnic_address;
+  info.qnic.pointer = module;
+  info.buffer_size = buffer_size;
+  info.link_cost = 100;  // This value should be updated by link tomography in the future
+  info.neighbor_address = getNeighborAddressFromQnicModule(module);
+  return info;
+}
 /**
  * This function gets topology information from omnet module.
  * This process should be done by proper routing process in the future.

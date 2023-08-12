@@ -61,13 +61,13 @@ void HardwareMonitor::initialize(int stage) {
   prepareNeighborTable();
   WATCH_MAP(neighbor_table);
 
+  auto neighbor_addresses = routing_daemon->getNeighborAddresses();
+
   if (do_link_level_tomography) {
-    for (auto it = neighbor_table.cbegin(); it != neighbor_table.cend(); ++it) {
-      // You don't want 2 separate tomography processes to run for each link.
-      // Not a very good solution, but makes sure that only 1 request per link is generated.
-      if (my_address > it->second.neighborQNode_address) {
-        LinkTomographyRequest *pk = new LinkTomographyRequest("LinkTomographyRequest");
-        pk->setDestAddr(it->second.neighborQNode_address);
+    for (auto neighbor_address : neighbor_addresses) {
+      if (my_address > neighbor_address) {
+        auto *pk = new LinkTomographyRequest("LinkTomographyRequest");
+        pk->setDestAddr(neighbor_address);
         pk->setSrcAddr(my_address);
         pk->setKind(6);
         send(pk, "RouterPort$o");
@@ -90,18 +90,15 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
   if (auto *request = dynamic_cast<LinkTomographyRequest *>(msg)) {
     /* Received a tomography request from neighbor */
 
-    auto info = findInterfaceByNeighborAddr(request->getSrcAddr());
-    if (info == nullptr) {
-      error("1. Something is wrong when finding out local qnic address from neighbor address in neighbor_table.");
-    }
+    auto interface_info = routing_daemon->getQuantumInterfaceInfo(request->getSrcAddr());
 
     /*Prepare an acknowledgment*/
     LinkTomographyAck *pk = new LinkTomographyAck("LinkTomographyAck");
     pk->setSrcAddr(my_address);
     pk->setDestAddr(request->getSrcAddr());
     pk->setKind(6);
-    pk->setQnic_index(info->qnic.index);
-    pk->setQnic_type(info->qnic.type);
+    pk->setQnic_index(interface_info->qnic.index);
+    pk->setQnic_type(interface_info->qnic.type);
 
     send(pk, "RouterPort$o");
     delete request;
@@ -114,10 +111,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     /*Create and send RuleSets*/
     int partner_address = ack->getSrcAddr();
 
-    auto my_qnic_info = findInterfaceByNeighborAddr(partner_address);
-    if (my_qnic_info == nullptr) {
-      error("2. Something is wrong when finding out local qnic address from neighbor address in neighbor_table.");
-    }
+    auto my_qnic_info = routing_daemon->getQuantumInterfaceInfo(partner_address);
 
     // RuleSets sent for this node and the partner node.
     long ruleset_id = HelperFunctions::createUniqueId(this->getRNG(0), my_address, simTime());

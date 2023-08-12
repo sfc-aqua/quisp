@@ -26,6 +26,9 @@ module quantumRoutingSoft
         rd: RoutingDaemon {
             parameters:
                 @display("p=115,63");
+                number_of_qnics = parent.number_of_qnics;
+                number_of_qnics_r = parent.number_of_qnics_r;
+                number_of_qnics_rp = parent.number_of_qnics_rp;
         }
         hm: HardwareMonitor {
             parameters:
