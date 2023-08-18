@@ -29,7 +29,7 @@ void BSAController::initialize() {
     address = provider.getNodeAddr();
     left_qnic.parent_node_addr = address;
     left_qnic.index = getParentModule()->par("self_qnic_index").intValue();
-    left_qnic.type = strcmp(getParentModule()->getName(),"qnic_r")==0 ? QNIC_R : QNIC_RP;
+    left_qnic.type = strcmp(getParentModule()->getName(), "qnic_r") == 0 ? QNIC_R : QNIC_RP;
   } else {
     address = getParentModule()->par("address").intValue();
     left_qnic = getExternalQNICInfoFromPort(0);
@@ -90,7 +90,7 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
     scheduleAt(simTime() + 1.1 * offset_time_for_first_photon, time_out_message);
   } else {
     SingleClickResult *click_result = new SingleClickResult();
-    if(batch_click_msg->numberOfClicks()!=1) {
+    if (batch_click_msg->numberOfClicks() != 1) {
       throw cRuntimeError("Number of clicks of BSA should be one");
     }
     click_result->setClickResult(batch_click_msg->getClickResults(0));

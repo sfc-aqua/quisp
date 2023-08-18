@@ -57,7 +57,7 @@ void EntangledPhotonPairSource::emitPhotons() {
   // only for debug usage
   left_photon->setGraphState(left_photon_ref->graphState().c_str());
   right_photon->setGraphState(right_photon_ref->graphState().c_str());
-  
+
   left_photon->setFirst(true);
   right_photon->setFirst(true);
   left_photon->setLast(true);

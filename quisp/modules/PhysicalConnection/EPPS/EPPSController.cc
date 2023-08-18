@@ -45,7 +45,7 @@ void EPPSController::initialize() {
 
 void EPPSController::handleMessage(cMessage *msg) {
   if (dynamic_cast<EmitPhotonRequest *>(msg)) {
-    if(stopping_epps_emission){
+    if (stopping_epps_emission) {
       delete msg;
       stopping_epps_emission = false;
       return;
@@ -64,12 +64,11 @@ void EPPSController::handleMessage(cMessage *msg) {
   } else if (dynamic_cast<StopEPPSEmission *>(msg)) {
     if (!neighbor_buffer_is_full) {
       neighbor_buffer_is_full = true;
-    }
-    else {
+    } else {
       neighbor_buffer_is_full = false;
       stopping_epps_emission = true;
       time_out_count++;
-      scheduleAt(simTime() + (4 + time_out_count)* std::max(left_travel_time,right_travel_time), time_out_message);
+      scheduleAt(simTime() + (4 + time_out_count) * std::max(left_travel_time, right_travel_time), time_out_message);
     }
   }
   return;
