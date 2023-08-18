@@ -45,7 +45,7 @@ async def test_NoErrorMM():
     }
 
 @pytest.mark.asyncio
-async def test_NoErrorMM():
+async def test_NoErrorMSM():
     worker = Worker()
     await worker.run(
         config_name="NoErrorMSM", ned_file_path="simulations/simulation_test.ini"

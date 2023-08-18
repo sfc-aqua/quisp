@@ -3,7 +3,7 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_NoErrorMIM():
+async def test_Entanglement_Swapping_MIM_3_Nodes():
     worker = Worker()
     await worker.run(
         config_name="Entanglement_Swapping_MIM_3_Nodes",
@@ -26,7 +26,7 @@ async def test_NoErrorMIM():
 
 
 @pytest.mark.asyncio
-async def test_NoErrorMM():
+async def test_Entanglement_Swapping_MM_3_Nodes():
     worker = Worker()
     await worker.run(
         config_name="Entanglement_Swapping_MM_3_Nodes",
@@ -47,9 +47,30 @@ async def test_NoErrorMM():
         "Yerror": 0.0,
     }
 
+@pytest.mark.asyncio
+async def test_Entanglement_Swapping_MSM_3_Nodes():
+    worker = Worker()
+    await worker.run(
+        config_name="Entanglement_Swapping_MSM_3_Nodes",
+        ned_file_path="simulations/simulation_test.ini",
+    )
+    print(worker.output)
+    worker.print_results()
+    assert worker.results["EndNode1<-->EndNode2"]["data"] == {
+        "Fidelity": 1.0,
+        "Xerror": 0.0,
+        "Zerror": 0.0,
+        "Yerror": 0.0,
+    }
+    assert worker.results["EndNode2<-->EndNode1"]["data"] == {
+        "Fidelity": 1.0,
+        "Xerror": 0.0,
+        "Zerror": 0.0,
+        "Yerror": 0.0,
+    }
 
 @pytest.mark.asyncio
-async def test_NoError_4_Node():
+async def test_Entanglement_Swapping_MM_4_Nodes():
     worker = Worker()
     await worker.run(
         config_name="Entanglement_Swapping_MM_4_Nodes",
@@ -72,7 +93,7 @@ async def test_NoError_4_Node():
 
 
 @pytest.mark.asyncio
-async def test_NoError_5_Node():
+async def test_Entanglement_Swapping_MM_5_Nodes():
     worker = Worker()
     await worker.run(
         config_name="Entanglement_Swapping_MM_5_Nodes",
@@ -95,7 +116,7 @@ async def test_NoError_5_Node():
 
 
 @pytest.mark.asyncio
-async def test_NoError_6_Node():
+async def test_Entanglement_Swapping_MM_6_Nodes():
     worker = Worker()
     await worker.run(
         config_name="Entanglement_Swapping_MM_6_Nodes",
@@ -118,7 +139,7 @@ async def test_NoError_6_Node():
 
 
 @pytest.mark.asyncio
-async def test_NoError_7_Node():
+async def test_Entanglement_Swapping_MM_7_Nodes():
     worker = Worker()
     await worker.run(
         config_name="Entanglement_Swapping_MM_7_Nodes",
@@ -141,7 +162,7 @@ async def test_NoError_7_Node():
 
 
 @pytest.mark.asyncio
-async def test_NoError_8_Node():
+async def test_Entanglement_Swapping_MM_8_Nodes():
     worker = Worker()
     await worker.run(
         config_name="Entanglement_Swapping_MM_8_Nodes",
@@ -164,7 +185,7 @@ async def test_NoError_8_Node():
 
 
 @pytest.mark.asyncio
-async def test_NoError_9_Node():
+async def test_Entanglement_Swapping_MM_9_Nodes():
     worker = Worker()
     await worker.run(
         config_name="Entanglement_Swapping_MM_9_Nodes",
@@ -187,7 +208,7 @@ async def test_NoError_9_Node():
 
 
 @pytest.mark.asyncio
-async def test_NoError_10_Node():
+async def test_Entanglement_Swapping_MM_10_Nodes():
     worker = Worker()
     await worker.run(
         config_name="Entanglement_Swapping_MM_10_Nodes",
