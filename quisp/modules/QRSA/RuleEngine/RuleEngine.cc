@@ -91,9 +91,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto qnic_index = pk->getQnicIndex();
     auto number_of_free_emitters = qnic_store->countNumFreeQubits(type, qnic_index);
     auto qubit_index = qnic_store->takeFreeQubitIndex(type, qnic_index);
-    auto &msm_info = msm_info_map[qnic_index];
     // If this is MSM, we keep on emmiting photons continuously
     if (pk->isMSM()) {
+      auto &msm_info = msm_info_map[qnic_index];
       msm_info.photon_index_counter++;
       if (number_of_free_emitters != 0) {
         msm_info.qubit_info_map[msm_info.iteration_index] = qubit_index;
