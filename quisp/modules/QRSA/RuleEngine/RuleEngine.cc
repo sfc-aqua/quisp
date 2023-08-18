@@ -210,7 +210,6 @@ void RuleEngine::sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index,
   realtime_controller->EmitPhoton(qnic_index, qubit_index, qnic_type, pulse);
   if (qnic_type != QNIC_RP) emitted_photon_order_map[{qnic_type, qnic_index}].push_back(qubit_index);
 }
-
 simtime_t RuleEngine::getEmitTimeFromBSMNotification(quisp::messages::BSMTimingNotification *notification) { return notification->getFirstPhotonEmitTime(); }
 
 void RuleEngine::stopOnGoingPhotonEmission(QNIC_type type, int qnic_index) { cancelEvent(emit_photon_timer_map[{type, qnic_index}]); }
