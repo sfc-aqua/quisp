@@ -172,7 +172,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
     int qnic_index = pkt->getQnic_address();
     auto &msm_info = msm_info_map[qnic_index];
-    if(msm_info.photon_index_counter == 0) return;
+    if (msm_info.photon_index_counter == 0) return;
     StopEPPSEmission *stop_epps_emission = new StopEPPSEmission();
     stop_epps_emission->setSrcAddr(parentAddress);
     stop_epps_emission->setDestAddr(msm_info.epps_address);

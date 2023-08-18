@@ -56,8 +56,8 @@ void EPPSController::handleMessage(cMessage *msg) {
     EmitPhotonRequest *emt = new EmitPhotonRequest();
     scheduleAt(emit_time, emt);
   } else if (dynamic_cast<StopEPPSEmission *>(msg)) {
-      delete msg;
-      return;
+    delete msg;
+    return;
   }
   return;
 }
