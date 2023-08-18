@@ -121,8 +121,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
 
   // [Key: qnic_index, Value: qubit_index]
   std::unordered_map<int, MSMInfo> msm_info_map;
-
-  int _num_bellpairs_generated;
 };
 
 Define_Module(RuleEngine);
