@@ -90,7 +90,7 @@ void Router::handleMessage(cMessage *msg) {
     return;
   } else if (dest_addr == my_address && dynamic_cast<StopEPPSEmission *>(msg)) {
     bubble("Stop EPPS emission signal received");
-    send(pk, "rePort$o");
+    send(pk, "toApp");
     return;
   } else if (dest_addr == my_address && dynamic_cast<ConnectionSetupRequest *>(msg)) {
     bubble("Connection setup request received");
