@@ -92,6 +92,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto number_of_free_emitters = qnic_store->countNumFreeQubits(type, qnic_index);
     auto qubit_index = qnic_store->takeFreeQubitIndex(type, qnic_index);
     auto &msm_info = msm_info_map[qnic_index];
+    // If this is MSM, we keep on emmiting photons continuously
     if (pk->isMSM()) {
       msm_info.photon_index_counter++;
       if (number_of_free_emitters != 0) {
@@ -100,6 +101,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       }
       scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
       return;
+      // If not, we emit photons on demand
     } else {
       if (number_of_free_emitters == 0) return;
       auto is_first = pk->isFirst();
@@ -114,6 +116,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       // and we don't want to delete these messages
       return;
     }
+    // store message from epps to rule engine
   } else if (auto *notification_packet = dynamic_cast<EPPSTimingNotification *>(msg)) {
     auto partner_address = notification_packet->getOtherQnicParentAddr();
     auto partner_qnic_index = notification_packet->getOtherQnicIndex();
@@ -126,8 +129,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
     msm_info.total_travel_time = notification_packet->getTotalTravelTime();
     stopOnGoingPhotonEmission(QNIC_RP, qnic_index);
     scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
+    // handle result incoming from bsa
   } else if (auto *click_result = dynamic_cast<SingleClickResult *>(msg)) {
     handleSingleClickResult(click_result);
+    // handle result incoming from partner node
   } else if (auto *msm_result = dynamic_cast<MSMResult *>(msg)) {
     handleMSMResult(msm_result);
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
@@ -137,6 +142,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     handlePurificationResult(pkt);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
     handleSwappingResult(pkt);
+    // handle self message to check whether partner's result has arrived
   } else if (auto *pkt = dynamic_cast<MSMResultArrivalCheck *>(msg)) {
     handleMSMResultArrivalCheck(pkt);
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
@@ -235,10 +241,11 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
     msm_info.qubit_postprocess_info[msm_info.photon_index_counter].qubit_index = qubit_index;
     msm_info.qubit_postprocess_info[msm_info.photon_index_counter].correction_operation = click_result->getClickResult().correction_operation;
     msm_info.iteration_index++;
-    // start countdown
+    // start countdown to check whether partner's result has arrived
     MSMResultArrivalCheck *msm_result_arrival_check = new MSMResultArrivalCheck;
     msm_result_arrival_check->setQnicIndex(qnic_index);
     msm_result_arrival_check->setQubitIndex(qubit_index);
+    // 1.1 is a magic number. It should be larger than the time it takes for the partner to send the result
     scheduleAt(simTime() + 1.1 * msm_info.total_travel_time, msm_result_arrival_check);
   } else {
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
@@ -251,29 +258,28 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
   auto qnic_index = msm_result->getQnicIndex();
   auto &msm_info = msm_info_map[qnic_index];
   auto qubit_itr = msm_info.qubit_postprocess_info.find(msm_result->getPhotonIndex());
-  // local failure partner success/failure
+  // local: fail | partner: success/fail
+  // qubit on photon index is not included in msm_info
   if (qubit_itr == msm_info.qubit_postprocess_info.end()) {
-    // qubit on photon index is not included in msm_info
     return;
   }
   QubitInfo qubit_info = qubit_itr->second;
   auto qubit_index = qubit_info.qubit_index;
   msm_info.qubit_postprocess_info[qubit_index].handled = true;
-  // partner failure local success
+  // local: success | partner: fail
+  // qubit on photon index is included in msm_info but the partner sends fail
   if (!msm_result->getSuccess()) {
-    // qubit on photon index is included in msm_info but the partner failed
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
   }
-  // partner success local success
+  // local: success | partner: success
+  // qubit on photon index is included in msm_info and the partner sends success
   else {
-    // qubit on photon index is included in msm_info and the partner succeeded
-    // postprocess conditions
-    bool is_phi_minus = qubit_info.correction_operation != msm_result->getCorrectionOperation();
-    // apply correction on only one side of the node
-    bool is_younger_address = parentAddress < msm_info.partner_address;
-
     auto *qubit_record = qnic_store->getQubitRecord(QNIC_RP, qnic_index, qubit_index);
+    // condition whether to apply Z gate or not
+    bool is_phi_minus = qubit_info.correction_operation != msm_result->getCorrectionOperation();
+    // restrict correction operation only on one side
+    bool is_younger_address = parentAddress < msm_info.partner_address;
     if (is_phi_minus && is_younger_address) realtime_controller->applyZGate(qubit_record);
     bell_pair_store.insertEntangledQubit(msm_info.partner_address, qubit_record);
   }
@@ -283,6 +289,7 @@ void RuleEngine::handleMSMResultArrivalCheck(MSMResultArrivalCheck *msm_result_a
   auto qnic_index = msm_result_arrival_check->getQnicIndex();
   auto qubit_index = msm_result_arrival_check->getQubitIndex();
   auto &msm_info = msm_info_map[qnic_index];
+  // result doesn't arrive in expected time
   if (!msm_info.qubit_postprocess_info[qubit_index].handled) {
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
