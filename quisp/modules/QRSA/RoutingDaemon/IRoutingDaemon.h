@@ -15,13 +15,15 @@ struct QuantumInterfaceInfo {
   int neighbor_address;
 };
 
-const QuantumInterfaceInfo NULL_QUANTUM_INTERFACE_IFNO {
-  .qnic =
-      {
-          .type = QNIC_N,
-          .index = -1,
-      },
-  .buffer_size = -1, .link_cost = -1, .neighbor_address = -1,
+const QuantumInterfaceInfo NULL_QUANTUM_INTERFACE_IFNO{
+    .qnic =
+        {
+            .type = QNIC_N,
+            .index = -1,
+        },
+    .buffer_size = -1,
+    .link_cost = -1,
+    .neighbor_address = -1,
 };
 
 class IRoutingDaemon : public cSimpleModule {

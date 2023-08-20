@@ -68,15 +68,18 @@ void RoutingDaemon::initialize(int stage) {
     if (topo->getNumNodes() == 0 || topo == nullptr) {
       return;
     }
-
     generateRoutingTable(topo);
-
-    // Prepare neighbor table
-    num_qnic = par("number_of_qnics");
-    num_qnic_r = par("number_of_qnics_r");
-    num_qnic_rp = par("number_of_qnics_rp");
-    prepareNeighborAddressTableWithTopologyInfo();
   }
+
+  // Prepare neighbor table
+  num_qnic = par("number_of_qnics");
+  num_qnic_r = par("number_of_qnics_r");
+  num_qnic_rp = par("number_of_qnics_rp");
+  qnic_num_map.insert(std::make_pair(QNIC_E, num_qnic));
+  qnic_num_map.insert(std::make_pair(QNIC_R, num_qnic_r));
+  qnic_num_map.insert(std::make_pair(QNIC_RP, num_qnic_rp));
+  prepareNeighborAddressTableWithTopologyInfo();
+  resolveQuantumInterfaceInfo();
 }
 
 void RoutingDaemon::generateRoutingTable() { qrtable = link_state_database.generateRoutingTableFromGraph(my_address); }
@@ -101,7 +104,6 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
     int dest_addr = node->getModule()->par("address");
 
     qrtable[dest_addr] = getQNicAddr(parentModuleGate);
-    interface_table[dest_addr] = std::make_unique<QuantumInterfaceInfo>(prepareQuantumInterfaceInfo(parentModuleGate));
 
     if (!strstr(parentModuleGate->getFullName(), "quantum")) {
       error("Quantum routing table referring to classical gates...");
@@ -119,6 +121,18 @@ std::vector<int> RoutingDaemon::getNeighborAddresses() {
     neighbors = neighbor_addresses;
   }
   return neighbors;
+}
+
+// create a map from destination address to quantum interface information
+void RoutingDaemon::resolveQuantumInterfaceInfo() {
+  // Routing table should already be prepared
+  for (const auto &dest_qnic_address : qrtable) {
+    auto qnic_address = dest_qnic_address.second;
+    auto dest_addr = dest_qnic_address.first;
+    auto [qnic_type, qnic_index] = qnic_addr_map[qnic_address];
+    auto *qnic = getQnicPointerFromQnicTypeIndex(qnic_type, qnic_index);
+    interface_table[dest_addr] = std::make_unique<QuantumInterfaceInfo>(prepareQuantumInterfaceInfo(qnic));
+  }
 }
 
 void RoutingDaemon::prepareNeighborAddressTableWithTopologyInfo() {
@@ -155,26 +169,27 @@ cModule *RoutingDaemon::getQnicPointerFromQnicTypeIndex(QNIC_type qnic_type, int
   }
 
   cModule *qnic = provider.getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
+  // create map between address and type, index for later use
+  qnic_addr_map[qnic->par("self_qnic_address").intValue()] = std::make_pair(qnic_type, qnic_index);
   if (qnic == nullptr) {
     error("qnic(index: %d) not found.", qnic_index);
   }
   return qnic;
 }
 
-QuantumInterfaceInfo RoutingDaemon::prepareQuantumInterfaceInfo(const cGate *const module_gate) {
-  const auto module = module_gate->getPreviousGate()->getOwnerModule();
-  auto qnic_address = getQNicAddr(module_gate);
-  auto qnic_type = static_cast<QNIC_type>(module->par("self_qnic_type").intValue());
-  auto qnic_index = module->par("self_qnic_index").intValue();
-  auto buffer_size = module->par("num_buffer").intValue();
+QuantumInterfaceInfo RoutingDaemon::prepareQuantumInterfaceInfo(cModule *qnic_module) {
+  auto qnic_address = qnic_module->par("self_qnic_address").intValue();
+  auto qnic_type = static_cast<QNIC_type>(qnic_module->par("self_qnic_type").intValue());
+  auto qnic_index = qnic_module->par("self_qnic_index").intValue();
+  auto buffer_size = qnic_module->par("num_buffer").intValue();
   QuantumInterfaceInfo info;
   info.qnic.type = qnic_type;
   info.qnic.index = qnic_index;
   info.qnic.address = qnic_address;
-  info.qnic.pointer = module;
+  info.qnic.pointer = qnic_module;
   info.buffer_size = buffer_size;
   info.link_cost = 1;  // This value should be updated by link tomography in the future
-  info.neighbor_address = getNeighborAddressFromQnicModule(module);
+  info.neighbor_address = getNeighborAddressFromQnicModule(qnic_module);
   return info;
 }
 /**
@@ -254,7 +269,22 @@ int RoutingDaemon::findQNicAddrByDestAddr(int destAddr) {
 }
 
 int RoutingDaemon::findQnicAddrByNeighborAddr(int neighbor_addr) {
-  // cModule *qnic = provider.getQNode()->getSubmodule();
+  // This function is used when ospf is running.
+  // We cannot use Quantum Interface Info at this point since qrtable is not ready.
+  std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R, QNIC_RP};
+
+  // 1. Go through all the qnics
+  for (auto qnic_type : qnic_types) {
+    for (int qnic_index = 0; qnic_index < qnic_num_map[qnic_type]; qnic_index++) {
+      cModule *qnic = provider.getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
+      // If this qnic's naighbor is the target neighbor, finish and return qnic address
+      auto neighbor = getNeighborAddressFromQnicModule(qnic);
+      if (neighbor == neighbor_addr) {
+        return qnic->par("self_qnic_address").intValue();
+      }
+    }
+  }
+  error("Failed to find qnic address by this neighbor address.");
 }
 
 /**

@@ -48,13 +48,14 @@ class RoutingDaemon : public IRoutingDaemon {
   int numInitStages() const override { return 3; };
   std::unique_ptr<QuantumInterfaceInfo> getQuantumInterfaceInfo(int dest_addr) override;
 
-  int getNeighborAddressFromQnicModule(const cModule *qnic_module);
-  cModule *getQnicPointerFromQnicTypeIndex(QNIC_type qnic_type, int qnic_index);
+  void resolveQuantumInterfaceInfo();
   void prepareNeighborAddressTableWithTopologyInfo();
+  int getNeighborAddressFromQnicModule(const cModule *qnic_module);
+  int findQnicAddrByNeighborAddr(int neighbor_addr);
   std::vector<int> getNeighborAddresses() override;
   std::vector<int> neighbor_addresses;
-  QuantumInterfaceInfo prepareQuantumInterfaceInfo(const cGate *const module_gate);
-  int findQnicAddrByNeighborAddr(int neighbor_addr);
+  cModule *getQnicPointerFromQnicTypeIndex(QNIC_type qnic_type, int qnic_index);
+  QuantumInterfaceInfo prepareQuantumInterfaceInfo(cModule *qnic_module);
 
   size_t getNumNeighbors();
 
@@ -90,6 +91,9 @@ class RoutingDaemon : public IRoutingDaemon {
   int num_qnic;
   int num_qnic_r;
   int num_qnic_rp;
+  std::map<QNIC_type, int> qnic_num_map;
+  // qnic_addr -> (qnic_type, qnic_index)
+  std::map<int, std::tuple<QNIC_type, int>> qnic_addr_map;
 };
 
 }  // namespace quisp::modules::routing_daemon

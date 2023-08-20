@@ -48,6 +48,9 @@ class RoutingDaemonTestTarget : public RoutingDaemon {
   using RoutingDaemon::qrtable;
   RoutingDaemonTestTarget(TestQNode* qnode) : RoutingDaemon() {
     setParBool(this, "run_ospf", true);
+    setParInt(this, "number_of_qnics", 2);
+    setParInt(this, "number_of_qnics_r", 2);
+    setParInt(this, "number_of_qnics_rp", 2);
     my_address = qnode->address;
     RouterPort = new TestGate(this, "RouterPort$o");
     this->provider.setStrategy(std::make_unique<Strategy>(qnode));
@@ -129,10 +132,7 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketAndEstablishInitState) {
   auto msg_from_other_node = new OspfHelloPacket;
   msg_from_other_node->setSrcAddr(src);
 
-  // auto expected_qnic = std::make_unique<InterfaceInfo>();
-  // expected_qnic->qnic.address = 0;
-  // expected_qnic->link_cost = 1;
-  // EXPECT_CALL(*mock_hardware_monitor, findInterfaceByNeighborAddr(_)).WillOnce(Return(ByMove(std::move(expected_qnic))));
+  EXPECT_CALL(*mock_hardware_monitor, getLinkCost).WillOnce(Return(1));
 
   routing_daemon->handleMessage(msg_from_other_node);
 
