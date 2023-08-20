@@ -38,7 +38,6 @@ ConnectionManager::~ConnectionManager() {
 void ConnectionManager::initialize() {
   initializeLogger(provider);
   routing_daemon = provider.getRoutingDaemon();
-  hardware_monitor = provider.getHardwareMonitor();
   my_address = provider.getNodeAddr();
   num_of_qnics = par("total_number_of_qnics");
   simultaneous_es_enabled = par("simultaneous_es_enabled");
@@ -279,21 +278,11 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   int application_id = req->getApplicationId();
   int responder_addr = req->getActual_destAddr();
   int prev_hop_addr = req->getSrcAddr();
-  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(responder_addr);
-  int inbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(prev_hop_addr);
 
-  if (outbound_qnic_address == -1) {
-    error("QNIC to destination not found");
-  }
-  if (inbound_qnic_address == -1) {
-    error("QNIC from source not found");
-  }
+  auto outbound_qinterface_info = routing_daemon->getQuantumInterfaceInfo(responder_addr);
+  auto inbound_qinterface_info = routing_daemon->getQuantumInterfaceInfo(prev_hop_addr);
 
-  // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
-  auto outbound_info = hardware_monitor->findConnectionInfoByQnicAddr(outbound_qnic_address);
-  auto inbound_info = hardware_monitor->findConnectionInfoByQnicAddr(inbound_qnic_address);
-
-  if (isQnicBusy(outbound_qnic_address) || isQnicBusy(inbound_qnic_address)) {
+  if (isQnicBusy(outbound_qinterface_info->qnic.address) || isQnicBusy(inbound_qinterface_info->qnic.address)) {
     rejectRequest(req);
     return;
   }
@@ -304,19 +293,19 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
 
   req->setApplicationId(application_id);
-  req->setDestAddr(outbound_info->neighbor_address);
+  req->setDestAddr(outbound_qinterface_info->neighbor_address);
   req->setSrcAddr(my_address);
   req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
   req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
   req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
-  req->setStack_of_linkCosts(num_accumulated_costs, outbound_info->quantum_link_cost);
+  req->setStack_of_linkCosts(num_accumulated_costs, outbound_qinterface_info->link_cost);
   req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
 
-  QNicPairInfo pair_info{inbound_info->qnic, outbound_info->qnic};
+  QNicPairInfo pair_info{inbound_qinterface_info->qnic, outbound_qinterface_info->qnic};
   req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
-  reserveQnic(inbound_info->qnic.address);
-  reserveQnic(outbound_info->qnic.address);
+  reserveQnic(inbound_qinterface_info->qnic.address);
+  reserveQnic(outbound_qinterface_info->qnic.address);
 
   send(req, "RouterPort$o");
 }
@@ -389,40 +378,35 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 }
 
 void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
-  int responder_address = req->getActual_destAddr();
-  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(responder_address);
+  int responder_addr = req->getActual_destAddr();
 
-  if (outbound_qnic_address == -1) {
-    error("QNIC to destination cannot be found");
-  }
-
-  // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
-  auto inbound_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
-  auto outbound_info = hardware_monitor->findConnectionInfoByQnicAddr(outbound_qnic_address);
+  // No invound qinterface info because it's initiator
+  auto inbound_qinterface_info = std::make_unique<QuantumInterfaceInfo>(NULL_QUANTUM_INTERFACE_IFNO);
+  auto outbound_qinterface_info = routing_daemon->getQuantumInterfaceInfo(responder_addr);
 
   // Update information and send it to the next Qnode.
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
   int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
 
-  req->setDestAddr(outbound_info->neighbor_address);
+  req->setDestAddr(outbound_qinterface_info->neighbor_address);
   req->setSrcAddr(my_address);
   req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
   req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
   req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
-  req->setStack_of_linkCosts(num_accumulated_costs, outbound_info->quantum_link_cost);
+  req->setStack_of_linkCosts(num_accumulated_costs, outbound_qinterface_info->link_cost);
   req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
 
-  QNicPairInfo pair_info{inbound_info->qnic, outbound_info->qnic};
+  QNicPairInfo pair_info{inbound_qinterface_info->qnic, outbound_qinterface_info->qnic};
   req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
-  auto &request_queue = connection_setup_buffer[outbound_qnic_address];
+  auto &request_queue = connection_setup_buffer[outbound_qinterface_info->qnic.address];
   request_queue.push(req);
 
   // this is the only request in the queue, try to send it right away
   if (request_queue.size() == 1) {
     EV << "schedule from enqueue" << endl;
-    scheduleAt(simTime(), request_send_timing[outbound_qnic_address]);
+    scheduleAt(simTime(), request_send_timing[outbound_qinterface_info->qnic.address]);
   }
 }
 

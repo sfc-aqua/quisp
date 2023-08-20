@@ -23,7 +23,6 @@ class HardwareMonitor : public IHardwareMonitor {
  public:
   HardwareMonitor();
   ~HardwareMonitor();
-  std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) override;
 
  protected:
   utils::ComponentProvider provider;
@@ -58,7 +57,7 @@ class HardwareMonitor : public IHardwareMonitor {
   void finish() override;
   void handleMessage(cMessage *msg) override;
   int numInitStages() const override { return 2; };
-  double getLinkCost(int neighbor_addr);
+  double getLinkCost(int neighbor_addr) override;
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id);
 };
 

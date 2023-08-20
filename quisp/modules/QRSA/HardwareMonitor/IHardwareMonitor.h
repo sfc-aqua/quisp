@@ -44,6 +44,5 @@ class IHardwareMonitor : public cSimpleModule {
  public:
   virtual ~IHardwareMonitor(){};
   virtual double getLinkCost(int neighbor_address) = 0;
-  virtual std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) = 0;
 };
 }  // namespace quisp::modules

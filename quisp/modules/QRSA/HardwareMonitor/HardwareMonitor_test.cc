@@ -50,9 +50,6 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
   using quisp::modules::HardwareMonitor::tomography_manager;
   HardwareMonitorTestTarget(MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
     setParInt(this, "address", 123);
-    setParInt(this, "number_of_qnics_rp", 0);
-    setParInt(this, "number_of_qnics_r", 0);
-    setParInt(this, "number_of_qnics", 0);
     setParBool(this, "link_tomography", false);
     setParStr(this, "tomography_output_filename", "test_file");
     setParStr(this, "file_dir_name", "out/tests");
@@ -101,8 +98,6 @@ TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
   auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
   sim->registerComponent(hardware_monitor);
   hardware_monitor->callInitialize(0);
-
-  // EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr).Times(1).WillOnce(Return(nullptr));
 
   auto* self_link_tomography_result = new LinkTomographyResult{"LinkTomographyResult"};
   // packet for myself 0 --> -

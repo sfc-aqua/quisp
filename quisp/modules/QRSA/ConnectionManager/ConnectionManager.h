@@ -74,7 +74,6 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   double threshold_fidelity;
   rules::PurType purification_type;
   IRoutingDaemon *routing_daemon;
-  IHardwareMonitor *hardware_monitor;
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;
