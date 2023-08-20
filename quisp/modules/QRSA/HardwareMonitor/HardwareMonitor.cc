@@ -35,31 +35,26 @@ HardwareMonitor::~HardwareMonitor() {}
 // HardwareMonitor is also responsible for calculating the rssi/oka's protocol/fidelity calculate and give it to the RoutingDaemon
 void HardwareMonitor::initialize(int stage) {
   EV_INFO << "HardwareMonitor booted\n";
+
   routing_daemon = provider.getRoutingDaemon();
+  my_address = provider.getNodeAddr();
 
-  num_qnic_rp = par("number_of_qnics_rp");
-  num_qnic_r = par("number_of_qnics_r");
-  num_qnic = par("number_of_qnics");
-
-  /*This keeps which node is connected to which local qnic.*/
-  tomography_output_filename = par("tomography_output_filename").str();
   // remove double quotes at the beginning and end
+  tomography_output_filename = par("tomography_output_filename").str();
   tomography_output_filename = tomography_output_filename.substr(1, tomography_output_filename.length() - 2);
   file_dir_name = par("file_dir_name").str();
+
+  // tomography parameters
   do_link_level_tomography = par("link_tomography");
   num_purification = par("initial_purification");
   x_purification = par("x_purification");
   z_purification = par("z_purification");
   purification_type = par("purification_type");
   num_measure = par("num_measure");
-  my_address = provider.getNodeAddr();
 
   if (stage == 0) {
     return;
   }
-
-  prepareNeighborTable();
-  WATCH_MAP(neighbor_table);
 
   auto neighbor_addresses = routing_daemon->getNeighborAddresses();
 
@@ -91,11 +86,10 @@ double HardwareMonitor::getLinkCost(int neighbor_address) {
 
 void HardwareMonitor::handleMessage(cMessage *msg) {
   if (auto *request = dynamic_cast<LinkTomographyRequest *>(msg)) {
-    /* Received a tomography request from neighbor */
-
+    // Get link tomography request from neighbor node
     auto interface_info = routing_daemon->getQuantumInterfaceInfo(request->getSrcAddr());
 
-    /*Prepare an acknowledgment*/
+    // Send ack to source
     LinkTomographyAck *pk = new LinkTomographyAck("LinkTomographyAck");
     pk->setSrcAddr(my_address);
     pk->setDestAddr(request->getSrcAddr());
@@ -109,17 +103,15 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
   }
 
   if (auto *ack = dynamic_cast<LinkTomographyAck *>(msg)) {
-    /*Received an acknowledgment for tomography from neighbor.*/
+    // Received acknowledegement from neighbor
 
-    /*Create and send RuleSets*/
     int partner_address = ack->getSrcAddr();
-
     auto my_qnic_info = routing_daemon->getQuantumInterfaceInfo(partner_address);
 
-    // RuleSets sent for this node and the partner node.
+    // RuleSet for partner node
     long ruleset_id = HelperFunctions::createUniqueId(this->getRNG(0), my_address, simTime());
     sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info->qnic.type, my_qnic_info->qnic.index, ruleset_id);
-
+    // RuleSet for this node
     QNIC_type partner_qnic_type = ack->getQnic_type();
     int partner_qnic_index = ack->getQnic_index();
     sendLinkTomographyRuleSet(partner_address, my_address, partner_qnic_type, partner_qnic_index, ruleset_id);
@@ -128,24 +120,19 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
   }
 
   if (auto *result = dynamic_cast<LinkTomographyResult *>(msg)) {
-    /*Link tomography measurement result/basis from neighbor received.*/
-    int partner_addr = result->getPartner_address();
-    // Get QNIC info from neighbor address.
-    int qnic_addr_to_partner = routing_daemon->findQNicAddrByDestAddr(partner_addr);
-    auto local_qnic_info = findConnectionInfoByQnicAddr(qnic_addr_to_partner);
-    if (local_qnic_info == nullptr) {
-      error("local qnic info should not be null");
-    }
-    InterfaceInfo inter_info = getQnicInterfaceByQnicAddr(local_qnic_info->qnic.index, local_qnic_info->qnic.type);
-    QNIC local_qnic = inter_info.qnic;
+    // Get link tomography result and make a record for it
+    int partner = result->getPartner_address();
+    auto quantum_interface_info = routing_daemon->getQuantumInterfaceInfo(partner);
 
-    auto qnic_id = local_qnic.index;
-    auto partner = partner_addr;
+    auto qnic_id = quantum_interface_info->qnic.index;
     auto tomography_round = result->getCount_id();
     auto measurement_basis = result->getBasis();
     auto tomography_outcome = result->getOutput_is_plus();
     auto god_clean = result->getGOD_clean();
+
+    // Remember current tomography partners for showing results
     tomography_partners.insert(std::make_tuple(qnic_id, partner));
+
     if (result->getSrcAddr() == my_address) {
       // Result from my self
       // Pass result to the tomography manager
@@ -165,8 +152,6 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
 }
 
 void HardwareMonitor::finish() {
-  EV << "Finishing Hardware Monitor\n";
-  // file name
   std::string file_name = tomography_output_filename;
   std::string df = "default";
   if (file_name.compare(df) == 0) {
@@ -221,34 +206,6 @@ void HardwareMonitor::finish() {
   tomography_dm.close();
 }
 
-void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec) {
-  auto info = findConnectionInfoByQnicAddr(qnic_id);
-  if (info == nullptr) {
-    error("qnic info not found");
-  }
-  InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
-  cModule *const this_node = provider.getQNode();
-  cModule *const neighbor_node = provider.getNeighborNode(interface.qnic.pointer);
-  const cModuleType *const neighbor_node_type = neighbor_node->getModuleType();
-  cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
-  double dis = channel->par("distance");
-  if (provider.isQNodeType(neighbor_node_type) && provider.isBSANodeType(neighbor_node_type) && provider.isSPDCNodeType(neighbor_node_type)) {
-    error("Module Type not recognized when writing to file...");
-  }
-
-  if (provider.isQNodeType(neighbor_node_type)) {
-    if (my_address > info->neighbor_address) {
-      std::cout << "\n"
-                << this_node->getFullName() << "<--> QuantumChannel{ cost = " << link_cost << "; distance = " << dis << "km; fidelity = " << fidelity
-                << "; bellpair_per_sec = " << bellpair_per_sec << ";} <-->" << neighbor_node->getFullName() << "\n";
-    }
-  } else {
-    std::cout << "\n"
-              << this_node->getFullName() << "<--> QuantumChannel{ cost = " << link_cost << "; distance = " << dis << "km; fidelity = " << fidelity
-              << "; bellpair_per_sec = " << bellpair_per_sec << ";} <-->" << neighbor_node->getFullName() << "\n";
-  }
-}
-
 /**
 A complex function defining RuleSets for purification and tomography
 on the link.  This function creates one rule per purification.  As the
@@ -301,144 +258,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   pk->setRuleSet(ruleset);
   send(pk, "RouterPort$o");
 }
-
-cModule *HardwareMonitor::getQnic(int qnic_index, QNIC_type qnic_type) {
-  if (qnic_type >= QNIC_N) {
-    error("invalid qnic type: %d", qnic_type);
-  }
-
-  cModule *qnic = provider.getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
-  if (qnic == nullptr) {
-    error("qnic(index: %d) not found.", qnic_index);
-  }
-  return qnic;
-}
-
-InterfaceInfo HardwareMonitor::getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type) {
-  cModule *local_qnic = getQnic(qnic_index, qnic_type);
-  InterfaceInfo inf;
-  inf.qnic.pointer = local_qnic;
-  inf.qnic.address = local_qnic->par("self_qnic_address");
-  inf.qnic.index = qnic_index;
-  inf.qnic.type = qnic_type;
-  inf.buffer_size = local_qnic->par("num_buffer");
-
-  // Just read link cost from channel parameter for now as a dummy (or as an initialization).
-  // int cost = local_qnic->gate("qnic_quantum_port$o")->getNextGate()->getChannel()->par("cost");
-  // This is false because the channel may only be between the node and BSA.
-
-  // Dummy it up. This cost must be the cost based on the neighboring QNode
-  // (excluding SPDC and BSA nodes)
-  inf.link_cost = 1;
-
-  return inf;
-}
-
-std::unique_ptr<ConnectionSetupInfo> HardwareMonitor::findConnectionInfoByQnicAddr(int qnic_address) {
-  for (auto it = neighbor_table.cbegin(); it != neighbor_table.cend(); ++it) {
-    if (it->second.qnic.address == qnic_address) {
-      auto info = std::make_unique<ConnectionSetupInfo>();
-      info->qnic.type = it->second.qnic.type;
-      info->qnic.index = it->second.qnic.index;
-      info->qnic.address = it->second.qnic.address;
-      info->neighbor_address = it->second.neighborQNode_address;
-      info->quantum_link_cost = it->second.link_cost;
-      return info;
-    }
-  }
-  return nullptr;
-}
-
-// This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
-void HardwareMonitor::prepareNeighborTable() {
-  // Traverse through all local qnics to check where they are connected to.
-  // BSA and EPPS will be ignored in this case.
-  for (int index = 0; index < num_qnic; index++) {
-    InterfaceInfo inf = getQnicInterfaceByQnicAddr(index, QNIC_E);
-    auto n_inf = getNeighbor(inf.qnic.pointer);
-    int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
-    inf.neighborQNode_address = n_inf->neighborQNode_address;
-    neighbor_table[neighborNodeAddress] = inf;
-  }
-  for (int index = 0; index < num_qnic_r; index++) {
-    InterfaceInfo inf = getQnicInterfaceByQnicAddr(index, QNIC_R);
-    auto n_inf = getNeighbor(inf.qnic.pointer);
-    int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
-    inf.neighborQNode_address = n_inf->neighborQNode_address;
-    neighbor_table[neighborNodeAddress] = inf;
-  }
-  for (int index = 0; index < num_qnic_rp; index++) {
-    InterfaceInfo inf = getQnicInterfaceByQnicAddr(index, QNIC_RP);
-    auto n_inf = getNeighbor(inf.qnic.pointer);
-    int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
-    inf.neighborQNode_address = n_inf->neighborQNode_address;
-    neighbor_table[neighborNodeAddress] = inf;
-  }
-}
-
-// This method finds out the address of the neighboring node with respect to the
-// local unique qnic address.
-std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module) {
-  // qnic_quantum_port$o is connected to the node's outermost quantum_port
-  cGate *gate = qnic_module->gate("qnic_quantum_port$o")->getNextGate();
-  cGate *neighbor_gate = gate->getNextGate();
-
-  // Owner could be BSA, EPPS, QNode
-  const cModule *neighbor_node = neighbor_gate->getOwnerModule();
-  if (neighbor_node == nullptr) {
-    error("neighbor node not found.");
-  }
-  auto neighbor_info = createNeighborInfo(*neighbor_node);
-  return neighbor_info;
-}
-
-std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
-  cModuleType *type = thisNode.getModuleType();
-
-  auto inf = std::make_unique<NeighborInfo>();
-  inf->address = thisNode.par("address");
-
-  if (provider.isQNodeType(type)) {
-    inf->neighborQNode_address = thisNode.par("address");
-    inf->address = thisNode.par("address");
-    return inf;
-  }
-
-  if (provider.isBSANodeType(type)) {
-    auto *controller = dynamic_cast<BSAController *>(thisNode.getSubmodule("bsa_controller"));
-    if (controller == nullptr) {
-      error("BSA controller not found");
-    }
-
-    int address_one = controller->getExternalAdressFromPort(0);
-    int address_two = controller->getExternalAdressFromPort(1);
-    int myaddress = provider.getNodeAddr();
-
-    EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
-
-    if (address_one == -1 && address_two == -1) {
-      error("BSA Controller is not initialized properly");
-    }
-
-    if (address_one == myaddress) {
-      inf->neighborQNode_address = address_two;
-    } else if (address_two == myaddress) {
-      inf->neighborQNode_address = address_one;
-    }
-
-    return inf;
-  }
-
-  if (provider.isSPDCNodeType(type)) {
-    error("TO BE IMPLEMENTED");
-  }
-
-  error(
-      "This simulator only recognizes the following network level node "
-      "types: QNode, EPPS and BSA. Not %s",
-      thisNode.getClassName());
-}
-
 }  // namespace quisp::modules
 
 namespace std {

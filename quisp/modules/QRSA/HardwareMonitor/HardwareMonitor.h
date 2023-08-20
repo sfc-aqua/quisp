@@ -32,14 +32,6 @@ class HardwareMonitor : public IHardwareMonitor {
  private:
   int my_address;
 
-  // number of qnics connected to stand alone BSA or internal hom in the neighbor.
-  int num_qnic;
-  // number of qnics connected to internal hom.
-  int num_qnic_r;
-  // number of qnics connected to epps.
-  int num_qnic_rp;
-  int num_qnic_total;
-
   bool do_link_level_tomography = false;
   int num_purification = 0;
   bool x_purification = false;
@@ -53,12 +45,10 @@ class HardwareMonitor : public IHardwareMonitor {
   std::set<std::tuple<int, int>> tomography_partners;
 
   // Store link cost information and routing daemon read this.
+  // neighbor address -> link cost
   std::map<int, double> link_cost_table;
 
   IRoutingDaemon *routing_daemon;
-
-  cModule *getQnic(int qnic_index, QNIC_type qnic_type);
-  NeighborTable neighbor_table;
 
   std::string tomography_output_filename;
   std::string file_dir_name;
@@ -68,13 +58,8 @@ class HardwareMonitor : public IHardwareMonitor {
   void finish() override;
   void handleMessage(cMessage *msg) override;
   int numInitStages() const override { return 2; };
-  void prepareNeighborTable();
   double getLinkCost(int neighbor_addr);
-  virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
-  virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
-  virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id);
-  virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
 };
 
 Define_Module(HardwareMonitor);
