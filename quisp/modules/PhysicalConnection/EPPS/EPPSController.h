@@ -55,6 +55,8 @@ class EPPSController : public cSimpleModule {
   EntangledPhotonPairSource *epps;
   utils::ComponentProvider provider;
   simtime_t first_notification_timer;
+  EmitPhotonRequest *emit_req;
+  bool emission_stopped;
 };
 
 }  // namespace quisp::modules
