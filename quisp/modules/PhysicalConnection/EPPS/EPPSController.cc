@@ -59,7 +59,7 @@ void EPPSController::handleMessage(cMessage *msg) {
     scheduleAt(emit_time, emit_req);
   } else if (dynamic_cast<StopEPPSEmission *>(msg)) {
     delete msg;
-    if(!emission_stopped) {
+    if (!emission_stopped) {
       cancelAndDelete(emit_req);
       emission_stopped = true;
     }
