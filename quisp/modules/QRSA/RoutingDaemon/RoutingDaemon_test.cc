@@ -2,6 +2,11 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
+#include "gmock/gmock-function-mocker.h"
+#include "modules/QNIC.h"
+#include "omnetpp/ccomponent.h"
+#include "omnetpp/cmodule.h"
+#include "test_utils/TestUtilFunctions.h"
 
 namespace {
 
@@ -21,14 +26,42 @@ class MockLinkStateDatabase : public LinkStateDatabase {
   using LinkStateDatabase::link_state_database;
 };
 
+class MockQnic : public cModule {
+ public:
+  MockQnic(int address, int index, QNIC_type qnic_type) {
+    setParInt(this, "self_qnic_address", address);
+    setParInt(this, "self_qnic_index", index);
+    setParInt(this, "self_qnic_type", qnic_type);
+  }
+};
+
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
-  Strategy(TestQNode* _qnode, IHardwareMonitor* _hardware_monitor) : parent_qnode(_qnode), hardware_monitor(_hardware_monitor) {}
-  Strategy(TestQNode* _qnode) : parent_qnode(_qnode) {}
+  Strategy(TestQNode* _qnode, IHardwareMonitor* _hardware_monitor) : parent_qnode(_qnode), hardware_monitor(_hardware_monitor) { initQnicModules(); }
+  Strategy(TestQNode* _qnode) : parent_qnode(_qnode) { initQnicModules(); }
   cModule* getNode() override { return parent_qnode; }
+  cModule* getQNIC(int qnic_index, QNIC_type qnic_type) override {
+    auto it = qnic_modules.find({qnic_type, qnic_index});
+    if (it == qnic_modules.end()) return nullptr;
+    return it->second;
+  }
   int getNodeAddr() override { return parent_qnode->address; }
   SharedResource* getSharedResource() override { return &shared_resource; }
   IHardwareMonitor* getHardwareMonitor() override { return hardware_monitor; }
+
+  void initQnicModules() {
+    //   // init qnic E
+    qnic_modules.insert({{QNIC_E, 0}, new MockQnic(0, 0, QNIC_E)});
+    qnic_modules.insert({{QNIC_E, 1}, new MockQnic(1, 1, QNIC_E)});
+    // init qnic R
+    qnic_modules.insert({{QNIC_R, 0}, new MockQnic(2, 0, QNIC_R)});
+    qnic_modules.insert({{QNIC_R, 1}, new MockQnic(3, 1, QNIC_R)});
+    // init qnic RP
+    qnic_modules.insert({{QNIC_RP, 0}, new MockQnic(4, 0, QNIC_RP)});
+    qnic_modules.insert({{QNIC_RP, 1}, new MockQnic(5, 1, QNIC_RP)});
+  }
+
+  std::map<std::pair<QNIC_type, int>, cModule*> qnic_modules;
 
  private:
   TestQNode* parent_qnode;

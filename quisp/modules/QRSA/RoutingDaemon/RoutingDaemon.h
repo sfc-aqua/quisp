@@ -48,13 +48,13 @@ class RoutingDaemon : public IRoutingDaemon {
   int numInitStages() const override { return 3; };
   std::unique_ptr<QuantumInterfaceInfo> getQuantumInterfaceInfo(int dest_addr) override;
 
+  void prepareQnicAddrMap();
   void resolveQuantumInterfaceInfo();
   void prepareNeighborAddressTableWithTopologyInfo();
   int getNeighborAddressFromQnicModule(const cModule *qnic_module);
   int findQnicAddrByNeighborAddr(int neighbor_addr);
   std::vector<int> getNeighborAddresses() override;
   std::vector<int> neighbor_addresses;
-  cModule *getQnicPointerFromQnicTypeIndex(QNIC_type qnic_type, int qnic_index);
   QuantumInterfaceInfo prepareQuantumInterfaceInfo(cModule *qnic_module);
 
   size_t getNumNeighbors();
