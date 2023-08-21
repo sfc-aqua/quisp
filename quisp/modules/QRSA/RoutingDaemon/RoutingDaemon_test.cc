@@ -5,7 +5,9 @@
 #include "gmock/gmock-function-mocker.h"
 #include "modules/QNIC.h"
 #include "omnetpp/ccomponent.h"
+#include "omnetpp/cgate.h"
 #include "omnetpp/cmodule.h"
+#include "test_utils/QNode.h"
 #include "test_utils/TestUtilFunctions.h"
 
 namespace {
@@ -28,10 +30,25 @@ class MockLinkStateDatabase : public LinkStateDatabase {
 
 class MockQnic : public cModule {
  public:
-  MockQnic(int address, int index, QNIC_type qnic_type) {
+  MockQnic(int address, int index, QNIC_type qnic_type, int conntected_to) {
     setParInt(this, "self_qnic_address", address);
     setParInt(this, "self_qnic_index", index);
     setParInt(this, "self_qnic_type", qnic_type);
+  }
+
+  int connected_to;
+  cGate* gate(const char* gatename, int index = -1) override {
+    auto neighbor_node = new TestQNode(connected_to, 100, false);
+    neighbor_node->setComponentType(new TestModuleType("test qnode"));
+    auto neighbor_gate = neighbor_node->addGate("quantum_port", cGate::Type::INPUT);
+
+    auto dummy_node = new TestQNode(20, 100, false);
+    auto dummy_neighbor_gate = dummy_node->addGate("quantum_port", cGate::Type::INPUT);
+    dummy_neighbor_gate->connectTo(neighbor_gate);
+
+    auto added_gate = this->addGate("qnic_quantum_port", cGate::Type::OUTPUT);
+    added_gate->connectTo(dummy_neighbor_gate);
+    return added_gate;
   }
 };
 
@@ -51,14 +68,14 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 
   void initQnicModules() {
     //   // init qnic E
-    qnic_modules.insert({{QNIC_E, 0}, new MockQnic(0, 0, QNIC_E)});
-    qnic_modules.insert({{QNIC_E, 1}, new MockQnic(1, 1, QNIC_E)});
+    qnic_modules.insert({{QNIC_E, 0}, new MockQnic(0, 0, QNIC_E, 1)});
+    qnic_modules.insert({{QNIC_E, 1}, new MockQnic(1, 1, QNIC_E, 2)});
     // init qnic R
-    qnic_modules.insert({{QNIC_R, 0}, new MockQnic(2, 0, QNIC_R)});
-    qnic_modules.insert({{QNIC_R, 1}, new MockQnic(3, 1, QNIC_R)});
+    qnic_modules.insert({{QNIC_R, 0}, new MockQnic(2, 0, QNIC_R, 3)});
+    qnic_modules.insert({{QNIC_R, 1}, new MockQnic(3, 1, QNIC_R, 4)});
     // init qnic RP
-    qnic_modules.insert({{QNIC_RP, 0}, new MockQnic(4, 0, QNIC_RP)});
-    qnic_modules.insert({{QNIC_RP, 1}, new MockQnic(5, 1, QNIC_RP)});
+    qnic_modules.insert({{QNIC_RP, 0}, new MockQnic(4, 0, QNIC_RP, 5)});
+    qnic_modules.insert({{QNIC_RP, 1}, new MockQnic(5, 1, QNIC_RP, 6)});
   }
 
   std::map<std::pair<QNIC_type, int>, cModule*> qnic_modules;
@@ -79,6 +96,11 @@ class RoutingDaemonTestTarget : public RoutingDaemon {
   using RoutingDaemon::my_address;
   using RoutingDaemon::neighbor_table;
   using RoutingDaemon::qrtable;
+
+  using RoutingDaemon::num_qnic;
+  using RoutingDaemon::num_qnic_r;
+  using RoutingDaemon::num_qnic_rp;
+
   RoutingDaemonTestTarget(TestQNode* qnode) : RoutingDaemon() {
     setParBool(this, "run_ospf", true);
     setParInt(this, "number_of_qnics", 2);
@@ -86,6 +108,7 @@ class RoutingDaemonTestTarget : public RoutingDaemon {
     setParInt(this, "number_of_qnics_rp", 2);
     my_address = qnode->address;
     RouterPort = new TestGate(this, "RouterPort$o");
+    this->qnic_num_map = {{QNIC_E, 2}, {QNIC_R, 2}, {QNIC_RP, 2}};
     this->provider.setStrategy(std::make_unique<Strategy>(qnode));
   }
 

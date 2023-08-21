@@ -39,6 +39,13 @@ class RoutingDaemon : public IRoutingDaemon {
   LinkStateDatabase link_state_database;
   InterfaceTable interface_table;
 
+  int num_qnic;
+  int num_qnic_r;
+  int num_qnic_rp;
+  std::map<QNIC_type, int> qnic_num_map;
+  // qnic_addr -> (qnic_type, qnic_index)
+  std::map<int, std::tuple<QNIC_type, int>> qnic_addr_map;
+
   void generateRoutingTable();
   void generateRoutingTable(cTopology *topo);
   int getQNicAddr(const cGate *const parentModuleGate);
@@ -88,12 +95,6 @@ class RoutingDaemon : public IRoutingDaemon {
 
  private:
   bool run_ospf;
-  int num_qnic;
-  int num_qnic_r;
-  int num_qnic_rp;
-  std::map<QNIC_type, int> qnic_num_map;
-  // qnic_addr -> (qnic_type, qnic_index)
-  std::map<int, std::tuple<QNIC_type, int>> qnic_addr_map;
 };
 
 }  // namespace quisp::modules::routing_daemon

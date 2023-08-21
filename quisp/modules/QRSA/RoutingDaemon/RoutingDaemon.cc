@@ -12,6 +12,7 @@
 #include "modules/QNIC.h"
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
 #include "omnetpp/cexception.h"
+#include "test_utils/QNode.h"
 
 using namespace omnetpp;
 
@@ -199,8 +200,10 @@ QuantumInterfaceInfo RoutingDaemon::prepareQuantumInterfaceInfo(cModule *qnic_mo
  */
 int RoutingDaemon::getNeighborAddressFromQnicModule(const cModule *qnic_module) {
   // qnic_quantum_port$o is connected to the node's outermost quantum_port
-  cGate *gate = qnic_module->gate("qnic_quantum_port$o")->getNextGate();
-  cGate *neighbor_gate = gate->getNextGate();
+  auto *neighbor_gate = qnic_module->gate("qnic_quantum_port$o")->getNextGate()->getNextGate();
+  if (neighbor_gate == nullptr) {
+    error("This qnic is not connected to any node.");
+  }
 
   // neighbor node could be BSA, EPPS, QNode
   const cModule *neighbor_node = neighbor_gate->getOwnerModule();
@@ -211,6 +214,10 @@ int RoutingDaemon::getNeighborAddressFromQnicModule(const cModule *qnic_module) 
   // Check neighbor node
   cModuleType *neighbor_node_type = neighbor_node->getModuleType();
 
+  if ((std::string)neighbor_node->getClassName() == "quisp_test::qnode::TestQNode"){
+    // In the case where this node is test node, just return address
+    return neighbor_node->par("address").intValue();
+  }
   // Based on node type, prepare neighbor table
   if (provider.isQNodeType(neighbor_node_type)) {
     // QNode (Just take address fro neighbor_node)
@@ -272,13 +279,13 @@ int RoutingDaemon::findQnicAddrByNeighborAddr(int neighbor_addr) {
   // This function is used when ospf is running.
   // We cannot use Quantum Interface Info at this point since qrtable is not ready.
   std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R, QNIC_RP};
-
   // 1. Go through all the qnics
   for (auto qnic_type : qnic_types) {
     for (int qnic_index = 0; qnic_index < qnic_num_map[qnic_type]; qnic_index++) {
       cModule *qnic = provider.getQNIC(qnic_index, qnic_type);
       // If this qnic's naighbor is the target neighbor, finish and return qnic address
       auto neighbor = getNeighborAddressFromQnicModule(qnic);
+      std::cout<<"neighbor: "<<neighbor<<":"<<neighbor_addr<<std::endl;
       if (neighbor == neighbor_addr) {
         return qnic->par("self_qnic_address").intValue();
       }
