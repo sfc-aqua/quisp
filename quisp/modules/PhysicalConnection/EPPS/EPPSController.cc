@@ -36,6 +36,7 @@ void EPPSController::initialize() {
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
   time_out_count = 0;
+  emission_stopped = false;
   checkNeighborsBSACapacity();
   time_out_message = new EPPSNotificationTimeout();
   first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
@@ -43,9 +44,9 @@ void EPPSController::initialize() {
 }
 
 void EPPSController::handleMessage(cMessage *msg) {
-  if (dynamic_cast<EmitPhotonRequest *>(msg)) {
+  if (auto *pk = dynamic_cast<EmitPhotonRequest *>(msg)) {
     epps->emitPhotons();
-    scheduleAt(simTime() + time_interval_between_photons, msg);
+    scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
   } else if (msg == time_out_message) {
     last_result_send_time = simTime();
     emit_time = simTime() + 2 * std::max(left_travel_time, right_travel_time);
@@ -53,10 +54,15 @@ void EPPSController::handleMessage(cMessage *msg) {
     EPPSTimingNotification *right_pk = generateNotifier(false);
     send(left_pk, "to_router");
     send(right_pk, "to_router");
-    EmitPhotonRequest *emt = new EmitPhotonRequest();
-    scheduleAt(emit_time, emt);
+    emit_req = new EmitPhotonRequest();
+    emit_req->setIntervalBetweenPhotons(time_interval_between_photons);
+    scheduleAt(emit_time, emit_req);
   } else if (dynamic_cast<StopEPPSEmission *>(msg)) {
     delete msg;
+    if(!emission_stopped) {
+      cancelAndDelete(emit_req);
+      emission_stopped = true;
+    }
     return;
   }
   return;
