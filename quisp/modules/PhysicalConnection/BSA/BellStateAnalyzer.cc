@@ -148,6 +148,8 @@ BSAClickResult BellStateAnalyzer::processIndistinguishPhotons(PhotonRecord &p, P
   if (!p.is_lost && !q.is_lost && isPsi && left_click && right_click) {
     bool isPsiPlus = dblrand() < 0.5;
     measureSuccessfully(p, q, isPsiPlus);
+    discardPhoton(p);
+    discardPhoton(q);
     return {.success = true, .correction_operation = isPsiPlus ? PauliOperator::X : PauliOperator::Y};
   }
 
