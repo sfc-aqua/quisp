@@ -170,13 +170,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
-    int qnic_index = pkt->getQnic_address();
-    auto &msm_info = msm_info_map[qnic_index];
-    if (msm_info.photon_index_counter == 0) return;
-    StopEPPSEmission *stop_epps_emission = new StopEPPSEmission();
-    stop_epps_emission->setSrcAddr(parentAddress);
-    stop_epps_emission->setDestAddr(msm_info.epps_address);
-    send(stop_epps_emission, "RouterPort$o");
+    handleStopEmitting(pkt);
   }
 
   for (int i = 0; i < number_of_qnics; i++) {
@@ -329,6 +323,17 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
       realtime_controller->applyYGate(qubit_record);
     }
   }
+}
+
+void RuleEngine::handleStopEmitting(StopEmitting *stop_emit) {
+  int qnic_index = stop_emit->getQnic_address();
+  auto &msm_info = msm_info_map[qnic_index];
+  // only do the following procedure for MSM links
+  if (msm_info.photon_index_counter == 0) return;
+  StopEPPSEmission *stop_epps_emission = new StopEPPSEmission();
+  stop_epps_emission->setSrcAddr(parentAddress);
+  stop_epps_emission->setDestAddr(msm_info.epps_address);
+  send(stop_epps_emission, "RouterPort$o");
 }
 
 void RuleEngine::handlePurificationResult(PurificationResult *result) {
