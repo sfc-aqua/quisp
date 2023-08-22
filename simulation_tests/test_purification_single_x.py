@@ -115,24 +115,24 @@ async def test_Single_X_Purification_MM_Werner_State():
         "Yerror": 0.0354823,
     }
 
-# @pytest.mark.asyncio
-# async def test_Single_X_Purification_MSM_Werner_State():
-#     worker = Worker()
-#     await worker.run(
-#         config_name="Single_X_Purification_MSM_Werner_State",
-#         ned_file_path="simulations/simulation_test.ini",
-#     )
-#     print(worker.output)
-#     worker.print_results()
-#     assert worker.results["EndNode1<-->EndNode2"]["data"] == {
-#         "Fidelity": ,
-#         "Xerror": ,
-#         "Zerror": ,
-#         "Yerror": ,
-#     }
-#     assert worker.results["EndNode2<-->EndNode1"]["data"] == {
-#         "Fidelity": ,
-#         "Xerror": ,
-#         "Zerror": ,
-#         "Yerror": ,
-#     }
+@pytest.mark.asyncio
+async def test_Single_X_Purification_MSM_Werner_State():
+    worker = Worker()
+    await worker.run(
+        config_name="Single_X_Purification_MSM_Werner_State",
+        ned_file_path="simulations/simulation_test.ini",
+    )
+    print(worker.output)
+    worker.print_results()
+    assert worker.results["EndNode1<-->EndNode2"]["data"] == {
+        "Fidelity": 0.741115,
+        "Xerror": 0.0313297,
+        "Zerror": 0.196659,
+        "Yerror": 0.0308964,
+    }
+    assert worker.results["EndNode2<-->EndNode1"]["data"] == {
+        "Fidelity": 0.741115,
+        "Xerror": 0.0313297,
+        "Zerror": 0.196659,
+        "Yerror": 0.0308964,
+    }
