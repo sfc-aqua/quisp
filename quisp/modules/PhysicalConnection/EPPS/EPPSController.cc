@@ -47,6 +47,7 @@ void EPPSController::handleMessage(cMessage *msg) {
   if (auto *pk = dynamic_cast<EmitPhotonRequest *>(msg)) {
     epps->emitPhotons();
     scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
+    return;
   } else if (msg == time_out_message) {
     last_result_send_time = simTime();
     emit_time = simTime() + 2 * std::max(left_travel_time, right_travel_time);
@@ -58,13 +59,12 @@ void EPPSController::handleMessage(cMessage *msg) {
     emit_req->setIntervalBetweenPhotons(time_interval_between_photons);
     scheduleAt(emit_time, emit_req);
   } else if (dynamic_cast<StopEPPSEmission *>(msg)) {
-    delete msg;
     if (!emission_stopped) {
       cancelAndDelete(emit_req);
       emission_stopped = true;
     }
-    return;
   }
+  delete msg;
   return;
 }
 
