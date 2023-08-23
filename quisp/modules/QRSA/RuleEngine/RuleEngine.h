@@ -81,13 +81,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void AllocateResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
   void freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
   std::vector<IQubitRecord*> getAllocatedResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
-
- protected:
-  void initialize() override;
-  void handleMessage(cMessage *msg) override;
-  void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
-  void handlePurificationResult(messages::PurificationResult *purification_result);
-  void handleSwappingResult(messages::SwappingResult *swapping_result);
   void handleConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *connection_teardown_message);
   void handleInternalConnectionTeardownInfoForwarding(messages::InternalConnectionTeardownInfoForwarding *connection_teardown_info_forwarding);
   string getRoleFromInternalConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *msg);
@@ -98,6 +91,14 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void sendLinkAllocationUpdateRequest(messages::BarrierMessage *msg);
   void sendLinkAllocationUpdateResponse(messages::LinkAllocationUpdateRequest *msg);
   void executeAllRuleSets();
+  std::vector<int> qnode_indices;
+
+ protected:
+  void initialize() override;
+  void handleMessage(cMessage *msg) override;
+  void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
+  void handlePurificationResult(messages::PurificationResult *purification_result);
+  void handleSwappingResult(messages::SwappingResult *swapping_result);
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);
   void freeFailedEntanglementAttemptQubits(QNIC_type qnic_type, int qnic_index);
@@ -110,7 +111,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   runtime::RuntimeManager runtimes;
   std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
-  std::vector<int> qnode_indices;
+  
 };
 
 Define_Module(RuleEngine);
