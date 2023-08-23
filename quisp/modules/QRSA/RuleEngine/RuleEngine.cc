@@ -138,15 +138,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
     sendLinkAllocationUpdateDecisionResponse(pkt);
-    auto ruleset_id = pkt->getCurrentRuleSet_id();
-    runtimes.stopById(ruleset_id);
-    for (int i = 0; i < number_of_qnics; i++) {
-      freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
-    }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
     auto ruleset_id = pkt->getCurrentRuleSet_id();
-    runtimes.stopById(ruleset_id);
-
     auto sequence_number = 0;
     for (int i = 0; i < number_of_qnics; i++) {
       qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, i, ruleset_id);
