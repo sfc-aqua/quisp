@@ -37,6 +37,7 @@ using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::rules;
 using namespace quisp::modules;
+using namespace quisp::messages;
 using quisp::modules::qrsa::IQubitRecord;
 using quisp::modules::qubit_record::QubitRecord;
 using namespace quisp_test;
@@ -84,7 +85,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 
   RuleEngineTestTarget(IStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller,
                        std::vector<QNicSpec> qnic_specs = {})
-      : quisp::modules::RuleEngine() {
+      : quisp::modules::RuleEngine(), toRouterGate(new TestGate(this, "RouterPort$o")) {
     setParInt(this, "address", 2);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 1);
@@ -95,14 +96,20 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     setComponentType(new TestModuleType("rule_engine_test"));
     qnic_store = std::make_unique<StrictMock<MockQNicStore>>();
   }
-  // setter function for allResources[qnic_type][qnic_index]
+  // setter function for allResorces[qnic_type][qnic_index]
   void setAllResources(int partner_addr, IQubitRecord* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
-
- private:
-  FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
-  FRIEND_TEST(RuleEngineTest, trackerUpdate);
-  friend class MockRoutingDaemon;
-  friend class MockHardwareMonitor;
+  cGate *gate(const char *gatename, int index = -1) {
+    if (strcmp(gatename, "RouterPort$o") != 0) {
+      throw cRuntimeError("unknown gate called");
+    }
+    return toRouterGate;
+  }
+  TestGate *toRouterGate;
+  private:
+    FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
+    FRIEND_TEST(RuleEngineTest, trackerUpdate);
+    friend class MockRoutingDaemon;
+    friend class MockHardwareMonitor;
 };
 
 class RuleEngineTest : public testing::Test {
@@ -122,7 +129,7 @@ class RuleEngineTest : public testing::Test {
   MockRoutingDaemon* routing_daemon;
   MockHardwareMonitor* hardware_monitor;
   MockRealTimeController* realtime_controller;
-};
+}; 
 
 // specifier for qnics in order to create qnic_record and qubit_record.
 static const std::vector<QNicSpec> qnic_specs = {{QNIC_E, 0, 2}, {QNIC_R, 0, 2}};
@@ -205,6 +212,46 @@ TEST_F(RuleEngineTest, freeConsumedResource) {
   EXPECT_FALSE(qubit_record->isBusy());
   delete qubit;
   delete rule_engine->qnic_store.get();
+}
+
+TEST_F(RuleEngineTest, handleInternalConnectionTeardownInfoForwarding) {
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+
+  auto *pkt = new InternalConnectionTeardownInfoForwarding();
+  pkt->setNext_destAddr(1);
+  rule_engine->handleInternalConnectionTeardownInfoForwarding(pkt);
+  EXPECT_EQ(rule_engine->qnode_indices, vector<int>{1});
+}
+
+TEST_F(RuleEngineTest, getRoleFromInternalConnectionTeardownMessage) {
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+
+  auto *pkt = new InternalConnectionTeardownMessage();
+  pkt->setRole("SEND");
+  auto role = rule_engine->getRoleFromInternalConnectionTeardownMessage(pkt);
+  EXPECT_EQ(role, "SEND");
+}
+
+TEST_F(RuleEngineTest, sendLinkAllocationUpdateDecisionRequest) {
+  auto *sim = prepareSimulation();
+  auto *routing_daemon = new MockRoutingDaemon();
+  auto *hardware_monitor = new MockHardwareMonitor();
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+
+  auto *msg = new InternalConnectionTeardownMessage();
+  msg->setNext_destAddr(1);
+  msg->setRuleSet_id(111);
+  rule_engine->sendLinkAllocationUpdateDecisionRequest(msg);
+
+  sim->setContext(rule_engine);
+  auto gate = rule_engine->toRouterGate;
+  EXPECT_EQ(gate->messages.size(), 1);
 }
 
 }  // namespace
