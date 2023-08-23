@@ -151,16 +151,19 @@ void RuleEngine::handleMessage(cMessage *msg) {
     for (int i = 0; i < number_of_qnics; i++) {
       qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, i, ruleset_id);
       for(IQubitRecord *qubit_record : qubit_record_list) {
-        if (qubit_record_list.size() == sequence_number) {
-
+        if (sequence_number == qubit_record_list.size()) {
+          sendBarrierMessage(pkt, qubit_record, sequence_number, true);
+          break;
         }
-        sendBarrierMessage(pkt, qubit_record, sequence_number);
+        sendBarrierMessage(pkt, qubit_record, sequence_number, false);
         sequence_number += 1;
       }
     }
   } else if (auto *pkt = dynamic_cast<BarrierMessage *>(msg)) { 
     if (strcmp(pkt->getRole(), "SEND")) {
      sendBarrierMessageAck(pkt);
+    } else if (pkt->getIs_last()) {
+      sendLinkAllocationUpdateRequest(pkt);
     }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) { 
     sendLinkAllocationUpdateResponse(pkt);
