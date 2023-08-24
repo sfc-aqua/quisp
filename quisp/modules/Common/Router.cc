@@ -60,9 +60,9 @@ void Router::generateRoutingTable(cTopology *topo) {
 }
 
 void Router::handleMessage(cMessage *msg) {
+  const int unidentified_destination = -1;
   // check the header of the received package
   Header *pk = check_and_cast<Header *>(msg);
-
   int dest_addr = pk->getDestAddr();
   int who_are_you = pk->getKind();
 
@@ -125,20 +125,64 @@ void Router::handleMessage(cMessage *msg) {
   } else if (dest_addr == my_address && dynamic_cast<StopEmitting *>(msg)) {
     send(pk, "rePort$o");
     return;
+  } else if (dest_addr == my_address && dynamic_cast<OspfPacket *>(msg)) {
+    send(pk, "rdPort$o");
+    return;
+  }
+
+  // RoutingDaemon sends hello packet without desination specified
+  if (dest_addr == unidentified_destination && dynamic_cast<OspfHelloPacket *>(msg)) {
+    handleOspfHelloPacket(msg);
+    return;
   }
 
   // Check if packet is reachable
-  auto it = routing_table.find(dest_addr);
-  if (it == routing_table.end()) {
+  if (!routing_table.count(dest_addr)) {
     std::cout << "In Node[" << my_address << "]Address... " << dest_addr << " unreachable, discarding packet " << pk->getName() << endl;
     delete pk;
     error("Router couldn't find the path. Shoudn't happen. Or maybe the router does not understand the packet.");
     return;
   }
 
-  int out_gate_index = (*it).second;
+  int out_gate_index = routing_table.at(dest_addr);
   pk->setHopCount(pk->getHopCount() + 1);
   send(pk, "toQueue", out_gate_index);
 }
+
+void Router::handleOspfHelloPacket(cMessage *msg) {
+  auto pk = dynamic_cast<OspfHelloPacket *>(msg);
+  if (!parentModuleIsQNode()) {
+    nonQNodeForwardOspfPacket(pk);
+    return;
+  }
+
+  const bool dst_is_this_node = (pk->getSrcAddr() != my_address);
+  if (dst_is_this_node) {
+    redirectOspfHelloPacketToRoutingDaemon(pk);
+  } else {
+    sendOspfHelloPacketToQueue(pk);
+  }
+}
+
+bool Router::parentModuleIsQNode() { return provider.getNode()->getModuleType() == cModuleType::get("modules.QNode"); }
+
+/**
+ * @details Unlike QNodes, BSA nodes are connected to only two nodes (at least that is the assumption)
+ *          So this function simulates BSA nodes receiving packets from one node, and sending them to the other node.
+ */
+void Router::nonQNodeForwardOspfPacket(OspfPacket *pk) {
+  pk->setHopCount(pk->getHopCount() + 1);
+  const int gate_index_to_pk_src = pk->getArrivalGate()->getIndex();
+  const int gate_index_to_pk_dst = gate_index_to_pk_src == 0 ? 1 : 0;
+  send(pk, "toQueue", gate_index_to_pk_dst);
+}
+
+void Router::sendOspfHelloPacketToQueue(OspfPacket *pk) {
+  pk->setHopCount(pk->getHopCount() + 1);
+  const int gate_index_to_pk_dst = pk->getSendingGateIndex();
+  send(pk, "toQueue", gate_index_to_pk_dst);
+}
+
+void Router::redirectOspfHelloPacketToRoutingDaemon(OspfPacket *pk) { send(pk, "rdPort$o"); }
 
 }  // namespace quisp::modules
