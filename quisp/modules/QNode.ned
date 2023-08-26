@@ -111,6 +111,7 @@ module QNode
             qnic_rp[i].to_parent_router --> router.fromQNIC++; // Directly connected to internal BSA
         }
 
+        router.rdPort <--> qrsa.rdPort;
         router.rePort <--> qrsa.rePort;
         router.cmPort <--> qrsa.cmPort;
         router.hmPort <--> qrsa.hmPort;
