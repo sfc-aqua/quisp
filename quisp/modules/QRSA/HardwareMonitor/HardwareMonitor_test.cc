@@ -90,12 +90,20 @@ class HardwareMonitorTest : public testing::Test {
 TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
   // Test for accepting tomography result from my self and put it to tomography manager
   // Situation:
-  // Node 0 (qnic_id: 1) <--> (qnic_id: 0)Node 1
+  // Node 0 (self, qnic_id: 1, qnic_type: QNIC_E) <--> (qnic_id: 0, qnic_type: QNIC_R)Node 1
   // EXPECT_CALL(*tomography_manager, addLocalResult).Times(1);
   // EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr).Times(1).WillOnce(Return(1));
-  // auto qinter_info = std::make_unique<QuantumInterfaceInfo>();
+  // auto qinter_info = QuantumInterfaceInfo {
+  //   .qnic = {
+  //     .type = QNIC_type::QNIC_E,
+  //     .index = 0,
+  //   },
+  //   .buffer_size = 10,
+  //   .link_cost = 1,
+  //   .neighbor_address = 1,
+  // };
 
-  // EXPECT_CALL(*routing_daemon, getQuantumInterfaceInfo).Times(1).WillOnce(Return());
+  // EXPECT_CALL(*routing_daemon, getQuantumInterfaceInfo).Times(1).WillOnce(Return(qinter_info));
 
   // auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
   // sim->registerComponent(hardware_monitor);

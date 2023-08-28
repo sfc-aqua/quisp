@@ -15,7 +15,7 @@ struct QuantumInterfaceInfo {
   int neighbor_address;
 };
 
-const QuantumInterfaceInfo NULL_QUANTUM_INTERFACE_IFNO{
+const QuantumInterfaceInfo NULL_QUANTUM_INTERFACE_INFO{
     .qnic =
         {
             .type = QNIC_N,

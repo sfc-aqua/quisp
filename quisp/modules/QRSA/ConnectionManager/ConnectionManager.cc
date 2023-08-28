@@ -381,7 +381,7 @@ void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
   int responder_addr = req->getActual_destAddr();
 
   // No invound qinterface info because it's initiator
-  auto inbound_qinterface_info = std::make_unique<QuantumInterfaceInfo>(NULL_QUANTUM_INTERFACE_IFNO);
+  auto inbound_qinterface_info = std::make_unique<QuantumInterfaceInfo>(NULL_QUANTUM_INTERFACE_INFO);
   auto outbound_qinterface_info = routing_daemon->getQuantumInterfaceInfo(responder_addr);
 
   // Update information and send it to the next Qnode.
