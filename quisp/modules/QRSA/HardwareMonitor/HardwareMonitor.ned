@@ -15,7 +15,6 @@ simple HardwareMonitor
         bool link_tomography;
         int num_measure = default(3000);
         string tomography_output_filename = default("default");
-        string file_dir_name = default("results/");
 	// purification control
         int initial_purification;
         int purification_type;

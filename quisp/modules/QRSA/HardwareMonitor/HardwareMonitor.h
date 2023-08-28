@@ -37,7 +37,6 @@ class HardwareMonitor : public IHardwareMonitor {
   bool z_purification = false;
   int purification_type = -1;
   int num_measure;
-  int num_end_nodes;
 
   // record all the partner information that perform tomography with this node.
   // Vector<Tuple<qnic_index, partner_address>>
@@ -50,7 +49,6 @@ class HardwareMonitor : public IHardwareMonitor {
   IRoutingDaemon *routing_daemon;
 
   std::string tomography_output_filename;
-  std::string file_dir_name;
 
  protected:
   void initialize(int stage) override;
@@ -58,7 +56,7 @@ class HardwareMonitor : public IHardwareMonitor {
   void handleMessage(cMessage *msg) override;
   int numInitStages() const override { return 2; };
   double getLinkCost(int neighbor_addr) override;
-  virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id);
+  [[deprecated("sendTomographyRuleSet should be moved to connection manager")]]virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id);
 };
 
 Define_Module(HardwareMonitor);

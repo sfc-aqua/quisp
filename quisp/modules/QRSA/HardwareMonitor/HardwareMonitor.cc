@@ -42,7 +42,6 @@ void HardwareMonitor::initialize(int stage) {
   // remove double quotes at the beginning and end
   tomography_output_filename = par("tomography_output_filename").str();
   tomography_output_filename = tomography_output_filename.substr(1, tomography_output_filename.length() - 2);
-  file_dir_name = par("file_dir_name").str();
 
   // tomography parameters
   do_link_level_tomography = par("link_tomography");
@@ -60,7 +59,7 @@ void HardwareMonitor::initialize(int stage) {
 
   // Initialize link costs
   for (auto neighbor : neighbor_addresses) {
-    // Values will be updated after link tomography
+    // Values should be updated after link tomography
     link_cost_table[neighbor] = 1;
   }
 
