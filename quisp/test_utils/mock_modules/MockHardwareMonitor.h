@@ -10,10 +10,7 @@ namespace quisp_test {
 namespace mock_modules {
 namespace hardware_monitor {
 
-using quisp::modules::ConnectionSetupInfo;
 using quisp::modules::IHardwareMonitor;
-using quisp::modules::InterfaceInfo;
-using quisp::modules::NeighborTable;
 using quisp::modules::QNIC_type;
 using quisp_test::utils::setParBool;
 using quisp_test::utils::setParDouble;

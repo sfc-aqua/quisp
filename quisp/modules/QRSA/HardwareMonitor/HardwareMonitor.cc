@@ -76,13 +76,6 @@ void HardwareMonitor::initialize(int stage) {
   }
 }
 
-double HardwareMonitor::getLinkCost(int neighbor_address) {
-  if (!link_cost_table.count(neighbor_address)) {
-    error("Link cost for neighbor %d not found", neighbor_address);
-  }
-  return link_cost_table[neighbor_address];
-}
-
 void HardwareMonitor::handleMessage(cMessage *msg) {
   if (auto *request = dynamic_cast<LinkTomographyRequest *>(msg)) {
     // Get link tomography request from neighbor node
@@ -148,6 +141,13 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     delete result;
     return;
   }
+}
+
+double HardwareMonitor::getLinkCost(int neighbor_address) {
+  if (!link_cost_table.count(neighbor_address)) {
+    error("Link cost for neighbor %d not found", neighbor_address);
+  }
+  return link_cost_table[neighbor_address];
 }
 
 void HardwareMonitor::finish() {
@@ -258,14 +258,3 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   send(pk, "RouterPort$o");
 }
 }  // namespace quisp::modules
-
-namespace std {
-std::stringstream &operator<<(std::stringstream &os, const quisp::modules::NeighborInfo &v) {
-  os << "neighborInfo(addr: " << v.address << ", neighborQNodeAddr: " << v.neighborQNode_address;
-  return os;
-}
-std::basic_ostream<char> &operator<<(std::basic_ostream<char> &os, const quisp::modules::InterfaceInfo &v) {
-  os << "InterfaceInf(neighborQNodeAddr: " << v.neighborQNode_address << ", qnic.addr: " << v.qnic.address << ")";
-  return os;
-}
-}  // namespace std

@@ -56,14 +56,10 @@ class HardwareMonitor : public IHardwareMonitor {
   void handleMessage(cMessage *msg) override;
   int numInitStages() const override { return 2; };
   double getLinkCost(int neighbor_addr) override;
-  [[deprecated("sendTomographyRuleSet should be moved to connection manager")]]virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id);
+  [[deprecated("sendTomographyRuleSet should be moved to connection manager")]] virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type,
+                                                                                                                       int qnic_index, unsigned long ruleset_id);
 };
 
 Define_Module(HardwareMonitor);
 
 }  // namespace quisp::modules
-
-namespace std {
-std::stringstream &operator<<(std::stringstream &os, const quisp::modules::NeighborInfo &v);
-std::basic_ostream<char> &operator<<(std::basic_ostream<char> &os, const quisp::modules::InterfaceInfo &v);
-}  // namespace std
