@@ -211,13 +211,13 @@ int RoutingDaemon::getNeighborAddressFromQnicModule(const cModule *qnic_module) 
     error("neighbor node not found.");
   }
 
-  // Check neighbor node
-  cModuleType *neighbor_node_type = neighbor_node->getModuleType();
-
-  if ((std::string)neighbor_node->getClassName() == "quisp_test::qnode::TestQNode"){
+  if ((std::string)neighbor_node->getClassName() == "quisp_test::qnode::TestQNode") {
     // In the case where this node is test node, just return address
     return neighbor_node->par("address").intValue();
   }
+
+  // Check neighbor node
+  cModuleType *neighbor_node_type = neighbor_node->getModuleType();
   // Based on node type, prepare neighbor table
   if (provider.isQNodeType(neighbor_node_type)) {
     // QNode (Just take address fro neighbor_node)
@@ -285,7 +285,6 @@ int RoutingDaemon::findQnicAddrByNeighborAddr(int neighbor_addr) {
       cModule *qnic = provider.getQNIC(qnic_index, qnic_type);
       // If this qnic's naighbor is the target neighbor, finish and return qnic address
       auto neighbor = getNeighborAddressFromQnicModule(qnic);
-      std::cout<<"neighbor: "<<neighbor<<":"<<neighbor_addr<<std::endl;
       if (neighbor == neighbor_addr) {
         return qnic->par("self_qnic_address").intValue();
       }

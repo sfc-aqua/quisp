@@ -34,6 +34,7 @@ class MockQnic : public cModule {
     setParInt(this, "self_qnic_address", address);
     setParInt(this, "self_qnic_index", index);
     setParInt(this, "self_qnic_type", qnic_type);
+    connected_to = conntected_to;
   }
 
   int connected_to;
@@ -210,11 +211,6 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
   NeighborTable neighbor_table;
   neighbor_table[routing_daemon->my_address] = OspfNeighborInfo(routing_daemon->my_address);
   msg_from_other_node->setNeighborTable(neighbor_table);
-
-  // auto expected_qnic = std::make_unique<InterfaceInfo>();
-  // expected_qnic->qnic.address = 0;
-  // expected_qnic->link_cost = 1;
-  // EXPECT_CALL(*mock_hardware_monitor, findInterfaceByNeighborAddr(_)).WillOnce(Return(ByMove(std::move(expected_qnic))));
 
   routing_daemon->handleMessage(msg_from_other_node);
 
