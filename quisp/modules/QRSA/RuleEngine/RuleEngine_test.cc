@@ -237,7 +237,33 @@ TEST_F(RuleEngineTest, getRoleFromInternalConnectionTeardownMessage) {
   EXPECT_EQ(role, "SEND");
 }
 
+TEST_F(RuleEngineTest, sendLinkAllocationUpdateDecisionRequest) {
+  auto *sim = prepareSimulation();
+  auto *routing_daemon = new MockRoutingDaemon();
+  auto *hardware_monitor = new MockHardwareMonitor();
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  sim->registerComponent(rule_engine);
+  sim->setContext(rule_engine);
+  
+  rule_engine->callInitialize();
 
+  auto *msg = new InternalConnectionTeardownMessage();
+
+  msg->setNext_destAddr(1);
+  msg->setRuleSet_id(111);
+  rule_engine->sendLinkAllocationUpdateDecisionRequest(msg);
+  EXPECT_NE(msg, nullptr);
+
+  auto gate = rule_engine->toRouterGate;
+  EXPECT_EQ(gate->messages.size(), 1);
+
+  auto pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(gate->messages[0]);
+  EXPECT_EQ(pkt->getSrcAddr(), 5);
+  EXPECT_EQ(pkt->getDestAddr(), 0);
+  EXPECT_EQ(pkt->getCurrentRuleSet_id(), 111);
+  EXPECT_EQ(pkt->getOffered_ruleset_idsArraySize(), 1);
+
+}
 
 
 }  // namespace
