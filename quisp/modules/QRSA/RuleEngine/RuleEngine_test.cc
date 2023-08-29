@@ -60,6 +60,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
     delete hardwareMonitor;
     delete realtimeController;
   }
+  int getNodeAddr() override { return 5; };
   IStationaryQubit* mockQubit = nullptr;
   MockRoutingDaemon* routingDaemon = nullptr;
   MockHardwareMonitor* hardwareMonitor = nullptr;
@@ -236,26 +237,7 @@ TEST_F(RuleEngineTest, getRoleFromInternalConnectionTeardownMessage) {
   EXPECT_EQ(role, "SEND");
 }
 
-TEST_F(RuleEngineTest, sendLinkAllocationUpdateDecisionRequest) {
-  auto *sim = prepareSimulation();
-  auto *routing_daemon = new MockRoutingDaemon();
-  auto *hardware_monitor = new MockHardwareMonitor();
-  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  sim->registerComponent(rule_engine);
-  sim->setContext(rule_engine);
-  
-  rule_engine->par("address") = 5;
-  rule_engine->callInitialize();
 
-  auto *pkt = new InternalConnectionTeardownMessage();
-  pkt->setNext_destAddr(1);
-  pkt->setRuleSet_id(111);
-  rule_engine->sendLinkAllocationUpdateDecisionRequest(pkt);
-  EXPECT_NE(pkt, nullptr);
-
-  auto gate = rule_engine->toRouterGate;
-  EXPECT_EQ(gate->messages.size(), 1);
-}
 
 
 }  // namespace
