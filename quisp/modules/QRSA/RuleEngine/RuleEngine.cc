@@ -288,7 +288,7 @@ void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDe
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
   pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
-  pkt->setNegotiatedRuleset_id(msg->getOfferedRuleSet_ids(0));
+  pkt->setNegotiatedRuleset_id(msg->getOfferedRuleSet_ids(1));
   send(pkt, "RouterPort$o");
 }
 
