@@ -9,6 +9,7 @@
 
 #include "omnetpp/simtime_t.h"
 #include "rules/RuleSet.h"
+#include "utils/ITomographyManager.h"
 
 using namespace quisp::rules;
 using Eigen::Matrix2cd;
@@ -17,7 +18,7 @@ using Eigen::Vector4cd;
 
 namespace quisp::utils {
 
-class TomographyManager {
+class TomographyManager : public ITomographyManager {
  public:
   TomographyManager();
   ~TomographyManager();
@@ -36,8 +37,8 @@ class TomographyManager {
                                                                                                                                  bool z_purification, int num_measure);
 
   // Tomography Calculation
-  void addLocalResult(int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
-  void addPartnerResult(int self_qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean);
+  void addLocalResult(int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean) override;
+  void addPartnerResult(int self_qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean) override;
   void setStats(int qnic_id, int partner, simtime_t tomography_time, double bell_pair_per_sec, int total_measurement_count);
   double calcFidelity(int qnic_id, int partner);
   std::tuple<double, double, double> calcErrorRate(int qnic_id, int partner);

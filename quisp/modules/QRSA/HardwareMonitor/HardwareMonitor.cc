@@ -38,6 +38,7 @@ void HardwareMonitor::initialize(int stage) {
 
   routing_daemon = provider.getRoutingDaemon();
   my_address = provider.getNodeAddr();
+  tomography_manager = std::make_unique<utils::TomographyManager>();
 
   // remove double quotes at the beginning and end
   tomography_output_filename = par("tomography_output_filename").str();
@@ -86,8 +87,8 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     pk->setSrcAddr(my_address);
     pk->setDestAddr(request->getSrcAddr());
     pk->setKind(6);
-    pk->setQnic_index(interface_info->qnic.index);
-    pk->setQnic_type(interface_info->qnic.type);
+    pk->setQnic_index(interface_info.qnic.index);
+    pk->setQnic_type(interface_info.qnic.type);
 
     send(pk, "RouterPort$o");
     delete request;
@@ -102,7 +103,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
 
     // RuleSet for partner node
     long ruleset_id = HelperFunctions::createUniqueId(this->getRNG(0), my_address, simTime());
-    sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info->qnic.type, my_qnic_info->qnic.index, ruleset_id);
+    sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info.qnic.type, my_qnic_info.qnic.index, ruleset_id);
     // RuleSet for this node
     QNIC_type partner_qnic_type = ack->getQnic_type();
     int partner_qnic_index = ack->getQnic_index();
@@ -116,27 +117,26 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     int partner = result->getPartner_address();
     auto quantum_interface_info = routing_daemon->getQuantumInterfaceInfo(partner);
 
-    auto qnic_id = quantum_interface_info->qnic.index;
+    auto qnic_id = quantum_interface_info.qnic.index;
     auto tomography_round = result->getCount_id();
     auto measurement_basis = result->getBasis();
     auto tomography_outcome = result->getOutput_is_plus();
     auto god_clean = result->getGOD_clean();
-
     // Remember current tomography partners for showing results
     tomography_partners.insert(std::make_tuple(qnic_id, partner));
 
     if (result->getSrcAddr() == my_address) {
       // Result from my self
       // Pass result to the tomography manager
-      tomography_manager.addLocalResult(qnic_id, partner, tomography_round, measurement_basis, tomography_outcome, god_clean);
+      tomography_manager->addLocalResult(qnic_id, partner, tomography_round, measurement_basis, tomography_outcome, god_clean);
     } else {
       // Result from partner
-      tomography_manager.addPartnerResult(qnic_id, partner, tomography_round, measurement_basis, tomography_outcome, god_clean);
+      tomography_manager->addPartnerResult(qnic_id, partner, tomography_round, measurement_basis, tomography_outcome, god_clean);
     }
 
     if (result->getFinish() != -1) {
       // Finish tomography and record tomography stats
-      tomography_manager.setStats(qnic_id, partner, result->getFinish(), (double)result->getMax_count() / result->getFinish().dbl(), result->getMax_count());
+      tomography_manager->setStats(qnic_id, partner, result->getFinish(), (double)result->getMax_count() / result->getFinish().dbl(), result->getMax_count());
     }
     delete result;
     return;
@@ -167,11 +167,11 @@ void HardwareMonitor::finish() {
   for (auto partner_key : tomography_partners) {
     auto qnic_id = std::get<0>(partner_key);
     auto partner = std::get<1>(partner_key);
-    Matrix4cd extended_density_matrix_reconstructed = tomography_manager.reconstructDensityMatrix(qnic_id, partner);
+    Matrix4cd extended_density_matrix_reconstructed = tomography_manager->reconstructDensityMatrix(qnic_id, partner);
 
-    auto fidelity = tomography_manager.calcFidelity(qnic_id, partner);
-    auto [x_error, y_error, z_error] = tomography_manager.calcErrorRate(qnic_id, partner);
-    auto tomography_stats = tomography_manager.getStats(qnic_id, partner);
+    auto fidelity = tomography_manager->calcFidelity(qnic_id, partner);
+    auto [x_error, y_error, z_error] = tomography_manager->calcErrorRate(qnic_id, partner);
+    auto tomography_stats = tomography_manager->getStats(qnic_id, partner);
     double link_cost;
     // TODO currently, it's just placed. consider how to culculate this
     double denom = fidelity * fidelity * tomography_stats.bell_pair_per_sec;
@@ -188,7 +188,7 @@ void HardwareMonitor::finish() {
     tomography_dm << "IMAGINARY\n";
     tomography_dm << extended_density_matrix_reconstructed.imag() << "\n";
 
-    auto [god_clean_pair_total, god_x_pair_total, god_y_pair_total, god_z_pair_total] = tomography_manager.calcGodPairCount(qnic_id, partner);
+    auto [god_clean_pair_total, god_x_pair_total, god_y_pair_total, god_z_pair_total] = tomography_manager->calcGodPairCount(qnic_id, partner);
     // link stats output
     tomography_stats_file << "Node (Address: " << my_address << "<-->QuantumChannel{cost=" << link_cost << ";fidelity=" << fidelity
                           << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";tomography_time=" << tomography_stats.tomography_time
@@ -252,8 +252,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   pk->setNumber_of_measuring_resources(num_measure);
   pk->setKind(6);
 
-  auto ruleset = tomography_manager.createLinkTomographyRuleSet(my_address, partner_address, qnic_type, qnic_index, ruleset_id, num_purification, purification_type, x_purification,
-                                                                z_purification, num_measure);
+  auto ruleset = tomography_manager->createLinkTomographyRuleSet(my_address, partner_address, qnic_type, qnic_index, ruleset_id, num_purification, purification_type,
+                                                                 x_purification, z_purification, num_measure);
   pk->setRuleSet(ruleset);
   send(pk, "RouterPort$o");
 }

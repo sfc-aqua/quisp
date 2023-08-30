@@ -149,7 +149,7 @@ void RoutingDaemon::resolveQuantumInterfaceInfo() {
     }
     auto [qnic_type, qnic_index] = qnic_addr_map[qnic_address];
     auto *qnic = provider.getQNIC(qnic_index, qnic_type);
-    interface_table[dest_addr] = std::make_unique<QuantumInterfaceInfo>(prepareQuantumInterfaceInfo(qnic));
+    interface_table[dest_addr] = prepareQuantumInterfaceInfo(qnic);
   }
 }
 
@@ -171,11 +171,11 @@ void RoutingDaemon::prepareNeighborAddressTableWithTopologyInfo() {
   }
 }
 
-std::unique_ptr<QuantumInterfaceInfo> RoutingDaemon::getQuantumInterfaceInfo(int dest_addr) {
+QuantumInterfaceInfo RoutingDaemon::getQuantumInterfaceInfo(int dest_addr) {
   if (!interface_table.count(dest_addr)) {
     error("Interface information for destination address %d not found.", dest_addr);
   }
-  return std::move(interface_table[dest_addr]);
+  return interface_table[dest_addr];
 }
 
 QuantumInterfaceInfo RoutingDaemon::prepareQuantumInterfaceInfo(cModule *qnic_module) {

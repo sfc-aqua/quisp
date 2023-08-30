@@ -10,7 +10,7 @@ class MockRoutingDaemon : public quisp::modules::IRoutingDaemon {
  public:
   MOCK_METHOD(int, findQNicAddrByDestAddr, (int destAddr), (override));
   MOCK_METHOD(std::vector<int>, getNeighborAddresses, (), (override));
-  MOCK_METHOD(std::unique_ptr<quisp::modules::QuantumInterfaceInfo>, getQuantumInterfaceInfo, (int dest_addr), (override));
+  MOCK_METHOD(quisp::modules::QuantumInterfaceInfo, getQuantumInterfaceInfo, (int dest_addr), (override));
 };
 
 }  // namespace routing_daemon

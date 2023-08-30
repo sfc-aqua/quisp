@@ -212,6 +212,8 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
   neighbor_table[routing_daemon->my_address] = OspfNeighborInfo(routing_daemon->my_address);
   msg_from_other_node->setNeighborTable(neighbor_table);
 
+  EXPECT_CALL(*mock_hardware_monitor, getLinkCost).WillOnce(Return(1));
+
   routing_daemon->handleMessage(msg_from_other_node);
 
   ASSERT_EQ(routing_daemon->neighbor_table[src].state, OspfState::TWO_WAY);

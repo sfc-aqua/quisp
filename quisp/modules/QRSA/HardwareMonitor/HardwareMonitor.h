@@ -7,6 +7,7 @@
 #include "IHardwareMonitor.h"
 
 #include <complex>
+#include <memory>
 
 #include "rules/Rule.h"
 #include "utils/ComponentProvider.h"
@@ -26,7 +27,11 @@ class HardwareMonitor : public IHardwareMonitor {
 
  protected:
   utils::ComponentProvider provider;
-  utils::TomographyManager tomography_manager;
+  std::unique_ptr<utils::TomographyManager> tomography_manager;
+
+  // Store link cost information and routing daemon read this.
+  // neighbor address -> link cost
+  std::map<int, double> link_cost_table = {};
 
  private:
   int my_address;
@@ -41,10 +46,6 @@ class HardwareMonitor : public IHardwareMonitor {
   // record all the partner information that perform tomography with this node.
   // Vector<Tuple<qnic_index, partner_address>>
   std::set<std::tuple<int, int>> tomography_partners;
-
-  // Store link cost information and routing daemon read this.
-  // neighbor address -> link cost
-  std::map<int, double> link_cost_table;
 
   IRoutingDaemon *routing_daemon;
 

@@ -282,7 +282,7 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   auto outbound_qinterface_info = routing_daemon->getQuantumInterfaceInfo(responder_addr);
   auto inbound_qinterface_info = routing_daemon->getQuantumInterfaceInfo(prev_hop_addr);
 
-  if (isQnicBusy(outbound_qinterface_info->qnic.address) || isQnicBusy(inbound_qinterface_info->qnic.address)) {
+  if (isQnicBusy(outbound_qinterface_info.qnic.address) || isQnicBusy(inbound_qinterface_info.qnic.address)) {
     rejectRequest(req);
     return;
   }
@@ -293,19 +293,19 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
 
   req->setApplicationId(application_id);
-  req->setDestAddr(outbound_qinterface_info->neighbor_address);
+  req->setDestAddr(outbound_qinterface_info.neighbor_address);
   req->setSrcAddr(my_address);
   req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
   req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
   req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
-  req->setStack_of_linkCosts(num_accumulated_costs, outbound_qinterface_info->link_cost);
+  req->setStack_of_linkCosts(num_accumulated_costs, outbound_qinterface_info.link_cost);
   req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
 
-  QNicPairInfo pair_info{inbound_qinterface_info->qnic, outbound_qinterface_info->qnic};
+  QNicPairInfo pair_info{inbound_qinterface_info.qnic, outbound_qinterface_info.qnic};
   req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
-  reserveQnic(inbound_qinterface_info->qnic.address);
-  reserveQnic(outbound_qinterface_info->qnic.address);
+  reserveQnic(inbound_qinterface_info.qnic.address);
+  reserveQnic(outbound_qinterface_info.qnic.address);
 
   send(req, "RouterPort$o");
 }
@@ -389,24 +389,24 @@ void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
   int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
 
-  req->setDestAddr(outbound_qinterface_info->neighbor_address);
+  req->setDestAddr(outbound_qinterface_info.neighbor_address);
   req->setSrcAddr(my_address);
   req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
   req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
   req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
-  req->setStack_of_linkCosts(num_accumulated_costs, outbound_qinterface_info->link_cost);
+  req->setStack_of_linkCosts(num_accumulated_costs, outbound_qinterface_info.link_cost);
   req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
 
-  QNicPairInfo pair_info{inbound_qinterface_info->qnic, outbound_qinterface_info->qnic};
+  QNicPairInfo pair_info{inbound_qinterface_info->qnic, outbound_qinterface_info.qnic};
   req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
-  auto &request_queue = connection_setup_buffer[outbound_qinterface_info->qnic.address];
+  auto &request_queue = connection_setup_buffer[outbound_qinterface_info.qnic.address];
   request_queue.push(req);
 
   // this is the only request in the queue, try to send it right away
   if (request_queue.size() == 1) {
     EV << "schedule from enqueue" << endl;
-    scheduleAt(simTime(), request_send_timing[outbound_qinterface_info->qnic.address]);
+    scheduleAt(simTime(), request_send_timing[outbound_qinterface_info.qnic.address]);
   }
 }
 

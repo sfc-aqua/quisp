@@ -14,9 +14,9 @@
 namespace {
 using json = nlohmann::json;
 using OriginalRSG = quisp::modules::ruleset_gen::RuleSetGenerator;
+using quisp::modules::NULL_QUANTUM_INTERFACE_INFO;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_R;
-using quisp::modules::NULL_QUANTUM_INTERFACE_INFO;
 
 using namespace quisp::messages;
 using namespace quisp_test::utils;

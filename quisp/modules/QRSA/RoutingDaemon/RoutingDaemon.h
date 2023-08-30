@@ -22,7 +22,7 @@ namespace quisp::modules::routing_daemon {
 // destaddr -> {self_qnic_address (unique)}
 using RoutingTable = std::map<int, int>;
 // destaddr -> QuantumInterfaceInfo (more information than qnic_address)
-using InterfaceTable = std::map<int, std::unique_ptr<QuantumInterfaceInfo>>;
+using InterfaceTable = std::map<int, QuantumInterfaceInfo>;
 
 using namespace ospf;
 using namespace quisp::messages;
@@ -53,7 +53,8 @@ class RoutingDaemon : public IRoutingDaemon {
   void initialize(int stage) override;
   void handleMessage(cMessage *msg) override;
   int numInitStages() const override { return 3; };
-  std::unique_ptr<QuantumInterfaceInfo> getQuantumInterfaceInfo(int dest_addr) override;
+  QuantumInterfaceInfo getQuantumInterfaceInfo(int dest_addr) override;
+  QuantumInterfaceInfo prepareQuantumInterfaceInfo(cModule *qnic_module);
 
   void prepareQnicAddrMap();
   void resolveQuantumInterfaceInfo();
@@ -62,7 +63,6 @@ class RoutingDaemon : public IRoutingDaemon {
   int findQnicAddrByNeighborAddr(int neighbor_addr);
   std::vector<int> getNeighborAddresses() override;
   std::vector<int> neighbor_addresses;
-  QuantumInterfaceInfo prepareQuantumInterfaceInfo(cModule *qnic_module);
 
   size_t getNumNeighbors();
 

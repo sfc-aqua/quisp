@@ -2,9 +2,11 @@
 #include <gtest/gtest.h>
 #include <omnetpp.h>
 #include <omnetpp/csimulation.h>
+#include <memory>
 
 #include "HardwareMonitor.h"
 
+#include "gmock/gmock-nice-strict.h"
 #include "gmock/gmock-spec-builders.h"
 #include "messages/tomography_messages_m.h"
 #include "modules/QNIC.h"
@@ -14,6 +16,7 @@
 #include "test_utils/TestUtilFunctions.h"
 #include "test_utils/TestUtils.h"
 #include "test_utils/mock_modules/MockRoutingDaemon.h"
+#include "test_utils/mock_modules/MockTomographyManager.h"
 #include "utils/HelperFunctions.h"
 #include "utils/TomographyManager.h"
 
@@ -26,6 +29,7 @@ using namespace quisp_test;
 using namespace testing;
 using namespace quisp::messages;
 using quisp::utils::HelperFunctions;
+using quisp_test::mock_modules::tomography_manager::MockTomographyManager;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -35,8 +39,8 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   ~Strategy() { delete routingDaemon; }
   cModule* getQNode() override { return parent_qnode; }
   MockRoutingDaemon* routingDaemon = nullptr;
-  TomographyManager* tomography_manager;
   IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
+  int getNodeAddr() override { return 0; }
 
  private:
   TestQNode* parent_qnode;
@@ -46,10 +50,10 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
  public:
   using quisp::modules::HardwareMonitor::handleMessage;
   using quisp::modules::HardwareMonitor::initialize;
+  using quisp::modules::HardwareMonitor::link_cost_table;
   using quisp::modules::HardwareMonitor::par;
   using quisp::modules::HardwareMonitor::tomography_manager;
   HardwareMonitorTestTarget(MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
-    setParInt(this, "address", 123);
     setParBool(this, "link_tomography", false);
     setParStr(this, "tomography_output_filename", "test_file");
     setParInt(this, "initial_purification", 0);
@@ -60,15 +64,8 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
 
     this->setName("hardware_monitor_test_target");
     this->provider.setStrategy(std::make_unique<Strategy>(routing_daemon));
+    setComponentType(new TestModuleType("hardware_monitor_test"));
   }
-};
-
-class MockTomographyManager : public TomographyManager {
- public:
-  MOCK_METHOD(void, addLocalResult, (int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean));
-  MOCK_METHOD(void, addPartnerResult, (int self_qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean));
-  MOCK_METHOD(void, setStats, (int qnic_id, int partner, simtime_t tomography_time, double bell_pair_per_sec, int total_measurement_count));
-  MOCK_METHOD(Matrix4cd, reconstructDensityMatrix, (int qnic_id, int partner));
 };
 
 class HardwareMonitorTest : public testing::Test {
@@ -87,40 +84,57 @@ class HardwareMonitorTest : public testing::Test {
   MockTomographyManager* tomography_manager;
 };
 
+TEST_F(HardwareMonitorTest, initialize_stage0) {
+  // Test for initialize
+  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
+  sim->registerComponent(hardware_monitor);
+  hardware_monitor->callInitialize(0);
+}
+
+TEST_F(HardwareMonitorTest, initialize_stage2) {
+  // Test for initialize
+  EXPECT_CALL(*routing_daemon, getNeighborAddresses).Times(1).WillOnce(Return(std::vector<int>{1, 2}));
+  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
+  sim->registerComponent(hardware_monitor);
+  hardware_monitor->callInitialize(1);
+  EXPECT_EQ(hardware_monitor->link_cost_table.size(), 2);
+}
+
 TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
   // Test for accepting tomography result from my self and put it to tomography manager
   // Situation:
   // Node 0 (self, qnic_id: 1, qnic_type: QNIC_E) <--> (qnic_id: 0, qnic_type: QNIC_R)Node 1
-  // EXPECT_CALL(*tomography_manager, addLocalResult).Times(1);
-  // EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr).Times(1).WillOnce(Return(1));
-  // auto qinter_info = QuantumInterfaceInfo {
-  //   .qnic = {
-  //     .type = QNIC_type::QNIC_E,
-  //     .index = 0,
-  //   },
-  //   .buffer_size = 10,
-  //   .link_cost = 1,
-  //   .neighbor_address = 1,
-  // };
+  EXPECT_CALL(*tomography_manager, addLocalResult(0, 0, 0, 'X', true, 'X')).WillOnce(Return());
 
-  // EXPECT_CALL(*routing_daemon, getQuantumInterfaceInfo).Times(1).WillOnce(Return(qinter_info));
+  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
+  auto qinter_info = QuantumInterfaceInfo{
+      .qnic =
+          {
+              .type = QNIC_type::QNIC_E,
+              .index = 0,
+          },
+      .buffer_size = 1,
+      .link_cost = 1,
+  };
+  EXPECT_CALL(*routing_daemon, getQuantumInterfaceInfo).Times(1).WillOnce(Return(qinter_info));
 
-  // auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
-  // sim->registerComponent(hardware_monitor);
-  // hardware_monitor->callInitialize(0);
+  sim->registerComponent(hardware_monitor);
+  hardware_monitor->callInitialize(0);
 
-  // auto* self_link_tomography_result = new LinkTomographyResult{"LinkTomographyResult"};
-  // // packet for myself 0 --> -
-  // self_link_tomography_result->setDestAddr(0);
-  // self_link_tomography_result->setSrcAddr(0);
+  auto* self_link_tomography_result = new LinkTomographyResult{"LinkTomographyResult"};
+  // packet for myself 0 --> -
+  self_link_tomography_result->setPartner_address(1);
+  self_link_tomography_result->setDestAddr(0);
+  self_link_tomography_result->setSrcAddr(0);
 
-  // // first tomography round
-  // self_link_tomography_result->setCount_id(0);
-  // self_link_tomography_result->setBasis('X');
-  // self_link_tomography_result->setOutput_is_plus(true);
+  // first tomography round
+  self_link_tomography_result->setCount_id(0);
+  self_link_tomography_result->setBasis('X');
+  self_link_tomography_result->setGOD_clean('X');
+  self_link_tomography_result->setOutput_is_plus(true);
 
-  // // handle tomography result
-  // hardware_monitor->handleMessage(self_link_tomography_result);
+  // handle tomography result
+  hardware_monitor->handleMessage(self_link_tomography_result);
 }
 
 // Should be deprecated in the future
