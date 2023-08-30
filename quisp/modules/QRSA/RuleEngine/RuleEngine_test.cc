@@ -333,5 +333,35 @@ TEST_F(RuleEngineTest, sendBarrierMessage){
   EXPECT_EQ(pkt->getIs_last(), false);
 }
 
+TEST_F(RuleEngineTest, sendBarrierMessageAck){
+  auto *sim = prepareSimulation();
+  auto *routing_daemon = new MockRoutingDaemon();
+  auto *hardware_monitor = new MockHardwareMonitor();
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  sim->registerComponent(rule_engine);
+  sim->setContext(rule_engine);
+  rule_engine->callInitialize();
+
+  auto *msg = new BarrierMessage();
+  msg->setSrcAddr(1);
+  msg->setDestAddr(2);
+  msg->setNegotiatedRuleset_id(111);
+
+  auto logger = std::make_unique<DisabledLogger>();
+  auto *qubit_record = new QubitRecord(QNIC_E, 3, 0, logger.get());;
+  msg->setQubitRecord(qubit_record);
+  msg->setSequence_number(0);
+
+  rule_engine->sendBarrierMessageAck(msg);
+  auto gate = rule_engine->toRouterGate;
+  EXPECT_EQ(gate->messages.size(), 1);
+
+  auto pkt = dynamic_cast<BarrierMessage *>(gate->messages[0]);
+  EXPECT_EQ(pkt->getSrcAddr(), 2);
+  EXPECT_EQ(pkt->getDestAddr(), 1);
+  EXPECT_EQ(pkt->getNegotiatedRuleset_id(), 111);
+  EXPECT_EQ(pkt->getSequence_number(), 1);
+  EXPECT_STREQ(pkt->getRole(), "ACK");
+}
 
 }  // namespace
