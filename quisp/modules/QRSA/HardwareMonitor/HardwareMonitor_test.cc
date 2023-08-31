@@ -74,25 +74,24 @@ class HardwareMonitorTest : public testing::Test {
     sim = prepareSimulation();
     routing_daemon = new MockRoutingDaemon;
     tomography_manager = std::make_unique<MockTomographyManager>();
+    hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
+    sim->registerComponent(hardware_monitor);
   }
   void TearDown() { delete routing_daemon; }
   utils::TestSimulation* sim;
   MockRoutingDaemon* routing_daemon;
   std::unique_ptr<MockTomographyManager> tomography_manager;
+  HardwareMonitorTestTarget* hardware_monitor;
 };
 
 TEST_F(HardwareMonitorTest, initialize_stage0) {
   // Test for initialize
-  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
-  sim->registerComponent(hardware_monitor);
   hardware_monitor->callInitialize(0);
 }
 
 TEST_F(HardwareMonitorTest, initialize_stage2) {
   // Test for initialize
   EXPECT_CALL(*routing_daemon, getNeighborAddresses).Times(1).WillOnce(Return(std::vector<int>{1, 2}));
-  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
-  sim->registerComponent(hardware_monitor);
   hardware_monitor->callInitialize(1);
   EXPECT_EQ(hardware_monitor->link_cost_table.size(), 2);
 }
@@ -110,10 +109,8 @@ TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
       .buffer_size = 1,
       .link_cost = 1,
   };
-  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
   EXPECT_CALL(*routing_daemon, getQuantumInterfaceInfo).Times(1).WillOnce(Return(qinter_info));
   EXPECT_CALL(*dynamic_cast<MockTomographyManager*>(tomography_manager.get()), addLocalResult).Times(1);
-  sim->registerComponent(hardware_monitor);
   hardware_monitor->callInitialize(0);
   hardware_monitor->tomography_manager = std::move(tomography_manager);
 
@@ -131,6 +128,38 @@ TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
 
   // handle tomography result
   hardware_monitor->handleMessage(self_link_tomography_result);
+  delete hardware_monitor->tomography_manager.get();
+}
+
+TEST_F(HardwareMonitorTest, acceptPartnerResult) {
+  auto qinter_info = QuantumInterfaceInfo{
+      .qnic =
+          {
+              .type = QNIC_type::QNIC_E,
+              .index = 1,
+          },
+      .buffer_size = 1,
+      .link_cost = 1,
+  };
+  EXPECT_CALL(*routing_daemon, getQuantumInterfaceInfo).Times(1).WillOnce(Return(qinter_info));
+  EXPECT_CALL(*dynamic_cast<MockTomographyManager*>(tomography_manager.get()), addPartnerResult).Times(1);
+  hardware_monitor->callInitialize(0);
+  hardware_monitor->tomography_manager = std::move(tomography_manager);
+
+  auto* partner_link_tomography_result = new LinkTomographyResult{"LinkTomographyResult"};
+
+  partner_link_tomography_result->setPartner_address(1);
+  partner_link_tomography_result->setDestAddr(0);
+  partner_link_tomography_result->setSrcAddr(1);  // src addr != my_address
+
+  // fist tomography round
+  partner_link_tomography_result->setCount_id(0);
+  partner_link_tomography_result->setBasis('X');
+  partner_link_tomography_result->setGOD_clean('X');
+  partner_link_tomography_result->setOutput_is_plus(true);
+
+  // handle tomography result
+  hardware_monitor->handleMessage(partner_link_tomography_result);
   delete hardware_monitor->tomography_manager.get();
 }
 
