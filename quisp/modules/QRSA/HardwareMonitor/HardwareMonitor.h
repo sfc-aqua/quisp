@@ -11,6 +11,7 @@
 
 #include "rules/Rule.h"
 #include "utils/ComponentProvider.h"
+#include "utils/ITomographyManager.h"
 #include "utils/TomographyManager.h"
 
 namespace quisp::modules {
@@ -27,7 +28,7 @@ class HardwareMonitor : public IHardwareMonitor {
 
  protected:
   utils::ComponentProvider provider;
-  std::unique_ptr<utils::TomographyManager> tomography_manager;
+  utils::ITomographyManager *tomography_manager;
 
   // Store link cost information and routing daemon read this.
   // neighbor address -> link cost

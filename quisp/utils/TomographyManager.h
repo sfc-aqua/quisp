@@ -15,6 +15,7 @@ using namespace quisp::rules;
 using Eigen::Matrix2cd;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
+using quisp::utils::TomographyStats;
 
 namespace quisp::utils {
 
@@ -22,29 +23,22 @@ class TomographyManager : public ITomographyManager {
  public:
   TomographyManager();
   ~TomographyManager();
-
-  // Performance result of tomography
-  struct TomographyStats {
-    simtime_t tomography_time;
-    double bell_pair_per_sec;
-    int total_measurement_count;
-  };
   // Link Tomography RuleSet Generator (deprecated)
   [[deprecated("Link Tomography RuleSet creation will be integrated to RuleSet Factory.")]] RuleSet *createLinkTomographyRuleSet(int my_address, int partner_address,
                                                                                                                                  QNIC_type qnic_type, int qnic_index,
                                                                                                                                  unsigned long ruleset_id, int num_purification,
                                                                                                                                  int purification_type, bool x_purification,
-                                                                                                                                 bool z_purification, int num_measure);
+                                                                                                                                 bool z_purification, int num_measure) override;
 
   // Tomography Calculation
   void addLocalResult(int qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean) override;
   void addPartnerResult(int self_qnic_id, int partner, int tomography_round, char measurement_basis, bool is_plus, char my_GOD_clean) override;
-  void setStats(int qnic_id, int partner, simtime_t tomography_time, double bell_pair_per_sec, int total_measurement_count);
-  double calcFidelity(int qnic_id, int partner);
-  std::tuple<double, double, double> calcErrorRate(int qnic_id, int partner);
-  std::tuple<int, int, int, int> calcGodPairCount(int qnic_id, int partner);
-  TomographyStats getStats(int qnic_id, int partner) { return tomography_stats[std::make_tuple(qnic_id, partner)]; };
-  Matrix4cd reconstructDensityMatrix(int qnic_id, int partner);
+  void setStats(int qnic_id, int partner, simtime_t tomography_time, double bell_pair_per_sec, int total_measurement_count) override;
+  double calcFidelity(int qnic_id, int partner) override;
+  std::tuple<double, double, double> calcErrorRate(int qnic_id, int partner) override;
+  std::tuple<int, int, int, int> calcGodPairCount(int qnic_id, int partner) override;
+  TomographyStats getStats(int qnic_id, int partner) override { return tomography_stats[std::make_tuple(qnic_id, partner)]; };
+  Matrix4cd reconstructDensityMatrix(int qnic_id, int partner) override;
 
  protected:
   // using enum would be easier to handle instead of using char

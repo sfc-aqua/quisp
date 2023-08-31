@@ -19,6 +19,7 @@
 #include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
 #include "rules/RuleSet.h"
 #include "utils/HelperFunctions.h"
+#include "utils/ITomographyManager.h"
 #include "utils/TomographyManager.h"
 
 using namespace quisp::messages;
@@ -26,6 +27,7 @@ using namespace quisp::rules;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
 using quisp::utils::HelperFunctions;
+using quisp::utils::TomographyManager;
 
 namespace quisp::modules {
 
@@ -38,7 +40,6 @@ void HardwareMonitor::initialize(int stage) {
 
   routing_daemon = provider.getRoutingDaemon();
   my_address = provider.getNodeAddr();
-  tomography_manager = std::make_unique<utils::TomographyManager>();
 
   // remove double quotes at the beginning and end
   tomography_output_filename = par("tomography_output_filename").str();
@@ -55,6 +56,8 @@ void HardwareMonitor::initialize(int stage) {
   if (stage == 0) {
     return;
   }
+
+  tomography_manager = new TomographyManager;
 
   auto neighbor_addresses = routing_daemon->getNeighborAddresses();
 
@@ -115,7 +118,9 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
   if (auto *result = dynamic_cast<LinkTomographyResult *>(msg)) {
     // Get link tomography result and make a record for it
     int partner = result->getPartner_address();
+
     auto quantum_interface_info = routing_daemon->getQuantumInterfaceInfo(partner);
+    std::cout<<quantum_interface_info.qnic.index<<"\n";
 
     auto qnic_id = quantum_interface_info.qnic.index;
     auto tomography_round = result->getCount_id();
@@ -128,6 +133,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     if (result->getSrcAddr() == my_address) {
       // Result from my self
       // Pass result to the tomography manager
+      std::cout<<"HardwareMonitor::handleMessage: addLocalResult\n";
       tomography_manager->addLocalResult(qnic_id, partner, tomography_round, measurement_basis, tomography_outcome, god_clean);
     } else {
       // Result from partner
@@ -203,6 +209,7 @@ void HardwareMonitor::finish() {
   }
   tomography_stats_file.close();
   tomography_dm.close();
+  delete tomography_manager;
 }
 
 /**

@@ -53,7 +53,7 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
   using quisp::modules::HardwareMonitor::link_cost_table;
   using quisp::modules::HardwareMonitor::par;
   using quisp::modules::HardwareMonitor::tomography_manager;
-  HardwareMonitorTestTarget(MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
+  HardwareMonitorTestTarget(MockRoutingDaemon* routing_daemon, MockTomographyManager* tomography_manager) : quisp::modules::HardwareMonitor() {
     setParBool(this, "link_tomography", false);
     setParStr(this, "tomography_output_filename", "test_file");
     setParInt(this, "initial_purification", 0);
@@ -65,6 +65,7 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
     this->setName("hardware_monitor_test_target");
     this->provider.setStrategy(std::make_unique<Strategy>(routing_daemon));
     setComponentType(new TestModuleType("hardware_monitor_test"));
+    this->tomography_manager = tomography_manager;
   }
 };
 
@@ -86,7 +87,7 @@ class HardwareMonitorTest : public testing::Test {
 
 TEST_F(HardwareMonitorTest, initialize_stage0) {
   // Test for initialize
-  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
+  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon, tomography_manager};
   sim->registerComponent(hardware_monitor);
   hardware_monitor->callInitialize(0);
 }
@@ -94,7 +95,7 @@ TEST_F(HardwareMonitorTest, initialize_stage0) {
 TEST_F(HardwareMonitorTest, initialize_stage2) {
   // Test for initialize
   EXPECT_CALL(*routing_daemon, getNeighborAddresses).Times(1).WillOnce(Return(std::vector<int>{1, 2}));
-  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
+  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon, tomography_manager};
   sim->registerComponent(hardware_monitor);
   hardware_monitor->callInitialize(1);
   EXPECT_EQ(hardware_monitor->link_cost_table.size(), 2);
@@ -104,20 +105,18 @@ TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
   // Test for accepting tomography result from my self and put it to tomography manager
   // Situation:
   // Node 0 (self, qnic_id: 1, qnic_type: QNIC_E) <--> (qnic_id: 0, qnic_type: QNIC_R)Node 1
-  EXPECT_CALL(*tomography_manager, addLocalResult(0, 0, 0, 'X', true, 'X')).WillOnce(Return());
-
-  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
   auto qinter_info = QuantumInterfaceInfo{
       .qnic =
           {
               .type = QNIC_type::QNIC_E,
-              .index = 0,
+              .index = 1,
           },
       .buffer_size = 1,
       .link_cost = 1,
   };
+  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon, tomography_manager};
   EXPECT_CALL(*routing_daemon, getQuantumInterfaceInfo).Times(1).WillOnce(Return(qinter_info));
-
+  EXPECT_CALL(*tomography_manager, addLocalResult).Times(1);
   sim->registerComponent(hardware_monitor);
   hardware_monitor->callInitialize(0);
 
@@ -138,7 +137,7 @@ TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
 }
 
 // Should be deprecated in the future
-// TEST_F(HardwareMonitorTest, sendLinkTomgraphyRuleSet) {}
+TEST_F(HardwareMonitorTest, sendLinkTomgraphyRuleSet) {}
 
 // TEST_F(HardwareMonitorTest, reconstructDensityMatrix) {}
 
