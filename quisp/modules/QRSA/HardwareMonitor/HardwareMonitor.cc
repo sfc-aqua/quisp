@@ -57,7 +57,7 @@ void HardwareMonitor::initialize(int stage) {
     return;
   }
 
-  tomography_manager = new TomographyManager;
+  tomography_manager = std::unique_ptr<TomographyManager>();
 
   auto neighbor_addresses = routing_daemon->getNeighborAddresses();
 
@@ -120,7 +120,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     int partner = result->getPartner_address();
 
     auto quantum_interface_info = routing_daemon->getQuantumInterfaceInfo(partner);
-    std::cout<<quantum_interface_info.qnic.index<<"\n";
+    std::cout << quantum_interface_info.qnic.index << "\n";
 
     auto qnic_id = quantum_interface_info.qnic.index;
     auto tomography_round = result->getCount_id();
@@ -133,7 +133,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     if (result->getSrcAddr() == my_address) {
       // Result from my self
       // Pass result to the tomography manager
-      std::cout<<"HardwareMonitor::handleMessage: addLocalResult\n";
+      std::cout << "HardwareMonitor::handleMessage: addLocalResult\n";
       tomography_manager->addLocalResult(qnic_id, partner, tomography_round, measurement_basis, tomography_outcome, god_clean);
     } else {
       // Result from partner
@@ -209,7 +209,6 @@ void HardwareMonitor::finish() {
   }
   tomography_stats_file.close();
   tomography_dm.close();
-  delete tomography_manager;
 }
 
 /**

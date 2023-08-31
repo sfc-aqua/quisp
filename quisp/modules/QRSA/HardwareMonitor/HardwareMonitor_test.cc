@@ -53,7 +53,7 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
   using quisp::modules::HardwareMonitor::link_cost_table;
   using quisp::modules::HardwareMonitor::par;
   using quisp::modules::HardwareMonitor::tomography_manager;
-  HardwareMonitorTestTarget(MockRoutingDaemon* routing_daemon, MockTomographyManager* tomography_manager) : quisp::modules::HardwareMonitor() {
+  HardwareMonitorTestTarget(MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
     setParBool(this, "link_tomography", false);
     setParStr(this, "tomography_output_filename", "test_file");
     setParInt(this, "initial_purification", 0);
@@ -65,7 +65,6 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
     this->setName("hardware_monitor_test_target");
     this->provider.setStrategy(std::make_unique<Strategy>(routing_daemon));
     setComponentType(new TestModuleType("hardware_monitor_test"));
-    this->tomography_manager = tomography_manager;
   }
 };
 
@@ -74,20 +73,17 @@ class HardwareMonitorTest : public testing::Test {
   void SetUp() {
     sim = prepareSimulation();
     routing_daemon = new MockRoutingDaemon;
-    tomography_manager = new MockTomographyManager;
+    tomography_manager = std::make_unique<MockTomographyManager>();
   }
-  void TearDown() {
-    delete routing_daemon;
-    delete tomography_manager;
-  }
+  void TearDown() { delete routing_daemon; }
   utils::TestSimulation* sim;
   MockRoutingDaemon* routing_daemon;
-  MockTomographyManager* tomography_manager;
+  std::unique_ptr<MockTomographyManager> tomography_manager;
 };
 
 TEST_F(HardwareMonitorTest, initialize_stage0) {
   // Test for initialize
-  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon, tomography_manager};
+  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
   sim->registerComponent(hardware_monitor);
   hardware_monitor->callInitialize(0);
 }
@@ -95,7 +91,7 @@ TEST_F(HardwareMonitorTest, initialize_stage0) {
 TEST_F(HardwareMonitorTest, initialize_stage2) {
   // Test for initialize
   EXPECT_CALL(*routing_daemon, getNeighborAddresses).Times(1).WillOnce(Return(std::vector<int>{1, 2}));
-  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon, tomography_manager};
+  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
   sim->registerComponent(hardware_monitor);
   hardware_monitor->callInitialize(1);
   EXPECT_EQ(hardware_monitor->link_cost_table.size(), 2);
@@ -114,11 +110,12 @@ TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
       .buffer_size = 1,
       .link_cost = 1,
   };
-  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon, tomography_manager};
+  auto hardware_monitor = new HardwareMonitorTestTarget{routing_daemon};
   EXPECT_CALL(*routing_daemon, getQuantumInterfaceInfo).Times(1).WillOnce(Return(qinter_info));
-  EXPECT_CALL(*tomography_manager, addLocalResult).Times(1);
+  EXPECT_CALL(*dynamic_cast<MockTomographyManager*>(tomography_manager.get()), addLocalResult).Times(1);
   sim->registerComponent(hardware_monitor);
   hardware_monitor->callInitialize(0);
+  hardware_monitor->tomography_manager = std::move(tomography_manager);
 
   auto* self_link_tomography_result = new LinkTomographyResult{"LinkTomographyResult"};
   // packet for myself 0 --> -
@@ -134,6 +131,7 @@ TEST_F(HardwareMonitorTest, acceptSelfTomographyResult) {
 
   // handle tomography result
   hardware_monitor->handleMessage(self_link_tomography_result);
+  delete hardware_monitor->tomography_manager.get();
 }
 
 // Should be deprecated in the future

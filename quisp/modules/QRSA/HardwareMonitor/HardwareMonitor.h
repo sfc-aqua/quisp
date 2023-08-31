@@ -28,7 +28,7 @@ class HardwareMonitor : public IHardwareMonitor {
 
  protected:
   utils::ComponentProvider provider;
-  utils::ITomographyManager *tomography_manager;
+  std::unique_ptr<utils::ITomographyManager> tomography_manager;
 
   // Store link cost information and routing daemon read this.
   // neighbor address -> link cost
