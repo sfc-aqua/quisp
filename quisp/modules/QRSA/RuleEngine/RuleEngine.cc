@@ -296,7 +296,7 @@ void RuleEngine::sendBarrierMessage(LinkAllocationUpdateDecisionResponse *msg, I
   BarrierMessage *pkt = new BarrierMessage("BarrierMessage");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleset_id());
+  pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleSet_id());
   pkt->setQubitRecord(qubit_record);
   pkt->setSequence_number(sequence_number);
   pkt->setRole("SEND");
@@ -308,7 +308,7 @@ void RuleEngine::sendBarrierMessageAck(BarrierMessage *msg) {
   BarrierMessage *pkt = new BarrierMessage("BarrierMessage");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleset_id());
+  pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleSet_id());
   pkt->setQubitRecord((IQubitRecord *)msg->getQubitRecord());
   pkt->setSequence_number(msg->getSequence_number() + 1);
   pkt->setRole("ACK");
@@ -319,7 +319,7 @@ void RuleEngine::sendLinkAllocationUpdateRequest(BarrierMessage *msg) {
   LinkAllocationUpdateRequest *pkt = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleset_id());
+  pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
   send(pkt, "RouterPort$o");
 }
 
