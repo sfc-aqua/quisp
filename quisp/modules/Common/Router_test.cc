@@ -4,6 +4,9 @@
 #include <test_utils/TestUtils.h>
 
 #include "Router.h"
+#include "messages/barrier_messages_m.h"
+#include "messages/connection_teardown_messages_m.h"
+#include "messages/link_allocation_update_messages_m.h"
 #include "modules/SharedResource/SharedResource.h"
 
 using namespace quisp_test;
@@ -161,6 +164,62 @@ TEST_F(RouterTest, handleInternalRuleSetForwarding) {
 
 TEST_F(RouterTest, handleInternalRuleSetForwarding_Application) {
   auto msg = new InternalRuleSetForwarding_Application;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rePort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleConnectionTeardownMessage) {
+  auto msg = new ConnectionTeardownMessage;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rePort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleInternalConnectionTeardownInfoForwarding) {
+  auto msg = new InternalConnectionTeardownInfoForwarding;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rePort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleInternalConnectionTeardownMessage) {
+  auto msg = new InternalConnectionTeardownMessage;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rePort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleLinkAllocationUpdateDecisionRequest) {
+  auto msg = new LinkAllocationUpdateDecisionRequest;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rePort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleBarrierMessage) {
+  auto msg = new BarrierMessage;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rePort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleLinkAllocationUpdateRequest) {
+  auto msg = new LinkAllocationUpdateRequest;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rePort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleLinkAllocationUpdateResponse) {
+  auto msg = new LinkAllocationUpdateResponse;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->rePort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleLinkAllocationUpdateDecisionResponse) {
+  auto msg = new LinkAllocationUpdateDecisionResponse;
   msg->setDestAddr(10);
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);

@@ -98,6 +98,38 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Internal RuleSet Forwarding Application packet received");
     send(pk, "rePort$o");
     return;
+  } else if (dest_addr == my_address && dynamic_cast<ConnectionTeardownMessage *>(msg)) {
+    bubble("Connection Teardown packet received");
+    send(pk, "rePort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<InternalConnectionTeardownInfoForwarding *>(msg)) {
+    bubble("Internal Connection Teardown Info Forwarding packet received");
+    send(pk, "rePort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
+    bubble("Internal Connection Teardown packet received");
+    send(pk, "rePort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
+    bubble("Link Allocation Update Decision Request packet received");
+    send(pk, "rePort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
+    bubble("Link Allocation Update Decision Response packet received");
+    send(pk, "rePort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<BarrierMessage *>(msg)) {
+    bubble("Barrier Message packet received");
+    send(pk, "rePort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
+    bubble("Link Allocation Update Request packet received");
+    send(pk, "rePort$o");
+    return;
+  }  else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateResponse *>(msg)) {
+    bubble("Link Allocation Update Response packet received");
+    send(pk, "rePort$o");
+    return;
   } else if (dest_addr == my_address && dynamic_cast<SwappingResult *>(msg)) {
     bubble("Swapping Result packet received");
     send(pk, "rePort$o");
@@ -128,7 +160,8 @@ void Router::handleMessage(cMessage *msg) {
   } else if (dest_addr == my_address && dynamic_cast<OspfPacket *>(msg)) {
     send(pk, "rdPort$o");
     return;
-  }
+  } 
+
 
   // RoutingDaemon sends hello packet without desination specified
   if (dest_addr == unidentified_destination && dynamic_cast<OspfHelloPacket *>(msg)) {
@@ -140,7 +173,7 @@ void Router::handleMessage(cMessage *msg) {
   if (!routing_table.count(dest_addr)) {
     std::cout << "In Node[" << my_address << "]Address... " << dest_addr << " unreachable, discarding packet " << pk->getName() << endl;
     delete pk;
-    error("Router couldn't find the path. Shoudn't happen. Or maybe the router does not understand the packet.");
+    error("Router couldn't find the path. Shouldn't happen. Or maybe the router does not understand the packet.");
     return;
   }
 
