@@ -208,7 +208,6 @@ void ConnectionManager::storeTeardownInfo(ConnectionSetupResponse *pk) {
  **/
 void ConnectionManager::storeTeardownMessage(ConnectionTeardownMessage *pk) {
   InternalConnectionTeardownMessage *pk_internal = new InternalConnectionTeardownMessage("InternalConnectionTeardownMessage");
-  pk_internal->setRole(pk->getRole());
   pk_internal->setSrcAddr(my_address);
   pk_internal->setDestAddr(my_address);
   pk_internal->setKind(5);
