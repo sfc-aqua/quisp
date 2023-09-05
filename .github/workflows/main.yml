@@ -12,7 +12,7 @@ jobs:
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: make eigen
         run: make eigen
       - name: generate makefile
@@ -43,7 +43,7 @@ jobs:
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install python dependencies for simulation tests
         run: pip install -r requirements.txt
       - name: doctest for simulation test utils
@@ -65,7 +65,7 @@ jobs:
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: make eigen
         run: make eigen
       - name: generate makefile
@@ -87,7 +87,7 @@ jobs:
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: make eigen
         run: make eigen
       - name: generate makefile
@@ -109,7 +109,7 @@ jobs:
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: generate makefile
         run: make makefile-lib
       - name: generate message headers
