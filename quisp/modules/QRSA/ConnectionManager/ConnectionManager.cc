@@ -107,7 +107,6 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     if (initiator_addr == my_address || responder_addr == my_address) {
       // this node is not a swapper
-      storeTeardownInfo(resp);
       storeRuleSetForApplication(resp);
     } else {
       // this node is a swapper (intermediate node)
