@@ -414,35 +414,14 @@ void RuleEngine::freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned
   }
 }
 
-void RuleEngine::executeAllRuleSets() {
-  auto ruleset_id_list = runtimes.exec();
-  auto is_terminated = ruleset_id_list.size() != 0;
-  if (is_terminated) {
-    for (int i = 0; i < ruleset_id_list.size(); i++) {
-      for (int j = 0; j < int(sizeof(qnode_indices) / sizeof(int) - 1); j++) {
-        ConnectionTeardownMessage *pkt1 = new ConnectionTeardownMessage("ConnectionTeardownMessage");
-        if(j % 2 == 0){
-          pkt1->setRole("SENDER");
-        }else{
-          pkt1->setRole("RECEIVER");
-        }
-        pkt1->setSrcAddr(parentAddress);
-        pkt1->setDestAddr(qnode_indices.at(j));
-        pkt1->setRuleSet_id(ruleset_id_list.at(i));
-        send(pkt1, "RouterPort$o");
-
-        ConnectionTeardownMessage *pkt2 = new ConnectionTeardownMessage("ConnectionTeardownMessage");
-        if(j % 2 == 0){
-          pkt2->setRole("RECEIVER");
-        }else{
-          pkt2->setRole("SENDER");
-        }
-        pkt2->setSrcAddr(parentAddress);
-        pkt2->setDestAddr(qnode_indices.at(j+1));
-        pkt2->setRuleSet_id(ruleset_id_list.at(i));
-        send(pkt2, "RouterPort$o");
-      }
-    }
+void RuleEngine::executeAllRuleSets() { 
+  auto terminated_ruleset_list = runtimes.exec(); 
+  for(auto ruleset: terminated_ruleset_list) {
+    auto pkt = new ConnectionTeardownMessage();
+    pkt->setSrcAddr(parentAddress);
+    pkt->setDestAddr(ruleset.owner_addr);
+    pkt->setRuleSet_id(ruleset.id);
+    send(pkt, "RouterPort$o");
   }
 }
 
