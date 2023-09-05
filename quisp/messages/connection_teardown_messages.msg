@@ -14,6 +14,7 @@ packet InternalConnectionTeardownMessage extends Header
 {
     int actual_srcAddr;
     int actual_destAddr;
+    string role;
     unsigned long RuleSet_id;
 }
 
