@@ -130,10 +130,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
-    auto role = getRoleFromInternalConnectionTeardownMessage(pkt);
-    if (role == "SENDER") {
-      sendLinkAllocationUpdateDecisionRequest(pkt);
-    }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
     sendLinkAllocationUpdateDecisionResponse(pkt);
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {

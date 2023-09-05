@@ -82,7 +82,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
   std::vector<IQubitRecord *> getAllocatedResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
   void handleConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *connection_teardown_message);
-  string getRoleFromInternalConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *msg);
   void sendLinkAllocationUpdateDecisionRequest(messages::InternalConnectionTeardownMessage *msg);
   void sendLinkAllocationUpdateDecisionResponse(messages::LinkAllocationUpdateDecisionRequest *msg);
   void sendBarrierMessage(messages::LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number, bool is_last);
