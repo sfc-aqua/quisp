@@ -173,7 +173,7 @@ TEST_F(RouterTest, handleConnectionTeardownMessage) {
   auto msg = new ConnectionTeardownMessage;
   msg->setDestAddr(10);
   router->handleMessage(msg);
-  ASSERT_EQ(router->rePort->messages.size(), 1);
+  ASSERT_EQ(router->cmPort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleInternalConnectionTeardownInfoForwarding) {
