@@ -248,6 +248,11 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
 }
 
 void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
+  stopRuleSetExecution(msg);
+  sendLinkAllocationUpdateDecisionRequest(msg);
+}
+
+void RuleEngine::stopRuleSetExecution(InternalConnectionTeardownMessage *msg) {
   auto ruleset_id = msg->getRuleSet_id();
   runtimes.stopById(ruleset_id);
 }
