@@ -3,6 +3,8 @@
 #include <iterator>
 #include <vector>
 #include "omnetpp/cexception.h"
+#include "runtime/RuleSet.h"
+#include "runtime/types.h"
 
 namespace quisp::runtime {
 
@@ -19,18 +21,18 @@ Runtime *RuntimeManager::findById(unsigned long long ruleset_id) {
   return nullptr;
 }
 
-std::vector<unsigned long> RuntimeManager::exec() {
-  auto result = std::vector<unsigned long>();
+std::vector<RuleSet> RuntimeManager::exec() {
+  std::vector<RuleSet> ruleset_list;
   for (auto it = runtimes.begin(); it != runtimes.end();) {
     it->exec();
     if (it->terminated) {
-      result.push_back(it->ruleset.id);
+      ruleset_list.push_back(it->ruleset);
       it = runtimes.erase(it);
     } else {
       ++it;
     }
   }
-  return result;
+  return ruleset_list;
 }
 
 void RuntimeManager::stopById(unsigned long long ruleset_id) {

@@ -102,8 +102,9 @@ TEST_F(RuntimeManagerTest, Exec) {
   runtimes->acceptRuleSet(rs2);
   runtimes->acceptRuleSet(rs3);
   EXPECT_EQ(runtimes->size(), 3);
-  std::vector<unsigned long> ruleset_id_list = runtimes->exec();
-  ASSERT_EQ(ruleset_id_list, std::vector<unsigned long>{});
+
+  auto terminated_ruleset_list = runtimes->exec();
+  EXPECT_EQ(terminated_ruleset_list, std::vector<RuleSet>{});
   {
     auto& rs1 = runtimes->at(0);
     auto& rs2 = runtimes->at(1);
@@ -132,8 +133,8 @@ TEST_F(RuntimeManagerTest, ExecAndTerminated) {
   runtimes->acceptRuleSet(rs2);
   runtimes->acceptRuleSet(rs3);
   EXPECT_EQ(runtimes->size(), 3);
-  std::vector<unsigned long> ruleset_id_list = runtimes->exec();
-  ASSERT_EQ(ruleset_id_list, std::vector<unsigned long>{2});
+  auto terminated_ruleset_list = runtimes->exec();
+  EXPECT_EQ(terminated_ruleset_list, std::vector<RuleSet>{rs2});
   ASSERT_EQ(runtimes->size(), 2);
   {
     auto& rs1 = runtimes->at(0);
