@@ -126,7 +126,7 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Link Allocation Update Request packet received");
     send(pk, "rePort$o");
     return;
-  }  else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateResponse *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateResponse *>(msg)) {
     bubble("Link Allocation Update Response packet received");
     send(pk, "rePort$o");
     return;
@@ -160,8 +160,7 @@ void Router::handleMessage(cMessage *msg) {
   } else if (dest_addr == my_address && dynamic_cast<OspfPacket *>(msg)) {
     send(pk, "rdPort$o");
     return;
-  } 
-
+  }
 
   // RoutingDaemon sends hello packet without desination specified
   if (dest_addr == unidentified_destination && dynamic_cast<OspfHelloPacket *>(msg)) {

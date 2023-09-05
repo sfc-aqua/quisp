@@ -69,7 +69,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int number_of_qnics;
   int number_of_qnics_r;
   int number_of_qnics_rp;
-  std::vector<IQubitRecord*> qubit_record_list;
+  std::vector<IQubitRecord *> qubit_record_list;
 
   IHardwareMonitor *hardware_monitor;
   IRoutingDaemon *routingdaemon;
@@ -80,7 +80,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void ResourceAllocation(int qnic_type, int qnic_index);
   void AllocateResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
   void freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
-  std::vector<IQubitRecord*> getAllocatedResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
+  std::vector<IQubitRecord *> getAllocatedResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
   void handleConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *connection_teardown_message);
   void handleInternalConnectionTeardownInfoForwarding(messages::InternalConnectionTeardownInfoForwarding *connection_teardown_info_forwarding);
   string getRoleFromInternalConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *msg);
@@ -111,7 +111,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   runtime::RuntimeManager runtimes;
   std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
-  
 };
 
 Define_Module(RuleEngine);

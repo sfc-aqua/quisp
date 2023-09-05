@@ -118,7 +118,7 @@ class RuleSet {
   /// @brief the Program to check the RuleSet is terminated or not.
   Program termination_condition;
   bool debugging = false;
-  
+
  protected:
   /**
    * @brief an internal method to traverse the given Rule's whole Program to
@@ -127,5 +127,5 @@ class RuleSet {
   static inline void collectPartners(const RuleId rule_id, const InstructionTypes& instr, std::set<QNodeAddr>& partners,
                                      std::unordered_map<QNodeAddr, std::vector<RuleId>>& partner_rules);
 };
-inline bool operator==(const RuleSet& a, const RuleSet& b) {return a.id == b.id; };
+inline bool operator==(const RuleSet& a, const RuleSet& b) { return a.id == b.id; };
 }  // namespace quisp::runtime

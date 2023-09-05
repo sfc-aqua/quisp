@@ -133,7 +133,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
     auto role = getRoleFromInternalConnectionTeardownMessage(pkt);
-    if (role == "SENDER"){
+    if (role == "SENDER") {
       sendLinkAllocationUpdateDecisionRequest(pkt);
     }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
@@ -143,7 +143,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto sequence_number = 0;
     for (int i = 0; i < number_of_qnics; i++) {
       qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, i, ruleset_id);
-      for(IQubitRecord *qubit_record : qubit_record_list) {
+      for (IQubitRecord *qubit_record : qubit_record_list) {
         if (sequence_number == qubit_record_list.size()) {
           sendBarrierMessage(pkt, qubit_record, sequence_number, true);
           break;
@@ -152,15 +152,15 @@ void RuleEngine::handleMessage(cMessage *msg) {
         sequence_number += 1;
       }
     }
-  } else if (auto *pkt = dynamic_cast<BarrierMessage *>(msg)) { 
+  } else if (auto *pkt = dynamic_cast<BarrierMessage *>(msg)) {
     if (strcmp(pkt->getRole(), "SEND")) {
-     sendBarrierMessageAck(pkt);
+      sendBarrierMessageAck(pkt);
     } else if (pkt->getIs_last()) {
       sendLinkAllocationUpdateRequest(pkt);
     }
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) { 
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
     sendLinkAllocationUpdateResponse(pkt);
-  } 
+  }
   for (int i = 0; i < number_of_qnics; i++) {
     ResourceAllocation(QNIC_E, i);
   }
@@ -258,9 +258,7 @@ void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnecti
   qnode_indices.push_back(dest_addr);
 }
 
-string RuleEngine::getRoleFromInternalConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
-  return msg->getRole();
-}
+string RuleEngine::getRoleFromInternalConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) { return msg->getRole(); }
 
 void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
   auto ruleset_id = msg->getRuleSet_id();
@@ -374,7 +372,7 @@ void RuleEngine::AllocateResourceToRuleSet(int qnic_type, int qnic_index, unsign
 
 // Invoked whenever existing resource (entangled with neighbor) need to be released.
 // Get those resources from a particular ruleset, from top to bottom (all of it).
-std::vector<IQubitRecord*> RuleEngine::getAllocatedResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id) {
+std::vector<IQubitRecord *> RuleEngine::getAllocatedResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id) {
   auto runtime = runtimes.findById(ruleset_id);
   auto &partners = runtime->partners;
   for (auto &partner_addr : partners) {
@@ -414,9 +412,9 @@ void RuleEngine::freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned
   }
 }
 
-void RuleEngine::executeAllRuleSets() { 
-  auto terminated_ruleset_list = runtimes.exec(); 
-  for(auto ruleset: terminated_ruleset_list) {
+void RuleEngine::executeAllRuleSets() {
+  auto terminated_ruleset_list = runtimes.exec();
+  for (auto ruleset : terminated_ruleset_list) {
     auto pkt = new ConnectionTeardownMessage();
     pkt->setSrcAddr(parentAddress);
     pkt->setDestAddr(ruleset.owner_addr);
