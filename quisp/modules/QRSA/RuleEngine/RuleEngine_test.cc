@@ -11,6 +11,7 @@
 #include "QubitRecord/QubitRecord.h"
 #include "RuleEngine.h"
 #include "messages/barrier_messages_m.h"
+#include "messages/connection_teardown_messages_m.h"
 #include "messages/link_allocation_update_messages_m.h"
 #include "messages/purification_messages_m.h"
 #include "modules/Logger/DisabledLogger.h"
@@ -28,6 +29,7 @@
 #include "runtime/opcode.h"
 #include "runtime/test.h"
 #include "runtime/types.h"
+#include "runtime/InstructionVisitor.h"
 #include "test_utils/TestUtilFunctions.h"
 #include "test_utils/TestUtils.h"
 #include "test_utils/mock_modules/MockHardwareMonitor.h"
@@ -39,6 +41,7 @@ namespace {
 using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::rules;
+using namespace quisp::runtime;
 using namespace quisp::modules;
 using namespace quisp::messages;
 using quisp::modules::qrsa::IQubitRecord;
@@ -50,6 +53,8 @@ using quisp::runtime::InstructionTypes;
 using quisp::runtime::Program;
 using quisp::runtime::QNodeAddr;
 using quisp::runtime::Runtime;
+using quisp::runtime::Rule;
+using quisp::runtime::RuleSet;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -417,6 +422,46 @@ TEST_F(RuleEngineTest, sendLinkAllocationUpdateResponse){
   EXPECT_EQ(pkt->getSrcAddr(), 2);
   EXPECT_EQ(pkt->getDestAddr(), 1);
   EXPECT_EQ(pkt->getNegotiatedRuleSet_id(), 111);
+}
+
+TEST_F(RuleEngineTest, executeAllRuleSets) {
+  auto *sim = prepareSimulation();
+  auto *routing_daemon = new MockRoutingDaemon();
+  auto *hardware_monitor = new MockHardwareMonitor();
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  sim->registerComponent(rule_engine);
+  sim->setContext(rule_engine);
+  rule_engine->callInitialize();
+
+  Program empty{"empty", {}};
+  Program cond_passed_once{"passed_once",
+                         {
+                             INSTR_LOAD_RegId_MemoryKey_{{RegId::REG0, MemoryKey{"count"}}},
+                             INSTR_BEZ_Label_RegId_{{Label{"first_time"}, RegId::REG0}},
+                             INSTR_RET_ReturnCode_{{ReturnCode::COND_FAILED}},
+                             INSTR_INC_RegId_{{RegId::REG0}, "first_time"},
+                             INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, RegId::REG0}},
+                             INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}},
+                         }};
+Program checker{"cond", {INSTR_STORE_MemoryKey_int_{{MemoryKey{"test"}, 123}}}};
+Program terminator{"terminator", {INSTR_RET_ReturnCode_{{ReturnCode::RS_TERMINATED}}}};
+Rule rule{
+    "", -1, -1, cond_passed_once, checker,
+};
+RuleSet rs1{"rs2", {rule}, terminator};
+rs1.id = 1;
+rs1.owner_addr = 1;
+rule_engine->runtimes.acceptRuleSet(rs1);
+rule_engine->executeAllRuleSets();
+
+auto gate = rule_engine->toRouterGate;
+EXPECT_EQ(gate->messages.size(), 1);
+
+auto pkt = dynamic_cast<ConnectionTeardownMessage *>(gate->messages[0]);
+EXPECT_EQ(pkt->getSrcAddr(), 5);
+EXPECT_EQ(pkt->getDestAddr(), 1);
+EXPECT_EQ(pkt->getRuleSet_id(), 1);
+  
 }
 
 }  // namespace
