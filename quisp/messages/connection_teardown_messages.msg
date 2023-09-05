@@ -5,7 +5,6 @@ namespace quisp::messages;
 
 packet ConnectionTeardownMessage extends Header
 {
-    string Role;
     int actual_srcAddr;
     int actual_destAddr;
     unsigned long RuleSet_id;
