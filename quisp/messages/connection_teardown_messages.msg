@@ -12,17 +12,8 @@ packet ConnectionTeardownMessage extends Header
 
 packet InternalConnectionTeardownMessage extends Header
 {
-    string Role;
     int actual_srcAddr;
     int actual_destAddr;
-    int next_destAddr;
     unsigned long RuleSet_id;
 }
 
-packet InternalConnectionTeardownInfoForwarding extends Header
-{
-    int actual_srcAddr;
-    int actual_destAddr;
-    int next_destAddr;
-    unsigned long RuleSet_id;
-}

@@ -182,25 +182,6 @@ PurType ConnectionManager::parsePurType(const std::string &pur_type) {
 }
 
 /**
- * This function is called to handle the ConnectionSetupResponse at end nodes.
- * The only job here is to store InternalConnectionTeardownInfoForwarding and feed them to the RuleEngine via Router.
- *
- * \param pk the received ConnectionSetupResponse.
- **/
-void ConnectionManager::storeTeardownInfo(ConnectionSetupResponse *pk) {
-  auto size = pk->getStack_of_QNodeIndexesArraySize();
-  for (int i = 0; i < size; i++) {
-    InternalConnectionTeardownInfoForwarding *pk_internal = new InternalConnectionTeardownInfoForwarding("InternalConnectionTeardownInfoForwarding");
-    pk_internal->setActual_destAddr(my_address);
-    pk_internal->setActual_srcAddr(my_address);
-    pk_internal->setKind(4);
-    pk_internal->setNext_destAddr(pk->getStack_of_QNodeIndexes(i));
-    pk_internal->setRuleSet_id(pk->getRuleSet_id());
-    send(pk_internal, "RouterPort$o");
-  }
-}
-
-/**
  * This function is called to handle the ConnectionTeardownMessage at end nodes.
  * The only job here is to store InternalConnectionTeardownMessage and feed them to the RuleEngine via Router.
  *

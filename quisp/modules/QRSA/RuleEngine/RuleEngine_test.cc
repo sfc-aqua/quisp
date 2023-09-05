@@ -224,28 +224,6 @@ TEST_F(RuleEngineTest, freeConsumedResource) {
   delete rule_engine->qnic_store.get();
 }
 
-TEST_F(RuleEngineTest, handleInternalConnectionTeardownInfoForwarding) {
-  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  sim->registerComponent(rule_engine);
-  rule_engine->callInitialize();
-
-  auto* pkt = new InternalConnectionTeardownInfoForwarding();
-  pkt->setNext_destAddr(1);
-  rule_engine->handleInternalConnectionTeardownInfoForwarding(pkt);
-  EXPECT_EQ(rule_engine->qnode_indices, vector<int>{1});
-}
-
-TEST_F(RuleEngineTest, getRoleFromInternalConnectionTeardownMessage) {
-  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  sim->registerComponent(rule_engine);
-  rule_engine->callInitialize();
-
-  auto* pkt = new InternalConnectionTeardownMessage();
-  pkt->setRole("SEND");
-  auto role = rule_engine->getRoleFromInternalConnectionTeardownMessage(pkt);
-  EXPECT_EQ(role, "SEND");
-}
-
 TEST_F(RuleEngineTest, sendLinkAllocationUpdateDecisionRequest) {
   auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon();
@@ -264,7 +242,7 @@ TEST_F(RuleEngineTest, sendLinkAllocationUpdateDecisionRequest) {
   rule_engine->runtimes.acceptRuleSet(rs);
 
   auto* msg = new InternalConnectionTeardownMessage();
-  msg->setNext_destAddr(1);
+  // msg->setNext_destAddr(1);
   msg->setRuleSet_id(111);
   rule_engine->sendLinkAllocationUpdateDecisionRequest(msg);
   auto gate = rule_engine->toRouterGate;

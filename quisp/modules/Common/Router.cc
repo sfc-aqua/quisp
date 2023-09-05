@@ -102,10 +102,6 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Connection Teardown packet received");
     send(pk, "cmPort$o");
     return;
-  } else if (dest_addr == my_address && dynamic_cast<InternalConnectionTeardownInfoForwarding *>(msg)) {
-    bubble("Internal Connection Teardown Info Forwarding packet received");
-    send(pk, "rePort$o");
-    return;
   } else if (dest_addr == my_address && dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     bubble("Internal Connection Teardown packet received");
     send(pk, "rePort$o");

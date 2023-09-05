@@ -116,8 +116,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     handlePurificationResult(pkt);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
     handleSwappingResult(pkt);
-  } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownInfoForwarding *>(msg)) {
-    handleInternalConnectionTeardownInfoForwarding(pkt);
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto serialized_ruleset = pkt->getRuleSet();
@@ -253,13 +251,6 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
 }
 
-void RuleEngine::handleInternalConnectionTeardownInfoForwarding(InternalConnectionTeardownInfoForwarding *connection_teardown_info_forwarding) {
-  auto dest_addr = connection_teardown_info_forwarding->getNext_destAddr();
-  qnode_indices.push_back(dest_addr);
-}
-
-string RuleEngine::getRoleFromInternalConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) { return msg->getRole(); }
-
 void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
   auto ruleset_id = msg->getRuleSet_id();
   runtimes.stopById(ruleset_id);
@@ -268,7 +259,7 @@ void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessa
 void RuleEngine::sendLinkAllocationUpdateDecisionRequest(InternalConnectionTeardownMessage *msg) {
   LinkAllocationUpdateDecisionRequest *pkt = new LinkAllocationUpdateDecisionRequest("LinkAllocationUpdateDecisionRequest");
   pkt->setSrcAddr(parentAddress);
-  pkt->setDestAddr(msg->getNext_destAddr());
+  // pkt->setDestAddr(msg->getNext_destAddr());
   pkt->setCurrentRuleSet_id(msg->getRuleSet_id());
   pkt->setOffered_ruleset_idsArraySize(runtimes.size());
   for (auto &runtime : runtimes) {
