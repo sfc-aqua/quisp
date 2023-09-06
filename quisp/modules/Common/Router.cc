@@ -5,6 +5,7 @@
  */
 #include "Router.h"
 #include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
+#include "messages/connection_teardown_messages_m.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -128,6 +129,9 @@ void Router::handleMessage(cMessage *msg) {
     return;
   } else if (dest_addr == my_address && dynamic_cast<SwappingResult *>(msg)) {
     bubble("Swapping Result packet received");
+    send(pk, "rePort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<InternalPathInfo *>(msg)) {
     send(pk, "rePort$o");
     return;
   } else if (dest_addr == my_address && dynamic_cast<LinkTomographyRequest *>(msg)) {
