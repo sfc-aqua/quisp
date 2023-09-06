@@ -92,8 +92,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   void scheduleRequestRetry(int qnic_address);
   void popApplicationRequest(int qnic_address);
 
-  void storeTeardownInfo(messages::ConnectionSetupResponse *pk);
-  void storeTeardownMessage(messages::ConnectionTeardownMessage *pk);
+  // void storeInfoAboutLinkAllocationUpdateDecision(messages::ConnectionTeardownMessage *pk);
 
   void storeRuleSetForApplication(messages::ConnectionSetupResponse *pk);
   void storeRuleSet(messages::ConnectionSetupResponse *pk);
@@ -111,6 +110,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   static rules::PurType parsePurType(const std::string &pur_type);
 
   unsigned long createUniqueId() override;
+  int getRuleSetIndexByOwnerAddress(std::map<int, nlohmann::json> rulesets, int owner_address);
 };
 
 }  // namespace quisp::modules

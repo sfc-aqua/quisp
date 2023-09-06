@@ -49,7 +49,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
   using quisp::modules::ConnectionManager::reserveQnic;
   using quisp::modules::ConnectionManager::respondToRequest;
   using quisp::modules::ConnectionManager::respondToRequest_deprecated;
-  using quisp::modules::ConnectionManager::storeTeardownInfo;
+  // using quisp::modules::ConnectionManager::storeInfoAboutLinkAllocationUpdateDecision;
 
   ConnectionManagerTestTarget(IRoutingDaemon *routing_daemon, IHardwareMonitor *hardware_monitor)
       : quisp::modules::ConnectionManager(), toRouterGate(new TestGate(this, "RouterPort$o")) {
@@ -160,6 +160,11 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     ASSERT_NE(packetFor2, nullptr);
     EXPECT_EQ(packetFor2->getApplicationId(), 1);
     EXPECT_EQ(packetFor2->getDestAddr(), 2);
+    EXPECT_EQ(packetFor2->getStack_of_NodeAddressesAlongThePathArraySize(), 4);
+    EXPECT_EQ(packetFor2->getStack_of_NodeAddressesAlongThePath(0), 2);
+    EXPECT_EQ(packetFor2->getStack_of_NodeAddressesAlongThePath(1), 3);
+    EXPECT_EQ(packetFor2->getStack_of_NodeAddressesAlongThePath(2), 4);
+    EXPECT_EQ(packetFor2->getStack_of_NodeAddressesAlongThePath(3), 5);
     auto ruleset = packetFor2->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 2);
@@ -257,6 +262,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     ASSERT_NE(packetFor3, nullptr);
     EXPECT_EQ(packetFor3->getApplicationId(), 1);
     EXPECT_EQ(packetFor3->getDestAddr(), 3);
+    EXPECT_EQ(packetFor3->getStack_of_NodeAddressesAlongThePathArraySize(), 3);
+    EXPECT_EQ(packetFor3->getStack_of_NodeAddressesAlongThePath(0), 3);
+    EXPECT_EQ(packetFor3->getStack_of_NodeAddressesAlongThePath(1), 4);
+    EXPECT_EQ(packetFor3->getStack_of_NodeAddressesAlongThePath(2), 5);
     auto ruleset = packetFor3->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 2);
@@ -368,6 +377,9 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     ASSERT_NE(packetFor4, nullptr);
     EXPECT_EQ(packetFor4->getApplicationId(), 1);
     EXPECT_EQ(packetFor4->getDestAddr(), 4);
+    EXPECT_EQ(packetFor4->getStack_of_NodeAddressesAlongThePathArraySize(), 2);
+    EXPECT_EQ(packetFor4->getStack_of_NodeAddressesAlongThePath(0), 4);
+    EXPECT_EQ(packetFor4->getStack_of_NodeAddressesAlongThePath(1), 5);
     auto ruleset = packetFor4->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 1);
@@ -446,6 +458,8 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     ASSERT_NE(packetFor5, nullptr);
     EXPECT_EQ(packetFor5->getApplicationId(), 1);
     EXPECT_EQ(packetFor5->getDestAddr(), 5);
+    EXPECT_EQ(packetFor5->getStack_of_NodeAddressesAlongThePathArraySize(), 1);
+    EXPECT_EQ(packetFor5->getStack_of_NodeAddressesAlongThePath(0), 5);
     auto ruleset = packetFor5->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 3);

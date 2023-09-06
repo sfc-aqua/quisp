@@ -3,6 +3,8 @@
  *  \brief ConnectionManager
  */
 
+#include <algorithm>
+#include <iterator>
 #include <string>
 
 #include "ConnectionManager.h"
@@ -130,14 +132,8 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 
   if (auto *pk = dynamic_cast<ConnectionTeardownMessage *>(msg)) {
-    // Connection is torn down only if the node has not received the ConnectionTeardownMessage
-    // If it has already received it, the incoming message is ignored.
-    // if (is_a_part_of_connection) {
-    //   auto dest_addr = pk->getDestAddr();
-    //   auto qnic_addr = routing_daemon->findQNicAddrByDestAddr(dest_addr);
-    //   // releaseQnic(qnic_addr);
-    //   is_a_part_of_connection = false;
-    // }
+    // Connection is torn down only if the node has not received the ConnectionTeardownMessage If it has already received it, the incoming message is ignored.
+    // storeInfoAboutLinkAllocationUpdateDecision(pk);
     delete msg;
     return;
   }
@@ -186,14 +182,16 @@ PurType ConnectionManager::parsePurType(const std::string &pur_type) {
  *
  * \param pk the received ConnectionTeardownMessage.
  **/
-void ConnectionManager::storeTeardownMessage(ConnectionTeardownMessage *pk) {
-  InternalConnectionTeardownMessage *pk_internal = new InternalConnectionTeardownMessage("InternalConnectionTeardownMessage");
-  pk_internal->setSrcAddr(my_address);
-  pk_internal->setDestAddr(my_address);
-  pk_internal->setKind(5);
-  pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  send(pk_internal, "RouterPort$o");
-}
+// void ConnectionManager::storeInfoAboutLinkAllocationUpdateDecision(ConnectionTeardownMessage *pk) {
+//   InternalConnectionTeardownMessage *pk_internal = new InternalConnectionTeardownMessage("InternalConnectionTeardownMessage");
+//   pk_internal->setSrcAddr(my_address);
+//   pk_internal->setDestAddr(my_address);
+//   pk_internal->setKind(5);
+//   pk_internal->setRuleSet_id(pk->getRuleSet_id());
+
+//   if (true) {
+//   }
+// }
 
 /**
  * This function is called to handle the ConnectionSetupResponse at the intermediate node.
@@ -295,9 +293,29 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setActual_destAddr(owner_address);
     pkt->setApplication_type(0);
     pkt->setKind(2);
+
+    auto index = getRuleSetIndexByOwnerAddress(rulesets, owner_address);
+    auto nodeNum = node_addresses_along_path.size() - index;
+    pkt->setStack_of_NodeAddressesAlongThePathArraySize(nodeNum);
+    for (auto i = 0; i < nodeNum; i++) {
+      pkt->setStack_of_NodeAddressesAlongThePath(i, node_addresses_along_path.at(index + i));
+    }
     send(pkt, "RouterPort$o");
   }
+
   reserveQnic(qnic_addr);
+}
+
+int ConnectionManager::getRuleSetIndexByOwnerAddress(std::map<int, nlohmann::json> rulesets, int owner_address) {
+  auto index = 0;
+  for (auto [current_address, rs] : rulesets) {
+    if (current_address == owner_address) {
+      return index;
+    } else {
+      index += 1;
+    }
+  }
+  return -1;
 }
 
 /**
