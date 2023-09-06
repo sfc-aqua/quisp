@@ -4,6 +4,7 @@
  *  \brief Router
  */
 #include "Router.h"
+#include "messages/QNode_ipc_messages_m.h"
 #include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
 #include "messages/connection_teardown_messages_m.h"
 
@@ -97,6 +98,10 @@ void Router::handleMessage(cMessage *msg) {
     return;
   } else if (dest_addr == my_address && dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     bubble("Internal RuleSet Forwarding Application packet received");
+    send(pk, "rePort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<InternalNodeAddressesAlongPathForwarding *>(msg)) {
+    bubble("Internal Node Addresses Along Path Forwarding packet received");
     send(pk, "rePort$o");
     return;
   } else if (dest_addr == my_address && dynamic_cast<ConnectionTeardownMessage *>(msg)) {
