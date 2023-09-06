@@ -131,9 +131,6 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Swapping Result packet received");
     send(pk, "rePort$o");
     return;
-  } else if (dest_addr == my_address && dynamic_cast<InternalPathInfo *>(msg)) {
-    send(pk, "rePort$o");
-    return;
   } else if (dest_addr == my_address && dynamic_cast<LinkTomographyRequest *>(msg)) {
     bubble("Link tomography request received");
     send(pk, "hmPort$o");

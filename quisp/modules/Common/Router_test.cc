@@ -218,13 +218,6 @@ TEST_F(RouterTest, handleLinkAllocationUpdateDecisionResponse) {
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
-TEST_F(RouterTest, handleInternalPathInfo) {
-  auto msg = new InternalPathInfo;
-  msg->setDestAddr(10);
-  router->handleMessage(msg);
-  ASSERT_EQ(router->rePort->messages.size(), 1);
-}
-
 TEST_F(RouterTest, handleSwappingResult) {
   auto msg = new SwappingResult;
   msg->setDestAddr(10);
