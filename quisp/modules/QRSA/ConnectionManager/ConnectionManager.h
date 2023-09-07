@@ -71,6 +71,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   std::map<int, int> connection_retry_count;  // key is qnic address
   std::vector<int> reserved_qnics = {};  // reserved qnic address table
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
+  std::map<unsigned long, std::vector<int>> ruleset_id_node_addresses_along_path_map;
   bool simultaneous_es_enabled;
   bool es_with_purify = false;
   bool is_a_part_of_connection = false;
@@ -96,6 +97,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
 
   void storeRuleSetForApplication(messages::ConnectionSetupResponse *pk);
   void storeRuleSet(messages::ConnectionSetupResponse *pk);
+  void storeInfoAboutNodeAddressesAlongPath(messages::ConnectionSetupResponse *pk);
 
   void initiator_reject_req_handler(messages::RejectConnectionSetupRequest *pk);
   void responder_reject_req_handler(messages::RejectConnectionSetupRequest *pk);
