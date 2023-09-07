@@ -435,7 +435,7 @@ void RuleEngine::executeAllRuleSets() {
   }
 }
 
-// bool RuleEngine::is_sender_of_LAU_req(int index) { return index % 2 == 0; }
+bool RuleEngine::is_sender_of_LAU_req(int index) { return index % 2 == 0; }
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationary_qubit_address"));
