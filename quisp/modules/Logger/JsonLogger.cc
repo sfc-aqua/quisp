@@ -77,6 +77,8 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << "\"msg_type\": \"ConnectionTeardownMessage\"";
     os << ", \"actual_dest_addr\": " << req->getActual_destAddr();
     os << ", \"actual_src_addr\": " << req->getActual_srcAddr();
+    os << ", \"LAU_req_dest_addr\": " << req->getLAU_req_destAddr();
+    os << ", \"LAU_req_src_addr\": " << req->getLAU_req_srcAddr();
     os << ", \"ruleset_id\": " << req->getRuleSet_id();
     return os.str();
   }
