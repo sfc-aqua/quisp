@@ -4,6 +4,7 @@
  */
 #pragma once
 
+#include <map>
 #include <unordered_map>
 #include <vector>
 
@@ -70,6 +71,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int number_of_qnics_r;
   int number_of_qnics_rp;
   std::vector<IQubitRecord *> qubit_record_list;
+  std::map<unsigned long, vector<int>> ruleset_id_node_addresses_along_path_map;
 
   IHardwareMonitor *hardware_monitor;
   IRoutingDaemon *routingdaemon;
@@ -83,6 +85,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   std::vector<IQubitRecord *> getAllocatedResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
   void handleConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *msg);
   void stopRuleSetExecution(messages::InternalConnectionTeardownMessage *msg);
+  void sendConnectionTeardownMessageForRuleSet(unsigned long ruleset_id);
   void sendLinkAllocationUpdateDecisionRequest(messages::InternalConnectionTeardownMessage *msg);
   void sendLinkAllocationUpdateDecisionResponse(messages::LinkAllocationUpdateDecisionRequest *msg);
   void sendBarrierMessage(messages::LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number, bool is_last);
@@ -103,6 +106,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void freeFailedEntanglementAttemptQubits(QNIC_type qnic_type, int qnic_index);
   simtime_t getEmitTimeFromBSMNotification(messages::BSMTimingNotification *notification);
   void schedulePhotonEmission(QNIC_type qnic_type, int qnic_index, messages::BSMTimingNotification *notification);
+  // bool is_sender_of_LAU_req(int index);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;

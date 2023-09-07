@@ -16,12 +16,14 @@
 
 #include "QNicStore/QNicStore.h"
 #include "RuntimeCallback.h"
+#include "messages/QNode_ipc_messages_m.h"
 #include "messages/barrier_messages_m.h"
 #include "messages/connection_teardown_messages_m.h"
 #include "messages/link_allocation_update_messages_m.h"
 #include "messages/tomography_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "modules/QRSA/RuleEngine/QubitRecord/IQubitRecord.h"
+#include "rules/RuleSet.h"
 #include "runtime/RuleSet.h"
 #include "runtime/Runtime.h"
 
@@ -128,6 +130,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
+  } else if (auto *pkt = dynamic_cast<InternalNodeAddressesAlongPathForwarding *>(msg)) {
+    vector<int> node_addresses_along_path;
+    for (auto index = 0; index < pkt->getNode_addresses_along_pathArraySize(); index++) {
+      node_addresses_along_path.push_back(pkt->getNode_addresses_along_path(index));
+    }
+    auto ruleset_id = pkt->getRuleSet_id();
+    ruleset_id_node_addresses_along_path_map[ruleset_id] = node_addresses_along_path;
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
@@ -255,6 +264,21 @@ void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessa
 void RuleEngine::stopRuleSetExecution(InternalConnectionTeardownMessage *msg) {
   auto ruleset_id = msg->getRuleSet_id();
   runtimes.stopById(ruleset_id);
+}
+
+void RuleEngine::sendConnectionTeardownMessageForRuleSet(unsigned long ruleset_id) {
+  auto node_addresses_along_path = ruleset_id_node_addresses_along_path_map[ruleset_id];
+  for (int index = 0; index < node_addresses_along_path.size() - 1; index++) {
+    auto pkt = new ConnectionTeardownMessage();
+    pkt->setSrcAddr(parentAddress);
+    pkt->setDestAddr(node_addresses_along_path.at(index));
+    pkt->setActual_srcAddr(parentAddress);
+    pkt->setActual_destAddr(node_addresses_along_path.at(index));
+    pkt->setLAU_req_srcAddr(node_addresses_along_path.at(index));
+    pkt->setLAU_req_destAddr(node_addresses_along_path.at(index + 1));
+    pkt->setRuleSet_id(ruleset_id);
+    send(pkt, "RouterPort$o");
+  }
 }
 
 void RuleEngine::sendLinkAllocationUpdateDecisionRequest(InternalConnectionTeardownMessage *msg) {
@@ -406,14 +430,12 @@ void RuleEngine::freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned
 
 void RuleEngine::executeAllRuleSets() {
   auto terminated_ruleset_list = runtimes.exec();
-  for (auto ruleset : terminated_ruleset_list) {
-    auto pkt = new ConnectionTeardownMessage();
-    pkt->setSrcAddr(parentAddress);
-    pkt->setDestAddr(ruleset.owner_addr);
-    pkt->setRuleSet_id(ruleset.id);
-    send(pkt, "RouterPort$o");
+  for (auto terminated_ruleset : terminated_ruleset_list) {
+    sendConnectionTeardownMessageForRuleSet(terminated_ruleset.id);
   }
 }
+
+// bool RuleEngine::is_sender_of_LAU_req(int index) { return index % 2 == 0; }
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationary_qubit_address"));
