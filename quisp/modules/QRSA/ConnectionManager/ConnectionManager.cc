@@ -9,6 +9,8 @@
 
 #include "ConnectionManager.h"
 #include "RuleSetGenerator.h"
+#include "messages/QNode_ipc_messages_m.h"
+#include "messages/connection_setup_messages_m.h"
 #include "messages/connection_teardown_messages_m.h"
 
 using namespace omnetpp;
@@ -107,7 +109,10 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int initiator_addr = resp->getActual_destAddr();
     int responder_addr = resp->getActual_srcAddr();
 
-    if (initiator_addr == my_address || responder_addr == my_address) {
+    if (responder_addr == my_address) {
+      storeInfoAboutNodeAddressesAlongPath(resp);
+      storeRuleSetForApplication(resp);
+    } else if (initiator_addr == my_address) {
       // this node is not a swapper
       storeRuleSetForApplication(resp);
     } else {
@@ -244,6 +249,19 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
   }
 }
 
+void ConnectionManager::storeInfoAboutNodeAddressesAlongPath(ConnectionSetupResponse *res) {
+  InternalNodeAddressesAlongPathForwarding *pkt = new InternalNodeAddressesAlongPathForwarding("InternalNodeAddressAlongPath;Forwarding");
+  pkt->setSrcAddr(my_address);
+  pkt->setDestAddr(my_address);
+  auto ruleset_id = res->getRuleSet_id();
+  auto node_addresses = ruleset_id_node_addresses_along_path_map[ruleset_id];
+  pkt->setNode_addresses_along_pathArraySize(node_addresses.size());
+  for (auto index = 0; index < node_addresses.size(); index++) {
+    pkt->setNode_addresses_along_path(index, node_addresses.at(index));
+  }
+  send(pkt, "RouterPort$o");
+}
+
 /**
  * This function is called to handle the ConnectionSetupRequest at the responder.
  * This is where much of the work happens, and there is the potential for new value
@@ -275,12 +293,14 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     return;
   }
 
+  auto ruleset_id = createUniqueId();
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
-  auto rulesets = ruleset_gen.generateRuleSets(req, createUniqueId());
+  auto rulesets = ruleset_gen.generateRuleSets(req, ruleset_id);
 
   for (auto rs = rulesets.begin(); rs != rulesets.end(); rs++) {
     node_addresses_along_path.push_back(rs->first);
   }
+  ruleset_id_node_addresses_along_path_map[ruleset_id] = node_addresses_along_path;
 
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
@@ -293,16 +313,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setActual_destAddr(owner_address);
     pkt->setApplication_type(0);
     pkt->setKind(2);
-
-    auto index = getRuleSetIndexByOwnerAddress(rulesets, owner_address);
-    auto nodeNum = node_addresses_along_path.size() - index;
-    pkt->setStack_of_NodeAddressesAlongThePathArraySize(nodeNum);
-    for (auto i = 0; i < nodeNum; i++) {
-      pkt->setStack_of_NodeAddressesAlongThePath(i, node_addresses_along_path.at(index + i));
-    }
     send(pkt, "RouterPort$o");
   }
-
   reserveQnic(qnic_addr);
 }
 
