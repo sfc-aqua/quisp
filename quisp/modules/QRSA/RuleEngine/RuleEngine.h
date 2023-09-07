@@ -106,7 +106,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void freeFailedEntanglementAttemptQubits(QNIC_type qnic_type, int qnic_index);
   simtime_t getEmitTimeFromBSMNotification(messages::BSMTimingNotification *notification);
   void schedulePhotonEmission(QNIC_type qnic_type, int qnic_index, messages::BSMTimingNotification *notification);
-  bool is_sender_of_LAU_req(int index);
+  bool isSenderOfLAURequest(int index);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
