@@ -322,6 +322,7 @@ double TomographyManager::getStokesParameter(const std::tuple<int, int> partner_
   return stokes_param;
 };
 
+// Deprecated: This function should be deprecated in the future since the ruleset creation should be done in connection manager.
 RuleSet *TomographyManager::createLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id, int num_purification,
                                                         int purification_type, bool x_purification, bool z_purification, int num_measure) {
   // add rules to this ruleset

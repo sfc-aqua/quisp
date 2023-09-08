@@ -12,8 +12,9 @@ class TomographyManager : public quisp::utils::TomographyManager {
  public:
   using quisp::utils::TomographyManager::addLocalResult;
   using quisp::utils::TomographyManager::tomography_records;
+  using quisp::utils::TomographyManager::tomography_stats;
   using quisp::utils::TomographyManager::TomographyOutput;
-  using quisp::utils::TomographyManager::TomographyRecord;
+  using quisp::utils::TomographyManager::TomographyRecord;;
 };
 
 class TomographyManagerTest : public testing::Test {
@@ -61,7 +62,7 @@ TEST_F(TomographyManagerTest, addPartnerResult) {
   EXPECT_EQ(stored_record.at(tomography_round).partner_output.my_god_clean, my_god_clean);
 }
 
-TEST_F(TomographyManagerTest, acceptPartnerResultToExistingSelfRecord) {
+TEST_F(TomographyManagerTest, addPartnerResultToExistingSelfRecord) {
   // Tomography between node 0 <--> node 2
   // Prepare self record
   int qnic_id = 0;
@@ -87,5 +88,20 @@ TEST_F(TomographyManagerTest, acceptPartnerResultToExistingSelfRecord) {
   EXPECT_EQ(stored_record.at(tomography_round).partner_output.basis, measurement_basis);
   EXPECT_EQ(stored_record.at(tomography_round).partner_output.output_is_plus, is_plus);
   EXPECT_EQ(stored_record.at(tomography_round).partner_output.my_god_clean, my_god_clean);
+}
+
+TEST_F(TomographyManagerTest, initializeTomographyStats){
+  // When the first tomography record is added, initialize a tomography stats record with this partner
+  int qnic_id = 0;
+  int partner_addr = 1;
+  int tomography_round = 0;
+
+  tomography_manager->addLocalResult(qnic_id, partner_addr, tomography_round, measurement_basis, is_plus, my_god_clean);
+  EXPECT_EQ(tomography_manager->tomography_stats.size(), 1);
+  auto stored_stats = tomography_manager->tomography_stats.at(std::make_tuple(qnic_id, partner_addr));
+  // Check initial values
+  EXPECT_EQ(stored_stats.tomography_time, 0);
+  EXPECT_EQ(stored_stats.bell_pair_per_sec, 0);
+  EXPECT_EQ(stored_stats.total_measurement_count, 0);
 }
 }  // namespace

@@ -32,7 +32,7 @@ class HardwareMonitor : public IHardwareMonitor {
 
   // Store link cost information and routing daemon read this.
   // neighbor address -> link cost
-  std::map<int, double> link_cost_table = {};
+  std::map<int, double> link_cost_table;
 
  private:
   int my_address;

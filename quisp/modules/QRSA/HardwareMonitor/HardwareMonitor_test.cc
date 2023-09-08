@@ -163,9 +163,4 @@ TEST_F(HardwareMonitorTest, acceptPartnerResult) {
   delete hardware_monitor->tomography_manager.get();
 }
 
-// Should be deprecated in the future
-TEST_F(HardwareMonitorTest, sendLinkTomgraphyRuleSet) {}
-
-// TEST_F(HardwareMonitorTest, reconstructDensityMatrix) {}
-
 }  // namespace

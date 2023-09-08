@@ -104,10 +104,10 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     int partner_address = ack->getSrcAddr();
     auto my_qnic_info = routing_daemon->getQuantumInterfaceInfo(partner_address);
 
-    // RuleSet for partner node
+    // RuleSet for this node
     long ruleset_id = HelperFunctions::createUniqueId(this->getRNG(0), my_address, simTime());
     sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info.qnic.type, my_qnic_info.qnic.index, ruleset_id);
-    // RuleSet for this node
+    // RuleSet for partner node
     QNIC_type partner_qnic_type = ack->getQnic_type();
     int partner_qnic_index = ack->getQnic_index();
     sendLinkTomographyRuleSet(partner_address, my_address, partner_qnic_type, partner_qnic_index, ruleset_id);
@@ -148,8 +148,12 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
 }
 
 double HardwareMonitor::getLinkCost(int neighbor_address) {
+  // Since OSPF requires link cost and ospf initialization would run before hardware monitor is initiated.
+  // If this neighbor address cannot be found in the link cost table, then initialize it with 1 for now.
+  // This value should be updated with link tomography result or initially set by the user.
   if (!link_cost_table.count(neighbor_address)) {
-    error("Link cost for neighbor %d not found", neighbor_address);
+    // error("Link cost for neighbor %d not found", neighbor_address);
+    link_cost_table[neighbor_address] = 1;
   }
   return link_cost_table[neighbor_address];
 }
