@@ -31,5 +31,6 @@ class IRoutingDaemon : public cSimpleModule {
   virtual int findQNicAddrByDestAddr(int destAddr) = 0;
   virtual std::vector<int> getNeighborAddresses() = 0;
   virtual QuantumInterfaceInfo getQuantumInterfaceInfo(int dest_addr) = 0;
+  virtual std::string getModuleNameByAddress(int module_address) = 0;
 };
 }  // namespace quisp::modules

@@ -189,8 +189,11 @@ void HardwareMonitor::finish() {
       link_cost = 1;
     }
     // density matrix output
-    tomography_dm << "Node (Address: " << my_address << ") <--->"
-                  << "Node (Address: " << partner << ")\n";
+    auto node_name = routing_daemon->getModuleNameByAddress(my_address);
+    auto partner_node_name = routing_daemon->getModuleNameByAddress(partner);
+
+    tomography_dm << node_name << "<--->"
+                  << partner_node_name <<"\n";
     tomography_dm << "REAL\n";
     tomography_dm << extended_density_matrix_reconstructed.real() << "\n";
     tomography_dm << "IMAGINARY\n";
@@ -198,16 +201,33 @@ void HardwareMonitor::finish() {
 
     auto [god_clean_pair_total, god_x_pair_total, god_y_pair_total, god_z_pair_total] = tomography_manager->calcGodPairCount(qnic_id, partner);
     // link stats output
-    tomography_stats_file << "Node (Address: " << my_address << "<-->QuantumChannel{cost=" << link_cost << ";fidelity=" << fidelity
-                          << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";tomography_time=" << tomography_stats.tomography_time
-                          << ";tomography_measurements=" << tomography_stats.total_measurement_count << "; GOD_clean_pair_total=" << god_clean_pair_total
-                          << "; GOD_X_pair_total=" << god_x_pair_total << "; GOD_Y_pair_total=" << god_y_pair_total << "; GOD_Z_pair_total=" << god_z_pair_total << ";}<-->"
-                          << "Node (Address: " << my_address << ")"
-                          << "; F=" << fidelity << "; X=" << x_error << "; Z=" << z_error << "; Y=" << y_error << endl;
+    tomography_stats_file << node_name
+    << "<-->QuantumChannel{cost=" << link_cost
+    << "; fidelity=" << fidelity
+    << "; bellpair_per_sec=" << tomography_stats.bell_pair_per_sec
+    << "; tomography_time=" << tomography_stats.tomography_time
+    << "; tomography_measurements=" << tomography_stats.total_measurement_count
+    << "; GOD_clean_pair_total=" << god_clean_pair_total
+    << "; GOD_X_pair_total=" << god_x_pair_total
+    << "; GOD_Y_pair_total=" << god_y_pair_total
+    << "; GOD_Z_pair_total=" << god_z_pair_total
+    << ";}<-->"
+    << partner_node_name
+    << "; F=" << fidelity
+    << "; X=" << x_error
+    << "; Z=" << z_error
+    << "; Y=" << y_error << endl;
     // this is a temporary implementation so that the e2e-test can read fidelity and error rates
-    std::cout << "Node (Address: " << my_address << "<-->QuantumChannel{cost=" << link_cost << ";fidelity=" << fidelity
-              << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec << ";}<-->"
-              << "Node (Address: " << partner << "); Fidelity=" << fidelity << "; Xerror=" << x_error << "; Zerror=" << z_error << "; Yerror=" << y_error << endl;
+    std::cout << node_name
+    << "<-->QuantumChannel{cost=" << link_cost
+    << ";fidelity=" << fidelity
+    << ";bellpair_per_sec=" << tomography_stats.bell_pair_per_sec
+    << ";}<-->"
+    << partner_node_name
+    << "; Fidelity=" << fidelity
+    << "; Xerror=" << x_error
+    << "; Zerror=" << z_error
+    << "; Yerror=" << y_error << endl;
   }
   tomography_stats_file.close();
   tomography_dm.close();

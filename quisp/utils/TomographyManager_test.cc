@@ -14,7 +14,8 @@ class TomographyManager : public quisp::utils::TomographyManager {
   using quisp::utils::TomographyManager::tomography_records;
   using quisp::utils::TomographyManager::tomography_stats;
   using quisp::utils::TomographyManager::TomographyOutput;
-  using quisp::utils::TomographyManager::TomographyRecord;;
+  using quisp::utils::TomographyManager::TomographyRecord;
+  ;
 };
 
 class TomographyManagerTest : public testing::Test {
@@ -90,7 +91,7 @@ TEST_F(TomographyManagerTest, addPartnerResultToExistingSelfRecord) {
   EXPECT_EQ(stored_record.at(tomography_round).partner_output.my_god_clean, my_god_clean);
 }
 
-TEST_F(TomographyManagerTest, initializeTomographyStats){
+TEST_F(TomographyManagerTest, initializeTomographyStats) {
   // When the first tomography record is added, initialize a tomography stats record with this partner
   int qnic_id = 0;
   int partner_addr = 1;

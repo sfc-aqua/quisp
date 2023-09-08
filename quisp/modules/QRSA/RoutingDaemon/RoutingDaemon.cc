@@ -124,6 +124,21 @@ std::vector<int> RoutingDaemon::getNeighborAddresses() {
   return neighbors;
 }
 
+
+// This function is called in finish() in HardwareMonitor to convert
+// node address into module name such as EndNode1.
+std::string RoutingDaemon::getModuleNameByAddress(int module_address){
+  auto *topology = provider.getTopologyForRoutingDaemon(this);
+  auto num_nodes = topology->getNumNodes();
+  for (int i=0; i<num_nodes; i++){
+    auto node = topology->getNode(i);
+    if (node->getModule()->par("address").intValue() == module_address){
+      return node->getModule()->getFullName();
+    };
+  }
+  error("Module not found for address %d", module_address);
+}
+
 void RoutingDaemon::prepareQnicAddrMap() {
   // create map between address and type, index for later use
   std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R, QNIC_RP};
