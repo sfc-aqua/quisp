@@ -258,7 +258,9 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
 
 void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
   stopRuleSetExecution(msg);
-  sendLinkAllocationUpdateDecisionRequest(msg);
+  if (msg->getLAU_req_destAddr() != -1) {
+    sendLinkAllocationUpdateDecisionRequest(msg);
+  }
 }
 
 void RuleEngine::stopRuleSetExecution(InternalConnectionTeardownMessage *msg) {
@@ -287,15 +289,15 @@ void RuleEngine::sendConnectionTeardownMessageForRuleSet(unsigned long ruleset_i
 
 void RuleEngine::sendLinkAllocationUpdateDecisionRequest(InternalConnectionTeardownMessage *msg) {
   LinkAllocationUpdateDecisionRequest *pkt = new LinkAllocationUpdateDecisionRequest("LinkAllocationUpdateDecisionRequest");
-  pkt->setSrcAddr(parentAddress);
-  // pkt->setDestAddr(msg->getNext_destAddr());
+  pkt->setSrcAddr(msg->getLAU_req_srcAddr());
+  pkt->setDestAddr(msg->getLAU_req_destAddr());
   pkt->setCurrentRuleSet_id(msg->getRuleSet_id());
   pkt->setOffered_ruleset_idsArraySize(runtimes.size());
-  for (auto &runtime : runtimes) {
-    if (runtime.ruleset.id == msg->getRuleSet_id()) {
+  for (auto it = runtimes.begin(); it != runtimes.end(); it++) {
+    if (it->ruleset.id == msg->getRuleSet_id()) {
       continue;
     } else {
-      pkt->appendOffered_ruleset_ids(runtime.ruleset.id);
+      pkt->setOfferedRuleSet_ids(it - runtimes.begin(), it->ruleset.id);
     }
   }
   send(pkt, "RouterPort$o");

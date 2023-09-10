@@ -263,38 +263,42 @@ TEST_F(RuleEngineTest, sendConnectionTeardownMessageForRuleSet) {
   EXPECT_EQ(pkt2->getLAU_req_destAddr(), -1);
 }
 
-// TEST_F(RuleEngineTest, sendLinkAllocationUpdateDecisionRequest) {
-//   auto* sim = prepareSimulation();
-//   auto* routing_daemon = new MockRoutingDaemon();
-//   auto* hardware_monitor = new MockHardwareMonitor();
-//   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-//   sim->registerComponent(rule_engine);
-//   sim->setContext(rule_engine);
-//   rule_engine->callInitialize();
+TEST_F(RuleEngineTest, sendLinkAllocationUpdateDecisionRequest) {
+  auto* sim = prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon();
+  auto* hardware_monitor = new MockHardwareMonitor();
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  sim->registerComponent(rule_engine);
+  sim->setContext(rule_engine);
+  rule_engine->callInitialize();
 
-//   int q0 = 0;
-//   QNodeAddr partner_addr{1};
-//   Program test_action{"testAction", {quisp::runtime::INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}}}};
-//   Program empty_condition{"emptyCondition", {}};
-//   auto rs = quisp::runtime::RuleSet{"test rs", {quisp::runtime::Rule{"test", -1, -1, empty_condition, test_action}}};
-//   rs.id = 1;
-//   rule_engine->runtimes.acceptRuleSet(rs);
+  int q0 = 0;
+  QNodeAddr partner_addr{1};
+  Program test_action{"testAction", {quisp::runtime::INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}}}};
+  Program empty_condition{"emptyCondition", {}};
+  auto rs = quisp::runtime::RuleSet{"test rs", {quisp::runtime::Rule{"test", -1, -1, empty_condition, test_action}}};
+  rs.id = 1;
+  rule_engine->runtimes.acceptRuleSet(rs);
 
-//   auto* msg = new InternalConnectionTeardownMessage();
-//   // msg->setNext_destAddr(1);
-//   msg->setRuleSet_id(111);
-//   rule_engine->sendLinkAllocationUpdateDecisionRequest(msg);
-//   auto gate = rule_engine->toRouterGate;
-//   EXPECT_EQ(gate->messages.size(), 1);
+  auto* msg = new InternalConnectionTeardownMessage();
+  msg->setSrcAddr(1);
+  msg->setDestAddr(1);
+  msg->setActual_srcAddr(1);
+  msg->setActual_destAddr(1);
+  msg->setRuleSet_id(111);
+  msg->setLAU_req_srcAddr(1);
+  msg->setLAU_req_destAddr(2);
+  rule_engine->sendLinkAllocationUpdateDecisionRequest(msg);
+  auto gate = rule_engine->toRouterGate;
+  EXPECT_EQ(gate->messages.size(), 1);
 
-//   auto pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest*>(gate->messages[0]);
-//   EXPECT_EQ(pkt->getSrcAddr(), 5);
-//   EXPECT_EQ(pkt->getDestAddr(), 1);
-//   EXPECT_EQ(pkt->getCurrentRuleSet_id(), 111);
-//   EXPECT_EQ(pkt->getOffered_ruleset_idsArraySize(), 2);
-//   EXPECT_EQ(pkt->getOfferedRuleSet_ids(0), 0);
-//   EXPECT_EQ(pkt->getOfferedRuleSet_ids(1), 1);
-// }
+  auto pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest*>(gate->messages[0]);
+  EXPECT_EQ(pkt->getSrcAddr(), 1);
+  EXPECT_EQ(pkt->getDestAddr(), 2);
+  EXPECT_EQ(pkt->getCurrentRuleSet_id(), 111);
+  EXPECT_EQ(pkt->getOffered_ruleset_idsArraySize(), 1);
+  EXPECT_EQ(pkt->getOfferedRuleSet_ids(0), 1);
+}
 
 TEST_F(RuleEngineTest, sendLinkAllocationUpdateDecisionResponse) {
   auto* sim = prepareSimulation();
@@ -310,7 +314,7 @@ TEST_F(RuleEngineTest, sendLinkAllocationUpdateDecisionResponse) {
   msg->setDestAddr(2);
   msg->setCurrentRuleSet_id(111);
   msg->setOffered_ruleset_idsArraySize(1);
-  msg->appendOffered_ruleset_ids(112);
+  msg->setOfferedRuleSet_ids(0, 112);
   rule_engine->sendLinkAllocationUpdateDecisionResponse(msg);
   auto gate = rule_engine->toRouterGate;
   EXPECT_EQ(gate->messages.size(), 1);
