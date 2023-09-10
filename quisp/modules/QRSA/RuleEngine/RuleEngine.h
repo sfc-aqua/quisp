@@ -90,8 +90,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void sendLinkAllocationUpdateDecisionResponse(messages::LinkAllocationUpdateDecisionRequest *msg);
   void sendBarrierMessage(messages::LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number, bool is_last);
   void sendBarrierMessageAck(messages::BarrierMessage *msg);
-  void sendLinkAllocationUpdateRequest(messages::BarrierMessage *msg);
-  void sendLinkAllocationUpdateResponse(messages::LinkAllocationUpdateRequest *msg);
   void executeAllRuleSets();
   std::vector<int> qnode_indices;
 

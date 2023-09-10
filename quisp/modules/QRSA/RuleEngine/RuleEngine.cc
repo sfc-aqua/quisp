@@ -139,9 +139,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ruleset_id_node_addresses_along_path_map[ruleset_id] = node_addresses_along_path;
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
     sendLinkAllocationUpdateDecisionResponse(pkt);
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateResponse *>(msg)) {
     auto ruleset_id = pkt->getCurrentRuleSet_id();
     auto sequence_number = 0;
     for (int i = 0; i < number_of_qnics; i++) {
@@ -156,10 +156,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
       }
     }
   } else if (auto *pkt = dynamic_cast<BarrierMessage *>(msg)) {
-    if (strcmp(pkt->getRole(), "SEND")) {
-      sendBarrierMessageAck(pkt);
-    } else if (pkt->getIs_last()) {
+    if (pkt->getIs_last()) {
       sendLinkAllocationUpdateRequest(pkt);
+    } else if (pkt->getIs_sender()) {
+      sendBarrierMessageAck(pkt);
     }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
     sendLinkAllocationUpdateResponse(pkt);
@@ -319,7 +319,7 @@ void RuleEngine::sendBarrierMessage(LinkAllocationUpdateDecisionResponse *msg, I
   pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleSet_id());
   pkt->setQubitRecord(qubit_record);
   pkt->setSequence_number(sequence_number);
-  pkt->setRole("SEND");
+  pkt->setIs_sender(true);
   pkt->setIs_last(is_last);
   send(pkt, "RouterPort$o");
 }
@@ -331,23 +331,7 @@ void RuleEngine::sendBarrierMessageAck(BarrierMessage *msg) {
   pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleSet_id());
   pkt->setQubitRecord((IQubitRecord *)msg->getQubitRecord());
   pkt->setSequence_number(msg->getSequence_number() + 1);
-  pkt->setRole("ACK");
-  send(pkt, "RouterPort$o");
-}
-
-void RuleEngine::sendLinkAllocationUpdateRequest(BarrierMessage *msg) {
-  LinkAllocationUpdateRequest *pkt = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
-  pkt->setSrcAddr(msg->getDestAddr());
-  pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
-  send(pkt, "RouterPort$o");
-}
-
-void RuleEngine::sendLinkAllocationUpdateResponse(LinkAllocationUpdateRequest *msg) {
-  LinkAllocationUpdateResponse *pkt = new LinkAllocationUpdateResponse("LinkAllocationUpdateResponse");
-  pkt->setSrcAddr(msg->getDestAddr());
-  pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
+  pkt->setIs_sender(false);
   send(pkt, "RouterPort$o");
 }
 
