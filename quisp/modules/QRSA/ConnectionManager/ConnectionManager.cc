@@ -104,8 +104,6 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 
   if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
-    is_a_part_of_connection = true;
-
     int initiator_addr = resp->getActual_destAddr();
     int responder_addr = resp->getActual_srcAddr();
 

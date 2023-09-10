@@ -74,7 +74,6 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   std::map<unsigned long, std::vector<int>> ruleset_id_node_addresses_along_path_map;
   bool simultaneous_es_enabled;
   bool es_with_purify = false;
-  bool is_a_part_of_connection = false;
   int num_remote_purification;
   double threshold_fidelity;
   rules::PurType purification_type;
