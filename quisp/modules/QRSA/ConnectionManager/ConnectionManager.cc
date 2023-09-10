@@ -142,9 +142,9 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     if (qnic_addr == -1) {
       error("No qnic to source node. Something wrong with routing.");
     }
-
     releaseQnic(qnic_addr);
-    // storeInfoAboutLinkAllocationUpdateDecision(pk);
+
+    storeInternalConnectionTeardownMessage(pk);
     delete msg;
     return;
   }
@@ -193,16 +193,18 @@ PurType ConnectionManager::parsePurType(const std::string &pur_type) {
  *
  * \param pk the received ConnectionTeardownMessage.
  **/
-// void ConnectionManager::storeInfoAboutLinkAllocationUpdateDecision(ConnectionTeardownMessage *pk) {
-//   InternalConnectionTeardownMessage *pk_internal = new InternalConnectionTeardownMessage("InternalConnectionTeardownMessage");
-//   pk_internal->setSrcAddr(my_address);
-//   pk_internal->setDestAddr(my_address);
-//   pk_internal->setKind(5);
-//   pk_internal->setRuleSet_id(pk->getRuleSet_id());
-
-//   if (true) {
-//   }
-// }
+void ConnectionManager::storeInternalConnectionTeardownMessage(ConnectionTeardownMessage *pk) {
+  InternalConnectionTeardownMessage *pk_internal = new InternalConnectionTeardownMessage("InternalConnectionTeardownMessage");
+  pk_internal->setSrcAddr(my_address);
+  pk_internal->setDestAddr(my_address);
+  pk_internal->setActual_srcAddr(my_address);
+  pk_internal->setActual_destAddr(my_address);
+  pk_internal->setKind(5);
+  pk_internal->setRuleSet_id(pk->getRuleSet_id());
+  pk_internal->setLAU_req_srcAddr(pk->getLAU_req_srcAddr());
+  pk_internal->setLAU_req_destAddr(pk->getLAU_req_destAddr());
+  send(pk_internal, "RouterPort$o");
+}
 
 /**
  * This function is called to handle the ConnectionSetupResponse at the intermediate node.
