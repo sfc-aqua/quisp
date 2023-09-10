@@ -18,7 +18,6 @@ packet BarrierMessage extends Header
     int destAddr;
     unsigned long negotiated_ruleset_id @setter(setNegotiatedRuleset_id) @getter(getNegotiatedRuleSet_id);
     IQubitRecord *qubit_record @setter(setQubitRecord) @getter(getQubitRecord);
-    int sequence_number;
-    string role @setter(setRole) @getter(getRole);
+    int sequence_number;    
     bool is_last;
 }
