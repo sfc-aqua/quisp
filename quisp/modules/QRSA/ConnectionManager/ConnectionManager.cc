@@ -138,6 +138,14 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
   if (auto *pk = dynamic_cast<ConnectionTeardownMessage *>(msg)) {
     // Connection is torn down only if the node has not received the ConnectionTeardownMessage If it has already received it, the incoming message is ignored.
+    int this_addr = pk->getActual_destAddr();
+    // qnic toward to the previous node
+    int qnic_addr = routing_daemon->findQNicAddrByDestAddr(this_addr);
+    if (qnic_addr == -1) {
+      error("No qnic to source node. Something wrong with routing.");
+    }
+
+    releaseQnic(qnic_addr);
     // storeInfoAboutLinkAllocationUpdateDecision(pk);
     delete msg;
     return;
