@@ -12,7 +12,7 @@
 
 using namespace omnetpp;
 
-namespace channels {
+namespace quisp::channels {
 class FSChannel : public cDatarateChannel {
  public:
     FSChannel();

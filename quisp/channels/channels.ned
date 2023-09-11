@@ -1,11 +1,12 @@
 package channels;
+@namespace(quisp::channels);
 
 import ned.DatarateChannel;
 import ned.DelayChannel;
 import ned.IdealChannel;
 
 channel FSChannel extends DatarateChannel {
-    @class(channels::FSChannel);
+    @class(FSChannel);
     double cost = default(1);
     double distance @unit(km) = default(20km);
     double speed_of_light_in_FS @unit(km) = default(299792.458km);

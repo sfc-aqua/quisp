@@ -6,7 +6,7 @@
 #include "FSChannel.h"
 
 using namespace omnetpp;
-namespace channels {
+namespace quisp::channels {
 
 
 FSChannel::FSChannel() {};

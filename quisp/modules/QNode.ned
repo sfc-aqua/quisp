@@ -29,11 +29,11 @@ module QNode
     submodules:
         app: Application {
             parameters:
-                @display("p=30,43");
+                @display("p=19,19");
         }
         router: Router {
             parameters:
-                @display("p=140,94");
+                @display("p=78,133");
             gates:
                 fromQueue[sizeof(parent.port)];
                 toQueue[sizeof(parent.port)];
@@ -43,11 +43,11 @@ module QNode
                 address = index;
                 //buffer = 8;
                 //@display("p=198,43");
-                @display("p=68,122");
+                @display("p=239,242");
         }
         qrsa: quantumRoutingSoft {
             parameters:
-                @display("p=171,33");
+                @display("p=180,19");
                 number_of_qnics = sizeof(parent.quantum_port);
                 number_of_qnics_r = sizeof(parent.quantum_port_receiver);
                 number_of_qnics_rp = sizeof(parent.quantum_port_receiver_passive);
@@ -62,7 +62,7 @@ module QNode
                 receiver = false;
                 emission_std = parent.emission_timing_std;
                 self_qnic_type = 0;
-                @display("p=300,200,m,5,100,50");
+                @display("p=445,211,m,5,100,50");
         }
         qnic_r[sizeof(quantum_port_receiver)]: QNIC {
             parameters:
@@ -86,7 +86,7 @@ module QNode
                 passive = true;
                 self_qnic_type = 2;
                 emission_std = parent.emission_timing_std;
-                @display("p=328,82");
+                @display("p=445,72");
         }
 
     connections:

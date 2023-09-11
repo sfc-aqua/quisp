@@ -35,9 +35,9 @@ network Simple_MIM
 
     connections:
         EndNode1.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> BSA.port++;
-        BSA.port++      <--> ClassicalChannel {  distance = 0.5km; } <--> EndNode2.port++;
+        BSA.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> EndNode2.port++;
         EndNode1.quantum_port++ <--> QuantumChannel {  distance = 0.5km; } <--> BSA.quantum_port++;
-        BSA.quantum_port++      <--> QuantumChannel {  distance = 0.5km; } <--> EndNode2.quantum_port++;
+        BSA.quantum_port++ <--> QuantumChannel {  distance = 0.5km; } <--> EndNode2.quantum_port++;
 
 }
 
@@ -64,6 +64,31 @@ network Simple_MM
     connections:
         EndNode1.port++ <--> ClassicalChannel {  distance = 1km; } <--> EndNode2.port++;
         EndNode1.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> EndNode2.quantum_port_receiver++;
+}
+
+network Simple_MM_SAT
+{
+    parameters:
+
+    submodules:
+        backend: Backend;
+        logger: Logger;
+        sharedResource: SharedResource;
+        EndNode1: QNode_Sat {
+            address = 1;
+            is_satellite = true;
+            node_type = "EndNode";
+            @display("i=COMP;p=168,127,m,5,60,60");
+        }
+        EndNode2: QNode {
+            address = 2;
+            node_type = "EndNode";
+            @display("i=COMP;p=327,77,m,5,60,60");
+        }
+
+    connections:
+        EndNode1.port++ <--> ClassicalChannel_FS {  distance = 1km; } <--> EndNode2.port++;
+        EndNode1.quantum_port++ <--> QuantumChannel_FS {  distance = 1km; } <--> EndNode2.quantum_port_receiver++;
 }
 
 network three_node_MIM
