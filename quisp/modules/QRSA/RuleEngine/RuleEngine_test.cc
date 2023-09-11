@@ -356,7 +356,7 @@ TEST_F(RuleEngineTest, sendBarrierMessage) {
   EXPECT_EQ(pkt->getNegotiatedRuleSet_id(), 111);
   EXPECT_EQ(pkt->getQubitRecord(), qubit_record);
   EXPECT_EQ(pkt->getSequence_number(), 0);
-  EXPECT_STREQ(pkt->getRole(), "SEND");
+  EXPECT_EQ(pkt->getIs_sender(), true);
   EXPECT_EQ(pkt->getIs_last(), false);
 }
 
@@ -390,7 +390,7 @@ TEST_F(RuleEngineTest, sendBarrierMessageAck) {
   EXPECT_EQ(pkt->getNegotiatedRuleSet_id(), 111);
   EXPECT_EQ(pkt->getQubitRecord(), qubit_record);
   EXPECT_EQ(pkt->getSequence_number(), 1);
-  EXPECT_STREQ(pkt->getRole(), "ACK");
+  EXPECT_EQ(pkt->getIs_sender(), false);
 }
 
 TEST_F(RuleEngineTest, sendLinkAllocationUpdateRequest) {
@@ -406,7 +406,7 @@ TEST_F(RuleEngineTest, sendLinkAllocationUpdateRequest) {
   msg->setSrcAddr(1);
   msg->setDestAddr(2);
   msg->setNegotiatedRuleset_id(111);
-  msg->setRole("ACK");
+  msg->setIs_last(true);
 
   auto logger = std::make_unique<DisabledLogger>();
   auto* qubit_record = new QubitRecord(QNIC_E, 3, 0, logger.get());
