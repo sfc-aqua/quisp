@@ -139,22 +139,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ruleset_id_node_addresses_along_path_map[ruleset_id] = node_addresses_along_path;
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
     sendLinkAllocationUpdateDecisionResponse(pkt);
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateResponse *>(msg)) {
-    auto ruleset_id = pkt->getCurrentRuleSet_id();
-    auto sequence_number = 0;
-    for (int i = 0; i < number_of_qnics; i++) {
-      qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, i, ruleset_id);
-      for (IQubitRecord *qubit_record : qubit_record_list) {
-        if (sequence_number == qubit_record_list.size()) {
-          sendBarrierMessage(pkt, qubit_record, sequence_number, true);
-          break;
-        }
-        sendBarrierMessage(pkt, qubit_record, sequence_number, false);
-        sequence_number += 1;
-      }
-    }
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
+    auto current_ruleset_id = pkt->getCurrentRuleSet_id();
+    auto next_ruleset_id = pkt->getNegotiatedRuleSet_id();
+    current_ruleset_id_next_ruleset_id_map[current_ruleset_id] = next_ruleset_id;
+    sendBarrierMessages(pkt, next_ruleset_id);
   } else if (auto *pkt = dynamic_cast<BarrierMessage *>(msg)) {
     if (pkt->getIs_last()) {
       sendLinkAllocationUpdateRequest(pkt);
@@ -308,8 +299,31 @@ void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDe
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
   pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
-  pkt->setNegotiatedRuleset_id(msg->getOfferedRuleSet_ids(1));
+  pkt->setNegotiatedRuleset_id(msg->getOfferedRuleSet_ids(0));
   send(pkt, "RouterPort$o");
+}
+
+void RuleEngine::sendBarrierMessages(LinkAllocationUpdateDecisionResponse *msg, unsigned long ruleset_id) {
+  auto sequence_number = 0;
+  for (int i = 0; i < number_of_qnics; i++) {
+    qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, i, ruleset_id);
+    for (IQubitRecord *qubit_record : qubit_record_list) {
+      BarrierMessage *pkt = new BarrierMessage("BarrierMessage");
+      pkt->setSrcAddr(msg->getDestAddr());
+      pkt->setDestAddr(msg->getSrcAddr());
+      pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleSet_id());
+      pkt->setQubitRecord(qubit_record);
+      pkt->setSequence_number(sequence_number);
+      pkt->setIs_sender(true);
+      if (sequence_number == qubit_record_list.size() - 1) {
+        pkt->setIs_last(true);
+      } else {
+        pkt->setIs_last(false);
+      }
+      send(pkt, "RouterPort$o");
+      sequence_number += 1;
+    }
+  }
 }
 
 void RuleEngine::sendBarrierMessage(LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number, bool is_last) {
@@ -332,6 +346,22 @@ void RuleEngine::sendBarrierMessageAck(BarrierMessage *msg) {
   pkt->setQubitRecord((IQubitRecord *)msg->getQubitRecord());
   pkt->setSequence_number(msg->getSequence_number() + 1);
   pkt->setIs_sender(false);
+  send(pkt, "RouterPort$o");
+}
+
+void RuleEngine::sendLinkAllocationUpdateRequest(BarrierMessage *msg) {
+  LinkAllocationUpdateRequest *pkt = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
+  pkt->setSrcAddr(msg->getDestAddr());
+  pkt->setDestAddr(msg->getSrcAddr());
+  pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
+  send(pkt, "RouterPort$o");
+}
+
+void RuleEngine::sendLinkAllocationUpdateResponse(LinkAllocationUpdateRequest *msg) {
+  LinkAllocationUpdateResponse *pkt = new LinkAllocationUpdateResponse("LinkAllocationUpdateResponse");
+  pkt->setSrcAddr(msg->getDestAddr());
+  pkt->setDestAddr(msg->getSrcAddr());
+  pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
   send(pkt, "RouterPort$o");
 }
 
