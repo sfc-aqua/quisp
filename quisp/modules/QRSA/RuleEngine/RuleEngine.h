@@ -72,6 +72,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int number_of_qnics_rp;
   std::vector<IQubitRecord *> qubit_record_list;
   std::map<unsigned long, vector<int>> ruleset_id_node_addresses_along_path_map;
+  std::map<unsigned long, unsigned long> current_ruleset_id_next_ruleset_id_map;
 
   IHardwareMonitor *hardware_monitor;
   IRoutingDaemon *routingdaemon;
@@ -88,8 +89,11 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void sendConnectionTeardownMessageForRuleSet(unsigned long ruleset_id);
   void sendLinkAllocationUpdateDecisionRequest(messages::InternalConnectionTeardownMessage *msg);
   void sendLinkAllocationUpdateDecisionResponse(messages::LinkAllocationUpdateDecisionRequest *msg);
+  void sendBarrierMessages(messages::LinkAllocationUpdateDecisionResponse *msg, unsigned long ruleset_id);
   void sendBarrierMessage(messages::LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number, bool is_last);
   void sendBarrierMessageAck(messages::BarrierMessage *msg);
+  void sendLinkAllocationUpdateRequest(messages::BarrierMessage *msg);
+  void sendLinkAllocationUpdateResponse(messages::LinkAllocationUpdateRequest *msg);
   void executeAllRuleSets();
   std::vector<int> qnode_indices;
 
