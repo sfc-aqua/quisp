@@ -51,6 +51,7 @@ using quisp::modules::qrsa::IQubitRecord;
 using quisp::modules::qubit_record::QubitRecord;
 using namespace quisp_test;
 using namespace testing;
+using quisp::modules::PartnerAddrQubitMapRange;
 using quisp::modules::Logger::DisabledLogger;
 using quisp::runtime::InstructionTypes;
 using quisp::runtime::Program;
@@ -227,6 +228,33 @@ TEST_F(RuleEngineTest, freeConsumedResource) {
   delete rule_engine->qnic_store.get();
 }
 
+TEST_F(RuleEngineTest, getAllocatedResourceToRuleSet) {
+  auto logger = std::make_unique<DisabledLogger>();
+  auto* qubit_record0 = new QubitRecord(QNIC_E, 3, 0, logger.get());
+  auto* qubit_record1 = new QubitRecord(QNIC_E, 3, 1, logger.get());
+  auto* qubit_record2 = new QubitRecord(QNIC_E, 3, 2, logger.get());
+  auto rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, nullptr, qnic_specs};
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+
+  rule_engine->setAllResources(0, qubit_record0);
+  rule_engine->setAllResources(1, qubit_record1);
+  rule_engine->setAllResources(2, qubit_record2);
+  int q0 = 0;
+  QNodeAddr partner_addr{1};
+  // this action needs a resource qubit that is entangled with partner 1.
+  Program test_action{"testAction", {quisp::runtime::INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}}}};
+  Program empty_condition{"emptyCondition", {}};
+  auto rs = quisp::runtime::RuleSet{"test rs", {quisp::runtime::Rule{"test", -1, -1, empty_condition, test_action}}};
+  rs.id = 1;
+  rule_engine->runtimes.acceptRuleSet(rs);
+  rule_engine->ResourceAllocation(QNIC_E, 3);
+
+  // auto range = rule_engine->bell_pair_store.getBellPairsRange(QNIC_E, 3, 1);
+  auto qubit_record_list = rule_engine->getAllocatedResourceToRuleSet(QNIC_E, 3, 1);
+  EXPECT_EQ(qubit_record_list, std::vector<IQubitRecord*>{qubit_record1});
+}
+
 TEST_F(RuleEngineTest, sendConnectionTeardownMessageForRuleSet) {
   auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon();
@@ -392,6 +420,20 @@ TEST_F(RuleEngineTest, sendBarrierMessageAck) {
   EXPECT_EQ(pkt->getSequence_number(), 1);
   EXPECT_EQ(pkt->getIs_sender(), false);
 }
+
+// TEST_F(RuleEngineTest, sendBarrierMessages) {
+//   auto* sim = prepareSimulation();
+//   auto* routing_daemon = new MockRoutingDaemon();
+//   auto* hardware_monitor = new MockHardwareMonitor();
+//   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+//   sim->registerComponent(rule_engine);
+//   sim->setContext(rule_engine);
+//   rule_engine->callInitialize();
+
+//   auto* msg = LinkAllocationUpdateDecisionResponse();
+//   msg->
+
+// }
 
 TEST_F(RuleEngineTest, sendLinkAllocationUpdateRequest) {
   auto* sim = prepareSimulation();
