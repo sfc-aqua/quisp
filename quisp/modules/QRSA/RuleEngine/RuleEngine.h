@@ -70,7 +70,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int number_of_qnics;
   int number_of_qnics_r;
   int number_of_qnics_rp;
-  std::vector<IQubitRecord *> qubit_record_list;
   std::map<unsigned long, vector<int>> ruleset_id_node_addresses_along_path_map;
   std::map<unsigned long, unsigned long> current_ruleset_id_next_ruleset_id_map;
 
