@@ -72,6 +72,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int number_of_qnics_rp;
   std::map<unsigned long, vector<int>> ruleset_id_node_addresses_along_path_map;
   std::map<unsigned long, unsigned long> current_ruleset_id_next_ruleset_id_map;
+  std::map<unsigned long, vector<int>> ruleset_id_qnic_addresses_map;
 
   IHardwareMonitor *hardware_monitor;
   IRoutingDaemon *routingdaemon;
@@ -85,6 +86,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   std::vector<IQubitRecord *> getAllocatedResourceToRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id);
   void handleConnectionTeardownMessage(messages::InternalConnectionTeardownMessage *msg);
   void stopRuleSetExecution(messages::InternalConnectionTeardownMessage *msg);
+  void addAllocatedQNICs(messages::InternalConnectionTeardownMessage *msg);
   void sendConnectionTeardownMessageForRuleSet(unsigned long ruleset_id);
   void sendLinkAllocationUpdateDecisionRequest(messages::InternalConnectionTeardownMessage *msg);
   void sendLinkAllocationUpdateDecisionResponse(messages::LinkAllocationUpdateDecisionRequest *msg);
