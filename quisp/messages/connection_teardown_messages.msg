@@ -19,5 +19,6 @@ packet InternalConnectionTeardownMessage extends Header
     int LAU_req_srcAddr;
     int LAU_req_destAddr;
     unsigned long RuleSet_id;
+    int stack_of_QNICAddresses[];
 }
 
