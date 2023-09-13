@@ -203,6 +203,10 @@ void ConnectionManager::storeInternalConnectionTeardownMessage(ConnectionTeardow
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
   pk_internal->setLAU_req_srcAddr(pk->getLAU_req_srcAddr());
   pk_internal->setLAU_req_destAddr(pk->getLAU_req_destAddr());
+  pk_internal->setStack_of_QNICAddressesArraySize(reserved_qnics.size());
+  for (auto index = 0; index < reserved_qnics.size(); index++) {
+    pk_internal->setStack_of_QNICAddresses(index, reserved_qnics.at(index));
+  }
   send(pk_internal, "RouterPort$o");
 }
 
