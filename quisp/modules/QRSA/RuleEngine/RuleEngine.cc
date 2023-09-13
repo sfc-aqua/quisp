@@ -248,9 +248,18 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
 }
 
 void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
+  addAllocatedQNICs(msg);
   stopRuleSetExecution(msg);
   if (msg->getLAU_req_destAddr() != -1) {
     sendLinkAllocationUpdateDecisionRequest(msg);
+  }
+}
+
+void RuleEngine::addAllocatedQNICs(InternalConnectionTeardownMessage *msg) {
+  auto ruleset_id = msg->getRuleSet_id();
+  auto num_of_qnics = msg->getStack_of_QNICAddressesArraySize();
+  for (auto index = 0; index < num_of_qnics; index++) {
+    ruleset_id_qnic_addresses_map[ruleset_id].push_back(msg->getStack_of_QNICAddresses(index));
   }
 }
 
@@ -305,8 +314,8 @@ void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDe
 
 void RuleEngine::sendBarrierMessages(LinkAllocationUpdateDecisionResponse *msg, unsigned long ruleset_id) {
   auto sequence_number = 0;
-  for (int i = 0; i < number_of_qnics; i++) {
-    auto qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, i, ruleset_id);
+  for (auto qnic_address : ruleset_id_qnic_addresses_map[ruleset_id]) {
+    auto qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, qnic_address, ruleset_id);
     for (IQubitRecord *qubit_record : qubit_record_list) {
       BarrierMessage *pkt = new BarrierMessage("BarrierMessage");
       pkt->setSrcAddr(msg->getDestAddr());
