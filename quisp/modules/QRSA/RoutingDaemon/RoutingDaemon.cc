@@ -5,6 +5,7 @@
  */
 #include "RoutingDaemon.h"
 
+#include <iostream>
 #include <vector>
 
 #include "messages/classical_messages.h"
@@ -185,13 +186,10 @@ void RoutingDaemon::prepareQnicAddrMap() {
 
 // create a map from destination address to quantum interface information
 void RoutingDaemon::resolveQuantumInterfaceInfo() {
-  std::cout << "resolving interface" << qrtable.size() << "\n";
   // Routing table should already be prepared
   for (const auto &dest_qnic_address : qrtable) {
     auto qnic_address = dest_qnic_address.second;
     auto dest_addr = dest_qnic_address.first;
-    std::cout << "qnic_address: " << qnic_address << "\n";
-    std::cout << "dest_addr: " << dest_addr << "\n";
     if (!qnic_addr_map.count(qnic_address)) {
       error("Failed to resolve quantum interface info");
     }

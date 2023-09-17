@@ -34,6 +34,7 @@ class MockQnic : public cModule {
     setParInt(this, "self_qnic_address", address);
     setParInt(this, "self_qnic_index", index);
     setParInt(this, "self_qnic_type", qnic_type);
+    setParInt(this, "num_buffer", 10);
     connected_to = conntected_to;
   }
 
@@ -110,6 +111,7 @@ class RoutingDaemonTestTarget : public RoutingDaemon {
     my_address = qnode->address;
     RouterPort = new TestGate(this, "RouterPort$o");
     this->qnic_num_map = {{QNIC_E, 2}, {QNIC_R, 2}, {QNIC_RP, 2}};
+    this->qnic_addr_map = {{1, std::make_tuple(QNIC_E, 1)}};
     this->provider.setStrategy(std::make_unique<Strategy>(qnode));
   }
 

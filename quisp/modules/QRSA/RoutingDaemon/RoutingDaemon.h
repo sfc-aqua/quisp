@@ -63,7 +63,7 @@ class RoutingDaemon : public IRoutingDaemon {
   int findQnicAddrByNeighborAddr(int neighbor_addr);
   std::vector<int> getNeighborAddresses() override;
   std::vector<int> neighbor_addresses;
-  std::string getModuleNameByAddress(int module_address);
+  std::string getModuleNameByAddress(int module_address) override;
 
   size_t getNumNeighbors();
 
