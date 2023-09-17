@@ -163,4 +163,8 @@ TEST_F(HardwareMonitorTest, acceptPartnerResult) {
   delete hardware_monitor->tomography_manager.get();
 }
 
+// TEST_F(HardwareMonitorTest, link_cost_table_generation){
+
+// }
+
 }  // namespace

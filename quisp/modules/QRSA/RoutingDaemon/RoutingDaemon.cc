@@ -80,10 +80,40 @@ void RoutingDaemon::initialize(int stage) {
     generateRoutingTable(topo);
     prepareNeighborAddressTableWithTopologyInfo();
   }
-  resolveQuantumInterfaceInfo();
 }
 
-void RoutingDaemon::generateRoutingTable() { qrtable = link_state_database.generateRoutingTableFromGraph(my_address); }
+/**
+ * Once we begin using dynamic routing protocols, this is where the messages
+ * will be handled.  This perhaps will also be how we communicate with the
+ * other important daemons in the qrsa.
+ * TODO Handle dynamic routing protocol messages.
+ **/
+void RoutingDaemon::handleMessage(cMessage *msg) {
+  if (auto pk = dynamic_cast<OspfHelloPacket *>(msg)) {
+    return ospfHandleHelloPacket(pk);
+  }
+
+  if (auto pk = dynamic_cast<OspfDbdPacket *>(msg)) {
+    return ospfHandleDbdPacket(pk);
+  }
+
+  if (auto pk = dynamic_cast<OspfLsrPacket *>(msg)) {
+    return ospfHandleLinkStateRequest(pk);
+  }
+
+  if (auto pk = dynamic_cast<OspfLsuPacket *>(msg)) {
+    return ospfHandleLinkStateUpdate(pk);
+  }
+
+  if (auto pk = dynamic_cast<OspfLsAckPacket *>(msg)) {
+    return;
+  }
+}
+
+void RoutingDaemon::generateRoutingTable() {
+  qrtable = link_state_database.generateRoutingTableFromGraph(my_address);
+  resolveQuantumInterfaceInfo();
+}
 
 void RoutingDaemon::generateRoutingTable(cTopology *topo) {
   cTopology::Node *this_node = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
@@ -110,6 +140,7 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
       error("Quantum routing table referring to classical gates...");
     }
   }
+  resolveQuantumInterfaceInfo();
 }
 
 std::vector<int> RoutingDaemon::getNeighborAddresses() {
@@ -124,15 +155,14 @@ std::vector<int> RoutingDaemon::getNeighborAddresses() {
   return neighbors;
 }
 
-
 // This function is called in finish() in HardwareMonitor to convert
 // node address into module name such as EndNode1.
-std::string RoutingDaemon::getModuleNameByAddress(int module_address){
+std::string RoutingDaemon::getModuleNameByAddress(int module_address) {
   auto *topology = provider.getTopologyForRoutingDaemon(this);
   auto num_nodes = topology->getNumNodes();
-  for (int i=0; i<num_nodes; i++){
+  for (int i = 0; i < num_nodes; i++) {
     auto node = topology->getNode(i);
-    if (node->getModule()->par("address").intValue() == module_address){
+    if (node->getModule()->par("address").intValue() == module_address) {
       return node->getModule()->getFullName();
     };
   }
@@ -155,10 +185,13 @@ void RoutingDaemon::prepareQnicAddrMap() {
 
 // create a map from destination address to quantum interface information
 void RoutingDaemon::resolveQuantumInterfaceInfo() {
+  std::cout << "resolving interface" << qrtable.size() << "\n";
   // Routing table should already be prepared
   for (const auto &dest_qnic_address : qrtable) {
     auto qnic_address = dest_qnic_address.second;
     auto dest_addr = dest_qnic_address.first;
+    std::cout << "qnic_address: " << qnic_address << "\n";
+    std::cout << "dest_addr: " << dest_addr << "\n";
     if (!qnic_addr_map.count(qnic_address)) {
       error("Failed to resolve quantum interface info");
     }
@@ -187,6 +220,9 @@ void RoutingDaemon::prepareNeighborAddressTableWithTopologyInfo() {
 }
 
 QuantumInterfaceInfo RoutingDaemon::getQuantumInterfaceInfo(int dest_addr) {
+  for (auto table : interface_table) {
+    EV << "table: " << table.first << "\n";
+  }
   if (!interface_table.count(dest_addr)) {
     error("Interface information for destination address %d not found.", dest_addr);
   }
@@ -306,34 +342,6 @@ int RoutingDaemon::findQnicAddrByNeighborAddr(int neighbor_addr) {
     }
   }
   error("Failed to find qnic address by this neighbor address.");
-}
-
-/**
- * Once we begin using dynamic routing protocols, this is where the messages
- * will be handled.  This perhaps will also be how we communicate with the
- * other important daemons in the qrsa.
- * TODO Handle dynamic routing protocol messages.
- **/
-void RoutingDaemon::handleMessage(cMessage *msg) {
-  if (auto pk = dynamic_cast<OspfHelloPacket *>(msg)) {
-    return ospfHandleHelloPacket(pk);
-  }
-
-  if (auto pk = dynamic_cast<OspfDbdPacket *>(msg)) {
-    return ospfHandleDbdPacket(pk);
-  }
-
-  if (auto pk = dynamic_cast<OspfLsrPacket *>(msg)) {
-    return ospfHandleLinkStateRequest(pk);
-  }
-
-  if (auto pk = dynamic_cast<OspfLsuPacket *>(msg)) {
-    return ospfHandleLinkStateUpdate(pk);
-  }
-
-  if (auto pk = dynamic_cast<OspfLsAckPacket *>(msg)) {
-    return;
-  }
 }
 
 /**
