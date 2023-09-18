@@ -521,6 +521,45 @@ TEST_F(RuleEngineTest, sendLinkAllocationUpdateResponse) {
   EXPECT_EQ(pkt->getNegotiatedRuleSet_id(), 111);
 }
 
+TEST_F(RuleEngineTest, reallocateResource) {
+  auto* sim = prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon();
+  auto* hardware_monitor = new MockHardwareMonitor();
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  sim->registerComponent(rule_engine);
+  sim->setContext(rule_engine);
+  rule_engine->callInitialize();
+
+  auto logger = std::make_unique<DisabledLogger>();
+  auto* qubit_record0 = new QubitRecord(QNIC_E, 3, 0, logger.get());
+  auto* qubit_record1 = new QubitRecord(QNIC_E, 3, 1, logger.get());
+  auto* qubit_record2 = new QubitRecord(QNIC_E, 3, 2, logger.get());
+  rule_engine->setAllResources(0, qubit_record0);
+  rule_engine->setAllResources(1, qubit_record1);
+  rule_engine->setAllResources(2, qubit_record2);
+  int q0 = 0;
+  QNodeAddr partner_addr{1};
+  // this action needs a resource qubit that is entangled with partner 1.
+  Program test_action{"testAction", {quisp::runtime::INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}}}};
+  Program empty_condition{"emptyCondition", {}};
+
+  auto rs1 = quisp::runtime::RuleSet{"test rs", {quisp::runtime::Rule{"test", -1, -1, empty_condition, test_action}}};
+  auto runtime1 = quisp::runtime::Runtime{};
+  rs1.id = 111;
+  rule_engine->runtimes.acceptRuleSet(rs1);
+
+  auto rs2 = quisp::runtime::RuleSet{"test rs", {quisp::runtime::Rule{"test", -1, -1, empty_condition, test_action}}};
+  auto runtime2 = quisp::runtime::Runtime{};
+  rs2.id = 222;
+  rule_engine->runtimes.acceptRuleSet(rs2);
+
+  rule_engine->ResourceAllocation(QNIC_E, 3);
+  EXPECT_TRUE(qubit_record1->isAllocated());
+
+  rule_engine->reallocateResource(QNIC_E, 3, rs1.id, rs2.id);
+  EXPECT_TRUE(qubit_record1->isAllocated());
+}
+
 TEST_F(RuleEngineTest, executeAllRuleSets) {
   auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon();
