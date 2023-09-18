@@ -96,6 +96,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void sendLinkAllocationUpdateRequest(messages::BarrierMessage *msg);
   void sendLinkAllocationUpdateResponse(messages::LinkAllocationUpdateRequest *msg);
   void executeAllRuleSets();
+  void reallocateResource(int qnic_type, int qnic_index, unsigned long current_ruleset_id, unsigned long next_ruleset_id);
   std::vector<int> qnode_indices;
 
  protected:
