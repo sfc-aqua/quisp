@@ -153,7 +153,18 @@ void RuleEngine::handleMessage(cMessage *msg) {
       sendBarrierMessageAck(pkt);
     }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
+    auto current_ruleset_id = pkt->getCurrentRuleSet_id();
+    auto negotiated_ruleset_id = pkt->getNegotiatedRuleSet_id();
+    for (int i = 0; i < number_of_qnics; i++) {
+      reallocateResource(QNIC_E, i, current_ruleset_id, negotiated_ruleset_id);
+    }
     sendLinkAllocationUpdateResponse(pkt);
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateResponse *>(msg)) {
+    auto current_ruleset_id = pkt->getCurrentRuleSet_id();
+    auto negotiated_ruleset_id = pkt->getNegotiatedRuleSet_id();
+    for (int i = 0; i < number_of_qnics; i++) {
+      reallocateResource(QNIC_E, i, current_ruleset_id, negotiated_ruleset_id);
+    }
   }
   for (int i = 0; i < number_of_qnics; i++) {
     ResourceAllocation(QNIC_E, i);
@@ -367,6 +378,10 @@ void RuleEngine::sendLinkAllocationUpdateRequest(BarrierMessage *msg) {
 }
 
 void RuleEngine::sendLinkAllocationUpdateResponse(LinkAllocationUpdateRequest *msg) {
+  auto ruleset_id = msg->getNegotiatedRuleSet_id();
+  for (auto qnic_address : ruleset_id_qnic_addresses_map[ruleset_id]) {
+    auto qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, qnic_address, ruleset_id);
+  }
   LinkAllocationUpdateResponse *pkt = new LinkAllocationUpdateResponse("LinkAllocationUpdateResponse");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
@@ -474,6 +489,26 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
     qubit_record->setAllocated(false);
   }
   bell_pair_store.eraseQubit(qubit_record);
+}
+
+void RuleEngine::reallocateResource(int qnic_type, int qnic_index, unsigned long current_ruleset_id, unsigned long next_ruleset_id) {
+  auto current_runtime = runtimes.findById(current_ruleset_id);
+  auto next_runtime = runtimes.findById(next_ruleset_id);
+  auto &partners = current_runtime->partners;
+
+  for (auto &partner_addr : partners) {
+    auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr.val);
+    for (auto it = range.first; it != range.second; ++it) {
+      auto qubit_record = it->second;
+
+      // 3. if the qubit is allocated, and the qubit need to be released from this rule,
+      // if the qubit is not assigned to the rule, the qubit is not releasable from that rule
+      if (qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
+        current_runtime->freeQubitFromRuleSet(partner_addr, qubit_record);
+        next_runtime->assignQubitToRuleSet(partner_addr, qubit_record);
+      }
+    }
+  }
 }
 
 }  // namespace quisp::modules
