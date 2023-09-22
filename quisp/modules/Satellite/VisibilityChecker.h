@@ -2,13 +2,15 @@
  *
  *  \brief VisibilityChecker
  */
-#pragma once.modules.Satellite;
+#pragma once
 
 #include <omnetpp.h>
 #include "omnetpp/simtime.h"
 #include "channels/FSChannel.h"
+#include "messages/gatedqueue_messages_m.h"
 
 using namespace omnetpp;
+using namespace quisp::messages;
 
 /** \class VisibilityChecker VisibilityChecker.cc
  *

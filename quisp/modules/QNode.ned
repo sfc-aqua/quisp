@@ -43,7 +43,7 @@ module QNode
                 address = index;
                 //buffer = 8;
                 //@display("p=198,43");
-                @display("p=239,242");
+                @display("p=278,203");
         }
         qrsa: quantumRoutingSoft {
             parameters:
@@ -74,7 +74,7 @@ module QNode
                 passive = false;
                 self_qnic_type = 1;
                 emission_std = parent.emission_timing_std;
-                @display("p=100, 250,m,5,50,60");
+                @display("p=106,223,m,5,50,60");
         }
         qnic_rp[sizeof(quantum_port_receiver_passive)]: QNIC {
             parameters:

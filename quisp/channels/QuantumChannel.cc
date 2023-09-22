@@ -7,6 +7,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "PhotonicQubit_m.h"
 #include "omnetpp/cexception.h"
+#include "FiberChannel.h"
 
 using namespace Eigen;
 using namespace omnetpp;
@@ -27,7 +28,7 @@ struct channel_error_model {
  *
  *  \brief QuantumChannel
  */
-class QuantumChannel : public cDatarateChannel {
+class QuantumChannel : public FiberChannel {
  public:
   QuantumChannel();
   // member variables
@@ -48,7 +49,7 @@ Define_Channel(QuantumChannel);
 QuantumChannel::QuantumChannel() : transition_to_the_distance(5, 5) {}
 
 void QuantumChannel::initialize() {
-  cDatarateChannel::initialize();
+  FiberChannel::initialize();
   distance = par("distance");  // in km
   err.loss_rate = par("channel_loss_rate");
   err.x_error_rate = par("channel_x_error_rate");

@@ -9,8 +9,10 @@
 #define CHANNELS_FSCHANNEL_H_
 
 #include <omnetpp.h>
+#include<messages/gatedqueue_messages_m.h>
 
 using namespace omnetpp;
+using namespace quisp::messages;
 
 namespace quisp::channels {
 class FSChannel : public cDatarateChannel {
@@ -22,7 +24,6 @@ class FSChannel : public cDatarateChannel {
 
 
  protected:
-  virtual void initialize() override;
   cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;
 
  private:

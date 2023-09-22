@@ -13,6 +13,7 @@ network Simple_MIM
 {
     parameters:
         **.speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_FS = 299792.458 km;
 
     submodules:
         backend: Backend;
@@ -69,6 +70,8 @@ network Simple_MM
 network Simple_MM_SAT
 {
     parameters:
+        **.speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_FS = 299792.458 km;
 
     submodules:
         backend: Backend;
@@ -80,15 +83,16 @@ network Simple_MM_SAT
             node_type = "EndNode";
             @display("i=COMP;p=168,127,m,5,60,60");
         }
-        EndNode2: QNode {
+        EndNode2: QNode_Sat {
             address = 2;
+            is_satellite = false;
             node_type = "EndNode";
             @display("i=COMP;p=327,77,m,5,60,60");
         }
 
     connections:
-        EndNode1.port++ <--> ClassicalChannel_FS {  distance = 1km; } <--> EndNode2.port++;
-        EndNode1.quantum_port++ <--> QuantumChannel_FS {  distance = 1km; } <--> EndNode2.quantum_port_receiver++;
+        EndNode1.port++ <--> ClassicalChannel_FS {  distance = 5km; } <--> EndNode2.port++;
+        EndNode1.quantum_port++ <--> QuantumChannel_FS {  distance = 5km; } <--> EndNode2.quantum_port_receiver++;
 }
 
 network three_node_MIM

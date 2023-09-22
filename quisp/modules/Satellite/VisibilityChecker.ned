@@ -6,7 +6,8 @@ package modules.Satellite;
 simple VisibilityChecker
 {
 parameters:
-    double orbital_period @unit(s) = default(5s);
+    string name = "VisChecker";
+    double orbital_period @unit(s) = default(6s);
     double visibility_window @unit(s) = default(1s);
     bool starts_visible = default(true);
     @class(VisibilityChecker);

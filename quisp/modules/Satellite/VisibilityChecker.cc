@@ -31,17 +31,18 @@ void VisibilityChecker::initialize() {
   next_check_time = {is_visible? up_time : down_time};
   scheduleAt(simTime()+next_check_time,msg);
 
-  cMessage* rst_lt = {is_visible? new cMessage("OPEN",5) : new cMessage("CLOSE",6)};
+  GQ_ctrl* rst_lt = new GQ_ctrl();
+  rst_lt->setCtrl_signal(is_visible);
   send(rst_lt,"ctrl");
 
   for (cModule::GateIterator i(this->getParentModule()); !i.end(); i++) {
          cGate* gate = *i;
          cChannel* chl = gate->getChannel();
-         if (FSChannel* dr_chl = dynamic_cast<FSChannel*>(chl); dr_chl != nullptr) {
-         dr_chl->setLOS(is_visible);
+         if (auto f_chl = dynamic_cast<FSChannel*>(chl)) {
+         f_chl->setLOS(is_visible);
          }
   }
-
+return;
 }
 
 void VisibilityChecker::handleMessage(cMessage *msg) {
@@ -59,14 +60,14 @@ void VisibilityChecker::handleMessage(cMessage *msg) {
 };
 
 void VisibilityChecker::toggleVisibility() {
-    cMessage* for_lt_ctrl = {!is_visible? new cMessage("OPEN",5) : new cMessage("CLOSE",6)};
+    EV_INFO << "Satellite visibility now " << !is_visible;
+
+    GQ_ctrl* for_lt_ctrl = new GQ_ctrl();
+    for_lt_ctrl->setCtrl_signal(!is_visible);
+
     if (is_visible) send(for_lt_ctrl,"ctrl");
     is_visible = !is_visible;
-    if (hasGUI()) {
-        char text[32];
-        sprintf(text, "Satellite visibility now %s", is_visible ? "true" : "false");
-        bubble(text);
-    }
+
     for (cModule::GateIterator i(this->getParentModule()); !i.end(); i++) {
         cGate* gate = *i;
         cChannel* chl = gate->getChannel();

@@ -6,6 +6,9 @@
 
 #include <cstring>
 #include <stdexcept>
+#include <channels/FSChannel.h>
+
+using quisp::channels::FSChannel;
 
 namespace quisp::modules {
 
@@ -200,7 +203,7 @@ simtime_t BSAController::getTravelTimeFromPort(int port) {
     channel = getParentModule()->getSubmodule("bsa")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
   }
   double distance = channel->par("distance").doubleValue();  // km
-  double speed_of_light_in_channel = channel->par("speed_of_light_in_fiber").doubleValue();  // km/sec
+  double speed_of_light_in_channel = {dynamic_cast<FSChannel*>(channel) == nullptr? channel->par("speed_of_light_in_fiber").doubleValue() : channel->par("speed_of_light_in_FS").doubleValue()};  // km/sec
   return SimTime(distance / speed_of_light_in_channel);
 }
 

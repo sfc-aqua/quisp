@@ -13,7 +13,7 @@ void Fanout::handleMessage(cMessage *msg)
 {
     for (cModule::GateIterator it(this); !it.end(); ++it) {
         cGate* gate = *it;
-        if (!strcmp(gate->getNameSuffix(),"$o")) {
+        if (gate->getType() == cGate::OUTPUT) {
             cMessage* cpy = msg->dup();
             send(cpy,gate);
         }
