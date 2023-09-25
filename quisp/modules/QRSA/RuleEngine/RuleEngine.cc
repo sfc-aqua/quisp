@@ -81,6 +81,8 @@ void RuleEngine::initialize() {
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
+  logger->logPacket("handleRuleEngineMessage", msg);
+
   executeAllRuleSets();  // New resource added to QNIC with qnic_type qnic_index.
 
   if (auto *notification_packet = dynamic_cast<BSMTimingNotification *>(msg)) {
