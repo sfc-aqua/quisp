@@ -7,7 +7,7 @@ jobs:
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
       - name: wasm build
@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/demo-')) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'sfc-aqua/quisp-online'
       - uses: actions/download-artifact@v3
