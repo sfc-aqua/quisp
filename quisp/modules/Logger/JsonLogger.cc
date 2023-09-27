@@ -1,6 +1,7 @@
 #include "JsonLogger.h"
 #include <sstream>
 #include "messages/QNode_ipc_messages_m.h"
+#include "messages/barrier_messages_m.h"
 #include "messages/connection_setup_messages_m.h"
 
 namespace quisp::modules::Logger {
@@ -143,6 +144,21 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << ", \"src_addr\": " << req->getSrcAddr();
     os << ", \"current_ruleset_id\": " << req->getCurrentRuleSet_id();
     os << ", \"negotiated_ruleset_id\": " << req->getNegotiatedRuleSet_id();
+    return os.str();
+  }
+
+  if (auto* req = dynamic_cast<const quisp::messages::BarrierMessage*>(msg)) {
+    std::stringstream os;
+    os << "\"msg_type\": \"BarrierMessage\"";
+    os << ", \"dest_addr\": " << req->getDestAddr();
+    os << ", \"src_addr\": " << req->getSrcAddr();
+    os << ", \"actual_dest_addr\": " << req->getActual_destAddr();
+    os << ", \"actual_src_addr\": " << req->getActual_srcAddr();
+    os << ", \"negotiated_ruleset_id\": " << req->getNegotiatedRuleSet_id();
+    os << ", \"qubit_record\": " << req->getQubitRecord();
+    os << ", \"sequence_number\": " << req->getSequence_number();
+    os << ", \"is_sender\": " << req->getIs_sender();
+    os << ", \"is_last\": " << req->getIs_last();
     return os.str();
   }
 
