@@ -94,6 +94,16 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     return os.str();
   }
 
+  if (auto* req = dynamic_cast<const quisp::messages::InternalRuleSetForwarding_Application*>(msg)) {
+    std::stringstream os;
+    os << "\"msg_type\": \"InternalRuleSetForwarding_Application\"";
+    os << ", \"rule_id\": " << req->getRule_id();
+    os << ", \"ruleset_id\": " << req->getRuleSet_id();
+    os << ", \"ruleset\": " << req->getRuleSet();
+    os << ", \"application_type\": " << req->getApplication_type();
+    return os.str();
+  }
+
   return "\"msg\": \"unknown class\": \"" + msg->getFullPath() + "\"";
 }
 
