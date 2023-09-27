@@ -1,5 +1,6 @@
 #include "JsonLogger.h"
 #include <sstream>
+#include "messages/QNode_ipc_messages_m.h"
 #include "messages/connection_setup_messages_m.h"
 
 namespace quisp::modules::Logger {
@@ -79,6 +80,16 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << ", \"actual_src_addr\": " << req->getActual_srcAddr();
     os << ", \"LAU_req_dest_addr\": " << req->getLAU_req_destAddr();
     os << ", \"LAU_req_src_addr\": " << req->getLAU_req_srcAddr();
+    os << ", \"ruleset_id\": " << req->getRuleSet_id();
+    return os.str();
+  }
+
+  if (auto* req = dynamic_cast<const quisp::messages::InternalNodeAddressesAlongPathForwarding*>(msg)) {
+    std::stringstream os;
+    os << "\"msg_type\": \"ConnectionTeardownMessage\"";
+    for (auto i = 0; i < req->getNode_addresses_along_pathArraySize(); i++) {
+      os << "\"node_address_along_path\": " << req->getNode_addresses_along_path(i);
+    }
     os << ", \"ruleset_id\": " << req->getRuleSet_id();
     return os.str();
   }
