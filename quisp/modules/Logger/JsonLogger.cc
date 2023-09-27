@@ -136,6 +136,16 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     return os.str();
   }
 
+  if (auto* req = dynamic_cast<const quisp::messages::LinkAllocationUpdateDecisionResponse*>(msg)) {
+    std::stringstream os;
+    os << "\"msg_type\": \"LinkAllocationUpdateDecisionResponse\"";
+    os << ", \"dest_addr\": " << req->getDestAddr();
+    os << ", \"src_addr\": " << req->getSrcAddr();
+    os << ", \"current_ruleset_id\": " << req->getCurrentRuleSet_id();
+    os << ", \"negotiated_ruleset_id\": " << req->getNegotiatedRuleSet_id();
+    return os.str();
+  }
+
   return "\"msg\": \"unknown class\": \"" + msg->getFullPath() + "\"";
 }
 
