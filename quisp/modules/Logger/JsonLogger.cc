@@ -88,7 +88,7 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     std::stringstream os;
     os << "\"msg_type\": \"InternalNodeAddressesAlongPathForwarding\"";
     for (auto i = 0; i < req->getNode_addresses_along_pathArraySize(); i++) {
-      os << "\"node_address_along_path\": " << req->getNode_addresses_along_path(i);
+      os << ", \"node_address_along_path\": " << req->getNode_addresses_along_path(i);
     }
     os << ", \"ruleset_id\": " << req->getRuleSet_id();
     return os.str();
