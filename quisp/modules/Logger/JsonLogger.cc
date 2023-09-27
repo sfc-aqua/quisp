@@ -164,7 +164,7 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
 
   if (auto* req = dynamic_cast<const quisp::messages::LinkAllocationUpdateRequest*>(msg)) {
     std::stringstream os;
-    os << "\"msg_type\": \"LinkAllocationUpdateMessage\"";
+    os << "\"msg_type\": \"LinkAllocationUpdateRequest\"";
     os << ", \"dest_addr\": " << req->getDestAddr();
     os << ", \"src_addr\": " << req->getSrcAddr();
     os << ", \"current_ruleset_id\": " << req->getCurrentRuleSet_id();
