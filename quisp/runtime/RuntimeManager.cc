@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iterator>
 #include <vector>
+#include "RuleSet.h"
 #include "omnetpp/cexception.h"
 #include "runtime/RuleSet.h"
 #include "runtime/types.h"
@@ -23,13 +24,12 @@ Runtime *RuntimeManager::findById(unsigned long long ruleset_id) {
 
 std::vector<RuleSet> RuntimeManager::exec() {
   std::vector<RuleSet> ruleset_list;
-  for (auto it = runtimes.begin(); it != runtimes.end();) {
+  for (auto it = runtimes.begin(); it != runtimes.end(); ++it) {
     it->exec();
     if (it->terminated) {
+      std::cout << "RuleSet ID:" << it->ruleset.id << std::endl;
       ruleset_list.push_back(it->ruleset);
       it = runtimes.erase(it);
-    } else {
-      ++it;
     }
   }
   return ruleset_list;
