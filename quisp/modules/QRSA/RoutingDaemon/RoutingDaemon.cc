@@ -141,24 +141,25 @@ int RoutingDaemon::getNumEndNodes() {
  **/
 void RoutingDaemon::handleMessage(cMessage *msg) {
   if (auto pk = dynamic_cast<OspfHelloPacket *>(msg)) {
-    return ospfHandleHelloPacket(pk);
+    ospfHandleHelloPacket(pk);
   }
 
   if (auto pk = dynamic_cast<OspfDbdPacket *>(msg)) {
-    return ospfHandleDbdPacket(pk);
+    ospfHandleDbdPacket(pk);
   }
 
   if (auto pk = dynamic_cast<OspfLsrPacket *>(msg)) {
-    return ospfHandleLinkStateRequest(pk);
+    ospfHandleLinkStateRequest(pk);
   }
 
   if (auto pk = dynamic_cast<OspfLsuPacket *>(msg)) {
-    return ospfHandleLinkStateUpdate(pk);
+    ospfHandleLinkStateUpdate(pk);
   }
 
   if (auto pk = dynamic_cast<OspfLsAckPacket *>(msg)) {
-    return;
   }
+  delete msg;
+  return;
 }
 
 /**
