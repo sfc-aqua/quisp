@@ -28,7 +28,6 @@ std::vector<RuleSet> RuntimeManager::exec() {
   for (; it != runtimes.end();) {
     it->exec();
     if (it->terminated) {
-      std::cout << "RuleSet ID:" << it->ruleset.id << std::endl;
       ruleset_list.push_back(it->ruleset);
       it = runtimes.erase(it);
     } else {
