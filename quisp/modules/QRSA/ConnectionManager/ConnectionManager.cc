@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iterator>
 #include <string>
+#include <vector>
 
 #include "ConnectionManager.h"
 #include "RuleSetGenerator.h"
@@ -41,7 +42,6 @@ void ConnectionManager::initialize() {
   routing_daemon = provider.getRoutingDaemon();
   hardware_monitor = provider.getHardwareMonitor();
   my_address = provider.getNodeAddr();
-  node_addresses_along_path = {};
   num_of_qnics = par("total_number_of_qnics");
   simultaneous_es_enabled = par("simultaneous_es_enabled");
   num_remote_purification = par("num_remote_purification");
@@ -108,6 +108,9 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int responder_addr = resp->getActual_srcAddr();
 
     if (responder_addr == my_address) {
+      auto ruleset_id = resp->getRuleSet_id();
+      auto node_addresses = ruleset_id_node_addresses_along_path_map[ruleset_id];
+
       storeInfoAboutNodeAddressesAlongPath(resp);
       storeRuleSetForApplication(resp);
     } else if (initiator_addr == my_address) {
@@ -309,8 +312,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
   auto rulesets = ruleset_gen.generateRuleSets(req, ruleset_id);
 
-  for (auto rs = rulesets.begin(); rs != rulesets.end(); rs++) {
-    node_addresses_along_path.push_back(rs->first);
+  std::vector<int> node_addresses_along_path;
+  for (auto [owner_address, rs] : rulesets) {
+    node_addresses_along_path.push_back(owner_address);
   }
   ruleset_id_node_addresses_along_path_map[ruleset_id] = node_addresses_along_path;
 
@@ -319,6 +323,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     ConnectionSetupResponse *pkt = new ConnectionSetupResponse("ConnectionSetupResponse");
     pkt->setApplicationId(application_id);
     pkt->setRuleSet(rs);
+    pkt->setRuleSet_id(ruleset_id);
     pkt->setSrcAddr(my_address);
     pkt->setDestAddr(owner_address);
     pkt->setActual_srcAddr(my_address);
