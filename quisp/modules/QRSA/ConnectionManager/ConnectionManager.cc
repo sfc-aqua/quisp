@@ -269,6 +269,7 @@ void ConnectionManager::storeInfoAboutNodeAddressesAlongPath(ConnectionSetupResp
   pkt->setSrcAddr(my_address);
   pkt->setDestAddr(my_address);
   auto ruleset_id = res->getRuleSet_id();
+  pkt->setRuleSet_id(ruleset_id);
   auto node_addresses = ruleset_id_node_addresses_along_path_map[ruleset_id];
   pkt->setNode_addresses_along_pathArraySize(node_addresses.size());
   for (auto index = 0; index < node_addresses.size(); index++) {
