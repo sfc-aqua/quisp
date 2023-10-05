@@ -144,17 +144,6 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int prev_hop_addr = pk->getPrev_hopAddr();
     int next_hop_addr = pk->getNext_hopAddr();
 
-    std::cout << "My QNode Address: " << my_address << std::endl;
-    std::cout << "My QNode Previous Hop Address: " << prev_hop_addr << std::endl;
-    std::cout << "My QNode Next Hop Address: " << next_hop_addr << std::endl;
-
-    // qnic toward to the previous node
-    std::cout << "Reserved QNICs: ";
-    for (auto qnic_address : reserved_qnics) {
-      std::cout << qnic_address << " ";
-    }
-    std::cout << std::endl;
-
     if (my_address == dest_addr) {
       // int inbound_qnic_addr = routing_daemon->findQNicAddrByDestAddr(src_addr);
       // if (inbound_qnic_addr == -1) {
