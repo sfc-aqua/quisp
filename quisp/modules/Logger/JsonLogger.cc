@@ -72,6 +72,12 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
       os << req->getStack_of_QNodeIndexes(i);
     }
     os << "]";
+    os << ", \"stack_of_qnic_addresses\": [";
+    for (int i = 0; i < req->getStack_of_QNICAddressesArraySize(); i++) {
+      if (i != 0) os << ", ";
+      os << req->getStack_of_QNICAddresses(i);
+    }
+    os << "]";
     return os.str();
   }
   if (auto* req = dynamic_cast<const quisp::messages::ConnectionTeardownMessage*>(msg)) {
