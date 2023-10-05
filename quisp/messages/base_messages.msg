@@ -5,6 +5,7 @@ cplusplus  {{
     #include <nlohmann/json.hpp>
     using quisp::rules::RuleSet;
     using quisp::modules::QNicPairInfo;
+    using quisp::modules::QNIC;
     using nlohmann::json;
 }}
 
@@ -14,6 +15,11 @@ class QNIC_type {
 };
 
 class QNicPairInfo {
+    @existingClass;
+    @opaque;
+};
+
+class QNIC {
     @existingClass;
     @opaque;
 };
