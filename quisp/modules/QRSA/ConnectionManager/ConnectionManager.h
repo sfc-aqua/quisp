@@ -70,6 +70,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   std::map<int, std::queue<messages::ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
   std::map<int, int> connection_retry_count;  // key is qnic address
   std::vector<int> reserved_qnics = {};  // reserved qnic address table
+  std::vector<int> available_qnics = {};
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
   std::map<unsigned long, std::vector<int>> ruleset_id_node_addresses_along_path_map;
   bool simultaneous_es_enabled;
