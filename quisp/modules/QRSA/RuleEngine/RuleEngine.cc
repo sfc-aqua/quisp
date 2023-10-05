@@ -133,12 +133,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<InternalNodeAddressesAlongPathForwarding *>(msg)) {
-    vector<int> node_addresses_along_path;
-    for (auto index = 0; index < pkt->getNode_addresses_along_pathArraySize(); index++) {
-      node_addresses_along_path.push_back(pkt->getNode_addresses_along_path(index));
-    }
     auto ruleset_id = pkt->getRuleSet_id();
-    ruleset_id_node_addresses_along_path_map[ruleset_id] = node_addresses_along_path;
+    for (auto index = 0; index < pkt->getNode_addresses_along_pathArraySize(); index++) {
+      ruleset_id_node_addresses_along_path_map[ruleset_id].push_back(pkt->getNode_addresses_along_path(index));
+    }
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
@@ -287,6 +285,16 @@ void RuleEngine::sendConnectionTeardownMessageForRuleSet(unsigned long ruleset_i
     auto pkt = new ConnectionTeardownMessage();
     pkt->setSrcAddr(parentAddress);
     pkt->setDestAddr(node_addresses_along_path.at(index));
+    if (index == 0) {
+      pkt->setPrev_hopAddr(-1);
+    } else {
+      pkt->setPrev_hopAddr(node_addresses_along_path.at(index - 1));
+    }
+    if (index == node_addresses_along_path.size() - 1) {
+      pkt->setNext_hopAddr(-1);
+    } else {
+      pkt->setNext_hopAddr(node_addresses_along_path.at(index + 1));
+    }
     pkt->setActual_srcAddr(parentAddress);
     pkt->setActual_destAddr(node_addresses_along_path.at(index));
     pkt->setLAU_req_srcAddr(node_addresses_along_path.at(index));
