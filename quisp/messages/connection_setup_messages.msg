@@ -32,4 +32,5 @@ packet ConnectionSetupResponse extends Header
     json ruleSet;
     int application_type;
     int stack_of_QNodeIndexes[];
+    int stack_of_QNICAddresses[];
 }
