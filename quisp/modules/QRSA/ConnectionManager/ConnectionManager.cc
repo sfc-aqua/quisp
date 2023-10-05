@@ -17,10 +17,10 @@
 using namespace omnetpp;
 using namespace quisp::messages;
 using namespace quisp::rules;
+using namespace quisp::modules;
 using quisp::modules::ruleset_gen::RuleSetGenerator;
 
 namespace quisp::modules {
-
 Define_Module(ConnectionManager);
 ConnectionManager::ConnectionManager() : provider(utils::ComponentProvider{this}) {}
 
@@ -357,16 +357,16 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   }
   ruleset_id_node_addresses_along_path_map[ruleset_id] = node_addresses_along_path;
 
-  std::map<int, std::vector<int>> qnic_addresses;
-  std::vector<int> qnic_addresses_tmp;
-  auto stack_of_qnic_addresses_size = req->getStack_of_QNICsArraySize();
+  std::map<int, std::vector<quisp::modules::QNIC>> qnics;
+  auto stack_of_qnic_size = req->getStack_of_QNICsArraySize();
 
-  for (auto index = 0; index < stack_of_qnic_addresses_size; index++) {
+  std::vector<quisp::modules::QNIC> qnics_tmp;
+  for (auto index = 0; index < stack_of_qnic_size; index++) {
     auto qnic_pair_info = (QNicPairInfo)req->getStack_of_QNICs(index);
-    qnic_addresses_tmp.push_back(qnic_pair_info.first.address);
-    qnic_addresses_tmp.push_back(qnic_pair_info.second.address);
-    qnic_addresses[index] = qnic_addresses_tmp;
-    qnic_addresses_tmp = {};
+    qnics_tmp.push_back(qnic_pair_info.first);
+    qnics_tmp.push_back(qnic_pair_info.second);
+    qnics[index] = qnics_tmp;
+    qnics_tmp = {};
   };
 
   // distribute rulesets to each qnode in the path
@@ -381,10 +381,10 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setActual_destAddr(owner_address);
     pkt->setApplication_type(0);
     pkt->setKind(2);
-    pkt->setStack_of_QNICAddressesArraySize(qnic_addresses.size());
-    for (auto index = 0; index < qnic_addresses[index].size(); index++) {
-      pkt->setStack_of_QNICAddresses(0, qnic_addresses[index].at(0));
-      pkt->setStack_of_QNICAddresses(1, qnic_addresses[index].at(1));
+    pkt->setStack_of_QNICsArraySize(2);
+    for (auto index = 0; index < qnics[index].size(); index++) {
+      pkt->setStack_of_QNICs(0, qnics[index].at(0));
+      pkt->setStack_of_QNICs(1, qnics[index].at(1));
     }
     send(pkt, "RouterPort$o");
   }
