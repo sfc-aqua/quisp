@@ -139,13 +139,51 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
   if (auto *pk = dynamic_cast<ConnectionTeardownMessage *>(msg)) {
     // Connection is torn down only if the node has not received the ConnectionTeardownMessage If it has already received it, the incoming message is ignored.
-    int this_addr = pk->getActual_destAddr();
+    int src_addr = pk->getActual_srcAddr();
+    int dest_addr = pk->getActual_destAddr();
+    int prev_hop_addr = pk->getPrev_hopAddr();
+    int next_hop_addr = pk->getNext_hopAddr();
+
+    std::cout << "My QNode Address: " << my_address << std::endl;
+    std::cout << "My QNode Previous Hop Address: " << prev_hop_addr << std::endl;
+    std::cout << "My QNode Next Hop Address: " << next_hop_addr << std::endl;
+
     // qnic toward to the previous node
-    int qnic_addr = routing_daemon->findQNicAddrByDestAddr(this_addr);
-    if (qnic_addr == -1) {
-      error("No qnic to source node. Something wrong with routing.");
+    std::cout << "Reserved QNICs: ";
+    for (auto qnic_address : reserved_qnics) {
+      std::cout << qnic_address << " ";
     }
-    releaseQnic(qnic_addr);
+    std::cout << std::endl;
+
+    if (my_address == dest_addr) {
+      // int inbound_qnic_addr = routing_daemon->findQNicAddrByDestAddr(src_addr);
+      // if (inbound_qnic_addr == -1) {
+      //   error("No qnic to responder node. Something wrong with routing.");
+      // }
+      if (isQnicBusy(0)) {
+        releaseQnic(0);
+      }
+    } else if (my_address == src_addr) {
+      int outbound_qnic_addr = routing_daemon->findQNicAddrByDestAddr(dest_addr);
+      if (outbound_qnic_addr == -1) {
+        error("No qnic to initiator node. Something wrong with routing.");
+      }
+      if (isQnicBusy(outbound_qnic_addr)) {
+        releaseQnic(outbound_qnic_addr);
+      }
+    } else {
+      int inbound_qnic_addr = routing_daemon->findQNicAddrByDestAddr(src_addr);
+      int outbound_qnic_addr = routing_daemon->findQNicAddrByDestAddr(dest_addr);
+      if (inbound_qnic_addr == -1 || outbound_qnic_addr == -1) {
+        error("No qnic to source node. Something wrong with routing.");
+      }
+      if (isQnicBusy(inbound_qnic_addr)) {
+        releaseQnic(inbound_qnic_addr);
+      }
+      if (isQnicBusy(outbound_qnic_addr)) {
+        releaseQnic(outbound_qnic_addr);
+      }
+    }
 
     storeInternalConnectionTeardownMessage(pk);
     delete msg;
