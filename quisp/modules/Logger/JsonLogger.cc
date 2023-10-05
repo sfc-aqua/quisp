@@ -46,6 +46,13 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << ", \"actual_src_addr\": " << req->getActual_srcAddr();
     os << ", \"num_measure\": " << req->getNum_measure();
     os << ", \"num_required_bell_pairs\": " << req->getNumber_of_required_Bellpairs();
+    os << ", \"stack_of_qnic_address\": [";
+    for (int i = 0; i < req->getStack_of_QNICsArraySize(); i++) {
+      if (i != 0) os << ", ";
+      os << req->getStack_of_QNICs(i).first.address << " ";
+      os << req->getStack_of_QNICs(i).second.address << " ";
+    }
+    os << "]";
     return os.str();
   }
   if (auto* req = dynamic_cast<const quisp::messages::RejectConnectionSetupRequest*>(msg)) {
