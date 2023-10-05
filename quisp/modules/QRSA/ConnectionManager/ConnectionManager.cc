@@ -340,23 +340,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
   auto rulesets = ruleset_gen.generateRuleSets(req, ruleset_id);
 
-  std::vector<int> node_addresses_along_path;
-  for (auto [owner_address, rs] : rulesets) {
-    node_addresses_along_path.push_back(owner_address);
-  }
-  ruleset_id_node_addresses_along_path_map[ruleset_id] = node_addresses_along_path;
-
-  std::map<int, std::vector<quisp::modules::QNIC>> qnics;
-  auto stack_of_qnic_size = req->getStack_of_QNICsArraySize();
-
-  std::vector<quisp::modules::QNIC> qnics_tmp;
-  for (auto index = 0; index < stack_of_qnic_size; index++) {
-    auto qnic_pair_info = (QNicPairInfo)req->getStack_of_QNICs(index);
-    qnics_tmp.push_back(qnic_pair_info.first);
-    qnics_tmp.push_back(qnic_pair_info.second);
-    qnics[index] = qnics_tmp;
-    qnics_tmp = {};
-  };
+  ruleset_id_node_addresses_along_path_map[ruleset_id] = generateNodeAddressesAlongPath(rulesets);
+  std::map<int, std::map<quisp::modules::QNIC, quisp::modules::QNIC>> qnics = generateListOfQNICs(req);
 
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
@@ -372,12 +357,35 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setKind(2);
     pkt->setStack_of_QNICsArraySize(2);
     for (auto index = 0; index < qnics[index].size(); index++) {
-      pkt->setStack_of_QNICs(0, qnics[index].at(0));
-      pkt->setStack_of_QNICs(1, qnics[index].at(1));
+      pkt->setStack_of_QNICs(0, qnics[index].first);
+      pkt->setStack_of_QNICs(1, qnics[index].second);
     }
     send(pkt, "RouterPort$o");
   }
   reserveQnic(qnic_addr);
+}
+
+std::map<int, std::map<quisp::modules::QNIC, quisp::modules::QNIC>> ConnectionManager::generateListOfQNICs(ConnectionSetupRequest *req) {
+  std::map<int, std::map<quisp::modules::QNIC, quisp::modules::QNIC>> qnics;
+  auto stack_of_qnic_size = req->getStack_of_QNICsArraySize();
+
+  std::map<quisp::modules::QNIC, quisp::modules::QNIC> qnics_tmp;
+  for (auto index = 0; index < stack_of_qnic_size; index++) {
+    auto qnic_pair_info = (QNicPairInfo)req->getStack_of_QNICs(index);
+    qnics_tmp.first = qnic_pair_info.first;
+    qnics_tmp.second = qnic_pair_info.second;
+    qnics[index] = qnics_tmp;
+    qnics_tmp = {};
+  };
+  return qnics;
+}
+
+std::vector<int> ConnectionManager::generateNodeAddressesAlongPath(std::map<int, json> rulesets) {
+  std::vector<int> node_addresses_along_path;
+  for (auto [owner_address, rs] : rulesets) {
+    node_addresses_along_path.push_back(owner_address);
+  }
+  return node_addresses_along_path;
 }
 
 int ConnectionManager::getRuleSetIndexByOwnerAddress(std::map<int, nlohmann::json> rulesets, int owner_address) {
