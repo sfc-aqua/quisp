@@ -2,7 +2,6 @@ import base_messages;
 namespace quisp::messages;
 
 
-
 packet ConnectionSetupRequest extends Header
 {
     int application_id @getter(getApplicationId) @setter(setApplicationId);
@@ -32,5 +31,5 @@ packet ConnectionSetupResponse extends Header
     json ruleSet;
     int application_type;
     int stack_of_QNodeIndexes[];
-    int stack_of_QNICAddresses[];
+    QNIC stack_of_QNICs[];
 }
