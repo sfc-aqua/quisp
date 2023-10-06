@@ -91,6 +91,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void sendLinkAllocationUpdateDecisionRequest(messages::InternalConnectionTeardownMessage *msg);
   void sendLinkAllocationUpdateDecisionResponse(messages::LinkAllocationUpdateDecisionRequest *msg);
   void sendRejectLinkAllocationUpdateDecisionRequest(messages::LinkAllocationUpdateDecisionRequest *msg);
+  void sendLinkReleaseRequest(messages::RejectLinkAllocationUpdateDecisionRequest *msg);
   void sendBarrierMessages(messages::LinkAllocationUpdateDecisionResponse *msg, unsigned long ruleset_id);
   void sendBarrierMessage(messages::LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number, bool is_last);
   void sendBarrierMessageAck(messages::BarrierMessage *msg);

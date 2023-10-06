@@ -25,6 +25,7 @@ packet RejectLinkAllocationUpdateDecisionRequest extends Header {
 packet LinkReleaseRequest extends Header {
   int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
   int destAddr @setter(setDestAddr) @getter(getDestAddr);
+  unsigned long current_ruleset_id @setter(setCurrentRuleSet_id) @getter(getCurrentRuleSet_id);
 }
 
 packet LinkAllocationUpdateRequest extends Header {
