@@ -148,7 +148,28 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<RejectLinkAllocationUpdateDecisionRequest *>(msg)) {
     sendLinkReleaseRequest(pkt);
   } else if (auto *pkt = dynamic_cast<LinkReleaseRequest *>(msg)) {
+    auto ruleset_id = pkt->getCurrentRuleSet_id();
+    for (int i = 0; i < number_of_qnics; i++) {
+      freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
+    }
+    for (int i = 0; i < number_of_qnics_r; i++) {
+      freeResourceFromRuleSet(QNIC_R, i, ruleset_id);
+    }
+    for (int i = 0; i < number_of_qnics_rp; i++) {
+      freeResourceFromRuleSet(QNIC_RP, i, ruleset_id);
+    }
     sendLinkReleaseResponse(pkt);
+  } else if (auto *pkt = dynamic_cast<LinkReleaseResponse *>(msg)) {
+    auto ruleset_id = pkt->getCurrentRuleSet_id();
+    for (int i = 0; i < number_of_qnics; i++) {
+      freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
+    }
+    for (int i = 0; i < number_of_qnics_r; i++) {
+      freeResourceFromRuleSet(QNIC_R, i, ruleset_id);
+    }
+    for (int i = 0; i < number_of_qnics_rp; i++) {
+      freeResourceFromRuleSet(QNIC_RP, i, ruleset_id);
+    }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
     auto current_ruleset_id = pkt->getCurrentRuleSet_id();
     auto next_ruleset_id = pkt->getNegotiatedRuleSet_id();
