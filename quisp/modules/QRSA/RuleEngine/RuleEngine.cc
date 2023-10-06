@@ -147,6 +147,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   } else if (auto *pkt = dynamic_cast<RejectLinkAllocationUpdateDecisionRequest *>(msg)) {
     sendLinkReleaseRequest(pkt);
+  } else if (auto *pkt = dynamic_cast<LinkReleaseRequest *>(msg)) {
+    sendLinkReleaseResponse(pkt);
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
     auto current_ruleset_id = pkt->getCurrentRuleSet_id();
     auto next_ruleset_id = pkt->getNegotiatedRuleSet_id();
@@ -339,6 +341,14 @@ void RuleEngine::sendRejectLinkAllocationUpdateDecisionRequest(LinkAllocationUpd
 
 void RuleEngine::sendLinkReleaseRequest(RejectLinkAllocationUpdateDecisionRequest *msg) {
   LinkReleaseRequest *pkt = new LinkReleaseRequest("LinkReleaseRequest");
+  pkt->setSrcAddr(msg->getDestAddr());
+  pkt->setDestAddr(msg->getSrcAddr());
+  pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
+  send(pkt, "RouterPort$o");
+}
+
+void RuleEngine::sendLinkReleaseResponse(LinkReleaseRequest *msg) {
+  LinkReleaseResponse *pkt = new LinkReleaseResponse("LinkReleaseResponse");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
   pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
