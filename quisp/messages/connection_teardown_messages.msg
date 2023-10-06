@@ -5,8 +5,6 @@ namespace quisp::messages;
 
 packet ConnectionTeardownMessage extends Header
 {
-    int prev_hopAddr;
-    int next_hopAddr;
     int actual_destAddr;
     int actual_srcAddr;
     int LAU_req_srcAddr;
