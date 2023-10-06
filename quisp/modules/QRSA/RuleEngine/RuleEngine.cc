@@ -285,16 +285,6 @@ void RuleEngine::sendConnectionTeardownMessageForRuleSet(unsigned long ruleset_i
     auto pkt = new ConnectionTeardownMessage();
     pkt->setSrcAddr(parentAddress);
     pkt->setDestAddr(node_addresses_along_path.at(index));
-    if (index == 0) {
-      pkt->setPrev_hopAddr(-1);
-    } else {
-      pkt->setPrev_hopAddr(node_addresses_along_path.at(index - 1));
-    }
-    if (index == node_addresses_along_path.size() - 1) {
-      pkt->setNext_hopAddr(-1);
-    } else {
-      pkt->setNext_hopAddr(node_addresses_along_path.at(index + 1));
-    }
     pkt->setActual_srcAddr(parentAddress);
     pkt->setActual_destAddr(node_addresses_along_path.at(index));
     pkt->setLAU_req_srcAddr(node_addresses_along_path.at(index));
