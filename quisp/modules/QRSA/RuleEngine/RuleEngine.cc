@@ -140,7 +140,11 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
-    sendLinkAllocationUpdateDecisionResponse(pkt);
+    if (runtimes.size() == 0) {
+      sendRejectLinkAllocationUpdateDecisionRequest(pkt);
+    } else {
+      sendLinkAllocationUpdateDecisionResponse(pkt);
+    }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
     auto current_ruleset_id = pkt->getCurrentRuleSet_id();
     auto next_ruleset_id = pkt->getNegotiatedRuleSet_id();
@@ -320,6 +324,13 @@ void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDe
   pkt->setDestAddr(msg->getSrcAddr());
   pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
   pkt->setNegotiatedRuleset_id(msg->getOfferedRuleSet_ids(0));
+  send(pkt, "RouterPort$o");
+}
+
+void RuleEngine::sendRejectLinkAllocationUpdateDecisionRequest(LinkAllocationUpdateDecisionRequest *msg) {
+  RejectLinkAllocationUpdateDecisionRequest *pkt = new RejectLinkAllocationUpdateDecisionRequest("RejectLinkAllocationUpdateDecisionResponse");
+  pkt->setSrcAddr(msg->getDestAddr());
+  pkt->setDestAddr(msg->getSrcAddr());
   send(pkt, "RouterPort$o");
 }
 

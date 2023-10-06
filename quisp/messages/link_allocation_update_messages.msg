@@ -16,6 +16,11 @@ packet LinkAllocationUpdateDecisionResponse extends Header {
   unsigned long negotiated_ruleset_id @setter(setNegotiatedRuleset_id) @getter(getNegotiatedRuleSet_id); 
 }
 
+packet RejectLinkAllocationUpdateDecisionRequest extends Header {
+  int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
+  int destAddr @setter(setDestAddr) @getter(getDestAddr);
+}
+
 packet LinkAllocationUpdateRequest extends Header {
     int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
     int destAddr @setter(setDestAddr) @getter(getDestAddr);

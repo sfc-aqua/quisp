@@ -116,6 +116,10 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Link Allocation Update Decision Request packet received");
     send(pk, "rePort$o");
     return;
+  } else if (dest_addr == my_address && dynamic_cast<RejectLinkAllocationUpdateDecisionRequest *>(msg)) {
+    bubble("Reject Link Allocation Update Decision Request packet received");
+    send(pk, "rePort$o");
+    return;
   } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
     bubble("Link Allocation Update Decision Response packet received");
     send(pk, "rePort$o");
