@@ -13,13 +13,13 @@ RuntimeManager::RuntimeManager(std::unique_ptr<Runtime::ICallBack> &&callback) :
 
 void RuntimeManager::acceptRuleSet(const RuleSet &ruleset) { runtimes.emplace_back(runtime::Runtime(ruleset, callback.get())); }
 
-Runtime *RuntimeManager::findById(unsigned long long ruleset_id) {
-  for (auto &rt : runtimes) {
-    if (rt.ruleset.id == ruleset_id) {
-      return &rt;
+std::vector<Runtime>::iterator RuntimeManager::findById(unsigned long long ruleset_id) {
+  std::vector<Runtime>::iterator it = runtimes.begin();
+  for (; it != runtimes.end();) {
+    if (it->ruleset.id == ruleset_id) {
+      return it;
     }
   }
-  return nullptr;
 }
 
 std::vector<RuleSet> RuntimeManager::exec() {
@@ -38,8 +38,8 @@ std::vector<RuleSet> RuntimeManager::exec() {
 }
 
 void RuntimeManager::stopById(unsigned long long ruleset_id) {
-  auto rt = findById(ruleset_id);
-  rt->terminated = true;
+  auto it = findById(ruleset_id);
+  it->terminated = true;
 }
 
 std::vector<Runtime>::iterator RuntimeManager::begin() { return runtimes.begin(); }

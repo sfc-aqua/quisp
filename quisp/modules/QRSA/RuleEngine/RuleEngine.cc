@@ -242,7 +242,7 @@ void RuleEngine::handlePurificationResult(PurificationResult *result) {
   auto purification_protocol = result->getProtocol();
   std::vector<int> message_content = {sequence_number, measurement_result, purification_protocol};
   auto runtime = runtimes.findById(ruleset_id);
-  if (runtime == nullptr) return;
+  if (runtime == runtimes.end()) return;
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
 }
 
@@ -254,7 +254,7 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   auto new_partner_addr = result->getNewPartner();
   std::vector<int> message_content = {sequence_number, correction_frame, new_partner_addr};
   auto runtime = runtimes.findById(ruleset_id);
-  if (runtime == nullptr) return;
+  if (runtime == runtimes.end()) return;
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
 }
 
