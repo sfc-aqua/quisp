@@ -114,7 +114,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   unsigned long createUniqueId() override;
   int getRuleSetIndexByOwnerAddress(std::map<int, nlohmann::json> rulesets, int owner_address);
   std::vector<int> generateNodeAddressesAlongPath(std::map<int, json> rulesets);
-  std::map<int, std::map<quisp::modules::QNIC, quisp::modules::QNIC>> generateListOfQNICs(messages::ConnectionSetupRequest *req);
+  std::map<int, std::pair<quisp::modules::QNIC, quisp::modules::QNIC>> generateListOfQNICs(messages::ConnectionSetupRequest *req);
 };
 
 }  // namespace quisp::modules
