@@ -149,23 +149,23 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int inbound_qnic_addr = available_qnics[0];
     int outbound_qnic_addr = available_qnics[1];
 
-    if (my_address == dest_addr) {
-      if (isQnicBusy(inbound_qnic_addr)) {
-        releaseQnic(inbound_qnic_addr);
-      }
-    } else if (my_address == src_addr) {
-      if (isQnicBusy(outbound_qnic_addr)) {
-        releaseQnic(outbound_qnic_addr);
-      }
-    } else {
-      if (isQnicBusy(inbound_qnic_addr)) {
-        releaseQnic(inbound_qnic_addr);
-      }
-      if (isQnicBusy(outbound_qnic_addr)) {
-        releaseQnic(outbound_qnic_addr);
-      }
-    }
-    available_qnics = {};
+    // if (my_address == dest_addr) {
+    //   if (isQnicBusy(inbound_qnic_addr)) {
+    //     releaseQnic(inbound_qnic_addr);
+    //   }
+    // } else if (my_address == src_addr) {
+    //   if (isQnicBusy(outbound_qnic_addr)) {
+    //     releaseQnic(outbound_qnic_addr);
+    //   }
+    // } else {
+    //   if (isQnicBusy(inbound_qnic_addr)) {
+    //     releaseQnic(inbound_qnic_addr);
+    //   }
+    //   if (isQnicBusy(outbound_qnic_addr)) {
+    //     releaseQnic(outbound_qnic_addr);
+    //   }
+    // }
+    // available_qnics = {};
 
     storeInternalConnectionTeardownMessage(pk);
     delete msg;
@@ -324,10 +324,10 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   }
 
   // check if the qnics are reserved or not
-  if (isQnicBusy(qnic_addr)) {
-    rejectRequest(req);
-    return;
-  }
+  // if (isQnicBusy(qnic_addr)) {
+  //   rejectRequest(req);
+  //   return;
+  // }
 
   auto ruleset_id = createUniqueId();
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
@@ -355,7 +355,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     }
     send(pkt, "RouterPort$o");
   }
-  reserveQnic(qnic_addr);
+  // reserveQnic(qnic_addr);
 }
 
 std::map<int, std::pair<quisp::modules::QNIC, quisp::modules::QNIC>> ConnectionManager::generateListOfQNICs(ConnectionSetupRequest *req) {
@@ -418,10 +418,10 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   auto outbound_info = hardware_monitor->findConnectionInfoByQnicAddr(outbound_qnic_address);
   auto inbound_info = hardware_monitor->findConnectionInfoByQnicAddr(inbound_qnic_address);
 
-  if (isQnicBusy(outbound_qnic_address) || isQnicBusy(inbound_qnic_address)) {
-    rejectRequest(req);
-    return;
-  }
+  // if (isQnicBusy(outbound_qnic_address) || isQnicBusy(inbound_qnic_address)) {
+  //   rejectRequest(req);
+  //   return;
+  // }
 
   // Update information and send it to the next Qnode.
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
@@ -440,8 +440,8 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   QNicPairInfo pair_info{inbound_info->qnic, outbound_info->qnic};
   req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
-  reserveQnic(inbound_info->qnic.address);
-  reserveQnic(outbound_info->qnic.address);
+  // reserveQnic(inbound_info->qnic.address);
+  // reserveQnic(outbound_info->qnic.address);
 
   send(req, "RouterPort$o");
 }
@@ -480,7 +480,7 @@ void ConnectionManager::initiator_reject_req_handler(RejectConnectionSetupReques
   int actual_dest = pk->getActual_destAddr();
   int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_dest);
 
-  releaseQnic(outbound_qnic_address);
+  // releaseQnic(outbound_qnic_address);
   scheduleRequestRetry(outbound_qnic_address);
 }
 
@@ -509,8 +509,8 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_dst);
   int inbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_src);
 
-  releaseQnic(outbound_qnic_address);
-  releaseQnic(inbound_qnic_address);
+  // releaseQnic(outbound_qnic_address);
+  // releaseQnic(inbound_qnic_address);
 }
 
 unsigned long ConnectionManager::createUniqueId() {
@@ -569,7 +569,7 @@ void ConnectionManager::popApplicationRequest(int qnic_address) {
   connection_retry_count[qnic_address] = 0;
   request_queue.pop();
   delete req;
-  releaseQnic(qnic_address);
+  // releaseQnic(qnic_address);
 
   if (!request_queue.empty()) {
     EV << "schedule from pop" << endl;
@@ -584,13 +584,13 @@ void ConnectionManager::initiateApplicationRequest(int qnic_address) {
     error("trying to initiate a request from empty queue");
   }
 
-  if (isQnicBusy(qnic_address)) {
-    EV << "qnic is busy stop trying to send for now" << endl;
-    connection_retry_count[qnic_address] = 0;
-    return;
-  }
+  // if (isQnicBusy(qnic_address)) {
+  //   EV << "qnic is busy stop trying to send for now" << endl;
+  //   connection_retry_count[qnic_address] = 0;
+  //   return;
+  // }
 
-  reserveQnic(qnic_address);
+  // reserveQnic(qnic_address);
   auto req = request_queue.front();
   send(req->dup(), "RouterPort$o");
 }
