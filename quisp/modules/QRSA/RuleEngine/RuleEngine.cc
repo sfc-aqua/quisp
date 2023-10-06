@@ -331,6 +331,7 @@ void RuleEngine::sendRejectLinkAllocationUpdateDecisionRequest(LinkAllocationUpd
   RejectLinkAllocationUpdateDecisionRequest *pkt = new RejectLinkAllocationUpdateDecisionRequest("RejectLinkAllocationUpdateDecisionResponse");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
+  pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
   send(pkt, "RouterPort$o");
 }
 
