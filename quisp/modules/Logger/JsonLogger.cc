@@ -49,8 +49,7 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << ", \"stack_of_qnic_address\": [";
     for (int i = 0; i < req->getStack_of_QNICsArraySize(); i++) {
       if (i != 0) os << ", ";
-      os << req->getStack_of_QNICs(i).first.address << " ";
-      os << req->getStack_of_QNICs(i).second.address << " ";
+      os << req->getStack_of_QNICs(i).first.address << ", " << req->getStack_of_QNICs(i).second.address;
     }
     os << "]";
     return os.str();
