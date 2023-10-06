@@ -106,6 +106,11 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
     int initiator_addr = resp->getActual_destAddr();
     int responder_addr = resp->getActual_srcAddr();
+    int inbound_qnic_addr = resp->getStack_of_QNICs(0).address;
+    int outbound_qnic_addr = resp->getStack_of_QNICs(1).address;
+
+    available_qnics.push_back(inbound_qnic_addr);
+    available_qnics.push_back(outbound_qnic_addr);
 
     if (responder_addr == my_address) {
       auto ruleset_id = resp->getRuleSet_id();
@@ -141,31 +146,18 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     // Connection is torn down only if the node has not received the ConnectionTeardownMessage If it has already received it, the incoming message is ignored.
     int src_addr = pk->getActual_srcAddr();
     int dest_addr = pk->getActual_destAddr();
-    int prev_hop_addr = pk->getPrev_hopAddr();
-    int next_hop_addr = pk->getNext_hopAddr();
+    int inbound_qnic_addr = available_qnics[0];
+    int outbound_qnic_addr = available_qnics[1];
 
     if (my_address == dest_addr) {
-      // int inbound_qnic_addr = routing_daemon->findQNicAddrByDestAddr(src_addr);
-      // if (inbound_qnic_addr == -1) {
-      //   error("No qnic to responder node. Something wrong with routing.");
-      // }
-      if (isQnicBusy(0)) {
-        releaseQnic(0);
+      if (isQnicBusy(inbound_qnic_addr)) {
+        releaseQnic(inbound_qnic_addr);
       }
     } else if (my_address == src_addr) {
-      int outbound_qnic_addr = routing_daemon->findQNicAddrByDestAddr(dest_addr);
-      if (outbound_qnic_addr == -1) {
-        error("No qnic to initiator node. Something wrong with routing.");
-      }
       if (isQnicBusy(outbound_qnic_addr)) {
         releaseQnic(outbound_qnic_addr);
       }
     } else {
-      int inbound_qnic_addr = routing_daemon->findQNicAddrByDestAddr(src_addr);
-      int outbound_qnic_addr = routing_daemon->findQNicAddrByDestAddr(dest_addr);
-      if (inbound_qnic_addr == -1 || outbound_qnic_addr == -1) {
-        error("No qnic to source node. Something wrong with routing.");
-      }
       if (isQnicBusy(inbound_qnic_addr)) {
         releaseQnic(inbound_qnic_addr);
       }
@@ -173,6 +165,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
         releaseQnic(outbound_qnic_addr);
       }
     }
+    available_qnics = {};
 
     storeInternalConnectionTeardownMessage(pk);
     delete msg;
@@ -341,7 +334,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   auto rulesets = ruleset_gen.generateRuleSets(req, ruleset_id);
 
   ruleset_id_node_addresses_along_path_map[ruleset_id] = generateNodeAddressesAlongPath(rulesets);
-  std::map<int, std::map<quisp::modules::QNIC, quisp::modules::QNIC>> qnics = generateListOfQNICs(req);
+  std::map<int, std::pair<quisp::modules::QNIC, quisp::modules::QNIC>> qnics = generateListOfQNICs(req);
 
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
@@ -356,7 +349,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setApplication_type(0);
     pkt->setKind(2);
     pkt->setStack_of_QNICsArraySize(2);
-    for (auto index = 0; index < qnics[index].size(); index++) {
+    for (auto index = 0; index < 2; index++) {
       pkt->setStack_of_QNICs(0, qnics[index].first);
       pkt->setStack_of_QNICs(1, qnics[index].second);
     }
@@ -365,11 +358,11 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   reserveQnic(qnic_addr);
 }
 
-std::map<int, std::map<quisp::modules::QNIC, quisp::modules::QNIC>> ConnectionManager::generateListOfQNICs(ConnectionSetupRequest *req) {
-  std::map<int, std::map<quisp::modules::QNIC, quisp::modules::QNIC>> qnics;
+std::map<int, std::pair<quisp::modules::QNIC, quisp::modules::QNIC>> ConnectionManager::generateListOfQNICs(ConnectionSetupRequest *req) {
+  std::map<int, std::pair<quisp::modules::QNIC, quisp::modules::QNIC>> qnics;
   auto stack_of_qnic_size = req->getStack_of_QNICsArraySize();
 
-  std::map<quisp::modules::QNIC, quisp::modules::QNIC> qnics_tmp;
+  std::pair<quisp::modules::QNIC, quisp::modules::QNIC> qnics_tmp;
   for (auto index = 0; index < stack_of_qnic_size; index++) {
     auto qnic_pair_info = (QNicPairInfo)req->getStack_of_QNICs(index);
     qnics_tmp.first = qnic_pair_info.first;
