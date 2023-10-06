@@ -505,11 +505,13 @@ std::vector<IQubitRecord *> RuleEngine::getAllocatedResourceToRuleSet(int qnic_t
 // Invoked whenever existing resource (entangled with neighbor) need to be released.
 // Frees those resources from a particular ruleset, from top to bottom (all of it).
 void RuleEngine::freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned long ruleset_id) {
-  auto runtime = runtimes.findById(ruleset_id);
-  auto &partners = runtime->partners;
+  auto runtime = runtimes.findTerminatedRuleSetById(ruleset_id);
+  for (auto partner : runtime->partners) {
+    std::cout << partner.val << std::endl;
+  }
+  auto partners = runtime->partners;
 
-  std::vector<IQubitRecord *> qubit_record_list;
-  for (auto &partner_addr : partners) {
+  for (auto partner_addr : partners) {
     auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr.val);
     for (auto it = range.first; it != range.second; ++it) {
       auto qubit_record = it->second;
@@ -519,7 +521,6 @@ void RuleEngine::freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned
       if (qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
         qubit_record->setAllocated(false);
         runtime->freeQubitFromRuleSet(partner_addr, qubit_record);
-        qubit_record_list.push_back(qubit_record);
       }
     }
   }

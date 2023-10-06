@@ -1,4 +1,5 @@
 #include "RuntimeManager.h"
+#include <__config>
 #include <iostream>
 #include <iterator>
 #include <vector>
@@ -14,8 +15,7 @@ RuntimeManager::RuntimeManager(std::unique_ptr<Runtime::ICallBack> &&callback) :
 void RuntimeManager::acceptRuleSet(const RuleSet &ruleset) { runtimes.emplace_back(runtime::Runtime(ruleset, callback.get())); }
 
 std::vector<Runtime>::iterator RuntimeManager::findById(unsigned long long ruleset_id) {
-  std::vector<Runtime>::iterator it = runtimes.begin();
-  for (; it != runtimes.end();) {
+  for (auto it = runtimes.begin(); it != runtimes.end(); ++it) {
     if (it->ruleset.id == ruleset_id) {
       return it;
     }
@@ -23,23 +23,31 @@ std::vector<Runtime>::iterator RuntimeManager::findById(unsigned long long rules
 }
 
 std::vector<RuleSet> RuntimeManager::exec() {
-  std::vector<RuleSet> ruleset_list;
-  std::vector<Runtime>::iterator it = runtimes.begin();
-  for (; it != runtimes.end();) {
+  std::vector<RuleSet> ruleset_list_tmp;
+  for (auto it = runtimes.begin(); it != runtimes.end();) {
     it->exec();
     if (it->terminated) {
-      ruleset_list.push_back(it->ruleset);
+      ruleset_list_tmp.push_back(it->ruleset);
+      terminated_ruleset_list.push_back(it);
       it = runtimes.erase(it);
     } else {
       ++it;
     }
   }
-  return ruleset_list;
+  return ruleset_list_tmp;
 }
 
 void RuntimeManager::stopById(unsigned long long ruleset_id) {
   auto it = findById(ruleset_id);
   it->terminated = true;
+}
+
+std::vector<Runtime>::iterator RuntimeManager::findTerminatedRuleSetById(unsigned long long ruleset_id) {
+  for (auto terminated_ruleset : terminated_ruleset_list) {
+    if (terminated_ruleset->ruleset.id == ruleset_id) {
+      return terminated_ruleset;
+    }
+  }
 }
 
 std::vector<Runtime>::iterator RuntimeManager::begin() { return runtimes.begin(); }
