@@ -21,6 +21,11 @@ packet RejectLinkAllocationUpdateDecisionRequest extends Header {
   int destAddr @setter(setDestAddr) @getter(getDestAddr);
 }
 
+packet LinkReleaseRequest extends Header {
+  int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
+  int destAddr @setter(setDestAddr) @getter(getDestAddr);
+}
+
 packet LinkAllocationUpdateRequest extends Header {
     int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
     int destAddr @setter(setDestAddr) @getter(getDestAddr);
