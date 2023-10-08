@@ -22,13 +22,27 @@ std::vector<Runtime>::iterator RuntimeManager::findById(unsigned long long rules
   }
 }
 
+std::vector<Runtime>::iterator RuntimeManager::findTerminatedRuntimeIteratorById(unsigned long long ruleset_id) {
+  for (auto it = terminated_runtimes.begin(); it != terminated_runtimes.end(); ++it) {
+    if (it->ruleset.id == ruleset_id) {
+      return it;
+    }
+  }
+}
+
 std::vector<RuleSet> RuntimeManager::exec() {
   std::vector<RuleSet> terminated_ruleset_list_tmp;
+  std::vector<QNodeAddr> partners_tmp;
   for (auto it = runtimes.begin(); it != runtimes.end();) {
     it->exec();
     if (it->terminated) {
+      auto partners = it->partners;
+      for (auto partner : partners) {
+        partners_tmp.push_back(partner);
+      }
+      ruleset_id_partners_map[it->ruleset.id] = partners_tmp;
+
       terminated_ruleset_list_tmp.push_back(it->ruleset);
-      terminated_ruleset_list.push_back(it);
       it = runtimes.erase(it);
     } else {
       ++it;
@@ -41,13 +55,14 @@ void RuntimeManager::stopById(unsigned long long ruleset_id) {
   auto it = findById(ruleset_id);
   it->terminated = true;
 }
-
-std::vector<Runtime>::iterator RuntimeManager::findTerminatedRuleSetById(unsigned long long ruleset_id) {
-  for (auto terminated_ruleset : terminated_ruleset_list) {
-    if (terminated_ruleset->ruleset.id == ruleset_id) {
-      return terminated_ruleset;
+std::vector<QNodeAddr> RuntimeManager::findPartnersById(unsigned long long ruleset_id) {
+  for (auto &[k, v] : ruleset_id_partners_map) {
+    if (k == ruleset_id) {
+      return v;
     }
   }
+  std::vector<QNodeAddr> partners;
+  return partners;
 }
 
 std::vector<Runtime>::iterator RuntimeManager::begin() { return runtimes.begin(); }

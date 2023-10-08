@@ -1,8 +1,11 @@
 #pragma once
 
+#include <map>
+#include <unordered_map>
 #include <vector>
 #include "Runtime.h"
 #include "runtime/RuleSet.h"
+using quisp::runtime::QNodeAddr;
 
 namespace quisp::runtime {
 class RuntimeManager {
@@ -16,11 +19,11 @@ class RuntimeManager {
   std::vector<Runtime>::iterator end();
   std::vector<Runtime>::reference at(size_t);
   size_t size() const;
-  std::vector<Runtime>::iterator findTerminatedRuleSetById(unsigned long long ruleset_id);
+  std::vector<QNodeAddr> findPartnersById(unsigned long long ruleset_id);
 
  protected:
   std::vector<Runtime> runtimes;
   std::unique_ptr<Runtime::ICallBack> callback;
-  std::vector<std::vector<Runtime>::iterator> terminated_ruleset_list;
+  std::map<unsigned unsigned long, std::vector<QNodeAddr> > ruleset_id_partners_map;
 };
 }  // namespace quisp::runtime
