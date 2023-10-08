@@ -22,12 +22,13 @@ std::vector<Runtime>::iterator RuntimeManager::findById(unsigned long long rules
   }
 }
 
-std::vector<Runtime>::iterator RuntimeManager::findTerminatedRuntimeIteratorById(unsigned long long ruleset_id) {
-  for (auto it = terminated_runtimes.begin(); it != terminated_runtimes.end(); ++it) {
-    if (it->ruleset.id == ruleset_id) {
-      return it;
+std::vector<Runtime>::iterator RuntimeManager::findTerminatedRuntimeById(unsigned long long ruleset_id) {
+  for (auto &rt : terminated_runtimes) {
+    if (rt->ruleset.id == ruleset_id) {
+      return rt;
     }
   }
+  return *terminated_runtimes.end();
 }
 
 std::vector<RuleSet> RuntimeManager::exec() {
@@ -42,6 +43,7 @@ std::vector<RuleSet> RuntimeManager::exec() {
       }
       ruleset_id_partners_map[it->ruleset.id] = partners_tmp;
 
+      terminated_runtimes.push_back(it);
       terminated_ruleset_list_tmp.push_back(it->ruleset);
       it = runtimes.erase(it);
     } else {
