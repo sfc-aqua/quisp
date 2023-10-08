@@ -23,18 +23,18 @@ std::vector<Runtime>::iterator RuntimeManager::findById(unsigned long long rules
 }
 
 std::vector<RuleSet> RuntimeManager::exec() {
-  std::vector<RuleSet> ruleset_list_tmp;
+  std::vector<RuleSet> terminated_ruleset_list_tmp;
   for (auto it = runtimes.begin(); it != runtimes.end();) {
     it->exec();
     if (it->terminated) {
-      ruleset_list_tmp.push_back(it->ruleset);
+      terminated_ruleset_list_tmp.push_back(it->ruleset);
       terminated_ruleset_list.push_back(it);
       it = runtimes.erase(it);
     } else {
       ++it;
     }
   }
-  return ruleset_list_tmp;
+  return terminated_ruleset_list_tmp;
 }
 
 void RuntimeManager::stopById(unsigned long long ruleset_id) {
