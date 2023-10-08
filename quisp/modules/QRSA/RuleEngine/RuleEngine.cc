@@ -515,8 +515,8 @@ void RuleEngine::freeResourceFromRuleSet(int qnic_type, int qnic_index, unsigned
       // if the qubit is not assigned to the rule, the qubit is not releasable from that rule
       if (qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
         qubit_record->setAllocated(false);
-        auto runtime = runtimes.findTerminatedRuntimeById(ruleset_id);
-        runtime->freeQubitFromRuleSet(partner_addr, qubit_record);
+        auto terminated_runtime = runtimes.findTerminatedRuntimeById(ruleset_id);
+        terminated_runtime->freeQubitFromRuleSet(partner_addr, qubit_record);
       }
     }
   }
