@@ -24,7 +24,7 @@ class RuntimeManager {
 
  protected:
   std::vector<Runtime> runtimes;
-  std::vector<std::vector<Runtime>::iterator> terminated_runtimes;
+  std::vector<Runtime> terminated_runtimes;
   std::unique_ptr<Runtime::ICallBack> callback;
   std::map<unsigned unsigned long, std::vector<QNodeAddr> > ruleset_id_partners_map;
 };
