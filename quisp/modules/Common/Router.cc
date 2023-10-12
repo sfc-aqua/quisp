@@ -112,14 +112,6 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Internal Connection Teardown packet received");
     send(pk, "rePort$o");
     return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkReleaseRequest *>(msg)) {
-    bubble("Link Release Request packet received");
-    send(pk, "rePort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkReleaseResponse *>(msg)) {
-    bubble("Link Release Response packet received");
-    send(pk, "rePort$o");
-    return;
   } else if (dest_addr == my_address && dynamic_cast<BarrierMessage *>(msg)) {
     bubble("Barrier Message packet received");
     send(pk, "rePort$o");
