@@ -2,39 +2,14 @@ import base_messages;
 
 namespace quisp::messages;
 
-packet LinkAllocationUpdateDecisionRequest extends Header {
+packet LinkAllocationUpdateRequest extends Header {
     int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
     int destAddr @setter(setDestAddr) @getter(getDestAddr);
     unsigned long current_ruleset_id @setter(setCurrentRuleSet_id) @getter(getCurrentRuleSet_id);
-    unsigned long offered_ruleset_ids[] @setter(setOfferedRuleSet_ids) @getter(getOfferedRuleSet_ids);    
+    unsigned long negotiated_ruleset_id @setter(setNegotiatedRuleSet_id) @getter(getNegotiatedRuleSet_id); 
 }
 
-packet LinkAllocationUpdateDecisionResponse extends Header {
-  int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
-  int destAddr @setter(setDestAddr) @getter(getDestAddr);
-  unsigned long current_ruleset_id @setter(setCurrentRuleSet_id) @getter(getCurrentRuleSet_id);
-  unsigned long negotiated_ruleset_id @setter(setNegotiatedRuleset_id) @getter(getNegotiatedRuleSet_id); 
-}
-
-packet RejectLinkAllocationUpdateDecisionRequest extends Header {
-  int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
-  int destAddr @setter(setDestAddr) @getter(getDestAddr);
-  unsigned long current_ruleset_id @setter(setCurrentRuleSet_id) @getter(getCurrentRuleSet_id);
-}
-
-packet LinkReleaseRequest extends Header {
-  int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
-  int destAddr @setter(setDestAddr) @getter(getDestAddr);
-  unsigned long current_ruleset_id @setter(setCurrentRuleSet_id) @getter(getCurrentRuleSet_id);
-}
-
-packet LinkReleaseResponse extends Header {
-  int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
-  int destAddr @setter(setDestAddr) @getter(getDestAddr);
-  unsigned long current_ruleset_id @setter(setCurrentRuleSet_id) @getter(getCurrentRuleSet_id);
-}
-
-packet LinkAllocationUpdateRequest extends Header {
+packet RejectLinkAllocationUpdateRequest extends Header {
     int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
     int destAddr @setter(setDestAddr) @getter(getDestAddr);
     unsigned long current_ruleset_id @setter(setCurrentRuleSet_id) @getter(getCurrentRuleSet_id);
