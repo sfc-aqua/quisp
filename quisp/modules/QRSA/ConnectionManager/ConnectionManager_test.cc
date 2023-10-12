@@ -49,7 +49,6 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
   using quisp::modules::ConnectionManager::reserveQnic;
   using quisp::modules::ConnectionManager::respondToRequest;
   using quisp::modules::ConnectionManager::respondToRequest_deprecated;
-  // using quisp::modules::ConnectionManager::storeInfoAboutLinkAllocationUpdateDecision;
 
   ConnectionManagerTestTarget(IRoutingDaemon *routing_daemon, IHardwareMonitor *hardware_monitor)
       : quisp::modules::ConnectionManager(), toRouterGate(new TestGate(this, "RouterPort$o")) {
