@@ -112,18 +112,6 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Internal Connection Teardown packet received");
     send(pk, "rePort$o");
     return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
-    bubble("Link Allocation Update Decision Request packet received");
-    send(pk, "rePort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<RejectLinkAllocationUpdateDecisionRequest *>(msg)) {
-    bubble("Reject Link Allocation Update Decision Request packet received");
-    send(pk, "rePort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
-    bubble("Link Allocation Update Decision Response packet received");
-    send(pk, "rePort$o");
-    return;
   } else if (dest_addr == my_address && dynamic_cast<LinkReleaseRequest *>(msg)) {
     bubble("Link Release Request packet received");
     send(pk, "rePort$o");

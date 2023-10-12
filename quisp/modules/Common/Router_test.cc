@@ -183,13 +183,6 @@ TEST_F(RouterTest, handleInternalConnectionTeardownMessage) {
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
-TEST_F(RouterTest, handleLinkAllocationUpdateDecisionRequest) {
-  auto msg = new LinkAllocationUpdateDecisionRequest;
-  msg->setDestAddr(10);
-  router->handleMessage(msg);
-  ASSERT_EQ(router->rePort->messages.size(), 1);
-}
-
 TEST_F(RouterTest, handleBarrierMessage) {
   auto msg = new BarrierMessage;
   msg->setDestAddr(10);
@@ -206,13 +199,6 @@ TEST_F(RouterTest, handleLinkAllocationUpdateRequest) {
 
 TEST_F(RouterTest, handleLinkAllocationUpdateResponse) {
   auto msg = new LinkAllocationUpdateResponse;
-  msg->setDestAddr(10);
-  router->handleMessage(msg);
-  ASSERT_EQ(router->rePort->messages.size(), 1);
-}
-
-TEST_F(RouterTest, handleLinkAllocationUpdateDecisionResponse) {
-  auto msg = new LinkAllocationUpdateDecisionResponse;
   msg->setDestAddr(10);
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
