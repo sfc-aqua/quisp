@@ -86,14 +86,14 @@ TEST_F(JsonLoggerTest, ConnTeardownTest) {
   auto tea = new ConnectionTeardownMessage();
   tea->setActual_destAddr(2);
   tea->setActual_srcAddr(1);
-  tea->setLAU_req_destAddr(2);
-  tea->setLAU_req_srcAddr(1);
+  tea->setLAU_destAddr_left(2);
+  tea->setLAU_destAddr_right(1);
   tea->setRuleSet_id(1);
   logger->setQNodeAddress(7);
   logger->logPacket("test", tea);
   EXPECT_EQ(log_stream.str(),
             "{\"simtime\": 0, \"event_type\": \"test\", \"address\": \"7\", \"msg_type\": \"ConnectionTeardownMessage\", "
-            "\"actual_dest_addr\": 2, \"actual_src_addr\": 1, \"LAU_req_dest_addr\": 2, \"LAU_req_src_addr\": 1, "
+            "\"actual_dest_addr\": 2, \"actual_src_addr\": 1, \"LAU_destAddr_left\": 2, \"LAU_destAddr_right\": 1, "
             "\"ruleset_id\": 1}\n");
 }
 
