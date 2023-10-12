@@ -88,13 +88,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void stopRuleSetExecution(messages::InternalConnectionTeardownMessage *msg);
   void addAllocatedQNICs(messages::InternalConnectionTeardownMessage *msg);
   void sendConnectionTeardownMessageForRuleSet(unsigned long ruleset_id);
-  void sendLinkAllocationUpdateDecisionRequest(messages::InternalConnectionTeardownMessage *msg);
-  void sendLinkAllocationUpdateDecisionResponse(messages::LinkAllocationUpdateDecisionRequest *msg);
-  void sendRejectLinkAllocationUpdateDecisionRequest(messages::LinkAllocationUpdateDecisionRequest *msg);
-  void sendLinkReleaseRequest(messages::RejectLinkAllocationUpdateDecisionRequest *msg);
-  void sendLinkReleaseResponse(messages::LinkReleaseRequest *msg);
-  void sendBarrierMessages(messages::LinkAllocationUpdateDecisionResponse *msg, unsigned long ruleset_id);
-  void sendBarrierMessage(messages::LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number, bool is_last);
   void sendBarrierMessageAck(messages::BarrierMessage *msg);
   void sendLinkAllocationUpdateRequest(messages::BarrierMessage *msg);
   void sendLinkAllocationUpdateResponse(messages::LinkAllocationUpdateRequest *msg);
