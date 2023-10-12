@@ -139,48 +139,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionRequest *>(msg)) {
-    if (runtimes.size() == 0) {
-      sendRejectLinkAllocationUpdateDecisionRequest(pkt);
-    } else {
-      sendLinkAllocationUpdateDecisionResponse(pkt);
-    }
-  } else if (auto *pkt = dynamic_cast<RejectLinkAllocationUpdateDecisionRequest *>(msg)) {
-    sendLinkReleaseRequest(pkt);
-  } else if (auto *pkt = dynamic_cast<LinkReleaseRequest *>(msg)) {
-    auto ruleset_id = pkt->getCurrentRuleSet_id();
-    for (int i = 0; i < number_of_qnics; i++) {
-      freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
-    }
-    for (int i = 0; i < number_of_qnics_r; i++) {
-      freeResourceFromRuleSet(QNIC_R, i, ruleset_id);
-    }
-    for (int i = 0; i < number_of_qnics_rp; i++) {
-      freeResourceFromRuleSet(QNIC_RP, i, ruleset_id);
-    }
-    sendLinkReleaseResponse(pkt);
-  } else if (auto *pkt = dynamic_cast<LinkReleaseResponse *>(msg)) {
-    auto ruleset_id = pkt->getCurrentRuleSet_id();
-    for (int i = 0; i < number_of_qnics; i++) {
-      freeResourceFromRuleSet(QNIC_E, i, ruleset_id);
-    }
-    for (int i = 0; i < number_of_qnics_r; i++) {
-      freeResourceFromRuleSet(QNIC_R, i, ruleset_id);
-    }
-    for (int i = 0; i < number_of_qnics_rp; i++) {
-      freeResourceFromRuleSet(QNIC_RP, i, ruleset_id);
-    }
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateDecisionResponse *>(msg)) {
-    auto current_ruleset_id = pkt->getCurrentRuleSet_id();
-    auto next_ruleset_id = pkt->getNegotiatedRuleSet_id();
-    current_ruleset_id_next_ruleset_id_map[current_ruleset_id] = next_ruleset_id;
-    sendBarrierMessages(pkt, next_ruleset_id);
-  } else if (auto *pkt = dynamic_cast<BarrierMessage *>(msg)) {
-    if (pkt->getIs_last()) {
-      sendLinkAllocationUpdateRequest(pkt);
-    } else if (pkt->getIs_sender()) {
-      sendBarrierMessageAck(pkt);
-    }
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
     auto current_ruleset_id = pkt->getCurrentRuleSet_id();
     auto negotiated_ruleset_id = pkt->getNegotiatedRuleSet_id();
@@ -290,9 +248,6 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
 void RuleEngine::handleConnectionTeardownMessage(InternalConnectionTeardownMessage *msg) {
   addAllocatedQNICs(msg);
   stopRuleSetExecution(msg);
-  if (msg->getLAU_req_destAddr() != -1) {
-    sendLinkAllocationUpdateDecisionRequest(msg);
-  }
 }
 
 void RuleEngine::addAllocatedQNICs(InternalConnectionTeardownMessage *msg) {
@@ -316,99 +271,19 @@ void RuleEngine::sendConnectionTeardownMessageForRuleSet(unsigned long ruleset_i
     pkt->setDestAddr(node_addresses_along_path.at(index));
     pkt->setActual_srcAddr(parentAddress);
     pkt->setActual_destAddr(node_addresses_along_path.at(index));
-    pkt->setLAU_req_srcAddr(node_addresses_along_path.at(index));
-    if (index == node_addresses_along_path.size() - 1) {
-      pkt->setLAU_req_destAddr(-1);
+    if (index == 0) {
+      pkt->setLAU_destAddr_left(-1);
     } else {
-      pkt->setLAU_req_destAddr(node_addresses_along_path.at(index + 1));
+      pkt->setLAU_destAddr_left(node_addresses_along_path.at(index - 1));
+    }
+    if (index == node_addresses_along_path.size() - 1) {
+      pkt->setLAU_destAddr_right(-1);
+    } else {
+      pkt->setLAU_destAddr_right(node_addresses_along_path.at(index + 1));
     }
     pkt->setRuleSet_id(ruleset_id);
     send(pkt, "RouterPort$o");
   }
-}
-
-void RuleEngine::sendLinkAllocationUpdateDecisionRequest(InternalConnectionTeardownMessage *msg) {
-  LinkAllocationUpdateDecisionRequest *pkt = new LinkAllocationUpdateDecisionRequest("LinkAllocationUpdateDecisionRequest");
-  pkt->setSrcAddr(msg->getLAU_req_srcAddr());
-  pkt->setDestAddr(msg->getLAU_req_destAddr());
-  pkt->setCurrentRuleSet_id(msg->getRuleSet_id());
-  pkt->setOffered_ruleset_idsArraySize(runtimes.size());
-  for (auto it = runtimes.begin(); it != runtimes.end(); it++) {
-    if (it->ruleset.id == msg->getRuleSet_id()) {
-      continue;
-    } else {
-      pkt->setOfferedRuleSet_ids(it - runtimes.begin(), it->ruleset.id);
-    }
-  }
-  send(pkt, "RouterPort$o");
-}
-
-void RuleEngine::sendLinkAllocationUpdateDecisionResponse(LinkAllocationUpdateDecisionRequest *msg) {
-  LinkAllocationUpdateDecisionResponse *pkt = new LinkAllocationUpdateDecisionResponse("LinkAllocationUpdateDecisionResponse");
-  pkt->setSrcAddr(msg->getDestAddr());
-  pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
-  pkt->setNegotiatedRuleset_id(msg->getOfferedRuleSet_ids(0));
-  send(pkt, "RouterPort$o");
-}
-
-void RuleEngine::sendRejectLinkAllocationUpdateDecisionRequest(LinkAllocationUpdateDecisionRequest *msg) {
-  RejectLinkAllocationUpdateDecisionRequest *pkt = new RejectLinkAllocationUpdateDecisionRequest("RejectLinkAllocationUpdateDecisionRequest");
-  pkt->setSrcAddr(msg->getDestAddr());
-  pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
-  send(pkt, "RouterPort$o");
-}
-
-void RuleEngine::sendLinkReleaseRequest(RejectLinkAllocationUpdateDecisionRequest *msg) {
-  LinkReleaseRequest *pkt = new LinkReleaseRequest("LinkReleaseRequest");
-  pkt->setSrcAddr(msg->getDestAddr());
-  pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
-  send(pkt, "RouterPort$o");
-}
-
-void RuleEngine::sendLinkReleaseResponse(LinkReleaseRequest *msg) {
-  LinkReleaseResponse *pkt = new LinkReleaseResponse("LinkReleaseResponse");
-  pkt->setSrcAddr(msg->getDestAddr());
-  pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setCurrentRuleSet_id(msg->getCurrentRuleSet_id());
-  send(pkt, "RouterPort$o");
-}
-
-void RuleEngine::sendBarrierMessages(LinkAllocationUpdateDecisionResponse *msg, unsigned long ruleset_id) {
-  auto sequence_number = 0;
-  for (auto qnic_address : ruleset_id_qnic_addresses_map[ruleset_id]) {
-    auto qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, qnic_address, ruleset_id);
-    for (IQubitRecord *qubit_record : qubit_record_list) {
-      BarrierMessage *pkt = new BarrierMessage("BarrierMessage");
-      pkt->setSrcAddr(msg->getDestAddr());
-      pkt->setDestAddr(msg->getSrcAddr());
-      pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleSet_id());
-      pkt->setQubitRecord(qubit_record);
-      pkt->setSequence_number(sequence_number);
-      pkt->setIs_sender(true);
-      if (sequence_number == qubit_record_list.size() - 1) {
-        pkt->setIs_last(true);
-      } else {
-        pkt->setIs_last(false);
-      }
-      send(pkt, "RouterPort$o");
-      sequence_number += 1;
-    }
-  }
-}
-
-void RuleEngine::sendBarrierMessage(LinkAllocationUpdateDecisionResponse *msg, IQubitRecord *qubit_record, int sequence_number, bool is_last) {
-  BarrierMessage *pkt = new BarrierMessage("BarrierMessage");
-  pkt->setSrcAddr(msg->getDestAddr());
-  pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setNegotiatedRuleset_id(msg->getNegotiatedRuleSet_id());
-  pkt->setQubitRecord(qubit_record);
-  pkt->setSequence_number(sequence_number);
-  pkt->setIs_sender(true);
-  pkt->setIs_last(is_last);
-  send(pkt, "RouterPort$o");
 }
 
 void RuleEngine::sendBarrierMessageAck(BarrierMessage *msg) {
