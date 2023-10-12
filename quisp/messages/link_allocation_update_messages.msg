@@ -3,24 +3,24 @@ import base_messages;
 namespace quisp::messages;
 
 packet LinkAllocationUpdateRequest extends Header {
-    int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
-    int destAddr @setter(setDestAddr) @getter(getDestAddr);
-    unsigned long current_ruleset_id @setter(setCurrentRuleSet_id) @getter(getCurrentRuleSet_id);
-    unsigned long negotiated_ruleset_id @setter(setNegotiatedRuleSet_id) @getter(getNegotiatedRuleSet_id); 
+  int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
+  int destAddr @setter(setDestAddr) @getter(getDestAddr);
+  unsigned long stack_of_CurrentRulesetIDs[];
+  unsigned long stack_of_NextRulesetIDs[];
+  int random_number; 
 }
 
 packet RejectLinkAllocationUpdateRequest extends Header {
-    int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
-    int destAddr @setter(setDestAddr) @getter(getDestAddr);
-    unsigned long current_ruleset_id @setter(setCurrentRuleSet_id) @getter(getCurrentRuleSet_id);
-    unsigned long negotiated_ruleset_id @setter(setNegotiatedRuleSet_id) @getter(getNegotiatedRuleSet_id); 
+  int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
+  int destAddr @setter(setDestAddr) @getter(getDestAddr);
 }
 
 packet LinkAllocationUpdateResponse extends Header {
   int srcAddr @setter(setSrcAddr) @getter(getSrcAddr);
   int destAddr @setter(setDestAddr) @getter(getDestAddr);
-  unsigned long current_ruleset_id @setter(setCurrentRuleSet_id) @getter(getCurrentRuleSet_id);
-  unsigned long negotiated_ruleset_id @setter(setNegotiatedRuleSet_id) @getter(getNegotiatedRuleSet_id);
+  unsigned long stack_of_CurrentRulesetIDs[];
+  unsigned long stack_of_NextRulesetIDs[];
+  int random_number; 
 }
 
 
