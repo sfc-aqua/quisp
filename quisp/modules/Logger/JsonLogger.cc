@@ -157,8 +157,18 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << "\"msg_type\": \"LinkAllocationUpdateRequest\"";
     os << ", \"dest_addr\": " << req->getDestAddr();
     os << ", \"src_addr\": " << req->getSrcAddr();
-    os << ", \"current_ruleset_id\": " << req->getCurrentRuleSet_id();
-    os << ", \"negotiated_ruleset_id\": " << req->getNegotiatedRuleSet_id();
+    os << ", \"stack_of_current_ruleset_ids\": [";
+    for (int i = 0; i < req->getStack_of_CurrentRulesetIDsArraySize(); i++) {
+      if (i != 0) os << ", ";
+      os << req->getStack_of_CurrentRulesetIDs(i);
+    }
+    os << "]";
+    os << ", \"stack_of_next_ruleset_ids\": [";
+    for (int i = 0; i < req->getStack_of_NextRulesetIDsArraySize(); i++) {
+      if (i != 0) os << ", ";
+      os << req->getStack_of_NextRulesetIDs(i);
+    }
+    os << "]";
     return os.str();
   }
 
@@ -167,8 +177,18 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << "\"msg_type\": \"LinkAllocationUpdateResponse\"";
     os << ", \"dest_addr\": " << req->getDestAddr();
     os << ", \"src_addr\": " << req->getSrcAddr();
-    os << ", \"current_ruleset_id\": " << req->getCurrentRuleSet_id();
-    os << ", \"negotiated_ruleset_id\": " << req->getNegotiatedRuleSet_id();
+    os << ", \"stack_of_current_ruleset_ids\": [";
+    for (int i = 0; i < req->getStack_of_CurrentRulesetIDsArraySize(); i++) {
+      if (i != 0) os << ", ";
+      os << req->getStack_of_CurrentRulesetIDs(i);
+    }
+    os << "]";
+    os << ", \"stack_of_next_ruleset_ids\": [";
+    for (int i = 0; i < req->getStack_of_NextRulesetIDsArraySize(); i++) {
+      if (i != 0) os << ", ";
+      os << req->getStack_of_NextRulesetIDs(i);
+    }
+    os << "]";
     return os.str();
   }
 
