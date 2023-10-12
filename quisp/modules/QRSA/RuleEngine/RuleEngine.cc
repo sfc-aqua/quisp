@@ -297,12 +297,21 @@ void RuleEngine::sendBarrierMessageAck(BarrierMessage *msg) {
   send(pkt, "RouterPort$o");
 }
 
-void RuleEngine::sendLinkAllocationUpdateRequest(BarrierMessage *msg) {
-  LinkAllocationUpdateRequest *pkt = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
-  pkt->setSrcAddr(msg->getDestAddr());
-  pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
-  send(pkt, "RouterPort$o");
+void RuleEngine::sendLinkAllocationUpdateRequest(InternalConnectionTeardownMessage *msg) {
+  if (msg->getLAU_destAddr_left() != -1) {
+    LinkAllocationUpdateRequest *pkt1 = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
+    pkt1->setSrcAddr(msg->getDestAddr());
+    pkt1->setDestAddr(msg->getLAU_destAddr_left());
+    pkt1->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
+    send(pkt1, "RouterPort$o");
+  }
+  if (msg->getLAU_destAddr_right() != -1) {
+    LinkAllocationUpdateRequest *pkt2 = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
+    pkt2->setSrcAddr(msg->getDestAddr());
+    pkt2->setDestAddr(msg->getLAU_destAddr_right());
+    pkt2->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
+    send(pkt2, "RouterPort$o");
+  }
 }
 
 void RuleEngine::sendLinkAllocationUpdateResponse(LinkAllocationUpdateRequest *msg) {
