@@ -137,36 +137,6 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     return os.str();
   }
 
-  if (auto* req = dynamic_cast<const quisp::messages::LinkAllocationUpdateDecisionRequest*>(msg)) {
-    std::stringstream os;
-    os << "\"msg_type\": \"LinkAllocationUpdateDecisionRequest\"";
-    os << ", \"dest_addr\": " << req->getDestAddr();
-    os << ", \"src_addr\": " << req->getSrcAddr();
-    os << ", \"current_ruleset_id\": " << req->getCurrentRuleSet_id();
-    for (auto i = 0; i < req->getOffered_ruleset_idsArraySize(); i++) {
-      os << ", \"offered_ruleset_id\": " << req->getOfferedRuleSet_ids(i);
-    }
-    return os.str();
-  }
-
-  if (auto* req = dynamic_cast<const quisp::messages::RejectLinkAllocationUpdateDecisionRequest*>(msg)) {
-    std::stringstream os;
-    os << "\"msg_type\": \"RejectLinkAllocationUpdateDecisionRequest\"";
-    os << ", \"dest_addr\": " << req->getDestAddr();
-    os << ", \"src_addr\": " << req->getSrcAddr();
-    return os.str();
-  }
-
-  if (auto* req = dynamic_cast<const quisp::messages::LinkAllocationUpdateDecisionResponse*>(msg)) {
-    std::stringstream os;
-    os << "\"msg_type\": \"LinkAllocationUpdateDecisionResponse\"";
-    os << ", \"dest_addr\": " << req->getDestAddr();
-    os << ", \"src_addr\": " << req->getSrcAddr();
-    os << ", \"current_ruleset_id\": " << req->getCurrentRuleSet_id();
-    os << ", \"negotiated_ruleset_id\": " << req->getNegotiatedRuleSet_id();
-    return os.str();
-  }
-
   if (auto* req = dynamic_cast<const quisp::messages::BarrierMessage*>(msg)) {
     std::stringstream os;
     os << "\"msg_type\": \"BarrierMessage\"";
