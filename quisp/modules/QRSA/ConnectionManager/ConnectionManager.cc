@@ -224,8 +224,8 @@ void ConnectionManager::storeInternalConnectionTeardownMessage(ConnectionTeardow
   pk_internal->setActual_destAddr(my_address);
   pk_internal->setKind(5);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  pk_internal->setLAU_req_srcAddr(pk->getLAU_req_srcAddr());
-  pk_internal->setLAU_req_destAddr(pk->getLAU_req_destAddr());
+  pk_internal->setLAU_destAddr_left(pk->getLAU_destAddr_left());
+  pk_internal->setLAU_destAddr_right(pk->getLAU_destAddr_right());
   pk_internal->setStack_of_QNICAddressesArraySize(reserved_qnics.size());
   for (auto index = 0; index < reserved_qnics.size(); index++) {
     pk_internal->setStack_of_QNICAddresses(index, reserved_qnics.at(index));
