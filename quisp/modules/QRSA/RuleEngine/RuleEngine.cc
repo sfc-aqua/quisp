@@ -420,8 +420,6 @@ void RuleEngine::executeAllRuleSets() {
   }
 }
 
-bool RuleEngine::isSenderOfLAURequest(int index) { return index % 2 == 0; }
-
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationary_qubit_address"));
   realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
