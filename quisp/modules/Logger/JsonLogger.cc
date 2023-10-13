@@ -137,6 +137,20 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     return os.str();
   }
 
+  if (auto* req = dynamic_cast<const quisp::messages::InternalNeighborAddressesMessage*>(msg)) {
+    std::stringstream os;
+    os << "\"msg_type\": \"InternalNeighborAddressesMessage\"";
+    os << ", \"dest_addr\": " << req->getDestAddr();
+    os << ", \"src_addr\": " << req->getSrcAddr();
+    os << ", \"stack_of_qnode_indices\": [";
+    for (int i = 0; i < req->getStack_of_NeighboringQNodeIndicesArraySize(); i++) {
+      if (i != 0) os << ", ";
+      os << req->getStack_of_NeighboringQNodeIndices(i);
+    }
+    os << "]";
+    return os.str();
+  }
+
   if (auto* req = dynamic_cast<const quisp::messages::BarrierMessage*>(msg)) {
     std::stringstream os;
     os << "\"msg_type\": \"BarrierMessage\"";
@@ -149,20 +163,6 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << ", \"sequence_number\": " << req->getSequence_number();
     os << ", \"is_sender\": " << req->getIs_sender();
     os << ", \"is_last\": " << req->getIs_last();
-    return os.str();
-  }
-
-  if (auto* req = dynamic_cast<const quisp::messages::LinkAllocationUpdateMessage*>(msg)) {
-    std::stringstream os;
-    os << "\"msg_type\": \"LinkAllocationUpdateMessage\"";
-    os << ", \"dest_addr\": " << req->getDestAddr();
-    os << ", \"src_addr\": " << req->getSrcAddr();
-    os << ", \"stack_of_active_link_allocations\": [";
-    for (int i = 0; i < req->getStack_of_ActiveLinkAllocationsArraySize(); i++) {
-      if (i != 0) os << ", ";
-      os << req->getStack_of_ActiveLinkAllocations(i);
-    }
-    os << "]";
     return os.str();
   }
 
