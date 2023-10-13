@@ -335,7 +335,7 @@ void RuleEngine::sendLinkAllocationUpdateMessageForConnectionSetup(InternalNeigh
   std::vector<int> neighbor_addresses;
   auto num_neighbors = msg->getStack_of_NeighboringQNodeIndicesArraySize();
   for (auto i = 0; i < num_neighbors; i++) {
-    neighbor_addresses.push_back(msg->getStack_of_NeighboringQNodeIndices.at(i));
+    neighbor_addresses.push_back(msg->getStack_of_NeighboringQNodeIndices(i));
   }
 
   auto ruleset_id = msg->getRuleSet_id();
@@ -343,7 +343,7 @@ void RuleEngine::sendLinkAllocationUpdateMessageForConnectionSetup(InternalNeigh
 
   for (auto neighbor_address : neighbor_addresses) {
     LinkAllocationUpdateMessage *pkt = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
-    pkt->setSrcAddr(my_address);
+    pkt->setSrcAddr(parentAddress);
     pkt->setDestAddr(neighbor_address);
     pkt->setStack_of_ActiveLinkAllocationsArraySize(neighbor_addresses.size());
     for (auto i = 0; i < neighbor_addresses.size(); i++) {
@@ -356,7 +356,7 @@ void RuleEngine::sendLinkAllocationUpdateMessageForConnectionSetup(InternalNeigh
 
 std::vector<unsigned long long> RuleEngine::getActiveLinkAllcations() {
   std::vector<unsigned long long> active_link_allocations;
-  for (it = runtimes.begins(); it = runtimes.end(); ++it) {
+  for (auto it = runtimes.begin(); it != runtimes.end(); ++it) {
     active_link_allocations.push_back(it->ruleset.id);
   }
   return active_link_allocations;
