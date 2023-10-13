@@ -331,7 +331,36 @@ void RuleEngine::respondToLinkAllocationUpdateMessage(LinkAllocationUpdateMessag
   send(pkt, "RouterPort$o");
 }
 
-void RuleEngine::sendLinkAllocationUpdateMessageForConnectionSetup(InternalNeighborAddressesMessage *msg) {}
+void RuleEngine::sendLinkAllocationUpdateMessageForConnectionSetup(InternalNeighborAddressesMessage *msg) {
+  std::vector<int> neighbor_addresses;
+  auto num_neighbors = msg->getStack_of_NeighboringQNodeIndicesArraySize();
+  for (auto i = 0; i < num_neighbors; i++) {
+    neighbor_addresses.push_back(msg->getStack_of_NeighboringQNodeIndices.at(i));
+  }
+
+  auto ruleset_id = msg->getRuleSet_id();
+  auto active_link_allocations = getActiveLinkAllcations();
+
+  for (auto neighbor_address : neighbor_addresses) {
+    LinkAllocationUpdateMessage *pkt = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
+    pkt->setSrcAddr(my_address);
+    pkt->setDestAddr(neighbor_address);
+    pkt->setStack_of_ActiveLinkAllocationsArraySize(neighbor_addresses.size());
+    for (auto i = 0; i < neighbor_addresses.size(); i++) {
+      pkt->setStack_of_ActiveLinkAllocations(i, neighbor_addresses.at(i));
+    }
+    pkt->setRandom_number(rand());
+    send(pkt, "RouterPort$o");
+  }
+}
+
+std::vector<unsigned long long> RuleEngine::getActiveLinkAllcations() {
+  std::vector<unsigned long long> active_link_allocations;
+  for (it = runtimes.begins(); it = runtimes.end(); ++it) {
+    active_link_allocations.push_back(it->ruleset.id);
+  }
+  return active_link_allocations;
+}
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
 // Allocates those resources to a particular ruleset, from top to bottom (all of it).
