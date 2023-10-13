@@ -117,11 +117,7 @@ void Router::handleMessage(cMessage *msg) {
     send(pk, "rePort$o");
     return;
   } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateMessage *>(msg)) {
-    bubble("Link Allocation Update Request packet received");
-    send(pk, "rePort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateMessage *>(msg)) {
-    bubble("Link Allocation Update Response packet received");
+    bubble("Link Allocation Update Message packet received");
     send(pk, "rePort$o");
     return;
   } else if (dest_addr == my_address && dynamic_cast<SwappingResult *>(msg)) {
