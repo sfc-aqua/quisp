@@ -137,12 +137,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
     for (auto index = 0; index < pkt->getNode_addresses_along_pathArraySize(); index++) {
       ruleset_id_node_addresses_along_path_map[ruleset_id].push_back(pkt->getNode_addresses_along_path(index));
     }
+  } else if (auto *pkt = dynamic_cast<InternalNeighborAddressesMessage *>(msg)) {
+    handleInternalNeighborAddressesMessage(pkt);
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateMessage *>(msg)) {
-    sendLinkAllocationUpdateMessage(pkt);
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateMessage *>(msg)) {
-    ;
+    respondToLinkAllocationUpdate(pkt);
   }
   for (int i = 0; i < number_of_qnics; i++) {
     ResourceAllocation(QNIC_E, i);
@@ -288,7 +288,7 @@ void RuleEngine::sendBarrierMessageAck(BarrierMessage *msg) {
   send(pkt, "RouterPort$o");
 }
 
-void RuleEngine::sendLinkAllocationUpdateMessage(InternalConnectionTeardownMessage *msg) {
+void RuleEngine::sendLinkAllocationUpdateMessageForConnectionTeardown(InternalConnectionTeardownMessage *msg) {
   if (msg->getLAU_destAddr_left() != -1) {
     LinkAllocationUpdateMessage *pkt1 = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
     pkt1->setSrcAddr(msg->getDestAddr());
@@ -317,7 +317,7 @@ void RuleEngine::sendLinkAllocationUpdateMessage(InternalConnectionTeardownMessa
   }
 }
 
-void RuleEngine::sendLinkAllocationUpdateMessage(LinkAllocationUpdateMessage *msg) {
+void RuleEngine::respondToLinkAllocationUpdate(LinkAllocationUpdateMessage *msg) {
   LinkAllocationUpdateMessage *pkt = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
@@ -330,6 +330,8 @@ void RuleEngine::sendLinkAllocationUpdateMessage(LinkAllocationUpdateMessage *ms
   pkt->setRandom_number(rand());
   send(pkt, "RouterPort$o");
 }
+
+void RuleEngine::sendLinkAllocationUpdateMessageForConnectionSetup(InternalNeighborAddressesMessage *msg) {}
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
 // Allocates those resources to a particular ruleset, from top to bottom (all of it).

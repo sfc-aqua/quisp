@@ -89,8 +89,9 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void addAllocatedQNICs(messages::InternalConnectionTeardownMessage *msg);
   void sendConnectionTeardownMessageForRuleSet(unsigned long ruleset_id);
   void sendBarrierMessageAck(messages::BarrierMessage *msg);
-  void sendLinkAllocationUpdateMessage(messages::InternalConnectionTeardownMessage *msg);
-  void sendLinkAllocationUpdateMessage(messages::LinkAllocationUpdateMessage *msg);
+  void sendLinkAllocationUpdateMessageForConnectionSetup(messages::InternalNeighborAddressesMessage *msg);
+  void sendLinkAllocationUpdateMessageForConnectionTeardown(messages::InternalConnectionTeardownMessage *msg);
+  void respondToLinkAllocationUpdateMessageForConnectionTeardown(messages::LinkAllocationUpdateMessage *msg);
   void executeAllRuleSets();
   void reallocateResource(int qnic_type, int qnic_index, unsigned long current_ruleset_id, unsigned long next_ruleset_id);
   std::vector<int> qnode_indices;
