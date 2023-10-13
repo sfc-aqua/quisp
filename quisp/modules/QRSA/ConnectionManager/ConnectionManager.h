@@ -73,6 +73,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   std::vector<int> available_qnics = {};
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
   std::map<unsigned long, std::vector<int>> ruleset_id_node_addresses_along_path_map;
+  std::map<unsigned long, std::vector<int>> ruleset_id_neighboring_node_addresses_map;
   bool simultaneous_es_enabled;
   bool es_with_purify = false;
   int num_remote_purification;
@@ -98,6 +99,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   void storeRuleSetForApplication(messages::ConnectionSetupResponse *pk);
   void storeRuleSet(messages::ConnectionSetupResponse *pk);
   void storeInfoAboutNodeAddressesAlongPath(messages::ConnectionSetupResponse *pk);
+  void saveNeighborsInfo(messages::ConnectionSetupResponse *pk);
 
   void initiator_reject_req_handler(messages::RejectConnectionSetupRequest *pk);
   void responder_reject_req_handler(messages::RejectConnectionSetupRequest *pk);

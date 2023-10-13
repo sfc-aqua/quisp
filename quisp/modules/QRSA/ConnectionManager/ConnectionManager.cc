@@ -333,8 +333,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
   auto rulesets = ruleset_gen.generateRuleSets(req, ruleset_id);
 
-  ruleset_id_node_addresses_along_path_map[ruleset_id] = generateNodeAddressesAlongPath(rulesets);
   std::map<int, std::pair<quisp::modules::QNIC, quisp::modules::QNIC>> qnics = generateListOfQNICs(req);
+  ruleset_id_node_addresses_along_path_map[ruleset_id] = generateNodeAddressesAlongPath(rulesets);
+  auto initiator_address = ruleset_id_node_addresses_along_path_map[ruleset_id][0];
 
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
@@ -344,6 +345,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setRuleSet_id(ruleset_id);
     pkt->setSrcAddr(my_address);
     pkt->setDestAddr(owner_address);
+    pkt->setInitiator_Addr(initiator_address);
     pkt->setActual_srcAddr(my_address);
     pkt->setActual_destAddr(owner_address);
     pkt->setApplication_type(0);
@@ -445,6 +447,31 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
 
   send(req, "RouterPort$o");
 }
+
+void ConnectionManager::saveNeighborsInfo(ConnectionSetupResponse *res) {
+  auto initiator_addr = res->getInitiator_Addr();
+  auto responder_addr = res->getSrcAddr();
+
+  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(responder_addr);
+  int inbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(initiator_addr);
+
+  auto ruleset_id = res->getRuleSet_id();
+
+  if (initiator_addr == my_address) {
+    auto outbound_info = hardware_monitor->findConnectionInfoByQnicAddr(outbound_qnic_address);
+    ruleset_id_neighboring_node_addresses_map[ruleset_id].push_back(outbound_info->neighbor_address);
+  } else if (responder_addr == my_address) {
+    auto inbound_info = hardware_monitor->findConnectionInfoByQnicAddr(inbound_qnic_address);
+    ruleset_id_neighboring_node_addresses_map[ruleset_id].push_back(inbound_info->neighbor_address);
+  } else {
+    auto outbound_info = hardware_monitor->findConnectionInfoByQnicAddr(outbound_qnic_address);
+    auto inbound_info = hardware_monitor->findConnectionInfoByQnicAddr(inbound_qnic_address);
+    ruleset_id_neighboring_node_addresses_map[ruleset_id].push_back(outbound_info->neighbor_address);
+    ruleset_id_neighboring_node_addresses_map[ruleset_id].push_back(inbound_info->neighbor_address);
+  }
+}
+
+// void ConnectionManager::storeNeightborsInfo(ConnectionSetupResponse *res) {}
 
 // This is not good way. This property should be held in qnic property.
 void ConnectionManager::reserveQnic(int qnic_address) {
