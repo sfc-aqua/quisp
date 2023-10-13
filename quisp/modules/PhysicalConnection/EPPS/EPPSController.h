@@ -45,7 +45,7 @@ class EPPSController : public cSimpleModule {
   simtime_t left_travel_time;
   simtime_t right_travel_time;
   simtime_t time_interval_between_photons;
-  double frequency;
+  double photon_emission_per_second;
   simtime_t emit_time;
   EPPSNotificationTimeout *time_out_message;
   int time_out_count;
@@ -54,7 +54,6 @@ class EPPSController : public cSimpleModule {
   // EPPS characteristics
   EntangledPhotonPairSource *epps;
   utils::ComponentProvider provider;
-  simtime_t first_notification_timer;
   EmitPhotonRequest *emit_req;
   bool emission_stopped;
 };

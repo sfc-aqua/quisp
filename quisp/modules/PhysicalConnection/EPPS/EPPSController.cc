@@ -39,7 +39,7 @@ void EPPSController::initialize() {
   emission_stopped = false;
   checkNeighborsBSACapacity();
   time_out_message = new EPPSNotificationTimeout();
-  first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
+  simtime_t first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
   scheduleAt(first_notification_timer, time_out_message);
 }
 
@@ -107,9 +107,9 @@ void EPPSController::checkNeighborsBSACapacity() {
                                               ->par("photon_detection_per_second");
   int min_photon_detection_per_second = std::min(left_photon_detection_per_second, right_photon_detection_per_second);
   time_interval_between_photons = (double)1 / (double)min_photon_detection_per_second;
-  // If the frequency is higher than the capacity of the neighbor's BSA, the time interval between photons is adjusted to the capacity of the neighbor's BSA.
-  // If not, the time interval between photons is adjusted to the frequency.
-  simtime_t pump_rate = (double)1 / (double)frequency;
+  // If the photon_emission_per_second is higher than the capacity of the neighbor's BSA, the time interval between photons is adjusted to the capacity of the neighbor's BSA.
+  // If not, the time interval between photons is adjusted to the photon_emission_per_second.
+  simtime_t pump_rate = (double)1 / (double)photon_emission_per_second;
   if (pump_rate > time_interval_between_photons) time_interval_between_photons = pump_rate;
 }
 
