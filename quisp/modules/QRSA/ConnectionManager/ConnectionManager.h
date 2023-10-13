@@ -100,6 +100,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   void storeRuleSet(messages::ConnectionSetupResponse *pk);
   void storeInfoAboutNodeAddressesAlongPath(messages::ConnectionSetupResponse *pk);
   void saveNeighborsInfo(messages::ConnectionSetupResponse *pk);
+  void storeNeightborsInfo(messages::ConnectionSetupResponse *pk);
 
   void initiator_reject_req_handler(messages::RejectConnectionSetupRequest *pk);
   void responder_reject_req_handler(messages::RejectConnectionSetupRequest *pk);

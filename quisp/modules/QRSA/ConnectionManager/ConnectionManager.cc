@@ -471,7 +471,19 @@ void ConnectionManager::saveNeighborsInfo(ConnectionSetupResponse *res) {
   }
 }
 
-// void ConnectionManager::storeNeightborsInfo(ConnectionSetupResponse *res) {}
+void ConnectionManager::storeNeightborsInfo(ConnectionSetupResponse *res) {
+  auto ruleset_id = res->getRuleSet_id();
+  auto neighboring_node_addresses = ruleset_id_neighboring_node_addresses_map[ruleset_id];
+  InternalNeighborAddressesMessage *pkt = new InternalNeighborAddressesMessage("InternalNeighborAddressesMessage");
+  pkt->setSrcAddr(my_address);
+  pkt->setDestAddr(my_address);
+  pkt->setRuleSet_id(ruleset_id);
+  pkt->setStack_of_NeighboringQNodeIndicesArraySize(neighboring_node_addresses.size());
+  for (auto i = 0; i < neighboring_node_addresses.size(); i++) {
+    pkt->setStack_of_NeighboringQNodeIndices(i, neighboring_node_addresses.at(i));
+  }
+  send(pkt, "RouterPort$o");
+}
 
 // This is not good way. This property should be held in qnic property.
 void ConnectionManager::reserveQnic(int qnic_address) {
