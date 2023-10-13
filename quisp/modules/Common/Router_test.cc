@@ -197,13 +197,6 @@ TEST_F(RouterTest, handleLinkAllocationUpdateMessage) {
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
-TEST_F(RouterTest, handleLinkAllocationUpdateMessage) {
-  auto msg = new LinkAllocationUpdateMessage;
-  msg->setDestAddr(10);
-  router->handleMessage(msg);
-  ASSERT_EQ(router->rePort->messages.size(), 1);
-}
-
 TEST_F(RouterTest, handleSwappingResult) {
   auto msg = new SwappingResult;
   msg->setDestAddr(10);
