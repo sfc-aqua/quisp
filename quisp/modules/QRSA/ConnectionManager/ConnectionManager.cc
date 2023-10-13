@@ -126,6 +126,8 @@ void ConnectionManager::handleMessage(cMessage *msg) {
       // currently, destinations are separated. (Not accumulated.)
       storeRuleSet(resp);
     }
+
+    storeNeightborsInfo(resp);
     delete msg;
     return;
   }
