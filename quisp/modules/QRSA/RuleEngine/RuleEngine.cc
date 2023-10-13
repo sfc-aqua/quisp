@@ -138,11 +138,11 @@ void RuleEngine::handleMessage(cMessage *msg) {
       ruleset_id_node_addresses_along_path_map[ruleset_id].push_back(pkt->getNode_addresses_along_path(index));
     }
   } else if (auto *pkt = dynamic_cast<InternalNeighborAddressesMessage *>(msg)) {
-    handleInternalNeighborAddressesMessage(pkt);
+    sendLinkAllocationUpdateMessageForConnectionSetup(pkt);
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateMessage *>(msg)) {
-    respondToLinkAllocationUpdate(pkt);
+    respondToLinkAllocationUpdateMessage(pkt);
   }
   for (int i = 0; i < number_of_qnics; i++) {
     ResourceAllocation(QNIC_E, i);
@@ -317,7 +317,7 @@ void RuleEngine::sendLinkAllocationUpdateMessageForConnectionTeardown(InternalCo
   }
 }
 
-void RuleEngine::respondToLinkAllocationUpdate(LinkAllocationUpdateMessage *msg) {
+void RuleEngine::respondToLinkAllocationUpdateMessage(LinkAllocationUpdateMessage *msg) {
   LinkAllocationUpdateMessage *pkt = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
