@@ -27,7 +27,7 @@ void EPPSController::finish() { std::cout << "last EPPS message that was sent " 
 
 void EPPSController::initialize() {
   epps = check_and_cast<EntangledPhotonPairSource *>(getParentModule()->getSubmodule("epps"));
-  frequency = par("frequency");
+  photon_emission_per_second = par("photon_emission_per_second");
   address = getParentModule()->par("address").intValue();
   left_addr = getExternalAdressFromPort(0);
   right_addr = getExternalAdressFromPort(1);
