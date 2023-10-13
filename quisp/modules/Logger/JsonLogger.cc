@@ -152,41 +152,29 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     return os.str();
   }
 
-  if (auto* req = dynamic_cast<const quisp::messages::LinkAllocationUpdateRequest*>(msg)) {
+  if (auto* req = dynamic_cast<const quisp::messages::LinkAllocationUpdateMessage*>(msg)) {
     std::stringstream os;
-    os << "\"msg_type\": \"LinkAllocationUpdateRequest\"";
+    os << "\"msg_type\": \"LinkAllocationUpdateMessage\"";
     os << ", \"dest_addr\": " << req->getDestAddr();
     os << ", \"src_addr\": " << req->getSrcAddr();
-    os << ", \"stack_of_current_link_allocations\": [";
+    os << ", \"stack_of_active_link_allocations\": [";
     for (int i = 0; i < req->getStack_of_ActiveLinkAllocationsArraySize(); i++) {
       if (i != 0) os << ", ";
       os << req->getStack_of_ActiveLinkAllocations(i);
-    }
-    os << "]";
-    os << ", \"stack_of_next_ruleset_ids\": [";
-    for (int i = 0; i < req->getStack_of_NextLinkAllocationsArraySize(); i++) {
-      if (i != 0) os << ", ";
-      os << req->getStack_of_NextLinkAllocations(i);
     }
     os << "]";
     return os.str();
   }
 
-  if (auto* req = dynamic_cast<const quisp::messages::LinkAllocationUpdateResponse*>(msg)) {
+  if (auto* req = dynamic_cast<const quisp::messages::LinkAllocationUpdateMessage*>(msg)) {
     std::stringstream os;
-    os << "\"msg_type\": \"LinkAllocationUpdateResponse\"";
+    os << "\"msg_type\": \"LinkAllocationUpdateMessage\"";
     os << ", \"dest_addr\": " << req->getDestAddr();
     os << ", \"src_addr\": " << req->getSrcAddr();
-    os << ", \"stack_of_current_link_allocations\": [";
+    os << ", \"stack_of_active_link_allocations\": [";
     for (int i = 0; i < req->getStack_of_ActiveLinkAllocationsArraySize(); i++) {
       if (i != 0) os << ", ";
       os << req->getStack_of_ActiveLinkAllocations(i);
-    }
-    os << "]";
-    os << ", \"stack_of_next_ruleset_ids\": [";
-    for (int i = 0; i < req->getStack_of_NextLinkAllocationsArraySize(); i++) {
-      if (i != 0) os << ", ";
-      os << req->getStack_of_NextLinkAllocations(i);
     }
     os << "]";
     return os.str();

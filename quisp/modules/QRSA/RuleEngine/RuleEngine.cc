@@ -139,19 +139,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
-    auto current_ruleset_id = pkt->getCurrentRuleSet_id();
-    auto negotiated_ruleset_id = pkt->getNegotiatedRuleSet_id();
-    for (int i = 0; i < number_of_qnics; i++) {
-      reallocateResource(QNIC_E, i, current_ruleset_id, negotiated_ruleset_id);
-    }
-    sendLinkAllocationUpdateResponse(pkt);
-  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateResponse *>(msg)) {
-    auto current_ruleset_id = pkt->getCurrentRuleSet_id();
-    auto negotiated_ruleset_id = pkt->getNegotiatedRuleSet_id();
-    for (int i = 0; i < number_of_qnics; i++) {
-      reallocateResource(QNIC_E, i, current_ruleset_id, negotiated_ruleset_id);
-    }
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateMessage *>(msg)) {
+    sendLinkAllocationUpdateMessage(pkt);
+  } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateMessage *>(msg)) {
+    ;
   }
   for (int i = 0; i < number_of_qnics; i++) {
     ResourceAllocation(QNIC_E, i);
@@ -297,32 +288,46 @@ void RuleEngine::sendBarrierMessageAck(BarrierMessage *msg) {
   send(pkt, "RouterPort$o");
 }
 
-void RuleEngine::sendLinkAllocationUpdateRequest(InternalConnectionTeardownMessage *msg) {
+void RuleEngine::sendLinkAllocationUpdateMessage(InternalConnectionTeardownMessage *msg) {
   if (msg->getLAU_destAddr_left() != -1) {
-    LinkAllocationUpdateRequest *pkt1 = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
+    LinkAllocationUpdateMessage *pkt1 = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
     pkt1->setSrcAddr(msg->getDestAddr());
     pkt1->setDestAddr(msg->getLAU_destAddr_left());
-    pkt1->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
+    pkt1->setStack_of_ActiveLinkAllocationsArraySize(runtimes.size());
+    auto index = 0;
+    for (auto it = runtimes.begin(); it < runtimes.end(); ++it) {
+      pkt1->setStack_of_ActiveLinkAllocations(index, it->ruleset.id);
+      index += 1;
+    }
+    pkt1->setRandom_number(rand());
     send(pkt1, "RouterPort$o");
   }
   if (msg->getLAU_destAddr_right() != -1) {
-    LinkAllocationUpdateRequest *pkt2 = new LinkAllocationUpdateRequest("LinkAllocationUpdateRequest");
+    LinkAllocationUpdateMessage *pkt2 = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
     pkt2->setSrcAddr(msg->getDestAddr());
-    pkt2->setDestAddr(msg->getLAU_destAddr_right());
-    pkt2->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
+    pkt2->setDestAddr(msg->getLAU_destAddr_left());
+    pkt2->setStack_of_ActiveLinkAllocationsArraySize(runtimes.size());
+    auto index = 0;
+    for (auto it = runtimes.begin(); it < runtimes.end(); ++it) {
+      pkt2->setStack_of_ActiveLinkAllocations(index, it->ruleset.id);
+      index += 1;
+    }
+    pkt2->setRandom_number(rand());
     send(pkt2, "RouterPort$o");
   }
 }
 
-void RuleEngine::sendLinkAllocationUpdateResponse(LinkAllocationUpdateRequest *msg) {
-  auto ruleset_id = msg->getNegotiatedRuleSet_id();
-  for (auto qnic_address : ruleset_id_qnic_addresses_map[ruleset_id]) {
-    auto qubit_record_list = getAllocatedResourceToRuleSet(QNIC_E, qnic_address, ruleset_id);
-  }
-  LinkAllocationUpdateResponse *pkt = new LinkAllocationUpdateResponse("LinkAllocationUpdateResponse");
+void RuleEngine::sendLinkAllocationUpdateMessage(LinkAllocationUpdateMessage *msg) {
+  LinkAllocationUpdateMessage *pkt = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
-  pkt->setNegotiatedRuleSet_id(msg->getNegotiatedRuleSet_id());
+  pkt->setStack_of_ActiveLinkAllocationsArraySize(runtimes.size());
+  auto index = 0;
+  for (auto it = runtimes.begin(); it < runtimes.end(); ++it) {
+    pkt->setStack_of_ActiveLinkAllocations(index, it->ruleset.id);
+    index += 1;
+  }
+  pkt->setRandom_number(rand());
   send(pkt, "RouterPort$o");
 }
 

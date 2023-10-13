@@ -116,11 +116,11 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Barrier Message packet received");
     send(pk, "rePort$o");
     return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateRequest *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateMessage *>(msg)) {
     bubble("Link Allocation Update Request packet received");
     send(pk, "rePort$o");
     return;
-  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateResponse *>(msg)) {
+  } else if (dest_addr == my_address && dynamic_cast<LinkAllocationUpdateMessage *>(msg)) {
     bubble("Link Allocation Update Response packet received");
     send(pk, "rePort$o");
     return;

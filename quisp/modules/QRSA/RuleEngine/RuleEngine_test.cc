@@ -324,7 +324,7 @@ TEST_F(RuleEngineTest, sendBarrierMessageAck) {
   EXPECT_EQ(pkt->getIs_sender(), false);
 }
 
-TEST_F(RuleEngineTest, sendLinkAllocationUpdateRequest) {
+TEST_F(RuleEngineTest, sendLinkAllocationUpdateMessage) {
   auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon();
   auto* hardware_monitor = new MockHardwareMonitor();
@@ -345,17 +345,17 @@ TEST_F(RuleEngineTest, sendLinkAllocationUpdateRequest) {
   msg->setQubitRecord(qubit_record);
   msg->setSequence_number(1);
 
-  rule_engine->sendLinkAllocationUpdateRequest(msg);
+  rule_engine->sendLinkAllocationUpdateMessage(msg);
   auto gate = rule_engine->toRouterGate;
   EXPECT_EQ(gate->messages.size(), 1);
 
-  auto pkt = dynamic_cast<LinkAllocationUpdateRequest*>(gate->messages[0]);
+  auto pkt = dynamic_cast<LinkAllocationUpdateMessage*>(gate->messages[0]);
   EXPECT_EQ(pkt->getSrcAddr(), 2);
   EXPECT_EQ(pkt->getDestAddr(), 1);
   EXPECT_EQ(pkt->getNegotiatedRuleSet_id(), 111);
 }
 
-TEST_F(RuleEngineTest, sendLinkAllocationUpdateResponse) {
+TEST_F(RuleEngineTest, sendLinkAllocationUpdateMessage) {
   auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon();
   auto* hardware_monitor = new MockHardwareMonitor();
@@ -364,16 +364,16 @@ TEST_F(RuleEngineTest, sendLinkAllocationUpdateResponse) {
   sim->setContext(rule_engine);
   rule_engine->callInitialize();
 
-  auto* msg = new LinkAllocationUpdateRequest();
+  auto* msg = new LinkAllocationUpdateMessage();
   msg->setSrcAddr(1);
   msg->setDestAddr(2);
   msg->setNegotiatedRuleSet_id(111);
 
-  rule_engine->sendLinkAllocationUpdateResponse(msg);
+  rule_engine->sendLinkAllocationUpdateMessage(msg);
   auto gate = rule_engine->toRouterGate;
   EXPECT_EQ(gate->messages.size(), 1);
 
-  auto pkt = dynamic_cast<LinkAllocationUpdateResponse*>(gate->messages[0]);
+  auto pkt = dynamic_cast<LinkAllocationUpdateMessage*>(gate->messages[0]);
   EXPECT_EQ(pkt->getSrcAddr(), 2);
   EXPECT_EQ(pkt->getDestAddr(), 1);
   EXPECT_EQ(pkt->getNegotiatedRuleSet_id(), 111);

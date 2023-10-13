@@ -190,15 +190,15 @@ TEST_F(RouterTest, handleBarrierMessage) {
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
-TEST_F(RouterTest, handleLinkAllocationUpdateRequest) {
-  auto msg = new LinkAllocationUpdateRequest;
+TEST_F(RouterTest, handleLinkAllocationUpdateMessage) {
+  auto msg = new LinkAllocationUpdateMessage;
   msg->setDestAddr(10);
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
-TEST_F(RouterTest, handleLinkAllocationUpdateResponse) {
-  auto msg = new LinkAllocationUpdateResponse;
+TEST_F(RouterTest, handleLinkAllocationUpdateMessage) {
+  auto msg = new LinkAllocationUpdateMessage;
   msg->setDestAddr(10);
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
