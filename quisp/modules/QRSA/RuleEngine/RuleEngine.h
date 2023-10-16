@@ -115,6 +115,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   runtime::RuntimeManager runtimes;
   std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
+  std::unordered_map<unsigned long, std::vector<unsigned long>> node_address_active_link_allocation_map;
 };
 
 Define_Module(RuleEngine);
