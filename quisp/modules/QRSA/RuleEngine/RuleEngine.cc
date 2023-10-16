@@ -83,7 +83,7 @@ void RuleEngine::initialize() {
 void RuleEngine::handleMessage(cMessage *msg) {
   logger->logPacket("handleRuleEngineMessage", msg);
 
-  executeAllRuleSets();  // New resource added to QNIC with qnic_type qnic_index.
+  // executeAllRuleSets();  // New resource added to QNIC with qnic_type qnic_index.
 
   if (auto *notification_packet = dynamic_cast<BSMTimingNotification *>(msg)) {
     if (auto *bsa_results = dynamic_cast<CombinedBSAresults *>(msg)) {
@@ -116,6 +116,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
+    std::cout << "Link Tomography: " << ruleset.id << std::endl;
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
     handlePurificationResult(pkt);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
@@ -142,7 +143,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<InternalConnectionTeardownMessage *>(msg)) {
     handleConnectionTeardownMessage(pkt);
   } else if (auto *pkt = dynamic_cast<LinkAllocationUpdateMessage *>(msg)) {
-    respondToLinkAllocationUpdateMessage(pkt);
+    auto is_sender = pkt->getIs_sender();
+    if (is_sender) {
+      respondToLinkAllocationUpdateMessage(pkt);
+    }
   }
   for (int i = 0; i < number_of_qnics; i++) {
     ResourceAllocation(QNIC_E, i);
@@ -154,7 +158,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ResourceAllocation(QNIC_RP, i);
   }
 
-  executeAllRuleSets();
+  // executeAllRuleSets();
   delete msg;
 }
 
@@ -321,6 +325,7 @@ void RuleEngine::respondToLinkAllocationUpdateMessage(LinkAllocationUpdateMessag
   LinkAllocationUpdateMessage *pkt = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
   pkt->setSrcAddr(msg->getDestAddr());
   pkt->setDestAddr(msg->getSrcAddr());
+  pkt->setIs_sender(false);
   pkt->setStack_of_ActiveLinkAllocationsArraySize(runtimes.size());
   auto index = 0;
   for (auto it = runtimes.begin(); it < runtimes.end(); ++it) {
@@ -345,6 +350,7 @@ void RuleEngine::sendLinkAllocationUpdateMessageForConnectionSetup(InternalNeigh
     LinkAllocationUpdateMessage *pkt = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
     pkt->setSrcAddr(parentAddress);
     pkt->setDestAddr(neighbor_address);
+    pkt->setIs_sender(true);
     pkt->setStack_of_ActiveLinkAllocationsArraySize(neighbor_addresses.size());
     for (auto i = 0; i < neighbor_addresses.size(); i++) {
       pkt->setStack_of_ActiveLinkAllocations(i, neighbor_addresses.at(i));
