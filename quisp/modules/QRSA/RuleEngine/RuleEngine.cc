@@ -344,7 +344,10 @@ void RuleEngine::sendLinkAllocationUpdateMessageForConnectionSetup(InternalNeigh
   }
 
   auto ruleset_id = msg->getRuleSet_id();
-  auto active_link_allocations = getActiveLinkAllcations();
+  std::vector<unsigned long long> active_link_allocations;
+  for (auto it = runtimes.begin(); it != runtimes.end(); ++it) {
+    active_link_allocations.push_back(it->ruleset.id);
+  }
 
   for (auto neighbor_address : neighbor_addresses) {
     LinkAllocationUpdateMessage *pkt = new LinkAllocationUpdateMessage("LinkAllocationUpdateMessage");
@@ -358,14 +361,6 @@ void RuleEngine::sendLinkAllocationUpdateMessageForConnectionSetup(InternalNeigh
     pkt->setRandom_number(rand());
     send(pkt, "RouterPort$o");
   }
-}
-
-std::vector<unsigned long long> RuleEngine::getActiveLinkAllcations() {
-  std::vector<unsigned long long> active_link_allocations;
-  for (auto it = runtimes.begin(); it != runtimes.end(); ++it) {
-    active_link_allocations.push_back(it->ruleset.id);
-  }
-  return active_link_allocations;
 }
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
