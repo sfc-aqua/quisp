@@ -354,9 +354,9 @@ void RuleEngine::sendLinkAllocationUpdateMessageForConnectionSetup(InternalNeigh
     pkt->setSrcAddr(parentAddress);
     pkt->setDestAddr(neighbor_address);
     pkt->setIs_sender(true);
-    pkt->setStack_of_ActiveLinkAllocationsArraySize(neighbor_addresses.size());
-    for (auto i = 0; i < neighbor_addresses.size(); i++) {
-      pkt->setStack_of_ActiveLinkAllocations(i, neighbor_addresses.at(i));
+    pkt->setStack_of_ActiveLinkAllocationsArraySize(active_link_allocations.size());
+    for (auto i = 0; i < active_link_allocations.size(); i++) {
+      pkt->setStack_of_ActiveLinkAllocations(i, active_link_allocations.at(i));
     }
     pkt->setRandom_number(rand());
     send(pkt, "RouterPort$o");
