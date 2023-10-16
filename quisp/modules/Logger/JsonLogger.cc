@@ -171,12 +171,14 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     os << "\"msg_type\": \"LinkAllocationUpdateMessage\"";
     os << ", \"dest_addr\": " << req->getDestAddr();
     os << ", \"src_addr\": " << req->getSrcAddr();
+    os << ", \"is_sender\": " << req->getIs_sender();
     os << ", \"stack_of_active_link_allocations\": [";
     for (int i = 0; i < req->getStack_of_ActiveLinkAllocationsArraySize(); i++) {
       if (i != 0) os << ", ";
       os << req->getStack_of_ActiveLinkAllocations(i);
     }
     os << "]";
+    os << ", \"random_number\": " << req->getRandom_number();
     return os.str();
   }
 
