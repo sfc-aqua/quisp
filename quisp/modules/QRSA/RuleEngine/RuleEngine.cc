@@ -116,7 +116,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
-    std::cout << "Link Tomography: " << ruleset.id << std::endl;
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
     handlePurificationResult(pkt);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
