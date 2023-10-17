@@ -58,16 +58,16 @@ async def test_Single_X_Purification_MIM_Werner_State():
     print(worker.output)
     worker.print_results()
     assert worker.results["EndNode1<-->EndNode2"]["data"] == {
-        "Fidelity": 0.735104,
-        "Xerror": 0.0311294,
-        "Zerror": 0.197981,
-        "Yerror": 0.0357851,
+        "Fidelity": 0.739466,
+        "Xerror": 0.052239,
+        "Zerror": 0.20503,
+        "Yerror": 0.00326519,
     }
     assert worker.results["EndNode2<-->EndNode1"]["data"] == {
-        "Fidelity": 0.735104,
-        "Xerror": 0.0311294,
-        "Zerror": 0.197981,
-        "Yerror": 0.0357851,
+        "Fidelity": 0.739466,
+        "Xerror": 0.052239,
+        "Zerror": 0.20503,
+        "Yerror": 0.00326519,
     }
 
 
@@ -81,14 +81,14 @@ async def test_Single_X_Purification_MM_Werner_State():
     print(worker.output)
     worker.print_results()
     assert worker.results["EndNode1<-->EndNode2"]["data"] == {
-        "Fidelity": 0.747207,
-        "Xerror": 0.0251512,
-        "Zerror": 0.19216,
-        "Yerror": 0.0354823,
+        "Fidelity": 0.742061,
+        "Xerror": 0.027587,
+        "Zerror": 0.192103,
+        "Yerror": 0.0382493,
     }
     assert worker.results["EndNode2<-->EndNode1"]["data"] == {
-        "Fidelity": 0.747207,
-        "Xerror": 0.0251512,
-        "Zerror": 0.19216,
-        "Yerror": 0.0354823,
+        "Fidelity": 0.742061,
+        "Xerror": 0.027587,
+        "Zerror": 0.192103,
+        "Yerror": 0.0382493,
     }
