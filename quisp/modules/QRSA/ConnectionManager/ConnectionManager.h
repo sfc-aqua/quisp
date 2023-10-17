@@ -8,6 +8,7 @@
 #pragma once
 
 #include <omnetpp.h>
+#include <memory>
 #include <queue>
 #include <vector>
 
@@ -20,6 +21,7 @@
 #include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
 #include <rules/Action.h>
 #include <utils/ComponentProvider.h>
+#include <utils/HelperFunctions.h>
 
 struct SwappingConfig {
   int left_partner;
@@ -72,7 +74,6 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   double threshold_fidelity;
   rules::PurType purification_type;
   IRoutingDaemon *routing_daemon;
-  IHardwareMonitor *hardware_monitor;
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;
@@ -100,8 +101,6 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   bool isQnicBusy(int qnic_address);
 
   static rules::PurType parsePurType(const std::string &pur_type);
-
-  unsigned long createUniqueId() override;
 };
 
 }  // namespace quisp::modules

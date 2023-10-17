@@ -8,12 +8,13 @@
 #include "RuleSetGenerator.h"
 #include "messages/classical_messages.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
+#include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
 #include "test_utils/TestUtilFunctions.h"
 
 namespace {
 using json = nlohmann::json;
 using OriginalRSG = quisp::modules::ruleset_gen::RuleSetGenerator;
-using quisp::modules::NULL_CONNECTION_SETUP_INFO;
+using quisp::modules::NULL_QUANTUM_INTERFACE_INFO;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_R;
 
@@ -101,7 +102,7 @@ TEST_F(RuleSetGeneratorTest, Simple) {
   req->setStack_of_QNodeIndexes(0, 2);
   req->setStack_of_QNodeIndexes(1, 3);
   req->setStack_of_QNodeIndexes(2, 4);
-  req->setStack_of_QNICs(0, QNicPairInfo{NULL_CONNECTION_SETUP_INFO.qnic, {.type = QNIC_E, .index = 11, .address = 101}});
+  req->setStack_of_QNICs(0, QNicPairInfo{NULL_QUANTUM_INTERFACE_INFO.qnic, {.type = QNIC_E, .index = 11, .address = 101}});
   req->setStack_of_QNICs(1, QNicPairInfo{{.type = QNIC_E, .index = 12, .address = 102}, {.type = QNIC_E, .index = 13, .address = 103}});
   req->setStack_of_QNICs(2, QNicPairInfo{{.type = QNIC_E, .index = 14, .address = 104}, {.type = QNIC_E, .index = 15, .address = 105}});
   auto rulesets = rsg->generateRuleSets(req, 1234);

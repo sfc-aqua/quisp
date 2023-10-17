@@ -21,6 +21,8 @@ namespace quisp::modules::routing_daemon {
 
 // destaddr -> {self_qnic_address (unique)}
 using RoutingTable = std::map<int, int>;
+// destaddr -> QuantumInterfaceInfo (more information than qnic_address)
+using InterfaceTable = std::map<int, QuantumInterfaceInfo>;
 
 using namespace ospf;
 using namespace quisp::messages;
@@ -35,6 +37,14 @@ class RoutingDaemon : public IRoutingDaemon {
   utils::ComponentProvider provider;
   ospf::NeighborTable neighbor_table;
   LinkStateDatabase link_state_database;
+  InterfaceTable interface_table;
+
+  int num_qnic;
+  int num_qnic_r;
+  int num_qnic_rp;
+  std::map<QNIC_type, int> qnic_num_map;
+  // qnic_addr -> (qnic_type, qnic_index)
+  std::map<int, std::tuple<QNIC_type, int>> qnic_addr_map;
 
   void generateRoutingTable();
   void generateRoutingTable(cTopology *topo);
@@ -43,9 +53,21 @@ class RoutingDaemon : public IRoutingDaemon {
   void initialize(int stage) override;
   void handleMessage(cMessage *msg) override;
   int numInitStages() const override { return 3; };
+  QuantumInterfaceInfo getQuantumInterfaceInfo(int dest_addr) override;
+  QuantumInterfaceInfo prepareQuantumInterfaceInfo(cModule *qnic_module);
+
+  void prepareQnicAddrMap();
+  void resolveQuantumInterfaceInfo();
+  void prepareNeighborAddressTableWithTopologyInfo();
+  int getNeighborAddressFromQnicModule(const cModule *qnic_module);
+  int findQnicAddrByNeighborAddr(int neighbor_addr);
+  std::vector<int> getNeighborAddresses() override;
+  std::vector<int> neighbor_addresses;
+  std::string getModuleNameByAddress(int module_address) override;
 
   size_t getNumNeighbors();
 
+  // OSPF functions
   void ospfHandleHelloPacket(const OspfHelloPacket *const pk);
   void ospfInitializeRoutingDaemon();
   void ospfSendHelloPacketToNeighbor(NodeAddr neighbor);
@@ -70,7 +92,6 @@ class RoutingDaemon : public IRoutingDaemon {
   void ospfUpdateMyAddressLsaInLsdb();
 
  public:
-  int getNumEndNodes() override;
   int findQNicAddrByDestAddr(int destAddr) override;
 
  private:

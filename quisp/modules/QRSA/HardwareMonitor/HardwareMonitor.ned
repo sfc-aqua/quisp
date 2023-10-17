@@ -4,9 +4,6 @@ package modules.QRSA.HardwareMonitor;
 simple HardwareMonitor
 {
     parameters:
-        int number_of_qnics;
-        int number_of_qnics_r;
-        int number_of_qnics_rp;
         string ntable = "";
 	// XYZ --rdv defaults removed so that users will be asked; 200402
 	// bool link_tomography = default(false);
@@ -15,7 +12,6 @@ simple HardwareMonitor
         bool link_tomography;
         int num_measure = default(3000);
         string tomography_output_filename = default("default");
-        string file_dir_name = default("results/");
 	// purification control
         int initial_purification;
         int purification_type;

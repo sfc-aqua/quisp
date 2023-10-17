@@ -5,9 +5,15 @@
  */
 #include "RoutingDaemon.h"
 
+#include <iostream>
 #include <vector>
 
 #include "messages/classical_messages.h"
+#include "modules/PhysicalConnection/BSA/BSAController.h"
+#include "modules/QNIC.h"
+#include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
+#include "omnetpp/cexception.h"
+#include "test_utils/QNode.h"
 
 using namespace omnetpp;
 
@@ -51,6 +57,14 @@ void RoutingDaemon::initialize(int stage) {
   if (stage >= 1) return;
 
   my_address = provider.getNodeAddr();
+  // Prepare neighbor table and resolve
+  num_qnic = par("number_of_qnics");
+  num_qnic_r = par("number_of_qnics_r");
+  num_qnic_rp = par("number_of_qnics_rp");
+  qnic_num_map.insert(std::make_pair(QNIC_E, num_qnic));
+  qnic_num_map.insert(std::make_pair(QNIC_R, num_qnic_r));
+  qnic_num_map.insert(std::make_pair(QNIC_RP, num_qnic_rp));
+  prepareQnicAddrMap();
 
   run_ospf = par("run_ospf");
 
@@ -64,74 +78,10 @@ void RoutingDaemon::initialize(int stage) {
     if (topo->getNumNodes() == 0 || topo == nullptr) {
       return;
     }
-
     generateRoutingTable(topo);
+    prepareNeighborAddressTableWithTopologyInfo();
   }
 }
-
-void RoutingDaemon::generateRoutingTable() { qrtable = link_state_database.generateRoutingTableFromGraph(my_address); }
-
-void RoutingDaemon::generateRoutingTable(cTopology *topo) {
-  cTopology::Node *this_node = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
-
-  for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
-    const auto node = topo->getNode(i);
-    if (node == this_node) continue;  // skip the node that is running this specific router app
-
-    // Apply dijkstra to each node to find all shortest paths.
-    topo->calculateWeightedSingleShortestPathsTo(node);  // Overwrites getNumPaths() and so on.
-
-    // Check the number of shortest paths towards the target node. This may be more than 1 if multiple paths have the same minimum cost.
-    if (this_node->getNumPaths() == 0) {
-      error("Path not found. This means that a node is completely separated...Probably not what you want now");
-      continue;  // not connected
-    }
-    // Returns the next link/gate in the ith shortest paths towards the target node.
-    cGate *parentModuleGate = this_node->getPath(0)->getLocalGate();
-    int destAddr = node->getModule()->par("address");
-
-    qrtable[destAddr] = getQNicAddr(parentModuleGate);
-
-    if (!strstr(parentModuleGate->getFullName(), "quantum")) {
-      error("Quantum routing table referring to classical gates...");
-    }
-  }
-}
-
-int RoutingDaemon::getQNicAddr(const cGate *const module_gate) {
-  const auto module = module_gate->getPreviousGate()->getOwnerModule();
-  return module->par("self_qnic_address").intValue();
-}
-
-/**
- * This is the only routine, at the moment, with any outside contact.
- * Rather than exchanging a message with those who need this information (ConnectionManager, mainly,
- * and in one case RuleEngine), this is a direct call that they make.
- *
- */
-int RoutingDaemon::findQNicAddrByDestAddr(int destAddr) {
-  RoutingTable::iterator it = qrtable.find(destAddr);
-  if (it == qrtable.end()) {
-    EV << "Quantum: address " << destAddr << " unreachable from this node \n";
-    return -1;
-  }
-  return it->second;
-}
-
-int RoutingDaemon::getNumEndNodes() {
-  cTopology *topo = new cTopology("topo");
-  topo->extractByParameter("included_in_topology", "\"yes\"");
-  int num_end_nodes = 0;
-  for (int i = 0; i < topo->getNumNodes(); i++) {
-    cTopology::Node *node = topo->getNode(i);
-    std::string node_type = node->getModule()->par("node_type");
-    if (node_type == "EndNode") {  // ignore myself
-      num_end_nodes++;
-    }
-  }
-  delete topo;
-  return num_end_nodes;
-};
 
 /**
  * Once we begin using dynamic routing protocols, this is where the messages
@@ -160,6 +110,237 @@ void RoutingDaemon::handleMessage(cMessage *msg) {
   }
   delete msg;
   return;
+}
+
+void RoutingDaemon::generateRoutingTable() {
+  qrtable = link_state_database.generateRoutingTableFromGraph(my_address);
+  resolveQuantumInterfaceInfo();
+}
+
+void RoutingDaemon::generateRoutingTable(cTopology *topo) {
+  cTopology::Node *this_node = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
+
+  for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
+    const auto node = topo->getNode(i);
+    if (node == this_node) continue;  // skip the node that is running this specific router app
+
+    // Apply dijkstra to each node to find all shortest paths.
+    topo->calculateWeightedSingleShortestPathsTo(node);  // Overwrites getNumPaths() and so on.
+
+    // Check the number of shortest paths towards the target node. This may be more than 1 if multiple paths have the same minimum cost.
+    if (this_node->getNumPaths() == 0) {
+      error("Path not found. This means that a node is completely separated...Probably not what you want now");
+      continue;  // not connected
+    }
+    // Returns the next link/gate in the ith shortest paths towards the target node.
+    cGate *parentModuleGate = this_node->getPath(0)->getLocalGate();
+    int dest_addr = node->getModule()->par("address");
+
+    qrtable[dest_addr] = getQNicAddr(parentModuleGate);
+
+    if (!strstr(parentModuleGate->getFullName(), "quantum")) {
+      error("Quantum routing table referring to classical gates...");
+    }
+  }
+  resolveQuantumInterfaceInfo();
+}
+
+std::vector<int> RoutingDaemon::getNeighborAddresses() {
+  std::vector<int> neighbors;
+  if (run_ospf) {
+    for (const auto &neighbor : neighbor_table) {
+      neighbors.push_back(neighbor.first);
+    }
+  } else {
+    neighbors = neighbor_addresses;
+  }
+  return neighbors;
+}
+
+// This function is called in finish() in HardwareMonitor to convert
+// node address into module name such as EndNode1.
+std::string RoutingDaemon::getModuleNameByAddress(int module_address) {
+  auto *topology = provider.getTopologyForRoutingDaemon(this);
+  auto num_nodes = topology->getNumNodes();
+  for (int i = 0; i < num_nodes; i++) {
+    auto node = topology->getNode(i);
+    if (node->getModule()->par("address").intValue() == module_address) {
+      return node->getModule()->getFullName();
+    };
+  }
+  error("Module not found for address %d", module_address);
+}
+
+void RoutingDaemon::prepareQnicAddrMap() {
+  // create map between address and type, index for later use
+  std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R, QNIC_RP};
+
+  // 1. Go through all the qnics
+  for (auto qnic_type : qnic_types) {
+    for (int qnic_index = 0; qnic_index < qnic_num_map[qnic_type]; qnic_index++) {
+      cModule *qnic = provider.getQNIC(qnic_index, qnic_type);
+      // If this qnic's naighbor is the target neighbor, finish and return qnic address
+      qnic_addr_map.insert(std::make_pair(qnic->par("self_qnic_address").intValue(), std::make_tuple(qnic_type, qnic_index)));
+    }
+  }
+}
+
+// create a map from destination address to quantum interface information
+void RoutingDaemon::resolveQuantumInterfaceInfo() {
+  // Routing table should already be prepared
+  for (const auto &dest_qnic_address : qrtable) {
+    auto qnic_address = dest_qnic_address.second;
+    auto dest_addr = dest_qnic_address.first;
+    if (!qnic_addr_map.count(qnic_address)) {
+      error("Failed to resolve quantum interface info");
+    }
+    auto [qnic_type, qnic_index] = qnic_addr_map[qnic_address];
+    auto *qnic = provider.getQNIC(qnic_index, qnic_type);
+    interface_table[dest_addr] = prepareQuantumInterfaceInfo(qnic);
+  }
+}
+
+void RoutingDaemon::prepareNeighborAddressTableWithTopologyInfo() {
+  for (int index = 0; index < num_qnic; index++) {
+    auto *qnic = provider.getQNIC(index, QNIC_E);
+    auto neighbor_address = getNeighborAddressFromQnicModule(qnic);
+    neighbor_addresses.push_back(neighbor_address);
+  }
+  for (int index = 0; index < num_qnic_r; index++) {
+    auto *qnic_r = provider.getQNIC(index, QNIC_R);
+    auto neighbor_address = getNeighborAddressFromQnicModule(qnic_r);
+    neighbor_addresses.push_back(neighbor_address);
+  }
+  for (int index = 0; index < num_qnic_rp; index++) {
+    auto *qnic_rp = provider.getQNIC(index, QNIC_RP);
+    auto neighbor_address = getNeighborAddressFromQnicModule(qnic_rp);
+    neighbor_addresses.push_back(neighbor_address);
+  }
+}
+
+QuantumInterfaceInfo RoutingDaemon::getQuantumInterfaceInfo(int dest_addr) {
+  for (auto table : interface_table) {
+    EV << "table: " << table.first << "\n";
+  }
+  if (!interface_table.count(dest_addr)) {
+    error("Interface information for destination address %d not found.", dest_addr);
+  }
+  return interface_table[dest_addr];
+}
+
+QuantumInterfaceInfo RoutingDaemon::prepareQuantumInterfaceInfo(cModule *qnic_module) {
+  auto qnic_address = qnic_module->par("self_qnic_address").intValue();
+  auto qnic_type = static_cast<QNIC_type>(qnic_module->par("self_qnic_type").intValue());
+  auto qnic_index = qnic_module->par("self_qnic_index").intValue();
+  auto buffer_size = qnic_module->par("num_buffer").intValue();
+  QuantumInterfaceInfo info;
+  info.qnic.type = qnic_type;
+  info.qnic.index = qnic_index;
+  info.qnic.address = qnic_address;
+  info.qnic.pointer = qnic_module;
+  info.buffer_size = buffer_size;
+  info.link_cost = 1;  // This value should be updated by link tomography in the future
+  info.neighbor_address = getNeighborAddressFromQnicModule(qnic_module);
+  return info;
+}
+/**
+ * This function gets topology information from omnet module.
+ * This process should be done by proper routing process in the future.
+ * This function get qnic module pointer and get its neighbor address.
+ */
+int RoutingDaemon::getNeighborAddressFromQnicModule(const cModule *qnic_module) {
+  // qnic_quantum_port$o is connected to the node's outermost quantum_port
+  auto *neighbor_gate = qnic_module->gate("qnic_quantum_port$o")->getNextGate()->getNextGate();
+  if (neighbor_gate == nullptr) {
+    error("This qnic is not connected to any node.");
+  }
+
+  // neighbor node could be BSA, EPPS, QNode
+  const cModule *neighbor_node = neighbor_gate->getOwnerModule();
+  if (neighbor_node == nullptr) {
+    error("neighbor node not found.");
+  }
+
+  if ((std::string)neighbor_node->getClassName() == "quisp_test::qnode::TestQNode") {
+    // In the case where this node is test node, just return address
+    return neighbor_node->par("address").intValue();
+  }
+
+  // Check neighbor node
+  cModuleType *neighbor_node_type = neighbor_node->getModuleType();
+  // Based on node type, prepare neighbor table
+  if (provider.isQNodeType(neighbor_node_type)) {
+    // QNode (Just take address fro neighbor_node)
+    return neighbor_node->par("address").intValue();
+  } else if (provider.isBSANodeType(neighbor_node_type)) {
+    // BSA needs to be skipped and find one more hop further neighbor since
+    // BSA is not treated as a node.
+    // Get BSA controller module
+    auto *bsa_controller = dynamic_cast<BSAController *>(neighbor_node->getSubmodule("bsa_controller"));
+    if (bsa_controller == nullptr) {
+      error("No BSA controller found");
+    }
+
+    // BSA has two ports, one for this node the other is one hop distant node.
+    // This node < -- > BSA (neighbor_node) < -- > Genuine neighbor node
+    int left_address = bsa_controller->getExternalAdressFromPort(0);
+    int right_address = bsa_controller->getExternalAdressFromPort(1);
+
+    // Check which port corresponds to my address
+    if (left_address == my_address) {
+      // port 0 corresponds to my address, means conponent on port 1 is my neighbor
+      return right_address;
+    } else {
+      // port 1 corresponds to my address, means conponent on port 0 is my neighbor
+      return left_address;
+    }
+  } else if (provider.isSPDCNodeType(neighbor_node_type)) {
+    // SPDC
+    error("To be implemented");
+  } else {
+    error(
+        "This simulator only recognizes the following network level node "
+        "types: QNode, EPPS and BSA. Not %s",
+        neighbor_node->getClassName());
+  }
+}
+
+int RoutingDaemon::getQNicAddr(const cGate *const module_gate) {
+  const auto module = module_gate->getPreviousGate()->getOwnerModule();
+  return module->par("self_qnic_address").intValue();
+}
+
+/**
+ * This is the only routine, at the moment, with any outside contact.
+ * Rather than exchanging a message with those who need this information (ConnectionManager, mainly,
+ * and in one case RuleEngine), this is a direct call that they make.
+ *
+ */
+int RoutingDaemon::findQNicAddrByDestAddr(int destAddr) {
+  RoutingTable::iterator it = qrtable.find(destAddr);
+  if (it == qrtable.end()) {
+    EV << "Quantum: address " << destAddr << " unreachable from this node \n";
+    return -1;
+  }
+  return it->second;
+}
+
+int RoutingDaemon::findQnicAddrByNeighborAddr(int neighbor_addr) {
+  // This function is used when ospf is running.
+  // We cannot use Quantum Interface Info at this point since qrtable is not ready.
+  std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R, QNIC_RP};
+  // 1. Go through all the qnics
+  for (auto qnic_type : qnic_types) {
+    for (int qnic_index = 0; qnic_index < qnic_num_map[qnic_type]; qnic_index++) {
+      cModule *qnic = provider.getQNIC(qnic_index, qnic_type);
+      // If this qnic's naighbor is the target neighbor, finish and return qnic address
+      auto neighbor = getNeighborAddressFromQnicModule(qnic);
+      if (neighbor == neighbor_addr) {
+        return qnic->par("self_qnic_address").intValue();
+      }
+    }
+  }
+  error("Failed to find qnic address by this neighbor address.");
 }
 
 /**
@@ -225,9 +406,8 @@ bool RoutingDaemon::ospfMyAddressIsRecognizedByNeighbor(const OspfHelloPacket *c
 
 void RoutingDaemon::ospfRegisterNeighbor(const OspfPacket *const pk, OspfState state) {
   const NodeAddr src = pk->getSrcAddr();
-  const auto qnic_interface = provider.getHardwareMonitor()->findInterfaceByNeighborAddr(src);
-  const int qnic_address = qnic_interface->qnic.address;
-  const double link_cost = qnic_interface->link_cost;
+  const int qnic_address = findQnicAddrByNeighborAddr(src);
+  const double link_cost = provider.getHardwareMonitor()->getLinkCost(src);
   neighbor_table[src] = OspfNeighborInfo(src, qnic_address, state, link_cost);
   ospfUpdateMyAddressLsaInLsdb();
 }

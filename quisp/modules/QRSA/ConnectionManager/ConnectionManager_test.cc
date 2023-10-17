@@ -9,6 +9,7 @@
 #include "modules/QNIC.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
+#include "omnetpp/crng.h"
 #include "rules/Action.h"
 #include "test_utils/TestUtils.h"
 
@@ -23,6 +24,7 @@ using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_R;
 using quisp::modules::QNIC_type;
 using quisp::rules::PurType;
+using quisp::utils::HelperFunctions;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -76,7 +78,6 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
     return toRouterGate;
   };
   TestGate *toRouterGate;
-  unsigned long createUniqueId() override { return 1234; };
 };
 
 TEST(ConnectionManagerTest, Init) {
@@ -85,7 +86,6 @@ TEST(ConnectionManagerTest, Init) {
 }
 
 TEST(ConnectionManagerTest, parsePurType) {
-  prepareSimulation();
   auto *routing_daemon = new MockRoutingDaemon();
   auto *hardware_monitor = new MockHardwareMonitor();
   auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
@@ -122,6 +122,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   auto *routing_daemon = new MockRoutingDaemon();
   auto *hardware_monitor = new MockHardwareMonitor();
   auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
+
   sim->registerComponent(connection_manager);
   connection_manager->par("address") = 5;
   connection_manager->par("entanglement_swapping_with_purification") = true;
@@ -141,7 +142,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   req->setStack_of_QNodeIndexes(0, 2);
   req->setStack_of_QNodeIndexes(1, 3);
   req->setStack_of_QNodeIndexes(2, 4);
-  req->setStack_of_QNICs(0, QNicPairInfo{NULL_CONNECTION_SETUP_INFO.qnic, {.type = QNIC_E, .index = 11, .address = 101}});
+  req->setStack_of_QNICs(0, QNicPairInfo{NULL_QUANTUM_INTERFACE_INFO.qnic, {.type = QNIC_E, .index = 11, .address = 101}});
   req->setStack_of_QNICs(1, QNicPairInfo{{.type = QNIC_E, .index = 12, .address = 102}, {.type = QNIC_E, .index = 13, .address = 103}});
   req->setStack_of_QNICs(2, QNicPairInfo{{.type = QNIC_E, .index = 14, .address = 104}, {.type = QNIC_E, .index = 15, .address = 105}});
   EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(4)).Times(1).WillOnce(Return(106));
@@ -157,6 +158,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor2->getApplicationId(), 1);
     EXPECT_EQ(packetFor2->getDestAddr(), 2);
     auto ruleset = packetFor2->getRuleSet();  // json serialized ruleset
+    ruleset["ruleset_id"] = 1234;
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 2);
     auto expected_ruleset = R"({
@@ -254,6 +256,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor3->getApplicationId(), 1);
     EXPECT_EQ(packetFor3->getDestAddr(), 3);
     auto ruleset = packetFor3->getRuleSet();  // json serialized ruleset
+    ruleset["ruleset_id"] = 1234;
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 2);
 
@@ -365,6 +368,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor4->getApplicationId(), 1);
     EXPECT_EQ(packetFor4->getDestAddr(), 4);
     auto ruleset = packetFor4->getRuleSet();  // json serialized ruleset
+    ruleset["ruleset_id"] = 1234;
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 1);
 
@@ -443,6 +447,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor5->getApplicationId(), 1);
     EXPECT_EQ(packetFor5->getDestAddr(), 5);
     auto ruleset = packetFor5->getRuleSet();  // json serialized ruleset
+    ruleset["ruleset_id"] = 1234;
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 3);
 

@@ -28,10 +28,6 @@ packet SchedulePhotonTransmissionsOnebyOne extends Header
     int internal_hom = 0;
 }
 
-packet StopEmitting extends Header{
-    int qnic_address;
-}
-
 packet InternalRuleSetForwarding extends Header{
     unsigned long RuleSet_id;
     unsigned long Rule_id;

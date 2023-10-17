@@ -23,6 +23,7 @@ network Linear_five_MM_network
         EndNode1[1]: QNode {
             address = 1;
             node_type = "EndNode";
+            is_initiator = true;
             @display("i=COMP;p=72,170");
         }
         Repeater2[1]: QNode {

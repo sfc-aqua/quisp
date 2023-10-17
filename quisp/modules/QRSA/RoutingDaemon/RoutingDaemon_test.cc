@@ -2,6 +2,13 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
+#include "gmock/gmock-function-mocker.h"
+#include "modules/QNIC.h"
+#include "omnetpp/ccomponent.h"
+#include "omnetpp/cgate.h"
+#include "omnetpp/cmodule.h"
+#include "test_utils/QNode.h"
+#include "test_utils/TestUtilFunctions.h"
 
 namespace {
 
@@ -21,14 +28,59 @@ class MockLinkStateDatabase : public LinkStateDatabase {
   using LinkStateDatabase::link_state_database;
 };
 
+class MockQnic : public cModule {
+ public:
+  MockQnic(int address, int index, QNIC_type qnic_type, int conntected_to) {
+    setParInt(this, "self_qnic_address", address);
+    setParInt(this, "self_qnic_index", index);
+    setParInt(this, "self_qnic_type", qnic_type);
+    setParInt(this, "num_buffer", 10);
+    connected_to = conntected_to;
+  }
+
+  int connected_to;
+  cGate* gate(const char* gatename, int index = -1) override {
+    auto neighbor_node = new TestQNode(connected_to, 100, false);
+    neighbor_node->setComponentType(new TestModuleType("test qnode"));
+    auto neighbor_gate = neighbor_node->addGate("quantum_port", cGate::Type::INPUT);
+
+    auto dummy_node = new TestQNode(20, 100, false);
+    auto dummy_neighbor_gate = dummy_node->addGate("quantum_port", cGate::Type::INPUT);
+    dummy_neighbor_gate->connectTo(neighbor_gate);
+
+    auto added_gate = this->addGate("qnic_quantum_port", cGate::Type::OUTPUT);
+    added_gate->connectTo(dummy_neighbor_gate);
+    return added_gate;
+  }
+};
+
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
-  Strategy(TestQNode* _qnode, IHardwareMonitor* _hardware_monitor) : parent_qnode(_qnode), hardware_monitor(_hardware_monitor) {}
-  Strategy(TestQNode* _qnode) : parent_qnode(_qnode) {}
+  Strategy(TestQNode* _qnode, IHardwareMonitor* _hardware_monitor) : parent_qnode(_qnode), hardware_monitor(_hardware_monitor) { initQnicModules(); }
+  Strategy(TestQNode* _qnode) : parent_qnode(_qnode) { initQnicModules(); }
   cModule* getNode() override { return parent_qnode; }
+  cModule* getQNIC(int qnic_index, QNIC_type qnic_type) override {
+    auto it = qnic_modules.find({qnic_type, qnic_index});
+    if (it == qnic_modules.end()) return nullptr;
+    return it->second;
+  }
   int getNodeAddr() override { return parent_qnode->address; }
   SharedResource* getSharedResource() override { return &shared_resource; }
   IHardwareMonitor* getHardwareMonitor() override { return hardware_monitor; }
+
+  void initQnicModules() {
+    //   // init qnic E
+    qnic_modules.insert({{QNIC_E, 0}, new MockQnic(0, 0, QNIC_E, 1)});
+    qnic_modules.insert({{QNIC_E, 1}, new MockQnic(1, 1, QNIC_E, 2)});
+    // init qnic R
+    qnic_modules.insert({{QNIC_R, 0}, new MockQnic(2, 0, QNIC_R, 3)});
+    qnic_modules.insert({{QNIC_R, 1}, new MockQnic(3, 1, QNIC_R, 4)});
+    // init qnic RP
+    qnic_modules.insert({{QNIC_RP, 0}, new MockQnic(4, 0, QNIC_RP, 5)});
+    qnic_modules.insert({{QNIC_RP, 1}, new MockQnic(5, 1, QNIC_RP, 6)});
+  }
+
+  std::map<std::pair<QNIC_type, int>, cModule*> qnic_modules;
 
  private:
   TestQNode* parent_qnode;
@@ -46,10 +98,20 @@ class RoutingDaemonTestTarget : public RoutingDaemon {
   using RoutingDaemon::my_address;
   using RoutingDaemon::neighbor_table;
   using RoutingDaemon::qrtable;
+
+  using RoutingDaemon::num_qnic;
+  using RoutingDaemon::num_qnic_r;
+  using RoutingDaemon::num_qnic_rp;
+
   RoutingDaemonTestTarget(TestQNode* qnode) : RoutingDaemon() {
     setParBool(this, "run_ospf", true);
+    setParInt(this, "number_of_qnics", 2);
+    setParInt(this, "number_of_qnics_r", 2);
+    setParInt(this, "number_of_qnics_rp", 2);
     my_address = qnode->address;
     RouterPort = new TestGate(this, "RouterPort$o");
+    this->qnic_num_map = {{QNIC_E, 2}, {QNIC_R, 2}, {QNIC_RP, 2}};
+    this->qnic_addr_map = {{1, std::make_tuple(QNIC_E, 1)}};
     this->provider.setStrategy(std::make_unique<Strategy>(qnode));
   }
 
@@ -129,10 +191,7 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketAndEstablishInitState) {
   auto msg_from_other_node = new OspfHelloPacket;
   msg_from_other_node->setSrcAddr(src);
 
-  auto expected_qnic = std::make_unique<InterfaceInfo>();
-  expected_qnic->qnic.address = 0;
-  expected_qnic->link_cost = 1;
-  EXPECT_CALL(*mock_hardware_monitor, findInterfaceByNeighborAddr(_)).WillOnce(Return(ByMove(std::move(expected_qnic))));
+  EXPECT_CALL(*mock_hardware_monitor, getLinkCost).WillOnce(Return(1));
 
   routing_daemon->handleMessage(msg_from_other_node);
 
@@ -155,10 +214,7 @@ TEST_F(RoutingDaemonTest, ospfReceiveHelloPacketAndEstablishTwoWayState) {
   neighbor_table[routing_daemon->my_address] = OspfNeighborInfo(routing_daemon->my_address);
   msg_from_other_node->setNeighborTable(neighbor_table);
 
-  auto expected_qnic = std::make_unique<InterfaceInfo>();
-  expected_qnic->qnic.address = 0;
-  expected_qnic->link_cost = 1;
-  EXPECT_CALL(*mock_hardware_monitor, findInterfaceByNeighborAddr(_)).WillOnce(Return(ByMove(std::move(expected_qnic))));
+  EXPECT_CALL(*mock_hardware_monitor, getLinkCost).WillOnce(Return(1));
 
   routing_daemon->handleMessage(msg_from_other_node);
 
