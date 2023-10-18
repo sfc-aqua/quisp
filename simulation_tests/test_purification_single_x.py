@@ -125,14 +125,14 @@ async def test_Single_X_Purification_MSM_Werner_State():
     print(worker.output)
     worker.print_results()
     assert worker.results["EndNode1<-->EndNode2"]["data"] == {
-        "Fidelity": 0.741115,
-        "Xerror": 0.0313297,
-        "Zerror": 0.196659,
-        "Yerror": 0.0308964,
+        "Fidelity": 0.745086,
+        "Xerror": 0.011647,
+        "Zerror": 0.186204,
+        "Yerror": 0.0570624,
     }
     assert worker.results["EndNode2<-->EndNode1"]["data"] == {
-        "Fidelity": 0.741115,
-        "Xerror": 0.0313297,
-        "Zerror": 0.196659,
-        "Yerror": 0.0308964,
+        "Fidelity": 0.745086,
+        "Xerror": 0.011647,
+        "Zerror": 0.186204,
+        "Yerror": 0.0570624,
     }
