@@ -283,6 +283,17 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
     bool is_younger_address = parentAddress < msm_info.partner_address;
     if (is_phi_minus && is_younger_address) realtime_controller->applyZGate(qubit_record);
     bell_pair_store.insertEntangledQubit(msm_info.partner_address, qubit_record);
+    // test code for logging the number of bell pairs generated
+    if (is_younger_address) {
+      bell_pair_counter++;
+      if (bell_pair_counter == 100) {
+        // write into file the current simulation time
+        std::ofstream myfile;
+        myfile.open("bell_pair_counter.txt", std::ios_base::app);
+        myfile << simTime() << "\n";
+        myfile.close();
+        }
+    }
   }
 }
 

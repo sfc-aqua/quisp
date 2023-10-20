@@ -122,6 +122,9 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
 
   // [Key: qnic_index, Value: qubit_index]
   std::unordered_map<int, MSMInfo> msm_info_map;
+
+  // variable for testing 1000th bell pair generation time
+  int bell_pair_counter = 0;
 };
 
 Define_Module(RuleEngine);
