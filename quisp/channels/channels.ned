@@ -15,7 +15,6 @@ channel FSChannel extends DatarateChannel {
 }
 
 channel FiberChannel extends DatarateChannel {
-    @class(FiberChannel);
 	double cost = default(1);
     double distance @unit(km) = default(20km);
     double speed_of_light_in_fiber @unit(km) = default(208189.206944km);
@@ -23,12 +22,7 @@ channel FiberChannel extends DatarateChannel {
     datarate = uniform(1kbps, 100kbps);
 }
 
-channel ClassicalChannel extends DatarateChannel {
-	double cost = default(1);
-    double distance @unit(km) = default(20km);
-    double speed_of_light_in_fiber @unit(km) = default(208189.206944km);
-    delay = this.distance / speed_of_light_in_fiber * 1s;
-    datarate = uniform(1kbps, 100kbps);
+channel ClassicalChannel extends FiberChannel {
 }
 
 channel QuantumChannel extends FiberChannel
@@ -57,5 +51,4 @@ channel QuantumChannel_FS extends FSChannel
     double Fried_parameter @unit(m) = default(15cm);
     double elevation_angle @unit(deg) = default(90deg); //TODO: this should be a function of time!
     double atmospheric_attenuation_zenith @unit(dB) = default(3dB);
-    bool line_of_sight = true;
 }

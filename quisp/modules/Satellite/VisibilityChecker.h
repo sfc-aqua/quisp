@@ -27,10 +27,7 @@ class VisibilityChecker : public cSimpleModule {
   virtual void handleMessage(cMessage *msg) override;
   void toggleVisibility();
   double orbital_period;
-  double up_time;
-  double down_time;
-  bool is_satellite;
-  bool is_visible;
-  double next_check_time;
+  double vis_start_coeff;
+  double vis_end_coeff;
 };
 }

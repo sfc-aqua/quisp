@@ -43,7 +43,7 @@ module QNode
                 address = index;
                 //buffer = 8;
                 //@display("p=198,43");
-                @display("p=278,203");
+                @display("p=265,182");
         }
         qrsa: quantumRoutingSoft {
             parameters:

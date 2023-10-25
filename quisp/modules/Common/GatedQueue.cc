@@ -1,97 +1,124 @@
 
 #include "GatedQueue.h"
 
-using quisp::messages::GQ_ctrl;
 
 namespace quisp::modules {
 
 Define_Module(GatedQueue);
 
+
+
 void GatedQueue::initialize() {
    Queue::initialize();
-   visibility_established = new cMessage("VisEstablished");
+   is_busy = false;
+}
+
+void GatedQueue::startTransmitting(cMessage *msg) {
+
+  if (BSMTimingNotification* btn = dynamic_cast<BSMTimingNotification*>(msg)) {
+      if (btn->getFirstPhotonEmitTime() < simTime()) btn->setFirstPhotonEmitTime(simTime()+next_check_time);
+  }
+
+
+  EV_INFO << "Starting transmission of " << msg << endl;
+  is_busy = true;
+  int64_t num_bytes = check_and_cast<cPacket *>(msg)->getByteLength();
+  send(msg, "line$o");  // inout gate's output
+  emit(tx_bytes_signal, (long)num_bytes);
+
+  // Schedule an event for the time when last bit will leave the gate.
+  cChannel* chl = gate("line$o")->getTransmissionChannel();
+  simtime_t transmission_finish_time = chl->getTransmissionFinishTime();
+
+
+  EV_INFO << "Transmission will end in " << transmission_finish_time << "\n";
+
+  if (simTime() != SIMTIME_ZERO) {
+      EV << "Error";
+  }
+
+  // pass end_transmission_event when it ends
+  scheduleAt(transmission_finish_time, end_transmission_event);
 }
 
 void GatedQueue::handleMessage(cMessage *msg)
 {
-if (hasGUI()) {
-     //  bubble("Queue received a message!\n");
-     }
+    if (hasGUI()) {
+        bubble("GatedQueue received a message!\n");
+      }
 
-     if (auto ctrl = dynamic_cast<GQ_ctrl *>(msg)) {
-         GQ_ctrl* cpy_for_remote = ctrl->dup();
-         cpy_for_remote->setIs_copy(true);
-        if (gate_open) {
-            if (!ctrl->getIs_copy()) send(cpy_for_remote,"line$o");
-            setGate_open(ctrl->getCtrl_signal());  // If the gate is already open, send the closing message then close.
-            bubble("closing gate");
-        } else {                                   // If it is closed, open then send the opening message.
-            scheduleAt(simTime(),visibility_established); // I am having this message bypass the queue because it's important ctrl info but I'm not sure I can, TODO: ask
-            setGate_open(ctrl->getCtrl_signal());
-            if (!ctrl->getIs_copy()) send(cpy_for_remote,"line$o");
-            bubble("opening gate");
+    if (auto vco = dynamic_cast<VisCheckOutcome *>(msg)) {
+           if (vco->getNext_check_time() == 0) {
+               pending_vcr = false;
+               msg = (cMessage *)queue.pop();
+               emit(queuing_time_signal, simTime() - msg->getTimestamp());
+               emit(qlen_signal, queue.getLength());
+               startTransmitting(msg);
+           } else {
+               VisCheckRetry* retry = new VisCheckRetry();
+               next_check_time = vco->getNext_check_time();
+               scheduleAfter(next_check_time,retry);
+           }
+          delete vco;
+           return;
         }
-        EV_INFO << "Gate now " << gate_open;
-        delete ctrl;
+
+    if (dynamic_cast<VisCheckRetry *>(msg)) {
+        VisCheckRequest* vis_check = new VisCheckRequest();
+        vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
+        vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
+        send(vis_check,"to_vc");
         return;
-     }
+    }
+
+    if (msg->arrivedOn("line$i")) {
+        emit(rx_bytes_signal, (long)check_and_cast<cPacket *>(msg)->getByteLength());
+        send(msg, "out");
+        return;
+      }
 
 
-     if (msg == end_transmission_event || msg == visibility_established) {  // update busy status
-     // Transmission finished, we can start next one.
-       EV_INFO << "Transmission finished.\n";
-       is_busy = false;
 
-       if (queue.isEmpty()) {
-         emit(busy_signal, false);
-         return;
-       }
 
-       if (gate_open) {
-       msg = (cMessage *)queue.pop();
-       emit(queuing_time_signal, simTime() - msg->getTimestamp());
-       emit(qlen_signal, queue.getLength());
-       startTransmitting(msg);
-       }
-       return;
-     }
+    if (msg == end_transmission_event) {  // update busy status
+        // Transmission finished, we can start next one.
+        EV_INFO << "Transmission finished.\n";
+        is_busy = false;
 
-     if (msg->arrivedOn("line$i")) {
-       emit(rx_bytes_signal, (long)check_and_cast<cPacket *>(msg)->getByteLength());
-       send(msg, "out");
-       return;
-     }
+        if (queue.isEmpty()) {
+          emit(busy_signal, false);
+          return;
+        }
 
-     // arrived on gate "in"
-     EV_INFO << "Arrived on gate Queue in.....";
-
-     if (end_transmission_event->isScheduled() || !gate_open) { //OR THE GATE IS CLOSED
-       EV_INFO << "Currently busy! queue it up\n";
-
-       // We are currently busy, so just queue up the packet.
-       if (frame_capacity && queue.getLength() >= frame_capacity) {
-         EV_INFO << "Received " << msg << " but transmitter busy and queue full: discarding\n";
-         emit(drop_signal, (long)check_and_cast<cPacket *>(msg)->getByteLength());
-         delete msg;
-         return;
-       }
-
-       EV_INFO << "Received " << msg << " but transmitter busy: queuing up\n";
-       msg->setTimestamp();
-       queue.insert(msg);
-       emit(qlen_signal, queue.getLength());
-       return;
-     }
-
-     // We are idle, so we can start transmitting right away.
-     EV_INFO << "Received " << msg << endl;
-     emit(queuing_time_signal, SIMTIME_ZERO);
-     startTransmitting(msg);
-     emit(busy_signal, true);}
-
-void GatedQueue::setGate_open(const bool ctrl_signal) {
-    gate_open = ctrl_signal;
+        if (!is_busy and !queue.isEmpty()) {
+        is_busy = true;
+        VisCheckRequest* vis_check = new VisCheckRequest();
+        vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
+        vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
+        send(vis_check,"to_vc");
+        }
     return;
+    }
+
+    if (frame_capacity && queue.getLength() >= frame_capacity) {
+          EV_INFO << "Received " << msg << " but transmitter busy and queue full: discarding\n";
+          emit(drop_signal, (long)check_and_cast<cPacket *>(msg)->getByteLength());
+          delete msg;
+          return;
+        }
+
+    EV_INFO << "Received " << msg << ": queuing up\n";
+    msg->setTimestamp();
+    queue.insert(msg);
+    emit(qlen_signal, queue.getLength());
+
+    if (!is_busy and !queue.isEmpty() and !pending_vcr) {
+    pending_vcr = true;
+    VisCheckRequest* vis_check = new VisCheckRequest();
+    vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
+    vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
+    send(vis_check,"to_vc");
+    }
 }
 
 } //namespace

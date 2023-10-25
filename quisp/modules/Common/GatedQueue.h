@@ -3,21 +3,23 @@
 
 #include <omnetpp.h>
 #include "Queue.h"
+#include "messages/visibility_messages_m.h"
+#include "messages/link_generation_messages_m.h"
 
 using namespace omnetpp;
+using namespace quisp::messages;
 
 namespace quisp::modules {
 
 class GatedQueue : public Queue
 {
   protected:
+    simtime_t next_check_time = 0;
     virtual void handleMessage(cMessage *msg) override;
     void initialize() override;
-    void setGate_open(const bool ctrl_signal);
+    void startTransmitting(cMessage *msg) override;
   private:
-    bool gate_open = false;
-    cMessage* visibility_established;
-
+    bool pending_vcr = false;
 };
 
 } //namespace

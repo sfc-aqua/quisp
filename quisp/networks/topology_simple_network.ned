@@ -81,18 +81,18 @@ network Simple_MM_SAT
             address = 1;
             is_satellite = true;
             node_type = "EndNode";
-            @display("i=COMP;p=168,127,m,5,60,60");
+            @display("i=COMP;p=196,35,m,5,60,60");
         }
         EndNode2: QNode_Sat {
             address = 2;
             is_satellite = false;
             node_type = "EndNode";
-            @display("i=COMP;p=327,77,m,5,60,60");
+            @display("i=COMP;p=295,201,m,5,60,60");
         }
 
     connections:
-        EndNode1.port++ <--> ClassicalChannel_FS {  distance = 5km; } <--> EndNode2.port++;
-        EndNode1.quantum_port++ <--> QuantumChannel_FS {  distance = 5km; } <--> EndNode2.quantum_port_receiver++;
+        EndNode1.port++ <--> ClassicalChannel_FS {  distance = 1km; } <--> EndNode2.port++;
+        EndNode1.quantum_port++ <--> QuantumChannel_FS {  distance = 1km; } <--> EndNode2.quantum_port_receiver++;
 }
 
 network three_node_MIM

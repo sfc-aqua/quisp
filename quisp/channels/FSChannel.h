@@ -1,33 +1,45 @@
-/*
- * FSChannel.h
+/** \file FSChannel.h
  *
- *  Created on: Sep 6, 2023
- *      Author: paolo
+ *  \brief Freespace channel
+ *
+ *  Loss model from 10.1038/s42005-022-01123-7.
+ *  ORBITAL_PARAMETERS are to be set on init by one of the connected modules.
+ *
  */
 
 #ifndef CHANNELS_FSCHANNEL_H_
 #define CHANNELS_FSCHANNEL_H_
 
 #include <omnetpp.h>
-#include<messages/gatedqueue_messages_m.h>
+#include <stdexcept>
+#include <unsupported/Eigen/MatrixFunctions>
+#include "PhotonicQubit_m.h"
+#include "omnetpp/cexception.h"
+#include <math.h>
 
 using namespace omnetpp;
-using namespace quisp::messages;
+
+
+struct ORBITAL_PARAMETERS {
+    SimTime orbit_period = SIMTIME_MAX;
+    SimTime vis_start_time = SIMTIME_ZERO;
+    SimTime vis_end_time = SIMTIME_MAX;
+};
 
 namespace quisp::channels {
 class FSChannel : public cDatarateChannel {
- public:
+public:
     FSChannel();
-    void setLOS(bool line_of_sight);
-    void toggleLOS();
-    bool getLOS();
+    void initialize() override;
+    void set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff);
+    bool checkLOS();
+    SimTime getNext_check_time();
+private:
+    ORBITAL_PARAMETERS op;
 
 
  protected:
-  cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;
-
- private:
-    bool line_of_sight;
+cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;
 };
 };
 

@@ -5,9 +5,6 @@
  */
 
 #include "Queue.h"
-#include "channels/FSChannel.h"
-
-using quisp::channels::FSChannel;
 
 namespace quisp {
 namespace modules {
@@ -46,12 +43,12 @@ void Queue::startTransmitting(cMessage *msg) {
   // Schedule an event for the time when last bit will leave the gate.
   cChannel* chl = gate("line$o")->getTransmissionChannel();
   simtime_t transmission_finish_time = chl->getTransmissionFinishTime();
-  EV_INFO << "Transmission will end in " << transmission_finish_time << "\n";
 
+
+  EV_INFO << "Transmission will end in " << transmission_finish_time << "\n";
 
   // pass end_transmission_event when it ends
   scheduleAt(transmission_finish_time, end_transmission_event);
-  return;
 }
 
 void Queue::handleMessage(cMessage *msg) {

@@ -14,26 +14,26 @@ module QNode_Sat extends QNode
     gates:
 
     submodules:
-        vc: VisibilityChecker {
-            @display("p=343,202");
+        vc[sizeof(port)]: VisibilityChecker {
+            @display("p=530,273");
         }
         fo: Fanout {
-            @display("p=343,303");
+            @display("p=382,286");
         }
         Gqueue[sizeof(port)]: GatedQueue {
             parameters:
                 address = index;
                 //buffer = 8;
                 //@display("p=198,43");
-                @display("p=278,203");
+                @display("p=341,185");
         }
     connections:
-        vc.ctrl --> fo.in;
         for i=0..sizeof(port)-1 {
             router.toQueue[i] --> { @reconnect; } --> Gqueue[i].in; // Each routing port is connected to its own queue
             router.fromQueue[i] <-- { @reconnect; } <-- Gqueue[i].out;
             Gqueue[i].line <--> { @reconnect; } <--> port[i];
-            Gqueue[i].ctrl_in <-- fo.out++;
+            Gqueue[i].to_vc --> vc[i].req;
+            Gqueue[i].from_vc <-- vc[i].ans;
         }
 
 }

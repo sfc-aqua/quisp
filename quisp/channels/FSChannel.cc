@@ -1,7 +1,13 @@
-/** \file QuantumChannel.cc
+/** \file FSChannel.cc
  *
- *  \brief QuantumChannel
+ *  \brief Freespace channel
+ *
+ *  Loss model from 10.1038/s42005-022-01123-7.
+ *  ORBITAL_PARAMETERS are to be set on init by one of the connected modules. LOS = Line Of Sight.
+ *  LOS-related methods are directly callable from outside since the pointing system is expected to be able to directly check whether there is visibility or not.
+ *
  */
+
 #include "FSChannel.h"
 
 using namespace omnetpp;
@@ -13,26 +19,69 @@ FSChannel::FSChannel() {};
 
 Define_Channel(FSChannel);
 
+void FSChannel::initialize() {
+    cDatarateChannel::initialize();
+}
+
 cChannel::Result FSChannel::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
-    return {!getLOS(), getDelay()};
+    Result result = cDatarateChannel::processMessage(msg, options, t);
+    if (!checkLOS()) {
+        result.discard = true;
+    }
+    return result;
 }
 
-void FSChannel::setLOS(bool LOS) {
-    line_of_sight = LOS;
+/** \fn checkLOS()
+ *
+ *  \brief Check if one end of the channel can see the other, i.e. we can send msg
+ *
+ *
+ */
+
+bool FSChannel::checkLOS() {
+    Enter_Method("checkLOS()");
+    const SimTime currentTime = fmod(simTime(),op.orbit_period);
+    if (currentTime >= op.vis_start_time and currentTime <= op.vis_end_time) {
+        return true;
+    }
+    return false;
 }
 
-void FSChannel::toggleLOS() {
-    line_of_sight = !line_of_sight;
+/** \fn set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff)
+ *
+ *  \brief Set visibility parameters: period in s, 0<=orb_vis_start_coeff<=orb_vis_end_coeff<=1, the two coeffs represent fractions of orb_period
+ *
+ *
+ */
+
+void FSChannel::set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff) {
+    Enter_Method("set_orbit_parameters()");
+    op.orbit_period = SimTime(orb_period);
+    op.vis_start_time = SimTime(orb_vis_start_coeff*orb_period);
+    op.vis_end_time = SimTime(orb_vis_end_coeff*orb_period);
+    return;
 }
 
-bool FSChannel::getLOS() {
-    return line_of_sight;
+/** \fn getNext_check_time()
+ *
+ *  \brief When will this channel have visibility again? 0 if visible now
+ *
+ *
+ */
+
+SimTime FSChannel::getNext_check_time() {
+    Enter_Method("next_check_time()");
+    const SimTime current_time = fmod(simTime(),op.orbit_period);
+    if (current_time >= op.vis_start_time and current_time <= op.vis_end_time) {
+       return 0;
+    }
+    if (current_time >= op.vis_end_time) { //Satellite already passed for this orbit
+        return op.vis_start_time + op.orbit_period - current_time;
+    }
+    return op.vis_start_time - current_time;
 }
 
-
 }
-
-
 
 
 
