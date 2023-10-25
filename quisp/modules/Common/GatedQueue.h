@@ -1,3 +1,10 @@
+/**
+* \file GatedQueue.h
+*
+* \brief Queue, modified to query the pointing system before sending messages to the outside.
+*
+*/
+
 #ifndef __QUISP_GATEDQUEUE_H_
 #define __QUISP_GATEDQUEUE_H_
 

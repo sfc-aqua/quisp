@@ -70,7 +70,6 @@ network Simple_MM
 network Simple_MM_SAT
 {
     parameters:
-        **.speed_of_light_in_fiber = 208189.206944 km;
         **.speed_of_light_in_FS = 299792.458 km;
 
     submodules:

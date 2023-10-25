@@ -3,14 +3,14 @@
 
 package modules.Satellite;
 @namespace(quisp::modules::Satellite);
-simple VisibilityChecker
+simple PointingSystem
 {
 parameters:
     string name = "VisChecker";
     double orbital_period @unit(s);// = default(6s);
     double vis_start_coeff;
     double vis_end_coeff;
-    @class(VisibilityChecker);
+    @class(PointingSystem);
 gates:
     input req;
     output ans;

@@ -1,6 +1,6 @@
-/** \file VisibilityChecker.h
+/** \file PointingSystem.h
  *
- *  \brief VisibilityChecker
+ *  \brief PointingSystem
  */
 #pragma once
 
@@ -12,15 +12,15 @@
 using namespace omnetpp;
 using namespace quisp::messages;
 
-/** \class VisibilityChecker VisibilityChecker.cc
+/** \class PointingSystem PointingSystem.cc
  *
- *  \brief VisibilityChecker: Crude, duty-cycle based model for the satellite orbiting in and out of sight.
+ *  \brief PointingSystem: Crude, duty-cycle based model for the satellite orbiting in and out of sight.
  */
 namespace quisp::modules::Satellite {
-class VisibilityChecker : public cSimpleModule {
+class PointingSystem : public cSimpleModule {
  public:
-  VisibilityChecker();
-  ~VisibilityChecker();
+  PointingSystem();
+  ~PointingSystem();
 
  protected:
   virtual void initialize() override;

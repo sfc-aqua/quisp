@@ -5,6 +5,6 @@ simple GatedQueue extends Queue
 {
     @class(GatedQueue);
     gates:
-        input from_vc;
-        output to_vc;
+        input from_ps;
+        output to_ps;
 }

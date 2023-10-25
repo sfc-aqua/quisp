@@ -1,8 +1,8 @@
-/** \file VisibilityChecker.cc
+/** \file PointingSystem.cc
  *
- *  \brief VisibilityChecker
+ *  \brief PointingSystem
  */
-#include "VisibilityChecker.h"
+#include "PointingSystem.h"
 #include "messages/visibility_messages_m.h"
 #include "channels/FSChannel.h"
 
@@ -10,14 +10,14 @@ using namespace quisp::channels;
 
 namespace quisp::modules::Satellite {
 
-Define_Module(VisibilityChecker);
+Define_Module(PointingSystem);
 
-VisibilityChecker::VisibilityChecker() {}
+PointingSystem::PointingSystem() {}
 
-VisibilityChecker::~VisibilityChecker() {}
+PointingSystem::~PointingSystem() {}
 
 
-void VisibilityChecker::initialize() {
+void PointingSystem::initialize() {
   //Setting the FSChannels' orbital parameters
 orbital_period = par("orbital_period");
 vis_start_coeff = par("vis_start_coeff");
@@ -37,7 +37,7 @@ vis_end_coeff = par("vis_end_coeff");
 return;
 }
 
-void VisibilityChecker::handleMessage(cMessage *msg) {
+void PointingSystem::handleMessage(cMessage *msg) {
   if (auto vcr = dynamic_cast<VisCheckRequest *>(msg)) {
       VisCheckOutcome* vco = new VisCheckOutcome();
       const char* gate_to_check = vcr->getOut_gate();

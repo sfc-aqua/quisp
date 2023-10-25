@@ -15,30 +15,11 @@ void GatedQueue::initialize() {
 
 void GatedQueue::startTransmitting(cMessage *msg) {
 
+//Find the proper place to do this modification, it's terrible practice to do it here.
   if (BSMTimingNotification* btn = dynamic_cast<BSMTimingNotification*>(msg)) {
       if (btn->getFirstPhotonEmitTime() < simTime()) btn->setFirstPhotonEmitTime(simTime()+next_check_time);
   }
-
-
-  EV_INFO << "Starting transmission of " << msg << endl;
-  is_busy = true;
-  int64_t num_bytes = check_and_cast<cPacket *>(msg)->getByteLength();
-  send(msg, "line$o");  // inout gate's output
-  emit(tx_bytes_signal, (long)num_bytes);
-
-  // Schedule an event for the time when last bit will leave the gate.
-  cChannel* chl = gate("line$o")->getTransmissionChannel();
-  simtime_t transmission_finish_time = chl->getTransmissionFinishTime();
-
-
-  EV_INFO << "Transmission will end in " << transmission_finish_time << "\n";
-
-  if (simTime() != SIMTIME_ZERO) {
-      EV << "Error";
-  }
-
-  // pass end_transmission_event when it ends
-  scheduleAt(transmission_finish_time, end_transmission_event);
+  Queue::startTransmitting(msg);
 }
 
 void GatedQueue::handleMessage(cMessage *msg)
@@ -67,7 +48,7 @@ void GatedQueue::handleMessage(cMessage *msg)
         VisCheckRequest* vis_check = new VisCheckRequest();
         vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
         vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
-        send(vis_check,"to_vc");
+        send(vis_check,"to_ps");
         return;
     }
 
@@ -95,7 +76,7 @@ void GatedQueue::handleMessage(cMessage *msg)
         VisCheckRequest* vis_check = new VisCheckRequest();
         vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
         vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
-        send(vis_check,"to_vc");
+        send(vis_check,"to_ps");
         }
     return;
     }
@@ -117,7 +98,7 @@ void GatedQueue::handleMessage(cMessage *msg)
     VisCheckRequest* vis_check = new VisCheckRequest();
     vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
     vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
-    send(vis_check,"to_vc");
+    send(vis_check,"to_ps");
     }
 }
 
