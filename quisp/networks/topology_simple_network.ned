@@ -58,6 +58,7 @@ network Simple_MM
         }
         EndNode2: QNode {
             address = 2;
+            is_initiator = true;
             node_type = "EndNode";
             @display("i=COMP;p=248,39,m,5,60,60");
         }
