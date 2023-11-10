@@ -53,3 +53,73 @@ Local BSM: success | Partner BSM: success
 - Save the information of the Bell pair in the bellpairstore.
 
 Once the required number of qubits, as specified by the ruleset, are created, each QNode stops emitting photons and sends StopEPPSEmission to the EPPSController. When the EPPSController receives this message, the continuous emission from the EntangledPhotonPairSource also terminates.
+
+We will show a pseudocode for the protocol below.
+
+
+**Global variables:**
+
+- `photon_index`: Variable to specify the entangled photon pair. We perform post-processing among memory qubits that share the same value of this variable.
+
+- `success_list`: List to store the information of memory qubits that succeeded local BSM. Contains the qubit information and the correction information.
+
+**Pseudocodes**:
+
+### Function to emit photons from qnodes in msm links
+
+**Input:**
+- Interval of emission specified by the EPPSTimingNotification: `interval`
+---
+**function** `emit_photons_msm(interval)`
+1. `photon_index` \gets `photon_index` + 1
+1. **If** There exist free memory qubits **then**
+    1. Pick a free memory qubit and emit a photon from it
+1. Call `emit_photons_msm(interval)` after interval
+---
+### Function to handle the click result
+
+**Input:**
+- BSM success result: `success`
+- BSM correction operation: `correction`
+- Memory qubit which emitted photon for this BSM: `qubit`
+---
+**function** `handle_click_result(success, correction, qubit)`
+1. **If** `success` **then**
+    1. Append `qubit` and `correction` to `success_list`
+    1. Call `handle_link_timeout(qubit)` after $1.1 \times$ `travel_time`
+       - *Comment:* Waiting time should be longer than the travel time to the partner
+1. **Else**
+    1. Free `qubit`
+1. Send `success, correction, photon_index`
+
+---
+### Function to handle the link generation result
+
+**Input:**
+- Partner BSM success result: `success`
+- Partner BSM correction operation: `correction`
+- Photon index the partner performed BSM with: `photon_index`
+---
+**function** `handle_msm_result(success, correction, photon_index)`
+1. **If** found `photon_index` in `success_list` **then**
+    1. Set `correction_local` $\gets$ `success_list[photon_index].correction`
+    1. Set `qubit \gets success_list[photon_index].qubit
+    1. **If** `success` **then**
+        1. Set `qubit.handled` $\gets$ True
+        1. **If** (`correction = correction_{local}` and `Addr_partner < Addr_self`) **then**
+            1. Apply Pauli Z Gate to `qubit`
+            1. Save bell pair information
+    1. **Else**
+        1. Free `qubit`
+---
+
+### Function to handle the timeout
+
+**Input:**
+- Memory qubit: `qubit`
+---
+**function** `handle_link_timeout(qubit)`
+1. **If** (`qubit.handled` = False) **then**
+    1. Free `qubit`
+1. Set `qubit.handled` $\gets$ False
+---
