@@ -87,7 +87,7 @@ We will show a pseudocode for the protocol below.
 1. **If** `success` **then**
     1. Append `qubit` and `correction` to `success_list`
     1. Call `handle_link_timeout(qubit)` after $1.1 \times$ `travel_time`
-       - *Comment:* Waiting time should be longer than the travel time to the partner
+       - Waiting time should be longer than the travel time to the partner
 1. **Else**
     1. Free `qubit`
 1. Send `success, correction, photon_index`
