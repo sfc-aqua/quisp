@@ -54,8 +54,9 @@ Local BSM: success | Partner BSM: success
 
 Once the required number of qubits, as specified by the ruleset, are created, each QNode stops emitting photons and sends StopEPPSEmission to the EPPSController. When the EPPSController receives this message, the continuous emission from the EntangledPhotonPairSource also terminates.
 
-We will show a pseudocode for the protocol below.
+Also, we ignore incoming photons for cases where there are no free memory. Therefore, when QNodeA does not have free memory and the QNodeB has free memory, QNodeB does not receive the BSM result from QNodeA, and for cases where the BSM at QNodeB succeeds, it cannot release the memory qubit forever. To counter this corner case, we set a timeout for each memory qubit, described in the pseudocode as `handle_link_timeout`.
 
+We will show a pseudocode for the protocol below.
 
 **Global variables:**
 
@@ -107,7 +108,7 @@ We will show a pseudocode for the protocol below.
     1. **If** `success` **then**
         1. Set `qubit.handled` $\gets$ True
         1. **If** (`correction = correction_{local}` and `Addr_partner < Addr_self`) **then**
-            1. Apply Pauli Z Gate to `qubit`
+            1. Apply Pauli Z Gate to `qubit`\*
             1. Save bell pair information
     1. **Else**
         1. Free `qubit`
@@ -123,3 +124,39 @@ We will show a pseudocode for the protocol below.
     1. Free `qubit`
 1. Set `qubit.handled` $\gets$ False
 ---
+
+\* This operation is due to as follows.
+
+We prepare the following entangled state at the beginning of the protocol.
+
+- QNodeA releases entangled photon from memory in following state: $|\text{QNodeA}_{memory}, \text{QNodeA}_{photon}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$.
+
+- EPPS releases entangled photons in following state: $|\text{EPP}_{A}, \text{EPP}_{B}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$.
+
+- QNodeB releases entangled photon from memory in following state: $|\text{QNodeB}_{memory}, \text{QNodeB}_{photon}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$.
+
+After emission, we perform bsm between $|\text{QNodeA}_{photon}\rangle$  $|\text{EPP}_{A}\rangle$, and $|\text{QNodeB}_{photon}\rangle$  $|\text{EPP}_{B}\rangle$.
+
+The quantum circuit for this operation is as follows. (the measurements are performed in computation basis. This quantum circuit is conceptional, so in an optical BSM, cases when EPA and EPB both measure state $|0\rangle$, result in a failure.)
+
+```
+     ┌───┐          ┌───┐
+QAM: ┤ H ├──■────■──┤ H ├───────────────────
+     └───┘┌─┴─┐  │  └───┘┌─┐
+QAP: ─────┤ X ├──┼───────┤M├────────────────
+     ┌───┐└───┘┌─┴─┐ ┌─┐ └╥┘┌───┐
+EPA: ┤ H ├──■──┤ X ├─┤M├──╫─┤ X ├───────────
+     └───┘┌─┴─┐└───┘ └╥┘  ║ └─┬─┘     ┌─┐
+EPB: ─────┤ X ├───────╫───╫───┼───────┤M├────
+     ┌───┐└───┘       ║   ║   │  ┌───┐└╥┘┌─┐
+QBP: ┤ H ├──■─────────╫───╫───■──┤ H ├─╫─┤M├
+     └───┘┌─┴─┐       ║   ║      └───┘ ║ └╥┘
+QBM: ─────┤ X ├───────╫───╫────────────╫──╫─
+          └───┘       ║   ║            ║  ║
+reg: ═════════════════╩═══╩════════════╩══╩═
+
+QAM: QNodeA_memory, QAP: QNodeA_photon, EPA: EPP_A, EPB: EPP_B, QBP: QNodeB_photon, QBM: QNodeB_memory
+```
+With simple calculation we can see that the state after this operation is $|\text{QNodeA}_{memory}, \text{QNodeB}_{memory}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + (-1)^{\psi^{A}+\psi^{B}}|11\rangle)$, where $\psi^{A/B}$ is the result of the BSM at QNodeA/B, with values $\psi^{A/B} = 0$ for obtaining $|\psi_{+}\rangle$ and $\psi^{A/B} = 1$ for $|\psi_{-}\rangle$.
+
+Therefore, we need to apply a Pauli Z gate to either memory qubit if $\psi^{A}$ is not the same value as $\psi^{B}$.
