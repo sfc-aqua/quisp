@@ -129,11 +129,11 @@ We will show a pseudocode for the protocol below.
 
 We prepare the following entangled state at the beginning of the protocol.
 
-- QNodeA releases entangled photon from memory in following state: $|\text{QNodeA}_{memory}, \text{QNodeA}_{photon}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$.
+- QNodeA releases entangled photon from memory in following state: $|\text{QNodeA}_{memory}, \text{QNodeA}_{photon}\rangle = |\phi_+\rangle$.
 
-- EPPS releases entangled photons in following state: $|\text{EPP}_{A}, \text{EPP}_{B}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$.
+- EPPS releases entangled photons in following state: $|\text{EPP}_{A}, \text{EPP}_{B}\rangle = |\phi_+\rangle$.
 
-- QNodeB releases entangled photon from memory in following state: $|\text{QNodeB}_{memory}, \text{QNodeB}_{photon}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$.
+- QNodeB releases entangled photon from memory in following state: $|\text{QNodeB}_{memory}, \text{QNodeB}_{photon}\rangle = |\phi_+\rangle$.
 
 After emission, we perform bsm between $|\text{QNodeA}_{photon}\rangle$  $|\text{EPP}_{A}\rangle$, and $|\text{QNodeB}_{photon}\rangle$  $|\text{EPP}_{B}\rangle$.
 
