@@ -2,15 +2,18 @@
 #include "GatedQueue.h"
 
 
+using quisp::modules::Logger::LoggerBase;
+
+
 namespace quisp::modules {
 
-Define_Module(GatedQueue);
-
+GatedQueue::GatedQueue() : provider(utils::ComponentProvider{this}) {}
 
 
 void GatedQueue::initialize() {
    Queue::initialize();
    is_busy = false;
+   initializeLogger(provider);
 }
 
 void GatedQueue::startTransmitting(cMessage *msg) {
@@ -49,6 +52,7 @@ void GatedQueue::handleMessage(cMessage *msg)
         vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
         vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
         send(vis_check,"to_ps");
+        delete msg;
         return;
     }
 
@@ -90,6 +94,7 @@ void GatedQueue::handleMessage(cMessage *msg)
 
     EV_INFO << "Received " << msg << ": queuing up\n";
     msg->setTimestamp();
+    logger->logPacket("DummyLabel", msg);
     queue.insert(msg);
     emit(qlen_signal, queue.getLength());
 

@@ -52,7 +52,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
   }
   // clang-format on
   if (photon.is_first) {
-    if (state == BSAState::Idle && photon.from_port == PortNumber::First) {
+      if (state == BSAState::Idle && photon.from_port == PortNumber::First) {
       state = BSAState::FirstPortArrive;
     } else if (state == BSAState::Idle && photon.from_port == PortNumber::Second) {
       state = BSAState::SecondPortArrive;
