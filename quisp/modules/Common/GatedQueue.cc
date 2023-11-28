@@ -16,6 +16,15 @@ void GatedQueue::initialize() {
    initializeLogger(provider);
 }
 
+void GatedQueue::startTransmitting(cMessage *msg) {
+
+//Find the proper place to do this modification, it's terrible practice to do it here.
+  if (BSMTimingNotification* btn = dynamic_cast<BSMTimingNotification*>(msg)) {
+      if (btn->getFirstPhotonEmitTime() < simTime()) btn->setFirstPhotonEmitTime(simTime()+next_check_time);
+  }
+  Queue::startTransmitting(msg);
+}
+
 void GatedQueue::handleMessage(cMessage *msg)
 {
     if (hasGUI()) {

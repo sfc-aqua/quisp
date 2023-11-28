@@ -86,7 +86,7 @@ network Simple_MM_SAT
         EndNode2: QNode_Sat {
             address = 2;
             is_satellite = false;
-            is_initiator = true;
+            //is_initiator = true;
             node_type = "EndNode";
             @display("i=COMP;p=295,201,m,5,60,60");
         }
