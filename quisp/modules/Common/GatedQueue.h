@@ -29,7 +29,6 @@ class GatedQueue : public Queue, public Logger::LoggerBase
     simtime_t next_check_time = 0;
     virtual void handleMessage(cMessage *msg) override;
     void initialize() override;
-    void startTransmitting(cMessage *msg) override;
     utils::ComponentProvider provider;
 //Logger::ILogger* logger = provider.getLogger();
   private:

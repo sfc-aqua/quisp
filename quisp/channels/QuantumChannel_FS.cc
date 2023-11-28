@@ -126,7 +126,8 @@ cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOpti
     // photon is lost
     q->setLost(true);
   }
-  return {!checkLOS(),getDelay(),0};
+  if (!checkLOS()) q->setLost(true);
+  return {false,getDelay(),0};
   }
 
 void QuantumChannel_FS::validateParameters() {
