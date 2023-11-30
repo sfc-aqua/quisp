@@ -21,13 +21,23 @@ Define_Channel(FSChannel);
 
 void FSChannel::initialize() {
     cDatarateChannel::initialize();
+    const char* filename = par("distance_CSV").stringValue();
+    dist_par = new CSVParser(filename);
+    op.orbit_period = par("orbital_period");
+    op.vis_start_time = dist_par->getLowestDatapoint();
+    op.vis_end_time = dist_par->getHighestDatapoint();
 }
 
 cChannel::Result FSChannel::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
-    Result result = cDatarateChannel::processMessage(msg, options, t);
+    Result result;
+
     if (!checkLOS()) {
         result.discard = true;
+        return result;
     }
+    par("distance").setDoubleValue(dist_par->getPropertyAtTime(simTime().dbl()));
+    par("delay").setDoubleValue(par("distance").doubleValue()/par("speed_of_light_in_FS").doubleValue());
+    result = cDatarateChannel::processMessage(msg, options, t);
     return result;
 }
 
@@ -54,13 +64,13 @@ bool FSChannel::checkLOS() {
  *
  */
 
-void FSChannel::set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff) {
-    Enter_Method("set_orbit_parameters()");
-    op.orbit_period = SimTime(orb_period);
-    op.vis_start_time = SimTime(orb_vis_start_coeff*orb_period);
-    op.vis_end_time = SimTime(orb_vis_end_coeff*orb_period);
-    return;
-}
+//void FSChannel::set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff) {
+//    Enter_Method("set_orbit_parameters()");
+//    op.orbit_period = SimTime(orb_period);
+//    op.vis_start_time = SimTime(orb_vis_start_coeff*orb_period);
+//    op.vis_end_time = SimTime(orb_vis_end_coeff*orb_period);
+//    return;
+//}
 
 /** \fn getNext_check_time()
  *
