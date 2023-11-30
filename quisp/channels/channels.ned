@@ -8,8 +8,10 @@ import ned.IdealChannel;
 channel FSChannel extends DatarateChannel {
     @class(FSChannel);
     double cost = default(1);
-    double distance @unit(m) = default(20km);
+    double distance @unit(m) = default(20km) @mutable;
     double speed_of_light_in_FS @unit(m) = default(299792.458km);
+    string distance_CSV;
+    double orbital_period @unit(h) = default(24h);
     delay = this.distance / speed_of_light_in_FS * 1s;
     datarate = uniform(1kbps, 100kbps);
 }

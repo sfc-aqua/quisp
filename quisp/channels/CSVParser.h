@@ -10,15 +10,24 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <omnetpp.h>
+#include <map>
 
+using namespace omnetpp;
+using std::string;
 
 class CSVParser {
 public:
-    CSVParser(char* filename);
+    CSVParser();
+    CSVParser(const string filename);
     virtual ~CSVParser();
-    float getPropertyAtTime(const SimTime& time);
+    double getPropertyAtTime(const double time);
+    int getLowestDatapoint();
+    int getHighestDatapoint();
     char* getName;
 private:
+    std::ifstream file;
     char* name;
     std::map<int,float> property;
 

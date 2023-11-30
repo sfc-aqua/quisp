@@ -4,6 +4,7 @@
  */
 
 #include "FSChannel.h"
+#include <unsupported/Eigen/MatrixFunctions>
 
 
 using namespace omnetpp;

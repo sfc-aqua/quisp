@@ -12,10 +12,10 @@
 
 #include <omnetpp.h>
 #include <stdexcept>
-#include <unsupported/Eigen/MatrixFunctions>
 #include "PhotonicQubit_m.h"
 #include "omnetpp/cexception.h"
 #include <cmath>
+#include "CSVParser.h"
 
 using namespace omnetpp;
 
@@ -36,7 +36,7 @@ public:
     SimTime getNext_check_time();
 private:
     ORBITAL_PARAMETERS op;
-
+    CSVParser* dist_par;
 
  protected:
 cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;

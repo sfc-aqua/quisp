@@ -6,10 +6,7 @@ package modules.Satellite;
 simple PointingSystem
 {
 parameters:
-    string name = "VisChecker";
-    double orbital_period @unit(s);// = default(6s);
-    double vis_start_coeff;
-    double vis_end_coeff;
+    string name = "PointingSystem";
     @class(PointingSystem);
 gates:
     input req;
