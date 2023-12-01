@@ -108,7 +108,7 @@ We will show a pseudocode for the protocol below.
     1. **If** `success` **then**
         1. Set `qubit.handled` $\gets$ True
         1. **If** (`correction = correction_{local}` and `Addr_partner < Addr_self`) **then**
-            1. Apply Pauli Z Gate to `qubit`\*
+            1. Apply Pauli Z Gate to `qubit` \**
             1. Save bell pair information
     1. **Else**
         1. Free `qubit`
@@ -125,7 +125,7 @@ We will show a pseudocode for the protocol below.
 1. Set `qubit.handled` $\gets$ False
 ---
 
-\* This operation is due to as follows.
+\** This operation is due to as follows.
 
 We prepare the following entangled state at the beginning of the protocol.
 

@@ -28,12 +28,5 @@
             ],
             "cwd": "${workspaceFolder}/quisp"
         },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "simple debug",
-            "program": "${workspaceFolder}/a.out",
-            "cwd": "${workspaceFolder}/quisp",
-        },
     ],
 }
