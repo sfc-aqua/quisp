@@ -35,7 +35,7 @@ cChannel::Result FSChannel::processMessage(cMessage *msg, const SendOptions &opt
         result.discard = true;
         return result;
     }
-    par("distance").setDoubleValue(dist_par->getPropertyAtTime(simTime().dbl()));
+    par("distance").setDoubleValue(dist_par->getPropertyAtTime(simTime().dbl())/100);
     par("delay").setDoubleValue(par("distance").doubleValue()/par("speed_of_light_in_FS").doubleValue());
     result = cDatarateChannel::processMessage(msg, options, t);
     return result;

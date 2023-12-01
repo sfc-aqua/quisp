@@ -87,6 +87,7 @@ void QuantumChannel_FS::initialize() {
 
 cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
   PhotonicQubit *q = dynamic_cast<PhotonicQubit *>(msg);
+  err.loss_rate = calculateLossRate();
   if (q == nullptr) {
     throw new cRuntimeError("something other than photonic qubit is sent through quantum channel");
   }
