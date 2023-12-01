@@ -52,8 +52,8 @@ void EntangledPhotonPairSource::emitPhotons() {
   auto *right_photon_ref = backend->getShortLiveQubit();
   left_photon_ref->noiselessH();
   left_photon_ref->noiselessCNOT(right_photon_ref);
-  left_photon->setQubit_ref(left_photon_ref);
-  right_photon->setQubit_ref(right_photon_ref);
+  left_photon->setQubitRef(left_photon_ref);
+  right_photon->setQubitRef(right_photon_ref);
 
   left_photon->setFirst(true);
   right_photon->setFirst(true);

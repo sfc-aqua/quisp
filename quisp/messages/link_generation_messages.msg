@@ -31,7 +31,7 @@ packet EPPSTimingNotification extends Header
     int otherQnicIndex;
     int otherQnicParentAddr;
     simtime_t totalTravelTime;
-    int eppsAddr;
+    int EPPSAddr;
 }
 
 // Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier

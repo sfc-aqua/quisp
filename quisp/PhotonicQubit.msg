@@ -14,9 +14,9 @@ message PhotonicQubit
 {
     string message_type = "qubit";
     IQubit *qubitRef;
-    bool isLost = false;
-    bool isFirst = false;
-    bool isLast = false;
-    bool has_x_error @getter(hasXError) @setter(setXError) = false;
-    bool has_z_error @getter(hasZError) @setter(setZError) = false;
+    bool isLost @getter(isLost) @setter(setLost) = false;
+    bool isFirst @getter(isFirst) @setter(setFirst) = false;
+    bool isLast @getter(isLast) @setter(setLast) = false;
+    bool xError @getter(hasXError) = false;
+    bool zError @getter(hasZError) = false;
 }
