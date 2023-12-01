@@ -131,13 +131,13 @@ We will show a pseudocode for major functions related to the MSM protocol, which
 
 We prepare the following entangled state at the beginning of the protocol.
 
-- QNodeA releases entangled photon from memory in following state: $|\text{QNodeA}_{memory} \text{QNodeA}_{photon}\rangle = |\phi_+\rangle$.
+- QNodeA releases entangled photon from memory in following state: $|{QNodeA}_{memory}{QNodeA}_{photon}\rangle=|\phi_+\rangle$.
 
-- EPPS releases entangled photons in following state: $|\text{EPP}_{A} \text{EPP}_{B}\rangle = |\phi_+\rangle$.
+- EPPS releases entangled photons in following state: $|{EPP}_{A}{EPP}_{B}\rangle=|\phi_+\rangle$.
 
-- QNodeB releases entangled photon from memory in following state: $|\text{QNodeB}_{memory} \text{QNodeB}_{photon}\rangle = |\phi_+\rangle$.
+- QNodeB releases entangled photon from memory in following state: $|{QNodeB}_{memory}{QNodeB}_{photon}\rangle=|\phi_+\rangle$.
 
-After emission\, we perform bsm between $|\text{QNodeA}_{photon} \text{EPP}_{A}\rangle$, and $|\text{QNodeB}_{photon}\text{EPP}_{B}\rangle$.
+After emission, we perform BSM between $|{QNodeA}_{photon}{EPP}_{A}\rangle$, and $|{QNodeB}_{photon}{EPP}_{B}\rangle$.
 
 The quantum circuit for this operation is as follows. (In this senario, we perform an optical BSM, so measuring $|\phi_{+}\rangle$ or $|\phi_{+}\rangle$, which are cases when EPA and EPB both measure state $|0\rangle$, should not happen)
 
@@ -159,6 +159,6 @@ reg: ═════════════════╩═══╩═══
 
 QAM: QNodeA_memory, QAP: QNodeA_photon, EPA: EPP_A, EPB: EPP_B, QBP: QNodeB_photon, QBM: QNodeB_memory
 ```
-With simple calculation we can see that the state after this operation is $|\text{QNodeA}_{memory} \text{QNodeB}_{memory}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + (-1)^{\psi^{A}+\psi^{B}}|11\rangle)$, where $\psi^{A/B}$ is the result of the BSM at QNodeA/B, with values $\psi^{A/B} = 0$ for obtaining $|\psi_{+}\rangle$ and $\psi^{A/B} = 1$ for $|\psi_{-}\rangle$.
+With simple calculation we can see that the state after this operation is $|{QNodeA}_{memory} {QNodeB}_{memory}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + (-1)^{\psi^{A}+\psi^{B}}|11\rangle)$, where $\psi^{A/B}$ is the result of the BSM at QNodeA/B, with values $\psi^{A/B} = 0$ for obtaining $|\psi_{+}\rangle$ and $\psi^{A/B} = 1$ for $|\psi_{-}\rangle$.
 
 Therefore, we need to apply a Pauli Z gate to either memory qubit if $\psi^{A}$ is not the same value as $\psi^{B}$.
