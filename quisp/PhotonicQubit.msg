@@ -19,5 +19,4 @@ message PhotonicQubit
     bool isLast = false;
     bool has_x_error @getter(hasXError) @setter(setXError) = false;
     bool has_z_error @getter(hasZError) @setter(setZError) = false;
-    string graphState = "";
 }

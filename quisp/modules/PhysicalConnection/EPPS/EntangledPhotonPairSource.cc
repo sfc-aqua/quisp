@@ -54,9 +54,6 @@ void EntangledPhotonPairSource::emitPhotons() {
   left_photon_ref->noiselessCNOT(right_photon_ref);
   left_photon->setQubit_ref(left_photon_ref);
   right_photon->setQubit_ref(right_photon_ref);
-  // only for debug usage
-  left_photon->setGraphState(left_photon_ref->graphState().c_str());
-  right_photon->setGraphState(right_photon_ref->graphState().c_str());
 
   left_photon->setFirst(true);
   right_photon->setFirst(true);

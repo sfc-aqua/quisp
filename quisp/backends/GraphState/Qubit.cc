@@ -490,12 +490,6 @@ EigenvalueResult GraphStateQubit::noiselessMeasureX(EigenvalueResult eigenvalue)
   return graphMeasureZ(eigenvalue);
 }
 
-// function for debugging, outputs the graph state of the current qubit
-std::string GraphStateQubit::graphState() {
-  std::string result = "VOP: " + cliffordToString(this->vertex_operator) + " Neighbors: " + std::to_string(this->neighbors.size());
-  return result;
-}
-
 // map clifford operator to string
 std::string GraphStateQubit::cliffordToString(CliffordOperator op) {
   switch (op) {

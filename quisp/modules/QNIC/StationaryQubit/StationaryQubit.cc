@@ -219,7 +219,6 @@ PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   qubit_ref->noiselessH();
   qubit_ref->noiselessCNOT(photon_ref);
   photon->setQubit_ref(photon_ref);
-  photon->setGraphState(photon_ref->graphState().c_str());
   return photon;
 }
 
@@ -265,11 +264,3 @@ MeasurementOutcome StationaryQubit::measureRandomPauliBasis() {
 }
 
 }  // namespace quisp::modules
-
-// functions for debugging
-namespace std {
-std::ostream &operator<<(std::ostream &os, quisp::modules::IBackendQubit *qubit_ref) {
-  os << qubit_ref->graphState();
-  return os;
-}
-}  // namespace std
