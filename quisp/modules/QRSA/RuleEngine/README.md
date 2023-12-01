@@ -18,7 +18,47 @@ Local BSM: success | Partner BSM: success
 
 Also, we ignore incoming photons for cases where there are no free memory. Therefore, when QNodeA does not have free memory and the QNodeB has free memory, QNodeB does not receive the BSM result from QNodeA, and for cases where the BSM at QNodeB succeeds, it cannot release the memory qubit forever. To counter this corner case, we set a timeout for each memory qubit, described in the pseudocode as `handle_link_timeout`.
 
-We will show a pseudocode for major functions related to the MSM protocol which take part in the RuleEngine below.
+We will show a sequence diagram of the MSM protocol below.
+
+```mermaid
+sequenceDiagram
+    participant REA as RuleEngineA
+    participant BSAA as BellStateAnalyzerA
+    participant EPPS as EPPS
+    participant BSAB as BellStateAnalyzerB
+    participant REB as RuleEngineB
+
+    EPPS->>REA: EPPSTimingNotification
+    REA->>REA: Call emit_photons_msm(interval)
+    EPPS->>REB: EPPSTimingNotification
+    REB->>REB: Call emit_photons_msm(interval)
+    loop Until the required number of qubits are created
+        par
+            EPPS->>BSAA: PhotonicQubit
+            EPPS->>BSAB: PhotonicQubit
+        end
+        REA->>BSAA: PhotonicQubit
+        REB->>BSAB: PhotonicQubit
+        BSAA->>BSAA: Perform Bell state measurement
+        BSAB->>BSAB: Perform Bell state measurement
+        BSAA->>REA: SingleClickResult (Contains success, correction, qubit)
+        BSAB->>REB: SingleClickResult (Contains success, correction, qubit)
+    end
+```
+After a RuleEngine recieves SingleClickResult, the following operations are performed between the QNodes, in a classical channel:
+
+```mermaid
+sequenceDiagram
+    participant REA as RuleEngine
+    participant PRT as PartnerRuleEngine
+
+    REA->>+REA: Call handle_click_result(success, correction, qubit)
+    REA->>+PRT: MSMResult (Contains success, correction, photon_index)
+    PRT->>-PRT: Call handle_msm_result(success, correction, photon_index)
+    REA->>-REA: Call handle_link_timeout(qubit) at travel_time + delta
+```
+
+We will show a pseudocode for major functions related to the MSM protocol, which also appeard in the sequence diagram above.
 
 **Global variables:**
 
