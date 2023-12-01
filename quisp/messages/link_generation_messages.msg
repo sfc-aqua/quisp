@@ -18,22 +18,20 @@ packet BSMTimingNotification extends Header
     simtime_t interval  @setter(setInterval)  @getter(getInterval);
     QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
     int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
-    bool is_pure_bsa_result      @setter(setIsPureBSAResult) @getter(getIsPureBSAResult);
-
 }
 
 packet EPPSTimingNotification extends Header
 {
-    simtime_t first_photon_emit_time  @setter(setFirstPhotonEmitTime) @getter(getFirstPhotonEmitTime);
-    simtime_t interval @setter(setInterval)  @getter(getInterval);
-    QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
-    int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
-    int qnic_parent_addr     @setter(setQnicParentAddr) @getter(getQnicParentAddr);
-    QNIC_type other_qnic_type @setter(setOtherQnicType)  @getter(getOtherQnicType);
-    int other_qnic_index      @setter(setOtherQnicIndex) @getter(getOtherQnicIndex);
-    int other_qnic_parent_addr     @setter(setOtherQnicParentAddr) @getter(getOtherQnicParentAddr);
-    simtime_t total_travel_time @setter(setTotalTravelTime) @getter(getTotalTravelTime);
-    int epps_addr @setter(setEPPSAddr) @getter(getEPPSAddr);
+    simtime_t firstPhotonEmitTime;
+    simtime_t interval;
+    QNIC_type qnicType;
+    int qnicIndex;
+    int qnicParentAddr;
+    QNIC_type otherQnicType;
+    int otherQnicIndex;
+    int otherQnicParentAddr;
+    simtime_t totalTravelTime;
+    int eppsAddr;
 }
 
 // Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier
@@ -47,17 +45,17 @@ packet CombinedBSAresults extends BSMTimingNotification
 // Used for MSM. Sends the BSA success/failure, correction message to the partner node
 packet MSMResult extends Header
 {
-    QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
-    int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
-    uint64_t photon_index @setter(setPhotonIndex) @getter(getPhotonIndex);
-    bool success @setter(setSuccess) @getter(getSuccess);
-    PauliOperator correction_operation @setter(setCorrectionOperation) @getter(getCorrectionOperation);
+    QNIC_type qnicType;
+    int qnicIndex;
+    uint64_t photonIndex;
+    bool success;
+    PauliOperator correctionOperation;
 }
 
 packet MSMResultArrivalCheck extends Header
 {
-    int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
-    int qubit_index @setter(setQubitIndex) @getter(getQubitIndex);
+    int qnicIndex;
+    int qubitIndex;
 }
 
 packet StopEPPSEmission extends Header

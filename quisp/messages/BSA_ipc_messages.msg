@@ -20,8 +20,8 @@ packet BatchClickEvent {
 
 // Used for MSM.
 packet SingleClickResult extends Header {
-    BSAClickResult click_result @setter(setClickResult) @getter(getClickResult);
-    int qnic_index @getter(getQnicIndex) @setter(setQnicIndex);
+    BSAClickResult clickResult;
+    int qnicIndex;
 }
 
 packet CancelBSMTimeOutMsg {}

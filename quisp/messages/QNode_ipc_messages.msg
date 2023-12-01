@@ -35,5 +35,3 @@ packet InternalRuleSetForwarding_Application extends Header{
 
     json RuleSet;
 }
-
-packet MsmNodeResultSendingFinished {}
