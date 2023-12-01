@@ -38,10 +38,10 @@ sequenceDiagram
             EPPS->>BSAB: PhotonicQubit
         end
         REA->>BSAA: PhotonicQubit
-        REB->>BSAB: PhotonicQubit
         BSAA->>BSAA: Perform Bell state measurement
-        BSAB->>BSAB: Perform Bell state measurement
         BSAA->>REA: SingleClickResult (Contains success, correction, qubit)
+        REB->>BSAB: PhotonicQubit
+        BSAB->>BSAB: Perform Bell state measurement
         BSAB->>REB: SingleClickResult (Contains success, correction, qubit)
     end
 ```
@@ -67,7 +67,7 @@ We will show a pseudocode for major functions related to the MSM protocol, which
 - `photon_index`: Variable to specify the entangled photon pair. We perform post-processing among memory qubits that share the same value of this variable.
 
 - `success_list`: List to store the information of memory qubits that succeeded local BSM. Contains the qubit information and the correction information.
-
+---
 #### Function to emit photons from qnodes in msm links
 
 **Input:**
@@ -78,7 +78,7 @@ We will show a pseudocode for major functions related to the MSM protocol, which
 1. **If** There exist free memory qubits **then**
     1. Pick a free memory qubit and emit a photon from it
 1. Wait for `interval` time and call EMIT_PHOTONS_MSM(`interval`)
-
+---
 #### Function to handle the click result
 
 **Input:**
@@ -95,7 +95,7 @@ We will show a pseudocode for major functions related to the MSM protocol, which
     1. Free `qubit`
 1. Send `success, correction, photon_index` to the partner QNode
 
-
+---
 #### Function to handle the MSMResult
 
 **Input:**
@@ -115,7 +115,7 @@ We will show a pseudocode for major functions related to the MSM protocol, which
     1. **Else**
         1. Free `qubit`
 
-
+---
 #### Function to handle the timeout
 
 **Input:**
@@ -130,16 +130,11 @@ We will show a pseudocode for major functions related to the MSM protocol, which
 ### Explanation of applying the Pauli Z gate for the case where the BSM results are different
 
 We prepare the following entangled state at the beginning of the protocol.
+$|\text{QNodeA}_\text{memory},\text{QNodeA}_\text{photon},\text{EPP}_\text{A},\text{EPP}_\text{B},\text{QNodeB}_\text{memory},\text{QNodeB}_\text{photon}\rangle=|\phi_+\rangle$
 
-- QNodeA releases entangled photon from memory in following state: $|{QNodeA}_{memory}{QNodeA}_{photon}\rangle=|\phi_+\rangle$.
+After emission, we perform a Bell state measurement at $|\text{QNodeA}_\text{photon}\text{EPP}_\text{A}\rangle$, and at $|\text{QNodeB}_\text{photon}\text{EPP}_\text{B}\rangle$.
 
-- EPPS releases entangled photons in following state: $|{EPP}_{A}{EPP}_{B}\rangle=|\phi_+\rangle$.
-
-- QNodeB releases entangled photon from memory in following state: $|{QNodeB}_{memory}{QNodeB}_{photon}\rangle=|\phi_+\rangle$.
-
-After emission, we perform BSM between $|{QNodeA}_{photon}{EPP}_{A}\rangle$, and $|{QNodeB}_{photon}{EPP}_{B}\rangle$.
-
-The quantum circuit for this operation is as follows. (In this senario, we perform an optical BSM, so measuring $|\phi_{+}\rangle$ or $|\phi_{+}\rangle$, which are cases when EPA and EPB both measure state $|0\rangle$, should not happen)
+Therefore, the quantum circuit for this operation can be described as follows.
 
 ```
      ┌───┐          ┌───┐
@@ -159,6 +154,12 @@ reg: ═════════════════╩═══╩═══
 
 QAM: QNodeA_memory, QAP: QNodeA_photon, EPA: EPP_A, EPB: EPP_B, QBP: QNodeB_photon, QBM: QNodeB_memory
 ```
-With simple calculation we can see that the state after this operation is $|{QNodeA}_{memory} {QNodeB}_{memory}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + (-1)^{\psi^{A}+\psi^{B}}|11\rangle)$, where $\psi^{A/B}$ is the result of the BSM at QNodeA/B, with values $\psi^{A/B} = 0$ for obtaining $|\psi_{+}\rangle$ and $\psi^{A/B} = 1$ for $|\psi_{-}\rangle$.
+(In this senario we perform an optical BSM, so we cannot measure state $|\phi_{+}\rangle$ or $|\phi_{-}\rangle$ since they are indistinguishable. Those cases correpsond to when EPA and EPB measure state $|0\rangle$.)
+
+
+With simple calculation, we can see that this quantum circuit will give us a quantum state as follows.
+$$
+|\text{QNodeA}_\text{memory}\text{QNodeB}_\text{memory}\rangle = \frac{1}{\sqrt{2}}(|00\rangle + (-1)^{\psi^{A}+\psi^{B}}|11\rangle)$$
+Here, $\psi^{A/B}$ is the result of the BSM at QNodeA/B, with values $\psi^{A/B} = 0$ for obtaining $|\psi_{+}\rangle$ and $\psi^{A/B} = 1$ for $|\psi_{-}\rangle$.
 
 Therefore, we need to apply a Pauli Z gate to either memory qubit if $\psi^{A}$ is not the same value as $\psi^{B}$.
