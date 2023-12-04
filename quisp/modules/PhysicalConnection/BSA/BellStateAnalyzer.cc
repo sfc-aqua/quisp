@@ -95,16 +95,18 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
 void BellStateAnalyzer::processPhotonRecords() {
   auto *batch_click_msg = new BatchClickEvent();
   clicks = 0; // P: I'm adding this variable to record double detector clicks.
+  no_clicks = 0;
+  distinguishable = 0;
   int number_of_possible_pairs = std::min(first_port_records.size(), second_port_records.size());
   for (int i = 0; i < number_of_possible_pairs; i++) {
     auto p = first_port_records[i];
     auto q = second_port_records[i];
-
     if (fabs(p.arrival_time - q.arrival_time) < indistinguishability_window) {
       BSAClickResult res = processIndistinguishPhotons(p, q);
       batch_click_msg->appendClickResults(res);
-      if (res.success) clicks++;
+      if (res.success) clicks++; else no_clicks++;
     } else {
+      distinguishable++;
       batch_click_msg->appendClickResults({.success = false, .correction_operation = PauliOperator::I});
       discardPhoton(p);
       discardPhoton(q);
@@ -113,6 +115,8 @@ void BellStateAnalyzer::processPhotonRecords() {
   first_port_records.clear();
   second_port_records.clear();
   emit(clicks_in_batch,clicks);
+  emit(no_click, no_clicks);
+  emit(dist,distinguishable);
   send(batch_click_msg, "to_bsa_controller");
 }
 

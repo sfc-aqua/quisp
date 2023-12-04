@@ -63,7 +63,11 @@ class BellStateAnalyzer : public omnetpp::cSimpleModule {
 
   // Coincidences signal - to count detector clicks
   int clicks = 0;
-  simsignal_t clicks_in_batch = registerSignal("clicks");
+  int distinguishable = 0;
+  int no_clicks = 0;
+  simsignal_t clicks_in_batch = registerSignal("clicks_in_batch");
+  simsignal_t no_click = registerSignal("no_click");
+  simsignal_t dist = registerSignal("dist");
 
 };
 }  // namespace quisp::modules
