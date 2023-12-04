@@ -9,8 +9,12 @@ simple BellStateAnalyzer
         double detection_efficiency = default(1);
         double indistinguishable_time_window @unit(ns) = default(1.5ns); // Precision of photon arrivial time ~1.5ns
         int photon_detection_per_second = default(1000000);
-        @signal[clicks](type=long);
-        @statistic[clicks](record=vector,sum);
+        @signal[clicks_in_batch](type=long);
+        @statistic[clicks_in_batch](record=vector,sum);
+        @signal[no_click](type=long);
+        @statistic[no_click](record=vector,sum);
+        @signal[dist](type=long);
+        @statistic[dist](record=vector,sum);
     gates:
         inout quantum_port[];
         output to_bsa_controller;

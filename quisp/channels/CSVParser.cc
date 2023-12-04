@@ -23,22 +23,22 @@ CSVParser::CSVParser(const string filename) {
 }
 
 double CSVParser::getPropertyAtTime(const double time) {
-    auto property_value = property.find(time);
-    if (property_value == property.end()) {
-      // not found, calculate
-        double lowWeight = 0,highWeight = 0;
-        double lowKey = 0, highKey = 0;
-        lowKey = (--property.upper_bound(time))->first;
-        highKey = property.upper_bound(time)->first;
+    if (time == last_polled_time) return last_polled_value;
+    last_polled_time = time;
 
-        lowWeight = simTime().dbl() - lowKey;
-        highWeight = highKey - simTime().dbl();
-        last_polled_value = (lowWeight*property[lowKey] + highWeight*property[highKey])/(lowWeight+highWeight);
-    } else {
-      // found
-    last_polled_value = property_value->second;
+    auto u_b = property.upper_bound(time);
+    if (u_b == property.end()) {
+      return --(u_b)->second;
     }
-      return last_polled_value;
+    if (u_b == property.begin()) {
+        return u_b->second;
+      }
+
+    auto l_b = u_b; --u_b;
+    const double delta = (time - l_b->first)/(u_b->first - l_b->first);
+    return delta*u_b->second + (1-delta)*l_b->second;
+
+
     }
 
 

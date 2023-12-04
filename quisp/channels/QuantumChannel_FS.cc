@@ -5,7 +5,7 @@
 
 #include "FSChannel.h"
 #include <unsupported/Eigen/MatrixFunctions>
-
+#include "CSVParser.h"
 
 using namespace omnetpp;
 using namespace Eigen;
@@ -38,8 +38,10 @@ class QuantumChannel_FS : public FSChannel {
  private:
   void validateParameters();
   double calculateLossRate();
+  void recalculateChannelParameters() override;
   Matrix<double, 5,5> transition_matrix;
   channel_error_model err;
+  CSVParser* Aatm_CSV;
 
   // Loss model - see 10.1038/s42005-022-01123-7
   double distance = 0;  // in m
@@ -47,13 +49,11 @@ class QuantumChannel_FS : public FSChannel {
   double Dt = 0;
   double Dr = 0;
   double r0 = 0;
-  double beta = 0;
-  double A0 = 0;
+  double Aatm = 0;
 
   //calculated in the code from the parameters above
   double theta_diff = 0;
   double theta_atm = 0;
-  double Aatm = 0;
   double loss_rate = 0;
   double attenuation_rate = 0;
 };
@@ -67,7 +67,8 @@ QuantumChannel_FS::QuantumChannel_FS() {}
 
 void QuantumChannel_FS::initialize() {
   FSChannel::initialize();
-  distance = par("distance");  // in m
+  distance = par("distance");
+  Aatm_CSV = new CSVParser(par("Aatm_CSV"));
   err.loss_rate = calculateLossRate();
   err.x_error_rate = par("channel_x_error_rate");
   err.y_error_rate = par("channel_y_error_rate");
@@ -87,7 +88,8 @@ void QuantumChannel_FS::initialize() {
 
 cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
   PhotonicQubit *q = dynamic_cast<PhotonicQubit *>(msg);
-  err.loss_rate = calculateLossRate();
+  if (checkLOS()) {
+  recalculateChannelParameters();
   if (q == nullptr) {
     throw new cRuntimeError("something other than photonic qubit is sent through quantum channel");
   }
@@ -128,7 +130,8 @@ cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOpti
     // photon is lost
     q->setLost(true);
   }
-  if (!checkLOS()) q->setLost(true);
+  } else q->setLost(true);
+
   return {false,getDelay(),0};
   }
 
@@ -151,12 +154,13 @@ void QuantumChannel_FS::validateParameters() {
 }
 
 double QuantumChannel_FS::calculateLossRate() {
+    distance = par("distance");
     lambda = par("wavelength");
     Dt = par("transmitter_telescope_diameter");
     Dr = par("receiver_telescope_diameter");
     r0 = par("Fried_parameter");
-    beta = par("elevation_angle");
-    A0 = par("atmospheric_attenuation_zenith");
+//    beta = par("elevation_angle");
+//    A0 = par("atmospheric_attenuation_zenith");
 
     //hard-coded values from 10.1038/s42005-022-01123-7
     theta_diff = 1.27*lambda/Dt;
@@ -167,5 +171,11 @@ double QuantumChannel_FS::calculateLossRate() {
     return loss_rate;
 }
 
+void QuantumChannel_FS::recalculateChannelParameters() {
+    FSChannel::recalculateChannelParameters();
+    Aatm = Aatm_CSV->getPropertyAtTime(simTime().dbl());
+    err.loss_rate = calculateLossRate();
+    validateParameters();
+}
 
 }  // namespace quisp::channels

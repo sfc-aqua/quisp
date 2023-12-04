@@ -33,11 +33,10 @@ cChannel::Result FSChannel::processMessage(cMessage *msg, const SendOptions &opt
 
     if (!checkLOS()) {
         result.discard = true;
-        return result;
-    }
-    par("distance").setDoubleValue(dist_par->getPropertyAtTime(simTime().dbl())/100);
-    par("delay").setDoubleValue(par("distance").doubleValue()/par("speed_of_light_in_FS").doubleValue());
+    } else {
+    recalculateChannelParameters();
     result = cDatarateChannel::processMessage(msg, options, t);
+    }
     return result;
 }
 
@@ -89,6 +88,11 @@ SimTime FSChannel::getNext_check_time() {
         return op.vis_start_time + op.orbit_period - current_time;
     }
     return op.vis_start_time - current_time;
+}
+
+void FSChannel::recalculateChannelParameters() {
+    par("distance").setDoubleValue(dist_par->getPropertyAtTime(simTime().dbl()));
+    par("delay").setDoubleValue(par("distance").doubleValue()/par("speed_of_light_in_FS").doubleValue());
 }
 
 }

@@ -9,16 +9,16 @@ channel FSChannel extends DatarateChannel {
     @class(FSChannel);
     double cost = default(1);
     double distance @unit(m) = default(20km) @mutable;
-    double speed_of_light_in_FS @unit(m) = default(299792.458km);
     string distance_CSV;
-    double orbital_period @unit(h) = default(24h);
-    delay = this.distance / speed_of_light_in_FS * 1s;
+    double speed_of_light_in_FS @unit(m) = default(299792.458km);
+    double orbital_period @unit(s) = default(24h);
+    delay = this.distance / speed_of_light_in_FS * 1s @mutable;
     datarate = uniform(1kbps, 100kbps);
 }
 
 channel FiberChannel extends DatarateChannel {
 	double cost = default(1);
-    double distance @unit(km) = default(20km);
+    double distance @unit(m) = default(20km);
     double speed_of_light_in_fiber @unit(km) = default(208189.206944km);
     delay = this.distance / speed_of_light_in_fiber * 1s;
     datarate = uniform(1kbps, 100kbps);
@@ -53,4 +53,5 @@ channel QuantumChannel_FS extends FSChannel
     double Fried_parameter @unit(m) = default(10cm);
     double elevation_angle @unit(rad) = default(90deg); //TODO: this should be a function of time!
     double atmospheric_attenuation_zenith @unit(dB) = default(-3dB);
+    string Aatm_CSV;
 }

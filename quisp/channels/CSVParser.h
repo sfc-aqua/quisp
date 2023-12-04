@@ -29,6 +29,7 @@ public:
 private:
     std::ifstream file;
     char* name;
+    double last_polled_time = -1;
     double last_polled_value;
     std::map<double,double> property;
 
