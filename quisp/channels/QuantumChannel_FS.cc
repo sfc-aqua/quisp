@@ -53,7 +53,7 @@ class QuantumChannel_FS : public FSChannel {
   double theta_diff = 0;
   double theta_atm = 0;
   double Aatm = 0;
-  double attenuation_dB = 0;
+  double loss_rate = 0;
   double attenuation_rate = 0;
 };
 
@@ -157,12 +157,12 @@ double QuantumChannel_FS::calculateLossRate() {
     A0 = par("atmospheric_attenuation_zenith");
 
     //hard-coded values from 10.1038/s42005-022-01123-7
-    theta_diff = 2.44*lambda/Dt;
+    theta_diff = 1.27*lambda/Dt;
     theta_atm = 2.1*lambda/r0;
     Aatm = A0/sin(beta);
-    attenuation_dB = ((pow(theta_diff,2) + pow(theta_atm,2))/(pow(Dr,2))) * pow(distance,2) * pow(10,Aatm/10); // from 10.1038/s42005-022-01123-7
-    attenuation_rate = 1/pow(10,attenuation_dB/10);
-    return 1 - attenuation_rate;
+    attenuation_rate = ((pow(theta_diff,2) + pow(theta_atm,2))/(pow(Dr,2))) * pow(distance,2) * pow(10,Aatm/10); // from 10.1038/s42005-022-01123-7
+    loss_rate = 1 - 1/attenuation_rate;
+    return loss_rate;
 }
 
 

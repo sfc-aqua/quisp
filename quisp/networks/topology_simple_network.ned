@@ -92,8 +92,8 @@ network Simple_MM_SAT
         }
 
     connections:
-        EndNode1.port++ <--> ClassicalChannel_FS {  distance = 100km; } <--> EndNode2.port++;
-        EndNode1.quantum_port++ <--> QuantumChannel_FS {  distance = 100km; } <--> EndNode2.quantum_port_receiver++;
+        EndNode1.port++ <--> ClassicalChannel_FS {  distance = 400km; } <--> EndNode2.port++;
+        EndNode1.quantum_port++ <--> QuantumChannel_FS {  distance = 400km; } <--> EndNode2.quantum_port_receiver++;
 }
 
 network three_node_MIM
