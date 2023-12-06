@@ -49,13 +49,20 @@ class QuantumChannel_FS : public FSChannel {
   double Dt = 0;
   double Dr = 0;
   double r0 = 0;
-  double Aatm = 0;
+  double Aatm = 1;
 
   //calculated in the code from the parameters above
   double theta_diff = 0;
   double theta_atm = 0;
   double loss_rate = 0;
   double attenuation_rate = 0;
+
+  //debug statistics
+  simsignal_t channel_length = registerSignal("channel_length");
+  simsignal_t channel_delay = registerSignal("channel_delay");
+  simsignal_t channel_att = registerSignal("channel_att");
+  simsignal_t channel_att_dB = registerSignal("channel_att_dB");
+
 };
 
 Define_Channel(QuantumChannel_FS);
@@ -83,7 +90,6 @@ void QuantumChannel_FS::initialize() {
                        err.y_error_rate,    err.z_error_rate,   err.x_error_rate,   1 - err.error_rate, err.loss_rate,
                        0,                   0,                  0,                  0,                  1;
   // clang-format on
-
 }
 
 cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
@@ -137,7 +143,7 @@ cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOpti
 
 void QuantumChannel_FS::validateParameters() {
   if (err.error_rate < 0 || 1 < err.error_rate) {
-    throw cRuntimeError("quantum channel has invalid total error rate");
+    throw cRuntimeError("quantum channel has invalid total error rate. If this is a free space channel, check that you are in far-field of the transmitting telescope.");
   }
   if (err.x_error_rate < 0 || 1 < err.x_error_rate) {
     throw cRuntimeError("quantum channel has invalid x error rate");
@@ -149,7 +155,7 @@ void QuantumChannel_FS::validateParameters() {
     throw cRuntimeError("quantum channel has invalid z error rate");
   }
   if (err.loss_rate < 0 || 1 < err.loss_rate) {
-    throw cRuntimeError("quantum channel has invalid loss rate");
+    throw cRuntimeError("quantum channel has invalid loss rate. If this is a free space channel, check that you are in far-field of the transmitting telescope.");
   }
 }
 
@@ -165,9 +171,9 @@ double QuantumChannel_FS::calculateLossRate() {
     //hard-coded values from 10.1038/s42005-022-01123-7
     theta_diff = 1.27*lambda/Dt;
     theta_atm = 2.1*lambda/r0;
-    Aatm = A0/sin(beta);
-    attenuation_rate = ((pow(theta_diff,2) + pow(theta_atm,2))/(pow(Dr,2))) * pow(distance,2) * pow(10,Aatm/10); // from 10.1038/s42005-022-01123-7
+    attenuation_rate = ((pow(theta_diff,2) + pow(theta_atm,2))/(pow(Dr,2))) * pow(distance,2) * Aatm; // from 10.1038/s42005-022-01123-7
     loss_rate = 1 - 1/attenuation_rate;
+
     return loss_rate;
 }
 
@@ -175,7 +181,22 @@ void QuantumChannel_FS::recalculateChannelParameters() {
     FSChannel::recalculateChannelParameters();
     Aatm = Aatm_CSV->getPropertyAtTime(simTime().dbl());
     err.loss_rate = calculateLossRate();
+    err.error_rate = err.x_error_rate + err.y_error_rate + err.z_error_rate + err.loss_rate;
+    rereadPars();
     validateParameters();
+
+    //clang-format off
+     transition_matrix << 1 - err.error_rate,  err.x_error_rate,   err.z_error_rate,   err.y_error_rate,   err.loss_rate,
+                          err.x_error_rate,    1 - err.error_rate, err.y_error_rate,   err.z_error_rate,   err.loss_rate,
+                          err.z_error_rate,    err.y_error_rate,   1 - err.error_rate, err.x_error_rate,   err.loss_rate,
+                          err.y_error_rate,    err.z_error_rate,   err.x_error_rate,   1 - err.error_rate, err.loss_rate,
+                          0,                   0,                  0,                  0,                  1;
+     // clang-format on
+
+    emit(channel_length,par("distance").doubleValue());
+    emit(channel_delay,getDelay());
+    emit(channel_att,attenuation_rate);
+    emit(channel_att_dB,10*log10(attenuation_rate));
 }
 
 }  // namespace quisp::channels

@@ -92,9 +92,9 @@ SimTime FSChannel::getNext_check_time() {
 
 void FSChannel::recalculateChannelParameters() {
     par("distance").setDoubleValue(dist_par->getPropertyAtTime(simTime().dbl()));
-    par("delay").setDoubleValue(par("distance").doubleValue()/par("speed_of_light_in_FS").doubleValue());
+    if (par("CSV_varies_delay").boolValue()) par("delay").setDoubleValue(par("distance").doubleValue()/par("speed_of_light_in_FS").doubleValue());
+    rereadPars();
 }
-
 }
 
 
