@@ -182,7 +182,6 @@ void QuantumChannel_FS::recalculateChannelParameters() {
     Aatm = Aatm_CSV->getPropertyAtTime(simTime().dbl());
     err.loss_rate = calculateLossRate();
     err.error_rate = err.x_error_rate + err.y_error_rate + err.z_error_rate + err.loss_rate;
-    rereadPars();
     validateParameters();
 
     //clang-format off
