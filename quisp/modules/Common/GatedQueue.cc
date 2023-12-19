@@ -24,6 +24,7 @@ void GatedQueue::handleMessage(cMessage *msg)
 
     if (auto vco = dynamic_cast<VisCheckOutcome *>(msg)) {
            if (vco->getNext_check_time() == 0) {
+               last_polling_time = simTime();
                pending_vcr = false;
                msg = (cMessage *)queue.pop();
                emit(queuing_time_signal, simTime() - msg->getTimestamp());
@@ -90,11 +91,19 @@ void GatedQueue::handleMessage(cMessage *msg)
     emit(qlen_signal, queue.getLength());
 
     if (!is_busy and !queue.isEmpty() and !pending_vcr) {
-    pending_vcr = true;
-    VisCheckRequest* vis_check = new VisCheckRequest();
-    vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
-    vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
-    send(vis_check,"to_ps");
+        if (last_polling_time < simTime()) {
+        pending_vcr = true;
+        VisCheckRequest* vis_check = new VisCheckRequest();
+        vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
+        vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
+        send(vis_check,"to_ps");
+        }
+        else { //not busy, there are messages, visibility already polled
+           msg = (cMessage *)queue.pop();
+           emit(queuing_time_signal, simTime() - msg->getTimestamp());
+           emit(qlen_signal, queue.getLength());
+           startTransmitting(msg);
+        }
     }
 }
 
