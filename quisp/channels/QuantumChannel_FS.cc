@@ -192,10 +192,10 @@ void QuantumChannel_FS::recalculateChannelParameters() {
                           0,                   0,                  0,                  0,                  1;
      // clang-format on
 
-    emit(channel_length,par("distance").doubleValue());
-    emit(channel_delay,getDelay());
-    emit(channel_att,attenuation_rate);
-    emit(channel_att_dB,10*log10(attenuation_rate));
+    //emit(channel_length,par("distance").doubleValue());
+    //emit(channel_delay,getDelay());
+    //emit(channel_att,attenuation_rate);
+    //emit(channel_att_dB,10*log10(attenuation_rate));
 }
 
 }  // namespace quisp::channels

@@ -71,11 +71,14 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     }
   }
 
-  if (photon.from_port == PortNumber::First)
+  if (photon.from_port == PortNumber::First) {
+      emit(p_arrived,1);
     first_port_records.emplace_back(photon);
-  else
-    second_port_records.emplace_back(photon);
-
+  }
+  else {
+    emit(q_arrived,1);
+      second_port_records.emplace_back(photon);
+  }
   if (!photon.is_last) {
     return;
   }

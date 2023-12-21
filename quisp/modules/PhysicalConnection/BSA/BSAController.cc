@@ -32,12 +32,9 @@ void BSAController::initialize() {
     address = getParentModule()->par("address").intValue();
     left_qnic = getExternalQNICInfoFromPort(0);
   }
-  time_interval_between_photons = SimTime(1, SIMTIME_S) / SimTime(getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue(), SIMTIME_S);
+  time_interval_between_photons = SimTime(1, SIMTIME_S) / getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
   simtime_t first_notification_timer = SimTime(par("initial_notification_timing_buffer").doubleValue());
   right_qnic = getExternalQNICInfoFromPort(1);
-  offset_time_for_first_photon = calculateOffsetTimeFromDistance();
-  left_travel_time = getTravelTimeFromPort(0);
-  right_travel_time = getTravelTimeFromPort(1);
   time_out_count = 0;
   time_out_message = new BSMNotificationTimeout("bsm_notification_timeout");
   scheduleAt(first_notification_timer, time_out_message);
@@ -45,11 +42,13 @@ void BSAController::initialize() {
 
 void BSAController::handleMessage(cMessage *msg) {
   if (msg == time_out_message) {
+    //P: For satellite links, we need to recalculate this for every pulse train due to variable channel length!
     send(generateFirstNotificationTiming(true), "to_router");
     send(generateFirstNotificationTiming(false), "to_router");
     bsa->resetState();
     // set timeout to be twice the travel time plus number of no response
     time_out_count++;
+
     scheduleAt(simTime() + (2 + time_out_count) * (offset_time_for_first_photon), msg);
     return;
   }
@@ -85,6 +84,7 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
   }
   send(leftpk, "to_router");
   send(rightpk, "to_router");
+  offset_time_for_first_photon = calculateOffsetTimeFromDistance();
   last_result_send_time = simTime();
 
   scheduleAt(simTime() + 1.1 * offset_time_for_first_photon, time_out_message);
@@ -95,7 +95,15 @@ BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_le
   int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
   auto qnic_type = (is_left) ? left_qnic.type : right_qnic.type;
   auto *notification_packet = new BSMTimingNotification();
+
+  offset_time_for_first_photon = calculateOffsetTimeFromDistance();
+  left_travel_time = getTravelTimeFromPort(0);
+  right_travel_time = getTravelTimeFromPort(1);
+
+
+
   auto travel_time = (is_left) ? left_travel_time : right_travel_time;
+
 
   // The node should emit at <arrival_time - travel_time>
   simtime_t arrival_time = simTime() + offset_time_for_first_photon;
@@ -115,6 +123,11 @@ CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) 
   int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
   auto qnic_type = (is_left) ? left_qnic.type : right_qnic.type;
   auto *notification_packet = new CombinedBSAresults();
+
+  offset_time_for_first_photon = calculateOffsetTimeFromDistance();
+  left_travel_time = getTravelTimeFromPort(0);
+  right_travel_time = getTravelTimeFromPort(1);
+
   auto travel_time = (is_left) ? left_travel_time : right_travel_time;
 
   // The node should emit at <arrival_time - travel_time>
@@ -194,6 +207,8 @@ int BSAController::getExternalQNICIndexFromPort(int port) {
 
 simtime_t BSAController::getTravelTimeFromPort(int port) {
   cChannel *channel;
+  double distance = 0;
+  double speed_of_light_in_channel = 1;
   // this port connects to internal QNIC
   // since only port 0 is supposed to be connected to internal QNIC
   if (port == 0 && strcmp(getParentModule()->getName(), "qnic_r") == 0) {
@@ -202,9 +217,15 @@ simtime_t BSAController::getTravelTimeFromPort(int port) {
     // this port connects to outside QNode
     channel = getParentModule()->getSubmodule("bsa")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
   }
-  double distance = channel->par("distance").doubleValue();  // km
-  double speed_of_light_in_channel = {dynamic_cast<FSChannel*>(channel) == nullptr? channel->par("speed_of_light_in_fiber").doubleValue() : channel->par("speed_of_light_in_FS").doubleValue()};  // km/sec
-  return SimTime(distance / speed_of_light_in_channel);
+
+  if (FSChannel* FS_chl = dynamic_cast<FSChannel*>(channel)) {
+      speed_of_light_in_channel = FS_chl->par("speed_of_light_in_FS").doubleValue();  // km/sec
+      distance = FS_chl->getDistance();
+  } else {
+      distance = channel->par("distance").doubleValue();  // km
+      speed_of_light_in_channel = channel->par("speed_of_light_in_fiber").doubleValue();
+  }
+      return SimTime(distance / speed_of_light_in_channel);
 }
 
 BSAController::QNicInfo BSAController::getExternalQNICInfoFromPort(int port) {

@@ -15,6 +15,10 @@ simple BellStateAnalyzer
         @statistic[no_click](record=vector,sum);
         @signal[dist](type=long);
         @statistic[dist](record=vector,sum);
+        @signal[p_arrived](type=long);
+        @statistic[p_arrived](record=vector,sum);
+        @signal[q_arrived](type=long);
+        @statistic[q_arrived](record=vector,sum);
     gates:
         inout quantum_port[];
         output to_bsa_controller;

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<analysis version="2">
-    <inputs>
-        <input pattern="/quisp/simulations/results/Entanglement_Swapping_MM_3_Nodes_Sat-*.vec"/>
-        <input pattern="/quisp/simulations/results/Entanglement_Swapping_MM_3_Nodes_Sat-*.sca"/>
-    </inputs>
-    <charts/>
-</analysis>

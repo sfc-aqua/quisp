@@ -56,6 +56,11 @@ bool FSChannel::checkLOS() {
     return false;
 }
 
+double FSChannel::getDistance() {
+    recalculateChannelParameters();
+    return par("distance").doubleValue();
+}
+
 /** \fn set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff)
  *
  *  \brief Set visibility parameters: period in s, 0<=orb_vis_start_coeff<=orb_vis_end_coeff<=1, the two coeffs represent fractions of orb_period
