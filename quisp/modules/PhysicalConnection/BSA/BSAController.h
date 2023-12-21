@@ -62,6 +62,8 @@ class BSAController : public cSimpleModule {
   int getExternalQNICIndexFromPort(int port);
   simtime_t calculateOffsetTimeFromDistance();
   simtime_t getTravelTimeFromPort(int port);
+  simtime_t getTravelTimeFromPortLocal(int port);
+
   double getExternalDistanceFromPort(int port);
   QNicInfo getExternalQNICInfoFromPort(int port);
   void sendMeasurementResults(BatchClickEvent* msg);

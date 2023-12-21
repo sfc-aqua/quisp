@@ -56,9 +56,8 @@ bool FSChannel::checkLOS() {
     return false;
 }
 
-double FSChannel::getDistance() {
-    recalculateChannelParameters();
-    return par("distance").doubleValue();
+double FSChannel::getDistanceAtTime(const simtime_t time) {
+    return dist_par->getPropertyAtTime(time.dbl());
 }
 
 /** \fn set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff)

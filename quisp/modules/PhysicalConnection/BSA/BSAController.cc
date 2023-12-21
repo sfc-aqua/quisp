@@ -144,9 +144,11 @@ CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) 
 }
 
 simtime_t BSAController::calculateOffsetTimeFromDistance() {
-  auto one_way_longer_travel_time = std::max(getTravelTimeFromPort(0), getTravelTimeFromPort(1));
+  auto current_longer_travel_time = std::max(getTravelTimeFromPortLocal(0), getTravelTimeFromPortLocal(1));
+  auto predicted_longer_travel_time = std::max(getTravelTimeFromPort(0), getTravelTimeFromPort(1));
+
   // we add 10 times the photon interval to offset the travel time for safety in case RuleEngine has internal delay;
-  return 2 * one_way_longer_travel_time + time_interval_between_photons * 10;
+  return current_longer_travel_time + predicted_longer_travel_time + time_interval_between_photons * 10;
 }
 
 int BSAController::getExternalAdressFromPort(int port) {
@@ -207,7 +209,7 @@ int BSAController::getExternalQNICIndexFromPort(int port) {
 
 simtime_t BSAController::getTravelTimeFromPort(int port) {
   cChannel *channel;
-  double distance = 0;
+  double distance = 0; //Initialization to avoid complaints
   double speed_of_light_in_channel = 1;
   // this port connects to internal QNIC
   // since only port 0 is supposed to be connected to internal QNIC
@@ -220,12 +222,47 @@ simtime_t BSAController::getTravelTimeFromPort(int port) {
 
   if (FSChannel* FS_chl = dynamic_cast<FSChannel*>(channel)) {
       speed_of_light_in_channel = FS_chl->par("speed_of_light_in_FS").doubleValue();  // km/sec
-      distance = FS_chl->getDistance();
+
+      //I need to predict where the satellite is going to be when emission starts. If I send the notification now, that's distance(simTime() + travel_time).
+      double current_distance = FS_chl->getDistanceAtTime(simTime());
+      simtime_t current_travel_time = SimTime(current_distance / speed_of_light_in_channel);
+
+
+      double predicted_distance = FS_chl->getDistanceAtTime(simTime()+current_travel_time);
+      double offset = (predicted_distance-current_distance)/speed_of_light_in_channel;
+
+     // distance = FS_chl->getDistanceAtTime(simTime());
+      return SimTime(current_distance / speed_of_light_in_channel) + offset;
+
+  } else {
+      distance = channel->par("distance").doubleValue();  // km
+      speed_of_light_in_channel = channel->par("speed_of_light_in_fiber").doubleValue();
+      return SimTime(distance / speed_of_light_in_channel);
+  }
+}
+
+simtime_t BSAController::getTravelTimeFromPortLocal(int port) {
+  cChannel *channel;
+  double distance = 0; //Initialization to avoid complaints
+  double speed_of_light_in_channel = 1;
+  // this port connects to internal QNIC
+  // since only port 0 is supposed to be connected to internal QNIC
+  if (port == 0 && strcmp(getParentModule()->getName(), "qnic_r") == 0) {
+    return 0;
+  } else {
+    // this port connects to outside QNode
+    channel = getParentModule()->getSubmodule("bsa")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
+  }
+
+  if (FSChannel* FS_chl = dynamic_cast<FSChannel*>(channel)) {
+      speed_of_light_in_channel = FS_chl->par("speed_of_light_in_FS").doubleValue();  // km/sec
+      distance = FS_chl->getDistanceAtTime(simTime());
+
   } else {
       distance = channel->par("distance").doubleValue();  // km
       speed_of_light_in_channel = channel->par("speed_of_light_in_fiber").doubleValue();
   }
-      return SimTime(distance / speed_of_light_in_channel);
+  return SimTime(distance / speed_of_light_in_channel);
 }
 
 BSAController::QNicInfo BSAController::getExternalQNICInfoFromPort(int port) {

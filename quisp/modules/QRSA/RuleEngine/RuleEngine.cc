@@ -136,11 +136,6 @@ void RuleEngine::schedulePhotonEmission(QNIC_type type, int qnic_index, BSMTimin
   auto *timer = emit_photon_timer_map[{type, qnic_index}];
   timer->setFirst(true);
   timer->setIntervalBetweenPhotons(notification->getInterval());
-
-//  if (getParentModule()->getParentModule()->par("is_satellite").boolValue()) {
-//        first_photon_emit_time-=SimTime(82,SIMTIME_NS);
-//    }
-
   if (first_photon_emit_time < simTime()) first_photon_emit_time = simTime();
 
   scheduleAt(first_photon_emit_time, timer);
