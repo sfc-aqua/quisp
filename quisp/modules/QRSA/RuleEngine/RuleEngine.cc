@@ -98,6 +98,18 @@ void RuleEngine::handleMessage(cMessage *msg) {
       if (number_of_free_emitters != 0) {
         msm_info.qubit_info_map[msm_info.iteration_index] = qubit_index;
         sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, true, true);
+      } else {
+        // send MSMResult to partner node, even if we fail to have BSM happen
+        MSMResult *msm_result = new MSMResult();
+        msm_result->setQnicIndex(msm_info.partner_qnic_index);
+        msm_result->setQnicType(QNIC_RP);
+        msm_result->setPhotonIndex(msm_info.photon_index_counter);
+        msm_result->setSuccess(false);
+        msm_result->setCorrectionOperation(PauliOperator ::I);
+        msm_result->setSrcAddr(parentAddress);
+        msm_result->setDestAddr(msm_info.partner_address);
+        msm_result->setKind(6);
+        send(msm_result, "RouterPort$o");
       }
       scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
       return;
