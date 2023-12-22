@@ -99,6 +99,19 @@ void RuleEngine::handleMessage(cMessage *msg) {
         msm_info.qubit_info_map[msm_info.iteration_index] = qubit_index;
         sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, true, true);
       }
+      else {
+        // send MSMResult to partner node, even if we fail to have BSM happen
+        MSMResult *msm_result = new MSMResult();
+        msm_result->setQnicIndex(msm_info.partner_qnic_index);
+        msm_result->setQnicType(QNIC_RP);
+        msm_result->setPhotonIndex(msm_info.photon_index_counter);
+        msm_result->setSuccess(false);
+        msm_result->setCorrectionOperation(PauliOperator ::I);
+        msm_result->setSrcAddr(parentAddress);
+        msm_result->setDestAddr(msm_info.partner_address);
+        msm_result->setKind(6);
+        send(msm_result, "RouterPort$o");
+      }
       scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
       return;
       // If not, we emit photons on demand
@@ -247,11 +260,13 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
     msm_result_arrival_check->setQnicIndex(qnic_index);
     msm_result_arrival_check->setQubitIndex(qubit_index);
     // 1.1 is a magic number. It should be larger than the time it takes for the partner to send the result
-    scheduleAt(simTime() + 1.1 * msm_info.total_travel_time, msm_result_arrival_check);
+    // scheduleAt(simTime() + 1.1 * msm_info.total_travel_time, msm_result_arrival_check);
   } else {
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
   }
+  bool success = click_result->getClickResult().success;
+  int photon_number = msm_info.photon_index_counter;
   send(msm_result, "RouterPort$o");
 }
 
