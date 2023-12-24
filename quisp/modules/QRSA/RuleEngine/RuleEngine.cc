@@ -155,9 +155,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     handlePurificationResult(pkt);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
     handleSwappingResult(pkt);
-    // handle self message to check whether partner's result has arrived
-  } else if (auto *pkt = dynamic_cast<MSMResultArrivalCheck *>(msg)) {
-    handleMSMResultArrivalCheck(pkt);
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto serialized_ruleset = pkt->getRuleSet();
@@ -255,12 +252,6 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
     msm_info.qubit_postprocess_info[msm_info.photon_index_counter].qubit_index = qubit_index;
     msm_info.qubit_postprocess_info[msm_info.photon_index_counter].correction_operation = click_result->getClickResult().correction_operation;
     msm_info.iteration_index++;
-    // start countdown to check whether partner's result has arrived
-    MSMResultArrivalCheck *msm_result_arrival_check = new MSMResultArrivalCheck;
-    msm_result_arrival_check->setQnicIndex(qnic_index);
-    msm_result_arrival_check->setQubitIndex(qubit_index);
-    // 1.1 is a magic number. It should be larger than the time it takes for the partner to send the result
-    // scheduleAt(simTime() + 1.1 * msm_info.total_travel_time, msm_result_arrival_check);
   } else {
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
     qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
@@ -281,7 +272,6 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
   }
   QubitInfo qubit_info = qubit_itr->second;
   auto qubit_index = qubit_info.qubit_index;
-  msm_info.qubit_postprocess_info[qubit_index].handled = true;
   // local: success | partner: fail
   // qubit on photon index is included in msm_info but the partner sends fail
   if (!msm_result->getSuccess()) {
@@ -310,19 +300,6 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
         }
     }
   }
-}
-
-void RuleEngine::handleMSMResultArrivalCheck(MSMResultArrivalCheck *msm_result_arrival_check) {
-  auto qnic_index = msm_result_arrival_check->getQnicIndex();
-  auto qubit_index = msm_result_arrival_check->getQubitIndex();
-  auto &msm_info = msm_info_map[qnic_index];
-  // result doesn't arrive in expected time
-  if (!msm_info.qubit_postprocess_info[qubit_index].handled) {
-    realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, QNIC_RP, false);
-    qnic_store->setQubitBusy(QNIC_RP, qnic_index, qubit_index, false);
-  }
-  msm_info.qubit_postprocess_info[qubit_index].handled = false;
-  return;
 }
 
 void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {

@@ -35,5 +35,23 @@
             "program": "${workspaceFolder}/a.out",
             "cwd": "${workspaceFolder}/quisp",
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Simulation MSM ES",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/msm_generation_test.ini",
+                "-u",
+                "Cmdenv",
+                "-c",
+                "MSM_ES_Four"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
     ],
 }
