@@ -16,7 +16,6 @@ Local BSM: success | Partner BSM: success
 - Based on the results, correct the qubits.
 - Save the information of the Bell pair in the bellpairstore.
 
-Also, we ignore incoming photons for cases where there are no free memory. Therefore, when QNodeA does not have free memory and the QNodeB has free memory, QNodeB does not receive the BSM result from QNodeA, and for cases where the BSM at QNodeB succeeds, it cannot release the memory qubit forever. To counter this corner case, we set a timeout for each memory qubit, described in the pseudocode as `handle_link_timeout`.
 
 We will show a sequence diagram of the MSM protocol below.
 
@@ -52,10 +51,9 @@ sequenceDiagram
     participant REA as RuleEngine
     participant PRT as PartnerRuleEngine
 
-    REA->>+REA: Call handle_click_result(success, correction, qubit)
-    REA->>+PRT: MSMResult (Contains success, correction, photon_index)
-    PRT->>-PRT: Call handle_msm_result(success, correction, photon_index)
-    REA->>-REA: Call handle_link_timeout(qubit) at 1.1 × travel_time
+    REA->>REA: Call handle_click_result(success, correction, qubit)
+    REA->>PRT: MSMResult (Contains success, correction, photon_index)
+    PRT->>PRT: Call handle_msm_result(success, correction, photon_index)
 ```
 
 We will show a pseudocode for major functions related to the MSM protocol, which also appeard in the sequence diagram above.
@@ -89,8 +87,6 @@ We will show a pseudocode for major functions related to the MSM protocol, which
 **function** HANDLE_CLICK_RESULT(`success`, `correction`, `qubit`)
 1. **If** `success` **then**
     1. Append `qubit` and `correction` to `success_list`
-    1. Call `handle_link_timeout(qubit)` after $1.1 \times$ `travel_time`
-       - Waiting time should be longer than the travel time to the partner
 1. **Else**
     1. Free `qubit`
 1. Send `success, correction, photon_index` to the partner QNode
@@ -108,24 +104,12 @@ We will show a pseudocode for major functions related to the MSM protocol, which
     1. Set `correction_local` $\gets$ `success_list[photon_index].correction`
     1. Set `qubit` $\gets$ `success_list[photon_index].qubit`
     1. **If** `success` **then**
-        1. Set `qubit.handled` $\gets$ True
         1. **If** (`correction = correction_local` and `Addr_partner < Addr_self`) **then**
             1. Apply Pauli Z Gate to `qubit` (The reason is explained in the section below)
             1. Save bell pair information
     1. **Else**
         1. Free `qubit`
-
 ---
-#### Function to handle the timeout
-
-**Input:**
-- Memory qubit: `qubit`
-
-**function** HANDLE_QUBIT_TIMEOUT(`qubit`)
-1. **If** (`qubit.handled` = False) **then**
-    1. Free `qubit`
-1. Set `qubit.handled` $\gets$ False
-
 
 ### Explanation of applying the Pauli Z gate for the case where the BSM results are different
 
