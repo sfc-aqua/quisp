@@ -316,7 +316,14 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
     std::advance(iterator, emitted_index);
     bell_pair_store.insertEntangledQubit(partner_address, qubit_record);
     emitted_indices.erase(iterator);
-
+    bell_pair_counter++;
+      if (bell_pair_counter == 100) {
+        // write into file the current simulation time
+        std::ofstream myfile;
+        myfile.open("bell_pair_counter.txt", std::ios_base::app);
+        myfile << simTime() << "\n";
+        myfile.close();
+        }
     auto correction_operation = bsa_result->getCorrectionOperationList(i);
     if (correction_operation == PauliOperator::X) {
       realtime_controller->applyXGate(qubit_record);
