@@ -525,11 +525,11 @@ TEST_F(GsMultiQubitTest, randomQuantumCircuit2) {
 
 TEST_F(GsMultiQubitTest, checkMSMLinkConnection) {
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(2)->gateH();
-  quantum_register.at(3)->gateCNOT(quantum_register.at(2));
-  quantum_register.at(5)->gateH();
-  quantum_register.at(5)->gateCNOT(quantum_register.at(4));
+  quantum_register.at(2)->gateCNOT(quantum_register.at(3));
+  quantum_register.at(4)->gateH();
+  quantum_register.at(4)->gateCNOT(quantum_register.at(5));
   quantum_register.at(1)->gateX();
   quantum_register.at(4)->gateX();
   quantum_register.at(1)->gateCNOT(quantum_register.at(2));
@@ -541,7 +541,7 @@ TEST_F(GsMultiQubitTest, checkMSMLinkConnection) {
 
   rng->double_value = 0;
   auto meas1 = quantum_register.at(0)->measureZ();
-  auto meas2 = quantum_register.at(0)->measureZ();
+  auto meas2 = quantum_register.at(5)->measureZ();
   EXPECT_EQ(meas1, EigenvalueResult::PLUS_ONE);
   EXPECT_EQ(meas2, EigenvalueResult::PLUS_ONE);
   resetRegister();
@@ -563,7 +563,7 @@ TEST_F(GsMultiQubitTest, checkMSMLinkConnection) {
 
   rng->double_value = 0.5;
   meas1 = quantum_register.at(0)->measureZ();
-  meas2 = quantum_register.at(0)->measureZ();
+  meas2 = quantum_register.at(5)->measureZ();
   EXPECT_EQ(meas1, EigenvalueResult::MINUS_ONE);
   EXPECT_EQ(meas2, EigenvalueResult::MINUS_ONE);
   resetRegister();
