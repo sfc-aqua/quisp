@@ -24,7 +24,7 @@ module QNode
         inout port[]; // size will be determined by the number of connections defined at the end of this file
         inout quantum_port[] @loose;
         inout quantum_port_receiver[] @loose; // BSA is active. Tells the neighboring nodes about the timings and so on.
-        inout quantum_port_receiver_passive[] @loose; // BSA is passive. Doesnt do anything. SPDC is in charge here.
+        inout quantum_port_receiver_passive[] @loose; // BSA is passive. Doesnt do anything. EPPS is in charge here.
 
     submodules:
         app: Application {
@@ -47,7 +47,7 @@ module QNode
         }
         qrsa: quantumRoutingSoft {
             parameters:
-                @display("p=171,33");
+                @display("p=179,35;is=l");
                 number_of_qnics = sizeof(parent.quantum_port);
                 number_of_qnics_r = sizeof(parent.quantum_port_receiver);
                 number_of_qnics_rp = sizeof(parent.quantum_port_receiver_passive);
@@ -62,7 +62,7 @@ module QNode
                 receiver = false;
                 emission_std = parent.emission_timing_std;
                 self_qnic_type = 0;
-                @display("p=300,200,m,5,100,50");
+                @display("p=311,161,m,5,100,50");
         }
         qnic_r[sizeof(quantum_port_receiver)]: QNIC {
             parameters:
@@ -74,19 +74,19 @@ module QNode
                 passive = false;
                 self_qnic_type = 1;
                 emission_std = parent.emission_timing_std;
-                @display("p=100, 250,m,5,50,60");
+                @display("p=179,200,m,5,50,60");
         }
         qnic_rp[sizeof(quantum_port_receiver_passive)]: QNIC {
             parameters:
                 parent_node_address = parent.address;
                 self_qnic_address = index + sizeof(parent.quantum_port) + sizeof(parent.quantum_port_receiver);
                 self_qnic_index = index;
-                num_buffer = default(int(buffers)); // number of buffers for each qnic
+                num_buffer = default(int(parent.buffers)); // number of buffers for each qnic
                 receiver = true;
                 passive = true;
                 self_qnic_type = 2;
                 emission_std = parent.emission_timing_std;
-                @display("p=328,82");
+                @display("p=338,82,m,5,50,60");
         }
 
     connections:

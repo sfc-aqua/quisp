@@ -42,7 +42,7 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   virtual int getNodeAddr() override { return -1; };
   virtual bool isQNodeType(const cModuleType *const type) override { return false; };
   virtual bool isBSANodeType(const cModuleType *const type) override { return false; };
-  virtual bool isSPDCNodeType(const cModuleType *const type) override { return false; };
+  virtual bool isEPPSNodeType(const cModuleType *const type) override { return false; };
   virtual IStationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override { return nullptr; };
   virtual cModule *getQNIC(int qnic_index, QNIC_type qnic_type) override { return nullptr; };
   virtual IRoutingDaemon *getRoutingDaemon() override { return nullptr; };

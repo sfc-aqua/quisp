@@ -1,57 +1,38 @@
-/** \file EntangledPhotonPairSource.h
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/03/30
- *
- *  \brief EntangledPhotonPairSource
- */
-#ifndef QUISP_MODULES_EPPS_H_
-#define QUISP_MODULES_EPPS_H_
+#pragma once
 
-#include <PhotonicQubit_m.h>
 #include <messages/classical_messages.h>
 #include <omnetpp.h>
+#include <utils/ComponentProvider.h>
 #include <vector>
+#include "PhotonicQubit_m.h"
+#include "backends/Backends.h"
+#include "backends/interfaces/IQubit.h"
+#include "modules/PhysicalConnection/BSA/types.h"
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 
-using namespace omnetpp;
-using namespace quisp::messages;
+namespace quisp::modules {
 
-namespace quisp {
-namespace modules {
-
-typedef struct {
-  PhotonicQubit* qubitOne;
-  PhotonicQubit* qubitTwo;
-} entangledPhotons;
-
-/** \class EntangledPhotonPairSource EntangledPhotonPairSource.h
- *
- *  \brief Entangled Photons Pairs Source
- *
- *  \see https://www.nist.gov/information-technology-laboratory/entangled-photon-pair-sources
- */
-class EntangledPhotonPairSource : public cSimpleModule {
+class EntangledPhotonPairSource : public omnetpp::cSimpleModule {
  private:
-  // int myAddress;
-  double error_rate;
-  double emission_std;
-  double Y_error_ratio;
-  double X_error_ratio;
-  double Z_error_ratio;
+  // device parameters
+  double emission_success_probability;
+  double emission_jittering_standard_deviation;
+  double emission_x_error_rate;
+  double emission_y_error_rate;
+  double emission_z_error_rate;
+
+  utils::ComponentProvider provider;
+  IQuantumBackend* backend;
 
  protected:
   virtual void initialize() override;
-  virtual void handleMessage(cMessage* msg) override;
-  virtual void BubbleText(const char* txt);
-  virtual PhotonicQubit* generateEntangledPhotons();
-  virtual cModule* getSPDCNode();
+  virtual void handleMessage(omnetpp::cMessage* msg) override;
+  virtual void finish() override;
 
  public:
-  double frequency;
-  virtual double getEmissionFrequency();
+  EntangledPhotonPairSource();
+  ~EntangledPhotonPairSource();
   virtual void emitPhotons();
 };
 
-}  // namespace modules
-}  // namespace quisp
-
-#endif /* QUISP_MODULES_EPPS_H_ */
+}  // namespace quisp::modules

@@ -1,4 +1,5 @@
 #pragma once
+
 namespace quisp::physical::types {
 
 enum class PauliOperator : int { I = 0, X, Y, Z };
@@ -8,5 +9,4 @@ struct BSAClickResult {
   bool success;
   PauliOperator correction_operation;
 };
-
 }  // namespace quisp::physical::types

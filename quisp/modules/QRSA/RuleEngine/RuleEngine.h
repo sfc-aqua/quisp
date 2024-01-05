@@ -13,7 +13,9 @@
 #include "IRuleEngine.h"
 #include "QNicStore/IQNicStore.h"
 #include "QubitRecord/IQubitRecord.h"
+#include "messages/BSA_ipc_messages_m.h"
 #include "messages/classical_messages.h"
+#include "messages/link_generation_messages_m.h"
 #include "modules/Logger/LoggerBase.h"
 #include "modules/QNIC.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
@@ -76,15 +78,20 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
  protected:
   void initialize() override;
   void handleMessage(cMessage *msg) override;
+  void handleMSMResult(messages::MSMResult *msm_result);
   void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(messages::PurificationResult *purification_result);
   void handleSwappingResult(messages::SwappingResult *swapping_result);
+  void handleSingleClickResult(messages::SingleClickResult *click_result);
+  messages::CombinedBSAresults *generateCombinedBSAresults(int qnic_index);
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);
   void freeFailedEntanglementAttemptQubits(QNIC_type qnic_type, int qnic_index);
   simtime_t getEmitTimeFromBSMNotification(messages::BSMTimingNotification *notification);
   void schedulePhotonEmission(QNIC_type qnic_type, int qnic_index, messages::BSMTimingNotification *notification);
+  void scheduleMSMPhotonEmission(QNIC_type qnic_type, int qnic_index, messages::EPPSTimingNotification *notification);
+  void handleStopEmitting(messages::StopEmitting *stop_emit);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
@@ -92,6 +99,27 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   runtime::RuntimeManager runtimes;
   std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
   std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
+
+  struct QubitInfo {
+    int qubit_index;
+    PauliOperator correction_operation = PauliOperator::I;
+  };
+
+  struct MSMInfo {
+    int partner_address;
+    int partner_qnic_index;
+    int epps_address;
+    unsigned long long photon_index_counter;
+    int iteration_index;
+    simtime_t total_travel_time;
+    // map of iteration index and qubit index
+    std::unordered_map<int, int> qubit_info_map;
+    // map of photon index and qubit info
+    std::unordered_map<int, QubitInfo> qubit_postprocess_info;
+  };
+
+  // [Key: qnic_index, Value: qubit_index]
+  std::unordered_map<int, MSMInfo> msm_info_map;
 };
 
 Define_Module(RuleEngine);

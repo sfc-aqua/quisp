@@ -522,4 +522,51 @@ TEST_F(GsMultiQubitTest, randomQuantumCircuit2) {
   EXPECT_EQ(meas5, EigenvalueResult::MINUS_ONE);
   resetRegister();
 }
+
+TEST_F(GsMultiQubitTest, checkMSMLinkConnection) {
+  quantum_register.at(0)->gateH();
+  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(2)->gateH();
+  quantum_register.at(3)->gateCNOT(quantum_register.at(2));
+  quantum_register.at(5)->gateH();
+  quantum_register.at(5)->gateCNOT(quantum_register.at(4));
+  quantum_register.at(1)->gateX();
+  quantum_register.at(4)->gateX();
+  quantum_register.at(1)->gateCNOT(quantum_register.at(2));
+  quantum_register.at(4)->gateCNOT(quantum_register.at(3));
+  quantum_register.at(1)->noiselessMeasureX(EigenvalueResult::PLUS_ONE);
+  quantum_register.at(2)->noiselessMeasureZ(EigenvalueResult::PLUS_ONE);
+  quantum_register.at(3)->noiselessMeasureZ(EigenvalueResult::PLUS_ONE);
+  quantum_register.at(4)->noiselessMeasureX(EigenvalueResult::PLUS_ONE);
+
+  rng->double_value = 0;
+  auto meas1 = quantum_register.at(0)->measureZ();
+  auto meas2 = quantum_register.at(0)->measureZ();
+  EXPECT_EQ(meas1, EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(meas2, EigenvalueResult::PLUS_ONE);
+  resetRegister();
+
+  quantum_register.at(0)->gateH();
+  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(2)->gateH();
+  quantum_register.at(3)->gateCNOT(quantum_register.at(2));
+  quantum_register.at(5)->gateH();
+  quantum_register.at(5)->gateCNOT(quantum_register.at(4));
+  quantum_register.at(1)->gateX();
+  quantum_register.at(4)->gateX();
+  quantum_register.at(1)->gateCNOT(quantum_register.at(2));
+  quantum_register.at(4)->gateCNOT(quantum_register.at(3));
+  quantum_register.at(1)->noiselessMeasureX(EigenvalueResult::PLUS_ONE);
+  quantum_register.at(2)->noiselessMeasureZ(EigenvalueResult::PLUS_ONE);
+  quantum_register.at(3)->noiselessMeasureZ(EigenvalueResult::PLUS_ONE);
+  quantum_register.at(4)->noiselessMeasureX(EigenvalueResult::PLUS_ONE);
+
+  rng->double_value = 0.5;
+  meas1 = quantum_register.at(0)->measureZ();
+  meas2 = quantum_register.at(0)->measureZ();
+  EXPECT_EQ(meas1, EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(meas2, EigenvalueResult::MINUS_ONE);
+  resetRegister();
+}
+
 }  // namespace
