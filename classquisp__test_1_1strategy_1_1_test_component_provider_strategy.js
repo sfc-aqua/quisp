@@ -17,7 +17,7 @@ var classquisp__test_1_1strategy_1_1_test_component_provider_strategy =
     [ "getSharedResource", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#ad43154bab41a83742790b9c2966e8c41", null ],
     [ "getStationaryQubit", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a61ad443e153f985d249a46de8cfe3e07", null ],
     [ "isBSANodeType", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a29e6ed3cd1c5a2627544a79538f62512", null ],
+    [ "isEPPSNodeType", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a436fc9e64139d18b1d88d5355c76f819", null ],
     [ "isQNodeType", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#ab05145a60d82c6717dd18f9774272fe0", null ],
-    [ "isSPDCNodeType", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a03a228b030c38a1e44229fc994673a46", null ],
     [ "qnic_specs", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#adb2de64a174ff8bd6ac4a0d23f0d0a46", null ]
 ];

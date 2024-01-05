@@ -16,10 +16,10 @@ var classquisp_1_1utils_1_1_default_component_provider_strategy =
     [ "getSharedResource", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a22dbb28c5387ea0f24aae15b2b5f7858", null ],
     [ "getStationaryQubit", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a4fced823f0bbaf64298c5d53cf01a349", null ],
     [ "isBSANodeType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#ab01c146aec1d7507ace30e303223bcc2", null ],
+    [ "isEPPSNodeType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a0cda40c56fcaf26815e6f90e896e59da", null ],
     [ "isQNodeType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#aea1f7f5818ec2ae0dd0334c18c22bb8e", null ],
-    [ "isSPDCNodeType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a5000dad70e7a3ea755a6ab40e421f31d", null ],
     [ "BSAType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#af6b9f17abb73bc65962ad0d396734cba", null ],
+    [ "EPPSType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#aa0af622004fd07c3bd9276f166f93230", null ],
     [ "QNodeType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a4a9c3a3ecc8b21db9f4c832ccee3fedd", null ],
-    [ "self", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a440858e627c54d1b1472a13e50106403", null ],
-    [ "SPDCType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a08c7d20c7488b58df71d6a5761310c68", null ]
+    [ "self", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a440858e627c54d1b1472a13e50106403", null ]
 ];

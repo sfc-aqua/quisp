@@ -1,0 +1,8 @@
+<map id="quisp::modules::EPPSController" name="quisp::modules::EPPSController">
+<area shape="rect" id="node1" title="EPPSController." alt="" coords="659,170,863,195"/>
+<area shape="rect" id="node2" title=" " alt="" coords="23,239,190,265"/>
+<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_entangled_photon_pair_source.html" title=" " alt="" coords="309,185,480,225"/>
+<area shape="rect" id="node3" title=" " alt="" coords="355,135,434,161"/>
+<area shape="rect" id="node5" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="5,57,208,82"/>
+<area shape="rect" id="node6" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="23,165,191,205"/>
+</map>

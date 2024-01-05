@@ -1,16 +1,16 @@
 var classquisp_1_1modules_1_1_entangled_photon_pair_source =
 [
-    [ "BubbleText", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a282213aa6db2a7b1193ed3fe07db053e", null ],
+    [ "EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a604592878e78267ca1d510029b12147b", null ],
+    [ "~EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a20687948ae01662577ce9ecc8ca57d5a", null ],
     [ "emitPhotons", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#af8889812a3e6fe04f0588906ca6ac789", null ],
-    [ "generateEntangledPhotons", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#ab86cae709f939bb21186a09ec523e12d", null ],
-    [ "getEmissionFrequency", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#aa143c9db8500a1326f087c21d54036eb", null ],
-    [ "getSPDCNode", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a15d5083a02cc844551e5626802ac5be8", null ],
-    [ "handleMessage", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a4d0f0825fda433995ffe2d49afb7f782", null ],
+    [ "finish", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a26cbcd36e7a748fc934b36723013ce3b", null ],
+    [ "handleMessage", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#afe07d969d61e62d59560fcc3d7cdc120", null ],
     [ "initialize", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#ad4d9cd0332b9859d7f23ee4c845d8299", null ],
-    [ "emission_std", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#ae2466210e33fe57960c3cba58e9a761b", null ],
-    [ "error_rate", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#afbc81fb34970a422dc679e88a9561225", null ],
-    [ "frequency", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a84ed15971af1f47960ecfca5a3870952", null ],
-    [ "X_error_ratio", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a2adc22e52f0a6a12e4b00b2306f00fd5", null ],
-    [ "Y_error_ratio", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a9aa3ac6f0e41e3ab125727c608251dc4", null ],
-    [ "Z_error_ratio", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a248660931c7739cd130307b9ee07528a", null ]
+    [ "backend", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a5b48a0fd4c55b91ec4fad121668c8843", null ],
+    [ "emission_jittering_standard_deviation", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a6cb81e34f0d59f7bf722a5318e951eb9", null ],
+    [ "emission_success_probability", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a177ca2132a0cf9879853bd91d6e1b67f", null ],
+    [ "emission_x_error_rate", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#acf9e73ab6375bc0377350c3da72c20b1", null ],
+    [ "emission_y_error_rate", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a3e048bf74d04e437468f0f9ef821f0cd", null ],
+    [ "emission_z_error_rate", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#ad11dc793bee1c693b29fb75b2e8ac238", null ],
+    [ "provider", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a701503976002210f9b954045d64a0fe6", null ]
 ];

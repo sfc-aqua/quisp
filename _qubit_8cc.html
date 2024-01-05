@@ -96,6 +96,7 @@ $(document).ready(function(){initNavTree('_qubit_8cc.html',''); initResizable();
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="backends_2_graph_state_2_qubit_8h_source.html">Qubit.h</a>&quot;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &quot;<a class="el" href="backends_2_graph_state_2_backend_8h_source.html">Backend.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_i_qubit_8h_source.html">backends/interfaces/IQubit.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_i_qubit_id_8h_source.html">backends/interfaces/IQubitId.h</a>&quot;</code><br />
@@ -109,38 +110,38 @@ Include dependency graph for Qubit.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="_qubit_8cc__incl.png" border="0" usemap="#aquisp_2backends_2_graph_state_2_qubit_8cc" alt=""/></div>
 <map name="aquisp_2backends_2_graph_state_2_qubit_8cc" id="aquisp_2backends_2_graph_state_2_qubit_8cc">
-<area shape="rect" title=" " alt="" coords="1719,5,1901,45"/>
-<area shape="rect" href="backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="1115,181,1177,207"/>
-<area shape="rect" href="_i_qubit_id_8h.html" title=" " alt="" coords="931,350,1009,375"/>
-<area shape="rect" href="_i_qubit_8h.html" title=" " alt="" coords="29,262,167,287"/>
-<area shape="rect" title=" " alt="" coords="5,350,84,375"/>
-<area shape="rect" href="backends_2_graph_state_2types_8h.html" title=" " alt="" coords="1984,262,2047,287"/>
-<area shape="rect" href="backends_2_graph_state_2_backend_8h.html" title=" " alt="" coords="730,101,813,126"/>
-<area shape="rect" title=" " alt="" coords="1873,93,2003,133"/>
-<area shape="rect" title=" " alt="" coords="2027,101,2159,126"/>
-<area shape="rect" title=" " alt="" coords="2183,101,2330,126"/>
-<area shape="rect" title=" " alt="" coords="2354,101,2501,126"/>
-<area shape="rect" title=" " alt="" coords="668,431,723,456"/>
-<area shape="rect" title=" " alt="" coords="981,262,1085,287"/>
-<area shape="rect" title=" " alt="" coords="1109,255,1277,295"/>
-<area shape="rect" href="_i_quantum_backend_8h.html" title=" " alt="" coords="594,262,805,287"/>
-<area shape="rect" title=" " alt="" coords="1301,262,1457,287"/>
-<area shape="rect" href="_qubit_configuration_8h.html" title=" " alt="" coords="371,262,569,287"/>
-<area shape="rect" title=" " alt="" coords="1481,262,1613,287"/>
-<area shape="rect" href="_util_functions_8h.html" title=" " alt="" coords="1823,262,1960,287"/>
-<area shape="rect" title=" " alt="" coords="1638,262,1697,287"/>
-<area shape="rect" title=" " alt="" coords="628,350,771,375"/>
-<area shape="rect" title=" " alt="" coords="305,350,373,375"/>
-<area shape="rect" href="_i_configuration_8h.html" title=" " alt="" coords="455,350,565,375"/>
-<area shape="rect" title=" " alt="" coords="985,431,1051,456"/>
-<area shape="rect" title=" " alt="" coords="883,431,961,456"/>
-<area shape="rect" title=" " alt="" coords="2021,350,2111,375"/>
-<area shape="rect" title=" " alt="" coords="1925,350,1997,375"/>
-<area shape="rect" title=" " alt="" coords="1853,350,1900,375"/>
-<area shape="rect" href="_i_random_number_generator_8h.html" title=" " alt="" coords="1639,343,1829,383"/>
-<area shape="rect" title=" " alt="" coords="879,181,962,207"/>
-<area shape="rect" title=" " alt="" coords="987,181,1044,207"/>
-<area shape="rect" title=" " alt="" coords="133,181,244,207"/>
+<area shape="rect" title=" " alt="" coords="1630,5,1813,45"/>
+<area shape="rect" href="backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="1225,181,1287,207"/>
+<area shape="rect" title=" " alt="" coords="430,431,485,456"/>
+<area shape="rect" href="_i_qubit_id_8h.html" title=" " alt="" coords="879,350,958,375"/>
+<area shape="rect" href="_i_qubit_8h.html" title=" " alt="" coords="93,262,232,287"/>
+<area shape="rect" title=" " alt="" coords="83,350,162,375"/>
+<area shape="rect" href="backends_2_graph_state_2types_8h.html" title=" " alt="" coords="1971,262,2034,287"/>
+<area shape="rect" href="backends_2_graph_state_2_backend_8h.html" title=" " alt="" coords="863,101,945,126"/>
+<area shape="rect" title=" " alt="" coords="1810,93,1939,133"/>
+<area shape="rect" title=" " alt="" coords="1963,101,2095,126"/>
+<area shape="rect" title=" " alt="" coords="2120,101,2267,126"/>
+<area shape="rect" title=" " alt="" coords="2291,101,2437,126"/>
+<area shape="rect" title=" " alt="" coords="1580,262,1684,287"/>
+<area shape="rect" title=" " alt="" coords="968,255,1136,295"/>
+<area shape="rect" href="_i_quantum_backend_8h.html" title=" " alt="" coords="581,262,792,287"/>
+<area shape="rect" title=" " alt="" coords="1161,262,1317,287"/>
+<area shape="rect" href="_qubit_configuration_8h.html" title=" " alt="" coords="358,262,557,287"/>
+<area shape="rect" title=" " alt="" coords="1341,262,1473,287"/>
+<area shape="rect" href="_util_functions_8h.html" title=" " alt="" coords="1810,262,1947,287"/>
+<area shape="rect" title=" " alt="" coords="1497,262,1556,287"/>
+<area shape="rect" title=" " alt="" coords="615,350,758,375"/>
+<area shape="rect" title=" " alt="" coords="273,350,341,375"/>
+<area shape="rect" href="_i_configuration_8h.html" title=" " alt="" coords="402,350,513,375"/>
+<area shape="rect" title=" " alt="" coords="838,431,903,456"/>
+<area shape="rect" title=" " alt="" coords="927,431,1006,456"/>
+<area shape="rect" title=" " alt="" coords="2011,350,2101,375"/>
+<area shape="rect" title=" " alt="" coords="1843,350,1915,375"/>
+<area shape="rect" title=" " alt="" coords="1939,350,1986,375"/>
+<area shape="rect" href="_i_random_number_generator_8h.html" title=" " alt="" coords="1627,343,1818,383"/>
+<area shape="rect" title=" " alt="" coords="901,181,984,207"/>
+<area shape="rect" title=" " alt="" coords="1009,181,1066,207"/>
+<area shape="rect" title=" " alt="" coords="1090,181,1201,207"/>
 </map>
 </div>
 </div><table class="memberdecls">

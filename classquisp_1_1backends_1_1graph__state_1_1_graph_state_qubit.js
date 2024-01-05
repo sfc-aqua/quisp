@@ -9,6 +9,7 @@ var classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit =
     [ "applyRightClifford", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a00b428e69fe290c3865e14cfda3da255", null ],
     [ "applySingleQubitGateError", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a65a4fed83db7bc938272a207f8d71a02", null ],
     [ "applyTwoQubitGateError", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a5e78fc5232bcda9a3875984e2a297aa7", null ],
+    [ "cliffordToString", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a6ffffdac99605903cc6c3dac0956becb", null ],
     [ "configure", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#adb1c62426cc1dd665db515396794af35", null ],
     [ "deleteEdge", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#aa9d68de4c6265b57a4ad7cbfff0c9305", null ],
     [ "excite", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#ad80aa3202625699c4a492fd5b5f3ad9e", null ],

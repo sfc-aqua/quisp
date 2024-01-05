@@ -84,7 +84,7 @@ var annotated_dup =
         [ "ConnectionSetupInfo", "structquisp_1_1modules_1_1_connection_setup_info.html", "structquisp_1_1modules_1_1_connection_setup_info" ],
         [ "dummyModule", "classquisp_1_1modules_1_1dummy_module.html", "classquisp_1_1modules_1_1dummy_module" ],
         [ "EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", "classquisp_1_1modules_1_1_entangled_photon_pair_source" ],
-        [ "entangledPhotons", "structquisp_1_1modules_1_1entangled_photons.html", "structquisp_1_1modules_1_1entangled_photons" ],
+        [ "EPPSController", "classquisp_1_1modules_1_1_e_p_p_s_controller.html", "classquisp_1_1modules_1_1_e_p_p_s_controller" ],
         [ "HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html", "classquisp_1_1modules_1_1_hardware_monitor" ],
         [ "IApplication", "classquisp_1_1modules_1_1_i_application.html", "classquisp_1_1modules_1_1_i_application" ],
         [ "IConnectionManager", "classquisp_1_1modules_1_1_i_connection_manager.html", "classquisp_1_1modules_1_1_i_connection_manager" ],
@@ -104,7 +104,6 @@ var annotated_dup =
         [ "RealTimeController", "classquisp_1_1modules_1_1_real_time_controller.html", "classquisp_1_1modules_1_1_real_time_controller" ],
         [ "Router", "classquisp_1_1modules_1_1_router.html", "classquisp_1_1modules_1_1_router" ],
         [ "RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", "classquisp_1_1modules_1_1_rule_engine" ],
-        [ "SPDC_Controller", "classquisp_1_1modules_1_1_s_p_d_c___controller.html", "classquisp_1_1modules_1_1_s_p_d_c___controller" ],
         [ "StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", "classquisp_1_1modules_1_1_stationary_qubit" ],
         [ "SwappingResultData", "structquisp_1_1modules_1_1_swapping_result_data.html", "structquisp_1_1modules_1_1_swapping_result_data" ],
         [ "TomographyOutcome", "structquisp_1_1modules_1_1_tomography_outcome.html", "structquisp_1_1modules_1_1_tomography_outcome" ]

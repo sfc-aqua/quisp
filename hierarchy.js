@@ -44,6 +44,7 @@ var hierarchy =
     ] ],
     [ "omnetpp::cSimpleModule", null, [
       [ "quisp::modules::BellStateAnalyzer", "classquisp_1_1modules_1_1_bell_state_analyzer.html", null ],
+      [ "quisp::modules::EPPSController", "classquisp_1_1modules_1_1_e_p_p_s_controller.html", null ],
       [ "quisp::modules::EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", null ],
       [ "quisp::modules::IApplication", "classquisp_1_1modules_1_1_i_application.html", [
         [ "quisp::modules::Application", "classquisp_1_1modules_1_1_application.html", null ]
@@ -70,12 +71,10 @@ var hierarchy =
       [ "quisp::modules::PhotonicSwitch", "classquisp_1_1modules_1_1_photonic_switch.html", null ],
       [ "quisp::modules::Queue", "classquisp_1_1modules_1_1_queue.html", null ],
       [ "quisp::modules::Router", "classquisp_1_1modules_1_1_router.html", null ],
-      [ "quisp::modules::SPDC_Controller", "classquisp_1_1modules_1_1_s_p_d_c___controller.html", null ],
       [ "quisp::modules::SharedResource::SharedResource", "classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html", null ],
       [ "quisp::modules::backend::BackendContainer", "classquisp_1_1modules_1_1backend_1_1_backend_container.html", null ],
       [ "quisp::modules::dummyModule", "classquisp_1_1modules_1_1dummy_module.html", null ]
     ] ],
-    [ "quisp::modules::entangledPhotons", "structquisp_1_1modules_1_1entangled_photons.html", null ],
     [ "quisp::backends::abstract::IQubitId::Hash", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_hash.html", null ],
     [ "std::hash< pair< quisp::modules::QNIC_type, int > >", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4.html", null ],
     [ "GraphStateBackend::ICallback", null, [
@@ -150,6 +149,7 @@ var hierarchy =
     [ "quisp::backends::graph_state::types::MemoryErrorModel", "structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html", null ],
     [ "quisp::runtime::MemoryKey", "structquisp_1_1runtime_1_1_memory_key.html", null ],
     [ "quisp::runtime::MemoryValue", "classquisp_1_1runtime_1_1_memory_value.html", null ],
+    [ "quisp::modules::RuleEngine::MSMInfo", "structquisp_1_1modules_1_1_rule_engine_1_1_m_s_m_info.html", null ],
     [ "quisp::modules::NeighborInfo", "structquisp_1_1modules_1_1_neighbor_info.html", null ],
     [ "quisp::runtime::Op< I >", "structquisp_1_1runtime_1_1_op.html", null ],
     [ "quisp::modules::ospf::OspfNeighborInfo", "structquisp_1_1modules_1_1ospf_1_1_ospf_neighbor_info.html", null ],
@@ -164,6 +164,7 @@ var hierarchy =
     [ "quisp::runtime::QNodeAddr", "structquisp_1_1runtime_1_1_q_node_addr.html", null ],
     [ "quisp::modules::QubitAddr_cons", "structquisp_1_1modules_1_1_qubit_addr__cons.html", null ],
     [ "quisp::runtime::QubitId", "structquisp_1_1runtime_1_1_qubit_id.html", null ],
+    [ "quisp::modules::RuleEngine::QubitInfo", "structquisp_1_1modules_1_1_rule_engine_1_1_qubit_info.html", null ],
     [ "quisp::runtime::Register", "structquisp_1_1runtime_1_1_register.html", null ],
     [ "RoutingDaemon", "class_routing_daemon.html", null ],
     [ "quisp::rules::Rule", "classquisp_1_1rules_1_1_rule.html", null ],

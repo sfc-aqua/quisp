@@ -200,6 +200,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a68cd79f3f0fd3743e7ae7a39348f44e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50be830990350e80f37150f2fecb46a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html">utils::ComponentProvider</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_b_s_a_controller.html#a50be830990350e80f37150f2fecb46a3">provider</a></td></tr>
 <tr class="separator:a50be830990350e80f37150f2fecb46a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a964907bc6eb16174dbf8bb38c2380164"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_b_s_a_controller.html#a964907bc6eb16174dbf8bb38c2380164">is_active</a></td></tr>
+<tr class="separator:a964907bc6eb16174dbf8bb38c2380164"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70d0d00eb1af9d2587939aed9046538a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html">BellStateAnalyzer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_b_s_a_controller.html#a70d0d00eb1af9d2587939aed9046538a">bsa</a></td></tr>
 <tr class="separator:a70d0d00eb1af9d2587939aed9046538a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19dc78e4d7f569958b2e748327a82a09"><td class="memItemLeft" align="right" valign="top">simtime_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_b_s_a_controller.html#a19dc78e4d7f569958b2e748327a82a09">last_result_send_time</a> = 0</td></tr>
@@ -209,7 +211,7 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p >This module takes the click event from BSA, compile the result and report back to QNode that sent the photons. </p>
 <p >The controller can be in 2 operational modes. 1) active mode 2) passive mode</p>
 <p >In the active mode, it will be responsible for deciding when the photons should come in. It will check the distance between two QNodes (possible one could be self), and decide on when the first photon should arrive. The result will be sent back in batches not on every photon pairs/single coming in.</p>
-<p >In the passive mode, this assumes that the BSA is internal and EPPS will tell us how many photons will arrive, when the first one will arrive, and what the iterval is. </p>
+<p >In the passive mode, this assumes that the BSA is internal and EPPS will tell us how many photons will arrive, when the first one will arrive, and what the interval is. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8a48c48d8519cb66ec523543d1bc969a" name="a8a48c48d8519cb66ec523543d1bc969a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8a48c48d8519cb66ec523543d1bc969a">&#9670;&#160;</a></span>BSAController()</h2>
@@ -620,6 +622,28 @@ Private Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">std::vector&lt;BSAClickResult&gt; quisp::modules::BSAController::click_results</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a964907bc6eb16174dbf8bb38c2380164" name="a964907bc6eb16174dbf8bb38c2380164"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a964907bc6eb16174dbf8bb38c2380164">&#9670;&#160;</a></span>is_active</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool quisp::modules::BSAController::is_active</td>
         </tr>
       </table>
   </td>
