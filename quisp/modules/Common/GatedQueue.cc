@@ -2,25 +2,17 @@
 #include "GatedQueue.h"
 
 
-using quisp::modules::Logger::LoggerBase;
-
-
 namespace quisp::modules {
-
-GatedQueue::GatedQueue() : provider(utils::ComponentProvider{this}) {}
-
-
-void GatedQueue::initialize() {
-   Queue::initialize();
-   is_busy = false;
-   initializeLogger(provider);
-}
 
 void GatedQueue::handleMessage(cMessage *msg)
 {
     if (hasGUI()) {
         bubble("GatedQueue received a message!\n");
       }
+
+    if (msg->arrivedOn("from_ps") and dynamic_cast<VisibilityMessage *>(msg) == nullptr) {
+    throw(cRuntimeError("Non-control message at the control gate of a gated queue, this should not happen."));
+    }
 
     if (auto vco = dynamic_cast<VisCheckOutcome *>(msg)) {
            if (vco->getNext_check_time() == 0) {
@@ -86,7 +78,6 @@ void GatedQueue::handleMessage(cMessage *msg)
 
     EV_INFO << "Received " << msg << ": queuing up\n";
     msg->setTimestamp();
-    logger->logPacket("DummyLabel", msg);
     queue.insert(msg);
     emit(qlen_signal, queue.getLength());
 
