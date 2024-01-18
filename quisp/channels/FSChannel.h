@@ -35,7 +35,7 @@ public:
     virtual void recalculateChannelParameters();
     bool checkLOS();
     double getDistanceAtTime(const simtime_t time);
-    SimTime getNext_check_time();
+    virtual SimTime getNext_check_time();
 private:
     ORBITAL_PARAMETERS op;
     CSVParser* dist_par;
