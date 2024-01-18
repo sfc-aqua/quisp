@@ -37,20 +37,31 @@ class Router : public OriginalRouter {
  public:
   using OriginalRouter::handleMessage;
   using OriginalRouter::initialize;
+  using OriginalRouter::routing_table;
   explicit Router(MockNode* parent_qnode) : OriginalRouter() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_router"));
-    recPort = new TestGate(this, "rec");
-    ansPort = new TestGate(this, "ans");
-    }
+    hmPort = new TestGate(this, "hmPort$o");
+    rePort = new TestGate(this, "rePort$o");
+    cmPort = new TestGate(this, "cmPort$o");
+    rdPort = new TestGate(this, "rdPort$o");
+    queueGate = new TestGate(this, "toQueue");
+    routing_table.insert({8, queueGate->getId()});
+  }
 
-  TestGate* recPort;
-  TestGate* ansPort;
+  TestGate* hmPort;
+  TestGate* rePort;
+  TestGate* cmPort;
+  TestGate* rdPort;
+  TestGate* queueGate;
 
   std::map<const char*, cGate*> ports{};
   cGate* gate(const char* gatename, int index = -1) override {
-    if (strcmp(gatename, "rec") == 0) return recPort;
-    if (strcmp(gatename, "ans") == 0) return ansPort;
+    if (strcmp(gatename, "hmPort$o") == 0) return hmPort;
+    if (strcmp(gatename, "cmPort$o") == 0) return cmPort;
+    if (strcmp(gatename, "rePort$o") == 0) return rePort;
+    if (strcmp(gatename, "rdPort$o") == 0) return rdPort;
+    if (strcmp(gatename, "toQueue") == 0) return queueGate;
     error("port: %s not found", gatename);
     return nullptr;
   }
@@ -63,10 +74,10 @@ class RouterTest : public ::testing::Test {
   void SetUp() {
     sim = prepareSimulation();
     node = new MockNode(10, 0, true);
-    ps = new PointingSystem(node);
-    sim->registerComponent(ps);
-    sim->setContext(ps);
-    ps->callInitialize();
+    router = new Router(node);
+    sim->registerComponent(router);
+    sim->setContext(router);
+    router->callInitialize();
   }
   void TearDown() {}
 
@@ -79,16 +90,18 @@ class RouterTest : public ::testing::Test {
   void mockMessageArrival(cMessage* msg) {
     int queue_size = 1;
     int arrival_gate_index = 0;
-    msg->setArrival(ps->getId(), router->findGate("rec"));
+    router->addGateVector("fromQueue", cGate::Type::INPUT, queue_size);
+    msg->setArrival(router->getId(), router->findGate("fromQueue", arrival_gate_index));
   }
 
   TestSimulation* sim;
-  PointingSystem* ps;
+  Router* router;
   MockNode* node;
 };
 
-TEST_F(PointingSystemTest, handleNonVisibilityMessage) {
-  auto msg = new cMessage;
+TEST_F(RouterTest, handlePacketForUnknownAddr) {
+  auto msg = new ConnectionSetupRequest;
+  msg->setDestAddr(7);
   EXPECT_THROW({ router->handleMessage(msg); }, cRuntimeError);
 }
 
