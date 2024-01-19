@@ -294,8 +294,8 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
       if (bell_pair_counter == 100) {
         // write into file the current simulation time
         std::ofstream myfile;
-        myfile.open("bell_pair_counter.txt", std::ios_base::app);
-        myfile << simTime() << "\n";
+        myfile.open("thousandbellpair", std::ios_base::app);
+        myfile << simTime() << ",";
         myfile.close();
         }
     }
@@ -317,11 +317,11 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
     bell_pair_store.insertEntangledQubit(partner_address, qubit_record);
     emitted_indices.erase(iterator);
     bell_pair_counter++;
-      if (bell_pair_counter == 100) {
+      if (bell_pair_counter == 100 && parentAddress == 1) {
         // write into file the current simulation time
         std::ofstream myfile;
-        myfile.open("bell_pair_counter.txt", std::ios_base::app);
-        myfile << simTime() << "\n";
+        myfile.open("thousandbellpair", std::ios_base::app);
+        myfile << simTime() << ",";
         myfile.close();
         }
     auto correction_operation = bsa_result->getCorrectionOperationList(i);
