@@ -53,5 +53,13 @@
             ],
             "cwd": "${workspaceFolder}/quisp"
         },
+        {
+            "type": "python",
+            "request": "launch",
+            "name": "Python: usage analysis",
+            "program": "${workspaceFolder}/quisp/usage_analysis.py",
+            "cwd": "${workspaceFolder}/quisp",
+            "console": "integratedTerminal"
+        }
     ],
 }

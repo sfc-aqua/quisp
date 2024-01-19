@@ -209,14 +209,21 @@ def calc_durations(log):
         durations: "DurationCollectorDict",
     ) -> "Tuple[List[str], List[float], List[float], List[str]]":
         usages: "List[Tuple[str,float, float, str]]" = []
+        usages_temp: "List[Tuple[str,float,float,str,int,int,int]]" = []
         for key in durations:
             d: "DurationCollector" = durations[key]
             for us in d["usage"]:
-                usages.append((str(key), us[0], us[1], us[2]))
-        if not usages:
+                usages_temp.append((str(key), us[0], us[1], us[2], key[3],key[0],key[2]))
+        if not usages_temp:
             return ([], [], [], [])
-        usages = sorted(usages)
-        usages.reverse()
+        usages_temp = sorted(usages_temp, key=lambda x: x[4])
+        usages_temp = sorted(usages_temp, key=lambda x: x[6])
+        usages_temp = sorted(usages_temp, key=lambda x: x[5])
+
+        usages_temp.reverse()
+        for u in usages_temp:
+            usages.append(u[:4])
+
         titles, begins, width, ts = zip(*usages)
         return (titles, begins, width, ts)  # type: ignore
 

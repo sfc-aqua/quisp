@@ -6,17 +6,10 @@ from analysis_utils import (
 )
 
 logs = []
-logs.append(pd.read_json("networks/results/Testing_MSM_one_memory-0.jsonl", orient="records", lines=True))
-logs.append(pd.read_json("networks/results/Testing_MSM_two_memory-0.jsonl", orient="records", lines=True))
-logs.append(pd.read_json("networks/results/Testing_MSM_four_memory-0.jsonl", orient="records", lines=True))
-logs.append(pd.read_json("networks/results/Testing_MSM_eight_memory-0.jsonl", orient="records", lines=True))
-logs.append(pd.read_json("networks/results/Testing_MSM_sixteen_memory-0.jsonl", orient="records", lines=True))
-logs.append(pd.read_json("networks/results/Testing_MSM_thirtytwo_memory-0.jsonl", orient="records", lines=True))
-logs.append(pd.read_json("networks/results/Testing_MSM_sixtyfour_memory-0.jsonl", orient="records", lines=True))
 logs.append(pd.read_json("networks/results/Testing_MSM_onetwoeight_memory-0.jsonl", orient="records", lines=True))
 
 
-index = 1
+index = 128
 for log in logs:
     durations = calc_durations(log)
     fig, ax = plt.subplots(figsize=(35, 22))
@@ -28,5 +21,5 @@ for log in logs:
         text, x, y = e
         ax.annotate(text, xy=(x, y))
     ax.legend(loc=(0.1, 0.1))
-    plt.savefig(f"usage_analysis_{index}_memory.png")
+    plt.savefig(f"usage_analysis_{index}_memory_sorted.png")
     index *= 2
