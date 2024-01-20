@@ -272,6 +272,7 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
   }
   QubitInfo qubit_info = qubit_itr->second;
   auto qubit_index = qubit_info.qubit_index;
+  msm_info_map[qnic_index].qubit_postprocess_info.erase(qubit_itr);
   // local: success | partner: fail
   // qubit on photon index is included in msm_info but the partner sends fail
   if (!msm_result->getSuccess()) {
