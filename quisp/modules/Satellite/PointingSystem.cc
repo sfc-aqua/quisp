@@ -12,7 +12,7 @@ namespace quisp::modules::Satellite {
 
 Define_Module(PointingSystem);
 
-PointingSystem::PointingSystem() {}
+PointingSystem::PointingSystem() : provider(utils::ComponentProvider{this}) {}
 
 PointingSystem::~PointingSystem() {}
 

@@ -4,6 +4,8 @@
 #include "Gate.h"
 #include "ModuleType.h"
 #include "QNode.h"
+#include "ChannelType.h"
+#include "MockFreeSpaceChannel.h"
 #include "Simulation.h"
 #include "StaticEnv.h"
 #include "TestComponentProviderStrategy.h"
@@ -16,8 +18,6 @@
 #include "mock_modules/MockQubit.h"
 #include "mock_modules/MockRealTimeController.h"
 #include "mock_modules/MockRoutingDaemon.h"
-#include "mock_modules/MockFreeSpaceChannel.h"
-
 namespace quisp_test {
 
 // use these functions and classes in your unit test.

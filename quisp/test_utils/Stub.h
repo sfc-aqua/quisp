@@ -15,8 +15,6 @@
 using namespace omnetpp;
 
 class Stub: public cModule {
-    private:
-    TestGate* stub_gate;
 };
 
 #endif /* TEST_UTILS_STUB_H_ */
