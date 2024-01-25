@@ -212,6 +212,8 @@ void RuleEngine::scheduleMSMPhotonEmission(QNIC_type type, int qnic_index, EPPST
   timer->setFirst(true);
   timer->setIntervalBetweenPhotons(notification->getInterval());
   timer->setMSM(true);
+  if (first_photon_emit_time < simTime()) first_photon_emit_time = simTime();
+
   scheduleAt(first_photon_emit_time, timer);
 }
 

@@ -13,6 +13,7 @@ network Simple_MIM
 {
     parameters:
         **.speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_FS = 299792.458 km;
 
     submodules:
         backend: Backend;
@@ -35,9 +36,9 @@ network Simple_MIM
 
     connections:
         EndNode1.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> BSA.port++;
-        BSA.port++      <--> ClassicalChannel {  distance = 0.5km; } <--> EndNode2.port++;
+        BSA.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> EndNode2.port++;
         EndNode1.quantum_port++ <--> QuantumChannel {  distance = 0.5km; } <--> BSA.quantum_port++;
-        BSA.quantum_port++      <--> QuantumChannel {  distance = 0.5km; } <--> EndNode2.quantum_port++;
+        BSA.quantum_port++ <--> QuantumChannel {  distance = 0.5km; } <--> EndNode2.quantum_port++;
 
 }
 
@@ -57,6 +58,7 @@ network Simple_MM
         }
         EndNode2: QNode {
             address = 2;
+            is_initiator = true;
             node_type = "EndNode";
             @display("i=COMP;p=248,39,m,5,60,60");
         }
@@ -70,8 +72,7 @@ network Simple_MSM
 {
     parameters:
         **.speed_of_light_in_fiber = 208189.206944 km;
-
-    submodules:
+        submodules:
         backend: Backend;
         logger: Logger;
         sharedResource: SharedResource;
@@ -95,6 +96,33 @@ network Simple_MSM
         EPPS.port++      <--> ClassicalChannel {  distance = 0.5km; } <--> EndNode2.port++;
         EndNode1.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 0.5km; } <--> EPPS.quantum_port++;
         EPPS.quantum_port++      <--> QuantumChannel {  distance = 0.5km; } <--> EndNode2.quantum_port_receiver_passive++;
+    }
+
+network Simple_MM_SAT
+{
+    parameters:
+        **.speed_of_light_in_FS = 299792.458 km;
+    submodules:
+        backend: Backend;
+        logger: Logger;
+        sharedResource: SharedResource;
+        EndNode1: QNode_Sat {
+            address = 1;
+            is_satellite = true;
+            node_type = "EndNode";
+            @display("i=COMP;p=196,35,m,5,60,60");
+        }
+        EndNode2: QNode_Sat {
+            address = 2;
+            is_satellite = false;
+            is_initiator = true;
+            node_type = "EndNode";
+            @display("i=COMP;p=295,201,m,5,60,60");
+        }
+
+    connections:
+        EndNode1.port++ <--> ClassicalChannel_FS {  distance = 400km; } <--> EndNode2.port++;
+        EndNode1.quantum_port++ <--> QuantumChannel_FS {  distance = 400km; } <--> EndNode2.quantum_port_receiver++;
 }
 
 network three_node_MIM

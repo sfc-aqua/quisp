@@ -8,7 +8,7 @@ DefaultComponentProviderStrategy::DefaultComponentProviderStrategy(cModule *_sel
 
 cModule *DefaultComponentProviderStrategy::getQNode() {
   cModule *currentModule = self->getParentModule();
-  while (currentModule->getModuleType() != QNodeType) {
+  while (currentModule->getModuleType() != QNodeType && currentModule->getModuleType() != QNodeSatType) {
     currentModule = currentModule->getParentModule();
     if (currentModule == nullptr) {
       throw cRuntimeError("QNode module not found. Have you changed the type name in ned file?");
@@ -20,7 +20,7 @@ cModule *DefaultComponentProviderStrategy::getQNode() {
 cModule *DefaultComponentProviderStrategy::getNode() {
   cModule *currentModule = self->getParentModule();
   auto *mod_type = currentModule->getModuleType();
-  while (mod_type != QNodeType && mod_type != BSAType && mod_type != EPPSType) {
+  while (mod_type != QNodeType && mod_type != QNodeSatType && mod_type != BSAType && mod_type != EPPSType) {
     currentModule = currentModule->getParentModule();
     mod_type = currentModule->getModuleType();
     if (currentModule == nullptr) {
