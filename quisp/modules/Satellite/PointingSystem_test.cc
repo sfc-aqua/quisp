@@ -42,9 +42,17 @@ class PointingSystem : public OriginalPointingSystem {
  public:
   using OriginalPointingSystem::handleMessage;
   using OriginalPointingSystem::initialize;
+  void addResultRecorders() override {};
+
+  MockNode* parent;
+  cModule* getParentModule() const override {return parent;};
+
   explicit PointingSystem(MockNode* parent_qnode) : OriginalPointingSystem() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_pointing_system"));
+    parent = parent_qnode;
+    auto *sim = getTestSimulation();
+    sim->registerComponent(this);
     recPort = new TestGate(this, "rec");
     ansPort = new TestGate(this, "ans");
   }
@@ -62,6 +70,8 @@ class PointingSystem : public OriginalPointingSystem {
   }
   bool parentModuleIsQNode() { return dynamic_cast<MockNode*>(provider.getNode())->is_qnode; }
   void setIsQnode(bool is_qnode) { dynamic_cast<MockNode*>(provider.getNode())->is_qnode = is_qnode; }
+
+
 };
 
 class PointingSystemTest : public ::testing::Test {
@@ -70,26 +80,19 @@ class PointingSystemTest : public ::testing::Test {
     sim = prepareSimulation();
     node = new MockNode(0, 0, false);
     pointing_system = new PointingSystem(node);
-    channel = new MockFreeSpaceChannel("test_channel");
+    chl = new MockFreeSpaceChannel("test_channel");
     stub = new Stub();
-
-    sim->registerComponent(pointing_system);
-    sim->setContext(pointing_system);
-
-    sim->registerComponent(channel);
-    sim->setContext(channel);
-
-    sim->registerComponent(stub);
-    sim->setContext(stub);
 
     outgate = node->addGate("test_out",cGate::OUTPUT);
     stub_gate = stub->addGate("stub_gate", cGate::INPUT);
 
-    outgate->connectTo(stub_gate,channel);
+    outgate->connectTo(stub_gate,chl,true);
+    chl->finalizeParameters(); // THIS METHOD MAY ONLY BE CALLED WHEN THE CHANNEL IS CONNECTED
 
     pointing_system->callInitialize();
-    channel->callInitialize();
+    chl->callInitialize();
     stub->callInitialize();
+
   }
   void TearDown() {
     }
@@ -107,7 +110,7 @@ class PointingSystemTest : public ::testing::Test {
   TestSimulation* sim;
   PointingSystem* pointing_system;
   MockNode* node;
-  MockFreeSpaceChannel* channel;
+  MockFreeSpaceChannel* chl;
   Stub* stub;
 
   cGate* outgate;
@@ -118,11 +121,10 @@ TEST_F(PointingSystemTest, handleNonControlMessage) {
   auto msg = new cMessage;
   mockMessageArrival(msg);
   EXPECT_THROW({ pointing_system->handleMessage(msg); }, cRuntimeError);
-  node->gate("test_out")->disconnect();
 }
 
 TEST_F(PointingSystemTest, handleVisRequest_VisibleChannel) {
-  channel->setNext_check_time(simTime());
+  chl->setNext_check_time(simTime());
 
   auto vcr = new VisCheckRequest;
   vcr->setOut_gate("test_out");
@@ -139,7 +141,7 @@ TEST_F(PointingSystemTest, handleVisRequest_VisibleChannel) {
 }
 
 TEST_F(PointingSystemTest, handleVisRequest_NonVisibleChannel) {
-  channel->setNext_check_time(simTime()+1);
+  chl->setNext_check_time(simTime()+1);
 
   auto vcr = new VisCheckRequest;
   vcr->setOut_gate("test_out");
@@ -155,3 +157,4 @@ TEST_F(PointingSystemTest, handleVisRequest_NonVisibleChannel) {
   }
 }
 }  // namespace
+

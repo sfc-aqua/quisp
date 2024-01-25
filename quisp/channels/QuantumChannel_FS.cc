@@ -60,8 +60,8 @@ class QuantumChannel_FS : public FSChannel {
   //debug statistics
   simsignal_t channel_length = registerSignal("channel_length");
   simsignal_t channel_delay = registerSignal("channel_delay");
-  simsignal_t channel_att = registerSignal("channel_att");
-  simsignal_t channel_att_dB = registerSignal("channel_att_dB");
+  simsignal_t channel_t = registerSignal("channel_t");
+  simsignal_t channel_t_dB = registerSignal("channel_t_dB");
 
 };
 
@@ -173,6 +173,9 @@ double QuantumChannel_FS::calculateLossRate() {
     theta_atm = 2.1*lambda/r0;
     attenuation_rate = ((pow(theta_diff,2) + pow(theta_atm,2))/(pow(Dr,2))) * pow(distance,2) * Aatm; // from 10.1038/s42005-022-01123-7
     loss_rate = 1 - 1/attenuation_rate;
+
+    emit(channel_t,1/attenuation_rate);
+    emit(channel_t_dB,10*log10(1/attenuation_rate));
 
     return loss_rate;
 }

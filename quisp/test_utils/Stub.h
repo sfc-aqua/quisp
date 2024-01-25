@@ -7,14 +7,17 @@
  * plug one end to the module under test and the other to this stub.
  */
 
-#ifndef TEST_UTILS_STUB_H_
-#define TEST_UTILS_STUB_H_
+#pragma once
 
 #include <omnetpp.h>
+#include "TestUtilFunctions.h"
+#include "ModuleType.h"
 
-using namespace omnetpp;
+using quisp_test::module_type::TestModuleType;
 
-class Stub: public cModule {
+class Stub : public omnetpp::cModule {
+  public:
+  explicit Stub();
+  void addResultRecorders() override {};
+
 };
-
-#endif /* TEST_UTILS_STUB_H_ */

@@ -58,8 +58,8 @@ channel QuantumChannel_FS extends FSChannel
     @statistic[channel_length](record=vector);
     @signal[channel_delay](type=long);
     @statistic[channel_delay](record=vector);
-    @signal[channel_att](type=long);
-    @statistic[channel_att](record=vector);
-    @signal[channel_att_dB](type=long);
-    @statistic[channel_att_dB](record=vector);
+    @signal[channel_t](type=long);
+    @statistic[channel_t](record=vector);
+    @signal[channel_t_dB](type=long);
+    @statistic[channel_t_dB](record=vector);
 }
