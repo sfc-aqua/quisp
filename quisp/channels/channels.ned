@@ -54,12 +54,12 @@ channel QuantumChannel_FS extends FSChannel
     double Fried_parameter @unit(m) = default(10cm);
     string Aatm_CSV;
     
-    @signal[channel_length](type=long);
+    @signal[channel_length](type=double);
     @statistic[channel_length](record=vector);
-    @signal[channel_delay](type=long);
+    @signal[channel_delay](type=double);
     @statistic[channel_delay](record=vector);
-    @signal[channel_t](type=long);
+    @signal[channel_t](type=double);
     @statistic[channel_t](record=vector);
-    @signal[channel_t_dB](type=long);
+    @signal[channel_t_dB](type=double);
     @statistic[channel_t_dB](record=vector);
 }

@@ -27,6 +27,7 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
  private:
   const cModuleType *const QNodeType = cModuleType::get("modules.QNode");
   const cModuleType *const EPPSType = cModuleType::get("modules.EPPSNode");
+  const cModuleType *const EPPSSatType = cModuleType::get("modules.EPPSNode_Sat");
   const cModuleType *const QNodeSatType = cModuleType::get("modules.QNode_Sat");
   const cModuleType *const BSAType = cModuleType::get("modules.BSANode");
   cModule *self;

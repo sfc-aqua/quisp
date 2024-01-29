@@ -34,6 +34,7 @@ class EPPSController : public cSimpleModule {
 
  private:
   double getTravelTimeFromPort(int port);
+  double getPredictedTravelTimeFromPort(int port);
   int getExternalQNICIndexFromPort(int port);
 
   // information for communications
@@ -44,9 +45,14 @@ class EPPSController : public cSimpleModule {
   int right_qnic_index;
   simtime_t left_travel_time;
   simtime_t right_travel_time;
+  simtime_t left_travel_time_predicted;
+  simtime_t right_travel_time_predicted;
+
   simtime_t time_interval_between_photons;
   double photon_emission_per_second;
-  simtime_t emit_time;
+  simtime_t local_emit_time;
+  simtime_t left_emit_time;
+  simtime_t right_emit_time;
   EPPSNotificationTimeout *time_out_message;
   int time_out_count;
   simtime_t last_result_send_time;
