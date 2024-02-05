@@ -93,9 +93,9 @@ void QuantumChannel_FS::initialize() {
 }
 
 cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
+  recalculateChannelParameters();
   PhotonicQubit *q = dynamic_cast<PhotonicQubit *>(msg);
   if (checkLOS()) {
-  recalculateChannelParameters();
   if (q == nullptr) {
     throw new cRuntimeError("something other than photonic qubit is sent through quantum channel");
   }

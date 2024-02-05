@@ -44,6 +44,8 @@ void EPPSController::initialize() {
   time_out_message = new EPPSNotificationTimeout();
   simtime_t first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
   scheduleAt(first_notification_timer, time_out_message);
+  cMessage* resync = new cMessage("Resync");
+  scheduleAt(first_notification_timer+SimTime(15,SIMTIME_MS),resync);
 }
 
 void EPPSController::handleMessage(cMessage *msg) {
@@ -54,11 +56,11 @@ void EPPSController::handleMessage(cMessage *msg) {
   } else if (msg == time_out_message) {
     left_travel_time = getTravelTimeFromPort(0);
     right_travel_time = getTravelTimeFromPort(1);
+    local_emit_time = simTime() + std::max(left_travel_time, right_travel_time);
     left_travel_time_predicted = getPredictedTravelTimeFromPort(0);
     right_travel_time_predicted = getPredictedTravelTimeFromPort(1);
 
     last_result_send_time = simTime();
-    local_emit_time = simTime() + std::max(left_travel_time, right_travel_time);
     EPPSTimingNotification *left_pk = generateNotifier(true);
     EPPSTimingNotification *right_pk = generateNotifier(false);
     send(left_pk, "to_router");
@@ -71,6 +73,12 @@ void EPPSController::handleMessage(cMessage *msg) {
       cancelAndDelete(emit_req);
       emission_stopped = true;
     }
+  } else if (!strcmp(msg->getName(),"Resync")) {
+      cancelAndDelete(emit_req);
+      time_out_message = new EPPSNotificationTimeout();
+      scheduleAt(simTime(), time_out_message);
+      scheduleAfter(SimTime(15,SIMTIME_MS),msg);
+      return;
   }
   delete msg;
   return;
@@ -143,13 +151,15 @@ double EPPSController::getPredictedTravelTimeFromPort(int port) {
         speed_of_light_in_channel = FS_chl->par("speed_of_light_in_FS").doubleValue();  // km/sec
 
         //I need to predict where the satellite is going to be when emission starts. If I send the notification now, that's distance(simTime() + travel_time).
-        double current_distance = FS_chl->getDistanceAtTime(simTime());
-        simtime_t current_travel_time = SimTime(current_distance / speed_of_light_in_channel);
-        double predicted_distance = FS_chl->getDistanceAtTime(simTime()+current_travel_time);
-//        double offset = (predicted_distance-current_distance)/speed_of_light_in_channel;
-//
-//       // distance = FS_chl->getDistanceAtTime(simTime());
-        return predicted_distance / speed_of_light_in_channel; //+ offset
+        //double current_distance = FS_chl->getDistanceAtTime(simTime());
+        //simtime_t current_travel_time = SimTime(current_distance / speed_of_light_in_channel);
+
+
+        double predicted_distance = FS_chl->getDistanceAtTime(local_emit_time);
+        //double offset = (predicted_distance-current_distance)/speed_of_light_in_channel;
+
+       // distance = FS_chl->getDistanceAtTime(simTime());
+        return predicted_distance / speed_of_light_in_channel;// + offset;
 
     } else {
         distance = channel->par("distance").doubleValue();  // km

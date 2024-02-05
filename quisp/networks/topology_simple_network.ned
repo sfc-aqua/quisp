@@ -125,10 +125,10 @@ network Simple_MSM_SAT
         }
 
     connections:
-        EndNode1.port++ <--> ClassicalChannel_FS {  distance = 100km; } <--> EPPS.port++;
-        EPPS.port++ <--> ClassicalChannel_FS {  distance = 100km; } <--> EndNode2.port++;
-        EndNode1.quantum_port_receiver_passive++ <--> QuantumChannel_FS {  distance = 100km; } <--> EPPS.quantum_port++;
-        EPPS.quantum_port++ <--> QuantumChannel_FS {  distance = 100km; } <--> EndNode2.quantum_port_receiver_passive++;
+        EndNode1.port++ <--> ClassicalChannel_FS {  distance = 5000km; } <--> EPPS.port++;
+        EPPS.port++ <--> ClassicalChannel_FS {  distance = 5000km; } <--> EndNode2.port++;
+        EndNode1.quantum_port_receiver_passive++ <--> QuantumChannel_FS {  distance = 5000km; } <--> EPPS.quantum_port++;
+        EPPS.quantum_port++ <--> QuantumChannel_FS {  distance = 5000km; } <--> EndNode2.quantum_port_receiver_passive++;
 }
 
 network Simple_MM_SAT

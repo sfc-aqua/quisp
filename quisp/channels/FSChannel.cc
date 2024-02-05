@@ -57,6 +57,7 @@ bool FSChannel::checkLOS() {
 }
 
 double FSChannel::getDistanceAtTime(const simtime_t time) {
+    recalculateChannelParameters();
     return dist_par->getPropertyAtTime(time.dbl());
 }
 
