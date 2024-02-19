@@ -44,6 +44,7 @@ class EPPSController : public cSimpleModule {
   int right_qnic_index;
   simtime_t left_travel_time;
   simtime_t right_travel_time;
+  simtime_t minimal_time_interval_between_photons;
   simtime_t time_interval_between_photons;
   double photon_emission_per_second;
   simtime_t emit_time;

@@ -414,6 +414,12 @@ void HardwareMonitor::finish() {
     std::cout << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
               << ";bellpair_per_sec=" << tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec << ";}<-->" << partner_node->getFullName()
               << "; Fidelity=" << fidelity << "; Xerror=" << Xerr_rate << "; Zerror=" << Zerr_rate << "; Yerror=" << Yerr_rate << endl;
+    if(my_address == 1) {
+      std::ofstream myfile;
+      myfile.open("fidelities", std::ios_base::app);
+      myfile << fidelity << ",";
+      myfile.close();
+    }
   }
   tomography_stats.close();
   tomography_dm.close();

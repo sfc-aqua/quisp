@@ -98,8 +98,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       if (number_of_free_emitters != 0) {
         msm_info.qubit_info_map[msm_info.iteration_index] = qubit_index;
         sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, true, true);
-      }
-      else {
+      } else {
         // send MSMResult to partner node, even if we fail to have BSM happen
         MSMResult *msm_result = new MSMResult();
         msm_result->setQnicIndex(msm_info.partner_qnic_index);
@@ -298,7 +297,7 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
         myfile.open("thousandbellpair", std::ios_base::app);
         myfile << simTime() << ",";
         myfile.close();
-        }
+      }
     }
   }
 }
@@ -317,14 +316,16 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
     std::advance(iterator, emitted_index);
     bell_pair_store.insertEntangledQubit(partner_address, qubit_record);
     emitted_indices.erase(iterator);
-    bell_pair_counter++;
-      if (bell_pair_counter == 100 && parentAddress == 1) {
-        // write into file the current simulation time
-        std::ofstream myfile;
-        myfile.open("thousandbellpair", std::ios_base::app);
-        myfile << simTime() << ",";
-        myfile.close();
-        }
+    // if (parentAddress == 1) {
+    //   bell_pair_counter++;
+    //   if (bell_pair_counter == 1000) {
+    //     // write into file the current simulation time
+    //     std::ofstream myfile;
+    //     myfile.open("thousandbellpair", std::ios_base::app);
+    //     myfile << simTime() << ",";
+    //     myfile.close();
+    //   }
+    // }
     auto correction_operation = bsa_result->getCorrectionOperationList(i);
     if (correction_operation == PauliOperator::X) {
       realtime_controller->applyXGate(qubit_record);

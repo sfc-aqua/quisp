@@ -242,7 +242,7 @@ void StationaryQubit::emitPhoton(int pulse) {
   if (pulse & STATIONARYQUBIT_PULSE_BOUND) pk->setKind(3);
   float jitter_timing = normal(0, emission_jittering_standard_deviation);
   float abso = fabs(jitter_timing);
-  scheduleAt(simTime() + abso, pk);  // cannot send back in time, so only positive lag
+  scheduleAt(simTime(), pk);  // cannot send back in time, so only positive lag
 }
 
 backends::IQubit *StationaryQubit::getBackendQubitRef() const { return qubit_ref; }
