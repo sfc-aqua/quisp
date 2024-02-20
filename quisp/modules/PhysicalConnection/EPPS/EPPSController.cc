@@ -122,16 +122,6 @@ void EPPSController::checkNeighborsBSACapacity() {
                                           ->getOwnerModule()  // QNIC
                                           ->par("num_buffer");
   int min_photon_detection_per_second = std::min(left_photon_detection_per_second, right_photon_detection_per_second);
-  // minimal_time_interval_between_photons = (double)1 / (double)min_photon_detection_per_second;
-  // // Calculate the optimal interval from the node distance and speed of light in fiber
-  // // time_interval_between_photons = (1.5*link_distance)/(speed_light_fiber*Number_of_memories)
-  // // TODO: think how to get these parameters from this module!!!
-  // time_interval_between_photons = 3*std::max(left_travel_time,right_travel_time)/std::min(left_memory_size, right_memory_size);
-
-  // // If the photon_emission_per_second is higher than the capacity of the neighbor's BSA, the time interval between photons is adjusted to the capacity of the neighbor's BSA.
-  // // If not, the time interval between photons is adjusted to the photon_emission_per_second.
-  // // if (minimal_time_interval_between_photons < photon_emission_per_second) time_interval_between_photons = 1/photon_emission_per_second;
-  // if (time_interval_between_photons < minimal_time_interval_between_photons) time_interval_between_photons = minimal_time_interval_between_photons;
   time_interval_between_photons = (double)1 / (double)min_photon_detection_per_second;
 }
 
