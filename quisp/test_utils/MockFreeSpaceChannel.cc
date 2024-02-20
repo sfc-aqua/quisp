@@ -8,9 +8,9 @@
 namespace quisp_test::FSChannel {
 
 using quisp_test::channel_type::TestChannelType;
-using utils::getTestSimulation;
+using namespace quisp_test::utils;
 
-MockFreeSpaceChannel::MockFreeSpaceChannel(const char* channel_name) : omnetpp::cIdealChannel(channel_name) {
+MockFreeSpaceChannel::MockFreeSpaceChannel(const char* channel_name) : quisp::channels::FSChannel() {
   setComponentType(new TestChannelType("test channel"));
   setName(channel_name);
 

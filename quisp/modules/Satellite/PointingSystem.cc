@@ -34,6 +34,7 @@ void PointingSystem::handleMessage(cMessage *msg) {
       EV << "WARNING: checking visibility along a fiber channel. Seems weird.";
       vco->setNext_check_time(0);
       }
+      take(vco); //This line does nothing when running the actual simulation since vco is already owned by PointingSystem. However, in unit testing the mock sim environment does not handle message ownership implicitly
       send(vco,"ans");
   delete vcr;
   }

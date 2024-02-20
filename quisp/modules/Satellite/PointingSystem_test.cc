@@ -156,5 +156,24 @@ TEST_F(PointingSystemTest, handleVisRequest_NonVisibleChannel) {
     ASSERT_EQ(vco->getNext_check_time(), simTime().dbl()+1);
   }
 }
+
+TEST_F(PointingSystemTest, handleVisRequest_NonFSChannel) {
+  outgate->disconnect();
+  outgate->connectTo(stub_gate);
+
+  auto vcr = new VisCheckRequest;
+  vcr->setOut_gate("test_out");
+  vcr->setIndex(-1);
+
+  mockMessageArrival(vcr);
+  pointing_system->handleMessage(vcr);
+  ASSERT_EQ(pointing_system->gate("ans")->messages.size(), 1);
+  {
+    auto* msg = pointing_system->gate("ans")->messages.at(0);
+    auto vco = dynamic_cast<VisCheckOutcome*>(msg);
+    ASSERT_EQ(vco->getNext_check_time(), 0);
+  }
+}
+
 }  // namespace
 

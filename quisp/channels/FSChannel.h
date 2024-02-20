@@ -30,7 +30,7 @@ namespace quisp::channels {
 class FSChannel : public cDatarateChannel {
 public:
     FSChannel();
-    void initialize() override;
+    virtual void initialize() override;
     void set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff);
     virtual void recalculateChannelParameters();
     bool checkLOS();
