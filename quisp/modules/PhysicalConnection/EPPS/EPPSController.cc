@@ -106,21 +106,21 @@ void EPPSController::checkNeighborsBSACapacity() {
                                               ->getSubmodule("bsa")  // BellStateAnalyzer
                                               ->par("photon_detection_per_second");
   int left_memory_size = getParentModule()
-                                          ->getSubmodule("epps")
-                                          ->gate("quantum_port$i", 0)
-                                          ->getPreviousGate()  // EPPSNode quantum_port
-                                          ->getPreviousGate()  // QNode quantum_port_receiver_passive
-                                          ->getPreviousGate()  // QNIC quantum_port
-                                          ->getOwnerModule()  // QNIC
-                                          ->par("num_buffer");
+                             ->getSubmodule("epps")
+                             ->gate("quantum_port$i", 0)
+                             ->getPreviousGate()  // EPPSNode quantum_port
+                             ->getPreviousGate()  // QNode quantum_port_receiver_passive
+                             ->getPreviousGate()  // QNIC quantum_port
+                             ->getOwnerModule()  // QNIC
+                             ->par("num_buffer");
   int right_memory_size = getParentModule()
-                                          ->getSubmodule("epps")
-                                          ->gate("quantum_port$i", 1)
-                                          ->getPreviousGate()  // EPPSNode quantum_port
-                                          ->getPreviousGate()  // QNode quantum_port_receiver_passive
-                                          ->getPreviousGate()  // QNIC quantum_port
-                                          ->getOwnerModule()  // QNIC
-                                          ->par("num_buffer");
+                              ->getSubmodule("epps")
+                              ->gate("quantum_port$i", 1)
+                              ->getPreviousGate()  // EPPSNode quantum_port
+                              ->getPreviousGate()  // QNode quantum_port_receiver_passive
+                              ->getPreviousGate()  // QNIC quantum_port
+                              ->getOwnerModule()  // QNIC
+                              ->par("num_buffer");
   int min_photon_detection_per_second = std::min(left_photon_detection_per_second, right_photon_detection_per_second);
   time_interval_between_photons = (double)1 / (double)min_photon_detection_per_second;
 }
