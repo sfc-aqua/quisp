@@ -288,13 +288,13 @@ void RuleEngine::handleMSMResult(MSMResult *msm_result) {
     bool is_younger_address = parentAddress < msm_info.partner_address;
     if (is_phi_minus && is_younger_address) realtime_controller->applyZGate(qubit_record);
     bell_pair_store.insertEntangledQubit(msm_info.partner_address, qubit_record);
-    // test code for logging the number of bell pairs generated
+    // log the simtime when we get 100 bell pairs, in a MSM link
     if (is_younger_address) {
       bell_pair_counter++;
       if (bell_pair_counter == 100) {
         // write into file the current simulation time
         std::ofstream myfile;
-        myfile.open("thousandbellpair", std::ios_base::app);
+        myfile.open("hundredbellpair", std::ios_base::app);
         myfile << simTime() << ",";
         myfile.close();
       }
@@ -316,16 +316,17 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
     std::advance(iterator, emitted_index);
     bell_pair_store.insertEntangledQubit(partner_address, qubit_record);
     emitted_indices.erase(iterator);
-    // if (parentAddress == 1) {
-    //   bell_pair_counter++;
-    //   if (bell_pair_counter == 1000) {
-    //     // write into file the current simulation time
-    //     std::ofstream myfile;
-    //     myfile.open("thousandbellpair", std::ios_base::app);
-    //     myfile << simTime() << ",";
-    //     myfile.close();
-    //   }
-    // }
+    // log the simtime when we get 100 bell pairs, in a MIM/MM link
+    if (parentAddress == 1) {
+      bell_pair_counter++;
+      if (bell_pair_counter == 100) {
+        // write into file the current simulation time
+        std::ofstream myfile;
+        myfile.open("hundredbellpair", std::ios_base::app);
+        myfile << simTime() << ",";
+        myfile.close();
+      }
+    }
     auto correction_operation = bsa_result->getCorrectionOperationList(i);
     if (correction_operation == PauliOperator::X) {
       realtime_controller->applyXGate(qubit_record);
