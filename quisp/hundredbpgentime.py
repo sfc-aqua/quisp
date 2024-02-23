@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Read data from the file
-data = open("hundredbellpair")
+data = open("hundredbellpairshort")
 lines = data.readlines()
 data.close()
 
