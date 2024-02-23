@@ -43,6 +43,8 @@ class PointingSystem : public OriginalPointingSystem {
   using OriginalPointingSystem::handleMessage;
   using OriginalPointingSystem::initialize;
   void addResultRecorders() override {};
+  virtual void send(omnetpp::cMessage *msg, const char *gatename, int gateindex=-1) override {take(msg); OriginalPointingSystem::send(msg,gatename,gateindex);};
+
 
   MockNode* parent;
   cModule* getParentModule() const override {return parent;};
@@ -55,6 +57,8 @@ class PointingSystem : public OriginalPointingSystem {
     sim->registerComponent(this);
     recPort = new TestGate(this, "rec");
     ansPort = new TestGate(this, "ans");
+    this->addGate("rec",cGate::INPUT);
+    this->addGate("ans",cGate::OUTPUT);
   }
 
   TestGate* ansPort;

@@ -4,6 +4,10 @@
 
 namespace quisp::modules {
 
+GatedQueue::GatedQueue() : provider(utils::ComponentProvider{this}) {}
+
+GatedQueue::~GatedQueue() {}
+
 void GatedQueue::handleMessage(cMessage *msg)
 {
     if (hasGUI()) {
@@ -34,7 +38,8 @@ void GatedQueue::handleMessage(cMessage *msg)
     if (dynamic_cast<VisCheckRetry *>(msg)) {
         VisCheckRequest* vis_check = new VisCheckRequest();
         vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
-        vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
+        if (gate("line$o")->getNextGate()->isVector()) vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
+        else vis_check->setIndex(-1);
         send(vis_check,"to_ps");
         delete msg;
         return;
@@ -63,7 +68,8 @@ void GatedQueue::handleMessage(cMessage *msg)
         is_busy = true;
         VisCheckRequest* vis_check = new VisCheckRequest();
         vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
-        vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
+        if (gate("line$o")->getNextGate()->isVector()) vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
+        else vis_check->setIndex(-1);
         send(vis_check,"to_ps");
         }
     return;
@@ -86,7 +92,8 @@ void GatedQueue::handleMessage(cMessage *msg)
         pending_vcr = true;
         VisCheckRequest* vis_check = new VisCheckRequest();
         vis_check->setOut_gate(gate("line$o")->getNextGate()->getName());
-        vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
+        if (gate("line$o")->getNextGate()->isVector()) vis_check->setIndex(gate("line$o")->getNextGate()->getIndex());
+        else vis_check->setIndex(-1);
         send(vis_check,"to_ps");
         }
         else { //not busy, there are messages, visibility already polled

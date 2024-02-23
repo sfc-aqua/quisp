@@ -10,6 +10,7 @@ using omnetpp::cSimulation;
 TempGate::TempGate() {}
 bool TempGate::deliver(cMessage *msg, const omnetpp::SendOptions &options, simtime_t at) { return true; }
 
+
 TestGate::TestGate(cModule *mod, const char *name) {
   desc = new omnetpp::cGate::Desc;
   // only for output gate
@@ -28,6 +29,13 @@ bool TestGate::deliver(cMessage *msg, const omnetpp::SendOptions &options, simti
   messages.push_back(msg->dup());
   return true;
 }
+
+void TestGate::quiet_connectTo(cGate* target) {
+  nextGate = target;
+  //target->prevGate = this;
+}
+
+
 
 }  // namespace gate
 }  // namespace quisp_test
