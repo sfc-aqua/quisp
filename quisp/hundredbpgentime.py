@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Read data from the file
-data = open("hundredbellpairlong")
+data = open("hundredbellpair")
 lines = data.readlines()
 data.close()
 
@@ -44,7 +44,7 @@ plt.ylabel('Time to create 100 Bell pairs (s)', fontsize=15)
 plt.legend(fontsize=15)
 
 # # Show the plot
-plt.savefig("hundredbellpair_log_long.pdf", dpi=1000)
+plt.savefig("hundredbellpair_log_short.pdf", dpi=1000)
 
 # xaxis = np.arange(len(x))
 # plt.bar(xaxis, ymim, label='MIM', log=True, width=0.5)
