@@ -44,10 +44,10 @@ plt.errorbar(xaxis+0.2, ymsm, yerr=emsm, fmt='.', capsize=3,markersize=10,ecolor
 
 plt.xticks(xaxis, x)
 # Add labels and legend
-plt.xlabel('Purification level')
-plt.ylabel('Fidelity')
-plt.title('Fidelity and purified fidelity for MIM and MSM links')
-plt.legend()
+plt.xlabel('Purification level', fontsize=15)
+plt.ylabel('Fidelity', fontsize=15)
+# plt.title('Fidelity and purified fidelity for MIM and MSM links')
+plt.legend(fontsize=15)
 
 # # Show the plot
 plt.savefig("fidelities.pdf", dpi=1000)

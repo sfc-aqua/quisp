@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Read data from the file
-data = open("h_longhundredbellpair")
+data = open("hundredbellpairlong")
 lines = data.readlines()
 data.close()
 
@@ -38,10 +38,10 @@ plt.errorbar(xaxis+0.2, ymsm, yerr=emsm, fmt='.', capsize=3,markersize=6,ecolor=
 
 plt.xticks(xaxis, x)
 # Add labels and legend
-plt.xlabel('Memory size (qubits)')
-plt.ylabel('Time to create 100 Bell pairs (s)')
-plt.title('Time to create 100 Bell pairs for MIM and MSM links, 20km distance')
-plt.legend()
+plt.xlabel('Memory size (qubits)', fontsize=15)
+plt.ylabel('Time to create 100 Bell pairs (s)', fontsize=15)
+# plt.title('Time to create 100 Bell pairs for MIM and MSM links, 20km distance')
+plt.legend(fontsize=15)
 
 # # Show the plot
 plt.savefig("hundredbellpair_log_long.pdf", dpi=1000)
