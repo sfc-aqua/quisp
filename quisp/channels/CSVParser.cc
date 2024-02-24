@@ -1,8 +1,9 @@
-/*
- * CSVParser.cc
+/** \file CSVParser.cc
  *
- *  Created on: Nov 28, 2023
- *      Author: paolo
+ *  \brief CSVParser
+ *
+ *
+ *  Quick parser for CSVs, written for csv-based Free-space channels.
  */
 
 #include "CSVParser.h"

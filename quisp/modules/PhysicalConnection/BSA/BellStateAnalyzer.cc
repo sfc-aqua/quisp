@@ -229,3 +229,5 @@ void BellStateAnalyzer::finish() {
 void BellStateAnalyzer::discardPhoton(PhotonRecord &photon) { photon.qubit_ref->relaseBackToPool(); };
 
 }  // namespace quisp::modules
+
+

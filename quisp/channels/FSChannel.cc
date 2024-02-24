@@ -2,9 +2,6 @@
  *
  *  \brief Freespace channel
  *
- *  Loss model from 10.1038/s42005-022-01123-7.
- *  ORBITAL_PARAMETERS are to be set on init by one of the connected modules. LOS = Line Of Sight.
- *  LOS-related methods are directly callable from outside since the pointing system is expected to be able to directly check whether there is visibility or not.
  *
  */
 
@@ -40,12 +37,6 @@ cChannel::Result FSChannel::processMessage(cMessage *msg, const SendOptions &opt
     return result;
 }
 
-/** \fn checkLOS()
- *
- *  \brief Check if one end of the channel can see the other, i.e. we can send msg
- *
- *
- */
 
 bool FSChannel::checkLOS() {
     Enter_Method("checkLOS()");
@@ -60,28 +51,6 @@ double FSChannel::getDistanceAtTime(const simtime_t time) {
     recalculateChannelParameters();
     return dist_par->getPropertyAtTime(time.dbl());
 }
-
-/** \fn set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff)
- *
- *  \brief Set visibility parameters: period in s, 0<=orb_vis_start_coeff<=orb_vis_end_coeff<=1, the two coeffs represent fractions of orb_period
- *
- *
- */
-
-//void FSChannel::set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff) {
-//    Enter_Method("set_orbit_parameters()");
-//    op.orbit_period = SimTime(orb_period);
-//    op.vis_start_time = SimTime(orb_vis_start_coeff*orb_period);
-//    op.vis_end_time = SimTime(orb_vis_end_coeff*orb_period);
-//    return;
-//}
-
-/** \fn getNext_check_time()
- *
- *  \brief When will this channel have visibility again? 0 if visible now
- *
- *
- */
 
 SimTime FSChannel::getNext_check_time() {
     Enter_Method("next_check_time()");

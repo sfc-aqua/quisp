@@ -69,9 +69,6 @@ Define_Channel(QuantumChannel_FS);
 
 QuantumChannel_FS::QuantumChannel_FS() {}
 
-//QuantumChannel_FS::~QuantumChannel_FS() {}
-
-
 void QuantumChannel_FS::initialize() {
   FSChannel::initialize();
   distance = par("distance");
