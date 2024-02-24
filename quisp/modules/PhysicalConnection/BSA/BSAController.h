@@ -1,6 +1,7 @@
 /** \file BSA_Controller.h
  *
  *  \brief BSAController
+ *
  */
 #pragma once
 
@@ -61,8 +62,8 @@ class BSAController : public cSimpleModule {
 
   int getExternalQNICIndexFromPort(int port);
   simtime_t calculateOffsetTimeFromDistance();
-  simtime_t getTravelTimeFromPort(int port);
-  simtime_t getTravelTimeFromPortLocal(int port);
+  simtime_t getPredictedTravelTimeFromPort(int port);
+  simtime_t getCurrentTravelTimeFromPort(int port);
 
   double getExternalDistanceFromPort(int port);
   QNicInfo getExternalQNICInfoFromPort(int port);

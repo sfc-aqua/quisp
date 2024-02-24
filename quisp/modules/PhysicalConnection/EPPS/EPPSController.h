@@ -33,7 +33,7 @@ class EPPSController : public cSimpleModule {
   virtual EPPSTimingNotification *generateNotifier(bool is_left);
 
  private:
-  double getTravelTimeFromPort(int port);
+  double getCurrentTravelTimeFromPort(int port);
   double getPredictedTravelTimeFromPort(int port);
   int getExternalQNICIndexFromPort(int port);
 
@@ -62,6 +62,9 @@ class EPPSController : public cSimpleModule {
   utils::ComponentProvider provider;
   EmitPhotonRequest *emit_req;
   bool emission_stopped;
+
+  //Satellite specific
+  simtime_t resync_delay;
 };
 
 }  // namespace quisp::modules

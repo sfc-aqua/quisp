@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<analysis version="2">
-    <inputs>
-        <input pattern="/quisp/simulations/results/NoErrorMSM_SAT-*.vec"/>
-        <input pattern="/quisp/simulations/results/NoErrorMSM_SAT-*.sca"/>
-    </inputs>
-    <charts/>
-</analysis>

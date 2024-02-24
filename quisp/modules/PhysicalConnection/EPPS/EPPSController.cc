@@ -36,16 +36,19 @@ void EPPSController::initialize() {
   right_addr = getExternalAdressFromPort(1);
   left_qnic_index = getExternalQNICIndexFromPort(0);
   right_qnic_index = getExternalQNICIndexFromPort(1);
-  //left_travel_time = getTravelTimeFromPort(0);
-  //right_travel_time = getTravelTimeFromPort(1);
+  //left_travel_time = getCurrentTravelTimeFromPort(0);
+  //right_travel_time = getCurrentTravelTimeFromPort(1);
   time_out_count = 0;
   emission_stopped = false;
   checkNeighborsBSACapacity();
   time_out_message = new EPPSNotificationTimeout();
   simtime_t first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
   scheduleAt(first_notification_timer, time_out_message);
-  cMessage* resync = new cMessage("Resync");
-  scheduleAt(first_notification_timer+SimTime(15,SIMTIME_MS),resync);
+  resync_delay = SimTime(par("SAT_resync_delay"));
+  if (resync_delay > 0) {
+      cMessage* resync = new cMessage("Resync");
+      scheduleAt(first_notification_timer+resync_delay,resync);
+  }
 }
 
 void EPPSController::handleMessage(cMessage *msg) {
@@ -54,8 +57,8 @@ void EPPSController::handleMessage(cMessage *msg) {
     scheduleAt(simTime() + pk->getIntervalBetweenPhotons(), pk);
     return;
   } else if (msg == time_out_message) {
-    left_travel_time = getTravelTimeFromPort(0);
-    right_travel_time = getTravelTimeFromPort(1);
+    left_travel_time = getCurrentTravelTimeFromPort(0);
+    right_travel_time = getCurrentTravelTimeFromPort(1);
     local_emit_time = simTime() + std::max(left_travel_time, right_travel_time);
     left_travel_time_predicted = getPredictedTravelTimeFromPort(0);
     right_travel_time_predicted = getPredictedTravelTimeFromPort(1);
@@ -77,7 +80,7 @@ void EPPSController::handleMessage(cMessage *msg) {
       cancelAndDelete(emit_req);
       time_out_message = new EPPSNotificationTimeout();
       scheduleAt(simTime(), time_out_message);
-      scheduleAfter(SimTime(15,SIMTIME_MS),msg);
+      scheduleAfter(resync_delay,msg);
       return;
   }
   delete msg;
@@ -129,7 +132,7 @@ void EPPSController::checkNeighborsBSACapacity() {
   if (pump_rate > time_interval_between_photons) time_interval_between_photons = pump_rate;
 }
 
-double EPPSController::getTravelTimeFromPort(int port) {
+double EPPSController::getCurrentTravelTimeFromPort(int port) {
   cChannel *channel = getParentModule()->getSubmodule("epps")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
   double distance = 1;
   double speed_of_light_in_channel = 1;
