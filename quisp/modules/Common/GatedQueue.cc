@@ -11,7 +11,7 @@ GatedQueue::~GatedQueue() {}
 void GatedQueue::handleMessage(cMessage *msg)
 {
     if (dynamic_cast<OspfPacket*>(msg) and msg->arrivedOn("in")) {
-      send(msg,"line_out");
+      send(msg,"line$o");
       return;
     }
     if (hasGUI()) {
