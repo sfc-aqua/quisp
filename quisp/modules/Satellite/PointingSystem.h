@@ -5,11 +5,10 @@
 #pragma once
 
 #include <omnetpp.h>
-#include "omnetpp/simtime.h"
 #include "channels/FSChannel.h"
 #include "messages/visibility_messages_m.h"
+#include "omnetpp/simtime.h"
 #include "utils/ComponentProvider.h"
-
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -33,4 +32,4 @@ class PointingSystem : public cSimpleModule {
   double vis_end_coeff;
   utils::ComponentProvider provider;
 };
-}
+}  // namespace quisp::modules::Satellite

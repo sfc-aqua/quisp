@@ -52,7 +52,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
   }
   // clang-format on
   if (photon.is_first) {
-      if (state == BSAState::Idle && photon.from_port == PortNumber::First) {
+    if (state == BSAState::Idle && photon.from_port == PortNumber::First) {
       state = BSAState::FirstPortArrive;
     } else if (state == BSAState::Idle && photon.from_port == PortNumber::Second) {
       state = BSAState::SecondPortArrive;
@@ -73,9 +73,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
 
   if (photon.from_port == PortNumber::First) {
     first_port_records.emplace_back(photon);
-  }
-  else {
-      second_port_records.emplace_back(photon);
+  } else {
+    second_port_records.emplace_back(photon);
   }
   if (!photon.is_last) {
     return;
@@ -219,5 +218,3 @@ void BellStateAnalyzer::finish() {
 void BellStateAnalyzer::discardPhoton(PhotonRecord &photon) { photon.qubit_ref->relaseBackToPool(); };
 
 }  // namespace quisp::modules
-
-

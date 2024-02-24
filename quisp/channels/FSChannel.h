@@ -11,42 +11,41 @@
 #ifndef CHANNELS_FSCHANNEL_H_
 #define CHANNELS_FSCHANNEL_H_
 
+#include <messages/ospf_messages_m.h>
 #include <omnetpp.h>
+#include <cmath>
 #include <stdexcept>
+#include "CSVParser.h"
 #include "PhotonicQubit_m.h"
 #include "omnetpp/cexception.h"
-#include <cmath>
-#include <messages/ospf_messages_m.h>
-#include "CSVParser.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
 
 struct ORBITAL_PARAMETERS {
-    SimTime orbit_period = SIMTIME_MAX;
-    SimTime vis_start_time = SIMTIME_ZERO;
-    SimTime vis_end_time = SIMTIME_MAX;
+  SimTime orbit_period = SIMTIME_MAX;
+  SimTime vis_start_time = SIMTIME_ZERO;
+  SimTime vis_end_time = SIMTIME_MAX;
 };
 
 namespace quisp::channels {
 class FSChannel : public cDatarateChannel {
-public:
-    FSChannel();
-    virtual void initialize() override;
-    void set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff);
-    virtual void recalculateChannelParameters();
-    bool checkLOS();
-    double getDistanceAtTime(const simtime_t time);
-    virtual SimTime getNext_check_time();
-private:
-    ORBITAL_PARAMETERS op;
-    CSVParser* dist_par;
+ public:
+  FSChannel();
+  virtual void initialize() override;
+  void set_orbit_parameters(double orb_period, double orb_vis_start_coeff, double orb_vis_end_coeff);
+  virtual void recalculateChannelParameters();
+  bool checkLOS();
+  double getDistanceAtTime(const simtime_t time);
+  virtual SimTime getNext_check_time();
+
+ private:
+  ORBITAL_PARAMETERS op;
+  CSVParser *dist_par;
 
  protected:
-cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;
+  cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;
 };
-};
-
-
+};  // namespace quisp::channels
 
 #endif /* CHANNELS_FSCHANNEL_H_ */

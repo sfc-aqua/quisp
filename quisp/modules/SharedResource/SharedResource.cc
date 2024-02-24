@@ -1,10 +1,10 @@
 #include "SharedResource.h"
+#include <channels/FSChannel.h>
 #include <memory>
 #include <random>
 #include <vector>
 #include "omnetpp/ctopology.h"
 #include "utils/ComponentProvider.h"
-#include <channels/FSChannel.h>
 
 using namespace quisp::channels;
 
@@ -80,8 +80,8 @@ void SharedResource::updateChannelWeightsOfNode(cTopology::Node *node, std::opti
 
 // The cost metric is taken from https://arxiv.org/abs/1206.5655
 double SharedResource::calculateSecPerBellPair(const cModule *const rd_module, const cTopology::LinkOut *const outgoing_link) {
-  cChannel* channel = outgoing_link->getLocalGate()->getChannel();
-  const char* speed_of_light_name = {dynamic_cast<FSChannel*>(channel) == nullptr? "speed_of_light_in_fiber" : "speed_of_light_in_FS"};
+  cChannel *channel = outgoing_link->getLocalGate()->getChannel();
+  const char *speed_of_light_name = {dynamic_cast<FSChannel *>(channel) == nullptr ? "speed_of_light_in_fiber" : "speed_of_light_in_FS"};
 
   double speed_of_light_in_medium = channel->par(speed_of_light_name);
   double channel_length = outgoing_link->getLocalGate()->getChannel()->par("distance");

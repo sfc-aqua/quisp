@@ -1,12 +1,11 @@
+#include "GatedQueue.h"
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
-#include "GatedQueue.h"
-#include "modules/SharedResource/SharedResource.h"
 #include "messages/visibility_messages_m.h"
+#include "modules/SharedResource/SharedResource.h"
 #include "test_utils/MockFreeSpaceChannel.h"
 #include "test_utils/Stub.h"
 #include "test_utils/TestUtilFunctions.h"
-
 
 using namespace quisp_test;
 using namespace quisp_test::utils;
@@ -22,8 +21,6 @@ class MockNode : public quisp_test::TestQNode {
   MockNode(int addr, int mass, bool is_initiator) : TestQNode(addr, mass, is_initiator), is_qnode(true) {}
   bool is_qnode;
 };
-
-
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -41,32 +38,38 @@ class GatedQueue : public OriginalGatedQueue {
  public:
   using OriginalGatedQueue::handleMessage;
   using OriginalGatedQueue::initialize;
-  void addResultRecorders() override {};
-  virtual void take(omnetpp::cOwnedObject *obj) override {OriginalGatedQueue::take(obj);};
-  virtual void send(omnetpp::cMessage *msg, const char *gatename, int gateindex=-1) override {take(msg); OriginalGatedQueue::send(msg,gatename,gateindex);};
-  virtual void scheduleAt(omnetpp::simtime_t t, omnetpp::cMessage* msg) override {take(msg); OriginalGatedQueue::scheduleAt(t,msg);};
+  void addResultRecorders() override{};
+  virtual void take(omnetpp::cOwnedObject* obj) override { OriginalGatedQueue::take(obj); };
+  virtual void send(omnetpp::cMessage* msg, const char* gatename, int gateindex = -1) override {
+    take(msg);
+    OriginalGatedQueue::send(msg, gatename, gateindex);
+  };
+  virtual void scheduleAt(omnetpp::simtime_t t, omnetpp::cMessage* msg) override {
+    take(msg);
+    OriginalGatedQueue::scheduleAt(t, msg);
+  };
   MockNode* parent;
 
   explicit GatedQueue(MockNode* parent_qnode) : OriginalGatedQueue() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_gated_queue"));
-    setParBool(this,"useCutThroughSwitching",false);
-    setParInt(this,"frame_capacity",0);
+    setParBool(this, "useCutThroughSwitching", false);
+    setParInt(this, "frame_capacity", 0);
     parent = parent_qnode;
-    auto *sim = getTestSimulation();
+    auto* sim = getTestSimulation();
     sim->registerComponent(this);
     inPort = new TestGate(this, "in");
     outPort = new TestGate(this, "out");
     line_inPort = new TestGate(this, "line$i");
     line_outPort = new TestGate(this, "line$o");
     from_psPort = new TestGate(this, "from_ps");
-    to_psPort = new TestGate (this, "to_ps");
+    to_psPort = new TestGate(this, "to_ps");
 
-    this->addGate("in",cGate::INPUT);
-    this->addGate("out",cGate::OUTPUT);
-    this->addGate("line",cGate::INOUT);
-    this->addGate("from_ps",cGate::INPUT);
-    this->addGate("to_ps",cGate::OUTPUT);
+    this->addGate("in", cGate::INPUT);
+    this->addGate("out", cGate::OUTPUT);
+    this->addGate("line", cGate::INOUT);
+    this->addGate("from_ps", cGate::INPUT);
+    this->addGate("to_ps", cGate::OUTPUT);
   }
 
   TestGate* inPort;
@@ -95,19 +98,19 @@ class GatedQueueTest : public ::testing::Test {
  protected:
   void SetUp() {
     sim = prepareSimulation();
-    node = new MockNode(0,0,false);
+    node = new MockNode(0, 0, false);
     gated_queue = new GatedQueue(node);
 
     chl = new MockFreeSpaceChannel("test_channel");
-    quisp_test::utils::setParDouble(chl,"delay",1);
+    quisp_test::utils::setParDouble(chl, "delay", 1);
 
     stub = new Stub();
 
-    outgate = node->addGate("test_out",cGate::OUTPUT);
+    outgate = node->addGate("test_out", cGate::OUTPUT);
     stub_gate = stub->addGate("stub_gate", cGate::INPUT);
 
-    outgate->connectTo(stub_gate,chl,true);
-    chl->finalizeParameters(); // THIS METHOD MAY ONLY BE CALLED WHEN THE CHANNEL IS CONNECTED
+    outgate->connectTo(stub_gate, chl, true);
+    chl->finalizeParameters();  // THIS METHOD MAY ONLY BE CALLED WHEN THE CHANNEL IS CONNECTED
 
     gated_queue->callInitialize();
     chl->callInitialize();
@@ -115,12 +118,9 @@ class GatedQueueTest : public ::testing::Test {
 
     gated_queue->gate("line$o")->quiet_connectTo(outgate);
 
-    //out_to_router = node->addGate("out_to_router", cGate::OUTPUT);
-
+    // out_to_router = node->addGate("out_to_router", cGate::OUTPUT);
   }
-  void TearDown() {
-    }
-
+  void TearDown() {}
 
   TestSimulation* sim;
   GatedQueue* gated_queue;
@@ -130,59 +130,59 @@ class GatedQueueTest : public ::testing::Test {
 
   cGate* outgate;
   cGate* stub_gate;
-  //TestGate* node_out;
+  // TestGate* node_out;
 };
 
 TEST_F(GatedQueueTest, handleNonVisMessage) {
   auto msg = new cMessage;
-  msg->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"),simTime());
+  msg->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"), simTime());
   EXPECT_THROW({ gated_queue->handleMessage(msg); }, cRuntimeError);
 }
 
 TEST_F(GatedQueueTest, handleIncomingMessage) {
   omnetpp::cPacket* pkt = new cPacket("TestPacket");
   gated_queue->take(pkt);
-  pkt->setArrival(gated_queue->getId(), gated_queue->findGate("line$i"),simTime());
+  pkt->setArrival(gated_queue->getId(), gated_queue->findGate("line$i"), simTime());
   gated_queue->handleMessage(pkt);
-  ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(),0); // Must not request Vis info
-  ASSERT_EQ(*gated_queue->gate("out")->messages.front()->getName(),*pkt->getName()); // Must let message from outside pass always
+  ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(), 0);  // Must not request Vis info
+  ASSERT_EQ(*gated_queue->gate("out")->messages.front()->getName(), *pkt->getName());  // Must let message from outside pass always
 }
 
 TEST_F(GatedQueueTest, handleOutgoingMessage_Visible) {
   omnetpp::cPacket* pkt = new cPacket("TestPacket");
-  //gated_queue->take(pkt);
-  pkt->setArrival(gated_queue->getId(), gated_queue->findGate("in"),simTime());
+  // gated_queue->take(pkt);
+  pkt->setArrival(gated_queue->getId(), gated_queue->findGate("in"), simTime());
   gated_queue->handleMessage(pkt);
-  ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(),1); // Must request Vis info
-  ASSERT_EQ(gated_queue->gate("line$o")->messages.size(),0); // Must not send message yet
+  ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(), 1);  // Must request Vis info
+  ASSERT_EQ(gated_queue->gate("line$o")->messages.size(), 0);  // Must not send message yet
   VisCheckOutcome* vco = new VisCheckOutcome();
   vco->setNext_check_time(0);
-  vco->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"),simTime());
+  vco->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"), simTime());
   gated_queue->handleMessage(vco);
-  ASSERT_EQ(*gated_queue->gate("line$o")->messages.front()->getName(),*pkt->getName()); // If receiver is visible, we can send the message.
+  ASSERT_EQ(*gated_queue->gate("line$o")->messages.front()->getName(), *pkt->getName());  // If receiver is visible, we can send the message.
 }
 
 TEST_F(GatedQueueTest, handleOutgoingMessage_NonVisible) {
   omnetpp::cPacket* pkt = new cPacket("TestPacket");
   gated_queue->take(pkt);
-  pkt->setArrival(gated_queue->getId(), gated_queue->findGate("in"),simTime());
+  pkt->setArrival(gated_queue->getId(), gated_queue->findGate("in"), simTime());
   gated_queue->handleMessage(pkt);
-  ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(),1); // Must request Vis info
-  ASSERT_EQ(gated_queue->gate("line$o")->messages.size(),0); // Must not send message yet
+  ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(), 1);  // Must request Vis info
+  ASSERT_EQ(gated_queue->gate("line$o")->messages.size(), 0);  // Must not send message yet
   VisCheckOutcome* vco = new VisCheckOutcome();
   vco->setNext_check_time(1);
-  vco->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"),simTime());
+  vco->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"), simTime());
   gated_queue->handleMessage(vco);
-  ASSERT_EQ(gated_queue->gate("line$o")->messages.size(),0); // Must not send message yet
-  sim->executeNextEvent(); // resend vcr
-  ASSERT_EQ(simTime().dbl(),1);
+  ASSERT_EQ(gated_queue->gate("line$o")->messages.size(), 0);  // Must not send message yet
+  sim->executeNextEvent();  // resend vcr
+  ASSERT_EQ(simTime().dbl(), 1);
 
-  ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(),2); // Must request Vis info
-  ASSERT_EQ(gated_queue->gate("line$o")->messages.size(),0); // Must not send message yet
+  ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(), 2);  // Must request Vis info
+  ASSERT_EQ(gated_queue->gate("line$o")->messages.size(), 0);  // Must not send message yet
   VisCheckOutcome* second_vco = new VisCheckOutcome();
   second_vco->setNext_check_time(0);
-  second_vco->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"),simTime());
+  second_vco->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"), simTime());
   gated_queue->handleMessage(second_vco);
-  ASSERT_EQ(gated_queue->gate("line$o")->messages.size(),1); // Finally send the message
-  }
+  ASSERT_EQ(gated_queue->gate("line$o")->messages.size(), 1);  // Finally send the message
 }
+}  // namespace

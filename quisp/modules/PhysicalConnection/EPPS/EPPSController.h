@@ -63,7 +63,7 @@ class EPPSController : public cSimpleModule {
   EmitPhotonRequest *emit_req;
   bool emission_stopped;
 
-  //Satellite specific
+  // Satellite specific
   simtime_t resync_delay;
 };
 

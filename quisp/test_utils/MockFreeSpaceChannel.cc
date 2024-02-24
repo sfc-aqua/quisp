@@ -1,9 +1,9 @@
 #include "MockFreeSpaceChannel.h"
 #include "ChannelType.h"
+#include "Configuration.h"
 #include "TestUtilFunctions.h"
 #include "omnetpp/cchannel.h"
 #include "omnetpp/ccomponent.h"
-#include "Configuration.h"
 
 namespace quisp_test::FSChannel {
 
@@ -17,19 +17,13 @@ MockFreeSpaceChannel::MockFreeSpaceChannel(const char* channel_name) : quisp::ch
   cfg = new quisp_test::configuration::Configuration;
   props = new cProperties;
 
-  auto *sim = getTestSimulation();
+  auto* sim = getTestSimulation();
   sim->registerComponent(this);
 };
 
-MockFreeSpaceChannel::~MockFreeSpaceChannel() {
-  this->getSourceGate()->disconnect();
-};
+MockFreeSpaceChannel::~MockFreeSpaceChannel() { this->getSourceGate()->disconnect(); };
 
-void MockFreeSpaceChannel::setNext_check_time(SimTime next_check) {
-    next_check_time = next_check;
-}
+void MockFreeSpaceChannel::setNext_check_time(SimTime next_check) { next_check_time = next_check; }
 
-SimTime MockFreeSpaceChannel::getNext_check_time() {
-    return next_check_time;
-}
-}
+SimTime MockFreeSpaceChannel::getNext_check_time() { return next_check_time; }
+}  // namespace quisp_test::FSChannel

@@ -119,5 +119,5 @@ cModule *DefaultComponentProviderStrategy::getQRSA() {
 
 bool DefaultComponentProviderStrategy::isBSANodeType(const cModuleType *const type) { return type == BSAType; }
 bool DefaultComponentProviderStrategy::isQNodeType(const cModuleType *const type) { return (type == QNodeType or type == QNodeSatType); }
-bool DefaultComponentProviderStrategy::isEPPSNodeType(const cModuleType *const type) { return type == EPPSType or type == EPPSSatType;}
+bool DefaultComponentProviderStrategy::isEPPSNodeType(const cModuleType *const type) { return type == EPPSType or type == EPPSSatType; }
 }  // namespace quisp::utils
