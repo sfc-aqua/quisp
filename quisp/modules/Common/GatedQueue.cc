@@ -10,6 +10,10 @@ GatedQueue::~GatedQueue() {}
 
 void GatedQueue::handleMessage(cMessage *msg)
 {
+    if (dynamic_cast<OspfPacket*>(msg) and msg->arrivedOn("in")) {
+      send(msg,"line_out");
+      return;
+    }
     if (hasGUI()) {
         bubble("GatedQueue received a message!\n");
       }

@@ -13,6 +13,7 @@
 #include "utils/ComponentProvider.h"
 #include "messages/visibility_messages_m.h"
 #include "messages/link_generation_messages_m.h"
+#include "messages/ospf_messages_m.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
