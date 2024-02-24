@@ -57,11 +57,11 @@ class QuantumChannel_FS : public FSChannel {
   double loss_rate = 0;
   double attenuation_rate = 0;
 
-  //debug statistics
-  simsignal_t channel_length = registerSignal("channel_length");
-  simsignal_t channel_delay = registerSignal("channel_delay");
-  simsignal_t channel_t = registerSignal("channel_t");
-  simsignal_t channel_t_dB = registerSignal("channel_t_dB");
+  //statistics
+  // simsignal_t channel_length = registerSignal("channel_length");
+  // simsignal_t channel_delay = registerSignal("channel_delay");
+  // simsignal_t channel_t = registerSignal("channel_t");
+  // simsignal_t channel_t_dB = registerSignal("channel_t_dB");
 
 };
 
@@ -162,8 +162,6 @@ double QuantumChannel_FS::calculateLossRate() {
     Dt = par("transmitter_telescope_diameter");
     Dr = par("receiver_telescope_diameter");
     r0 = par("Fried_parameter");
-//    beta = par("elevation_angle");
-//    A0 = par("atmospheric_attenuation_zenith");
 
     //hard-coded values from 10.1038/s42005-022-01123-7
     theta_diff = 1.27*lambda/Dt;
@@ -171,8 +169,8 @@ double QuantumChannel_FS::calculateLossRate() {
     attenuation_rate = ((pow(theta_diff,2) + pow(theta_atm,2))/(pow(Dr,2))) * pow(distance,2) * Aatm; // from 10.1038/s42005-022-01123-7
     loss_rate = 1 - 1/attenuation_rate;
 
-    emit(channel_t,1/attenuation_rate);
-    emit(channel_t_dB,10*log10(1/attenuation_rate));
+    // emit(channel_t,1/attenuation_rate);
+    // emit(channel_t_dB,10*log10(1/attenuation_rate));
 
     return loss_rate;
 }

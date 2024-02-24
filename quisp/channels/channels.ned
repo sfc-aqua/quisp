@@ -39,7 +39,7 @@ channel QuantumChannel extends FiberChannel
 
 channel ClassicalChannel_FS extends FSChannel
 {
-      
+
 }
 
 channel QuantumChannel_FS extends FSChannel
@@ -53,13 +53,4 @@ channel QuantumChannel_FS extends FSChannel
     double receiver_telescope_diameter @unit(m) = default(1m);
     double Fried_parameter @unit(m) = default(10cm);
     string Aatm_CSV;
-    
-    @signal[channel_length](type=double);
-    @statistic[channel_length](record=vector);
-    @signal[channel_delay](type=double);
-    @statistic[channel_delay](record=vector);
-    @signal[channel_t](type=double);
-    @statistic[channel_t](record=vector);
-    @signal[channel_t_dB](type=double);
-    @statistic[channel_t_dB](record=vector);
 }
