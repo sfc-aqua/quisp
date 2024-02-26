@@ -1,18 +1,25 @@
 <map id="quisp/modules/QRSA/HardwareMonitor" name="quisp/modules/QRSA/HardwareMonitor">
-<area shape="rect" id="node1" href="dir_20823001e3c88b1bb6c061fd9664ae33.html" title="RoutingDaemon" alt="" coords="31,125,145,151"/>
-<area shape="rect" id="node2" href="dir_ba3734aa71aa5bf20699e6ca05cee4f0.html" title="HardwareMonitor" alt="" coords="27,52,149,77"/>
-<area shape="rect" id="edge2-headlabel" href="dir_000010_000027.html" title="1" alt="" coords="92,99,100,114"/>
-<area shape="rect" id="node3" href="dir_1b9adf9caaa3a542423f2e420ebd3760.html" title="test_utils" alt="" coords="171,125,245,151"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000010_000035.html" title="1" alt="" coords="173,101,181,116"/>
-<area shape="rect" id="node4" href="dir_51e4f05f71aecc0592d69bc07f0c0aa9.html" title="rules" alt="" coords="269,125,320,151"/>
-<area shape="rect" id="edge3-headlabel" href="dir_000010_000030.html" title="2" alt="" coords="251,107,259,121"/>
-<area shape="rect" id="node5" href="dir_5be2f2e0efe1693c6264fc3f1f727d33.html" title="QNIC" alt="" coords="345,125,399,151"/>
-<area shape="rect" id="edge4-headlabel" href="dir_000010_000020.html" title="1" alt="" coords="325,108,333,123"/>
-<area shape="rect" id="node6" href="dir_613ea0b845b544fcb4bbcc1caa07a8a8.html" title="PhysicalConnection" alt="" coords="424,125,560,151"/>
-<area shape="rect" id="edge5-headlabel" href="dir_000010_000019.html" title="3" alt="" coords="403,106,411,121"/>
-<area shape="rect" id="node7" href="dir_a836f5e64f274e5f0ad02ce32d2d2034.html" title="messages" alt="" coords="584,125,667,151"/>
-<area shape="rect" id="edge6-headlabel" href="dir_000010_000013.html" title="1" alt="" coords="563,109,571,123"/>
-<area shape="rect" id="node8" href="dir_ea1185b6f782e3d4d47e4f1c837d33c0.html" title="utils" alt="" coords="691,125,738,151"/>
-<area shape="rect" id="edge7-headlabel" href="dir_000010_000036.html" title="1" alt="" coords="671,109,679,124"/>
-<area shape="rect" id="clust1" href="dir_d5a888b414a72d278ec0e70b4b76cbad.html" title="QRSA" alt="" coords="16,16,160,161"/>
+<area shape="rect" id="node1" href="dir_20823001e3c88b1bb6c061fd9664ae33.html" title="RoutingDaemon" alt="" coords="30,126,143,152"/>
+<area shape="rect" id="node2" href="dir_ba3734aa71aa5bf20699e6ca05cee4f0.html" title="HardwareMonitor" alt="" coords="27,52,147,78"/>
+<area shape="poly" id="edge2" href="dir_000010_000027.html" alt="" coords="89,78,89,110,84,110,84,78"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000010_000027.html" title="1" alt="" coords="92,100,99,115"/>
+<area shape="rect" id="node3" href="dir_1b9adf9caaa3a542423f2e420ebd3760.html" title="test_utils" alt="" coords="168,126,243,152"/>
+<area shape="poly" id="edge1" href="dir_000010_000035.html" alt="" coords="108,76,174,115,171,120,105,81"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000010_000035.html" title="1" alt="" coords="170,101,177,116"/>
+<area shape="rect" id="node4" href="dir_51e4f05f71aecc0592d69bc07f0c0aa9.html" title="rules" alt="" coords="266,126,315,152"/>
+<area shape="poly" id="edge3" href="dir_000010_000030.html" alt="" coords="122,76,252,121,250,126,120,81"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000010_000030.html" title="2" alt="" coords="248,107,255,122"/>
+<area shape="rect" id="node5" href="dir_5be2f2e0efe1693c6264fc3f1f727d33.html" title="QNIC" alt="" coords="340,126,394,152"/>
+<area shape="poly" id="edge4" href="dir_000010_000020.html" alt="" coords="139,76,325,123,324,128,138,81"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000010_000020.html" title="1" alt="" coords="320,109,327,124"/>
+<area shape="rect" id="node6" href="dir_613ea0b845b544fcb4bbcc1caa07a8a8.html" title="PhysicalConnection" alt="" coords="418,126,553,152"/>
+<area shape="poly" id="edge5" href="dir_000010_000019.html" alt="" coords="148,75,403,120,402,125,147,80"/>
+<area shape="rect" id="edge5-headlabel" href="dir_000010_000019.html" title="3" alt="" coords="397,106,404,121"/>
+<area shape="rect" id="node7" href="dir_a836f5e64f274e5f0ad02ce32d2d2034.html" title="messages" alt="" coords="577,126,658,152"/>
+<area shape="poly" id="edge6" href="dir_000010_000013.html" alt="" coords="148,70,329,90,562,123,561,128,329,95,147,75"/>
+<area shape="rect" id="edge6-headlabel" href="dir_000010_000013.html" title="1" alt="" coords="557,109,564,124"/>
+<area shape="rect" id="node8" href="dir_ea1185b6f782e3d4d47e4f1c837d33c0.html" title="utils" alt="" coords="683,126,728,152"/>
+<area shape="poly" id="edge7" href="dir_000010_000036.html" alt="" coords="148,66,373,81,519,98,668,123,667,129,518,103,373,86,147,71"/>
+<area shape="rect" id="edge7-headlabel" href="dir_000010_000036.html" title="1" alt="" coords="663,109,670,124"/>
+<area shape="rect" id="clust1" href="dir_d5a888b414a72d278ec0e70b4b76cbad.html" title="QRSA" alt="" coords="16,16,157,162"/>
 </map>

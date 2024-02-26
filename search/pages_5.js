@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['runtime_0',['Runtime',['../md_quisp_runtime__r_e_a_d_m_e.html',1,'']]]
+  ['logging_0',['Logging',['../md_quisp_2modules_2_logger_2_r_e_a_d_m_e.html',1,'']]]
 ];

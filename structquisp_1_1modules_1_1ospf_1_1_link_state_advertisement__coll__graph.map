@@ -1,4 +1,5 @@
 <map id="quisp::modules::ospf::LinkStateAdvertisement" name="quisp::modules::ospf::LinkStateAdvertisement">
-<area shape="rect" id="node1" title="Full link&#45;state advertisement that holds info of neighbor_nodes. Element that makes up the LinkStateD..." alt="" coords="33,93,201,133"/>
-<area shape="rect" id="node2" href="$structquisp_1_1modules_1_1ospf_1_1_summary_link_state_advertisement.html" title="This struct is used in DBD packet exchange for two nodes to communicate what link&#45;state advertisement..." alt="" coords="5,5,228,45"/>
+<area shape="rect" id="Node000001" title="Full link&#45;state advertisement that holds info of neighbor_nodes. Element that makes up the LinkStateD..." alt="" coords="33,94,200,135"/>
+<area shape="rect" id="Node000002" href="$structquisp_1_1modules_1_1ospf_1_1_summary_link_state_advertisement.html" title="This struct is used in DBD packet exchange for two nodes to communicate what link&#45;state advertisement..." alt="" coords="5,5,228,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,62,119,94,114,94,114,62"/>
 </map>

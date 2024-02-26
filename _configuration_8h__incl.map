@@ -1,5 +1,8 @@
 <map id="quisp/test_utils/Configuration.h" name="quisp/test_utils/Configuration.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,204,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="63,152,146,177"/>
-<area shape="rect" id="node3" href="$_key_value_8h.html" title=" " alt="" coords="103,79,189,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,204,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="64,153,145,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,32,92,79,93,109,98,137,93,138,88,110,87,79,98,31"/>
+<area shape="rect" id="Node000003" href="$_key_value_8h.html" title=" " alt="" coords="101,79,188,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,30,133,64,128,67,109,33"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="140,106,121,140,116,138,136,104"/>
 </map>

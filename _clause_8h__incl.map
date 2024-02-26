@@ -1,6 +1,10 @@
 <map id="quisp/rules/Clause.h" name="quisp/rules/Clause.h">
-<area shape="rect" id="node1" title=" " alt="" coords="49,5,188,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,152,136,177"/>
-<area shape="rect" id="node3" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="109,79,227,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="160,152,243,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="49,5,187,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,153,135,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,32,98,80,80,139,75,137,93,78,111,30"/>
+<area shape="rect" id="Node000003" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="107,79,225,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,30,152,64,147,67,124,33"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="151,107,100,146,96,141,148,103"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="159,153,240,178"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="174,104,190,137,185,140,169,106"/>
 </map>

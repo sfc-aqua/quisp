@@ -1,9 +1,16 @@
 <map id="quisp::modules::HardwareMonitor" name="quisp::modules::HardwareMonitor">
-<area shape="rect" id="node1" title="HardwareMonitor." alt="" coords="576,104,747,144"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_hardware_monitor.html" title=" " alt="" coords="243,5,418,45"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,45,172,70"/>
-<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="249,69,412,109"/>
-<area shape="rect" id="node4" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="229,134,432,159"/>
-<area shape="rect" id="node6" href="$structquisp_1_1modules_1_1_hardware_monitor_1_1_single_qubit_error.html" title=" " alt="" coords="245,184,416,224"/>
-<area shape="rect" id="node7" title=" " alt="" coords="49,191,128,217"/>
+<area shape="rect" id="Node000001" title="HardwareMonitor." alt="" coords="574,105,743,146"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1_i_hardware_monitor.html" title=" " alt="" coords="243,5,417,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="432,48,551,82,607,102,605,107,549,87,431,53"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,46,172,72"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="187,43,242,35,243,40,188,48"/>
+<area shape="rect" id="Node000005" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="249,71,411,111"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="187,69,249,78,248,83,187,75"/>
+<area shape="rect" id="Node000004" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="229,136,431,161"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="447,145,550,139,573,137,574,142,550,145,447,150"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="426,98,574,114,574,119,426,104"/>
+<area shape="rect" id="Node000006" href="$structquisp_1_1modules_1_1_hardware_monitor_1_1_single_qubit_error.html" title=" " alt="" coords="245,185,415,226"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="429,191,489,180,549,166,611,144,612,149,551,171,490,186,430,196"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="50,193,127,219"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="143,203,245,203,245,208,143,208"/>
 </map>

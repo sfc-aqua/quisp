@@ -1,5 +1,7 @@
 <map id="quisp_test::mock_modules::routing_daemon::MockRoutingDaemon" name="quisp_test::mock_modules::routing_daemon::MockRoutingDaemon">
-<area shape="rect" id="node1" title=" " alt="" coords="5,167,256,207"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="49,79,212,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="75,5,186,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,168,255,208"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="49,79,211,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,135,133,167,127,167,127,135"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="75,5,185,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="133,46,133,79,127,79,127,46"/>
 </map>

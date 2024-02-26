@@ -1,6 +1,9 @@
 <map id="quisp::channels::QuantumChannel" name="quisp::channels::QuantumChannel">
-<area shape="rect" id="node1" title="QuantumChannel." alt="" coords="151,108,321,148"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,13,131,38"/>
-<area shape="rect" id="node3" href="$structquisp_1_1channels_1_1channel__error__model.html" title=" " alt="" coords="155,5,317,45"/>
-<area shape="rect" id="node4" title=" " alt="" coords="342,13,415,38"/>
+<area shape="rect" id="Node000001" title="QuantumChannel." alt="" coords="150,109,319,150"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,13,130,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,44,203,106,200,111,99,49"/>
+<area shape="rect" id="Node000003" href="$structquisp_1_1channels_1_1channel__error__model.html" title=" " alt="" coords="154,5,315,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="237,62,237,109,232,109,232,62"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="339,13,412,39"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="348,50,263,111,260,106,345,46"/>
 </map>

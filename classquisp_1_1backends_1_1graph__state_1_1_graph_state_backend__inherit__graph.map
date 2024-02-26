@@ -1,5 +1,7 @@
 <map id="quisp::backends::graph_state::GraphStateBackend" name="quisp::backends::graph_state::GraphStateBackend">
-<area shape="rect" id="node1" title=" " alt="" coords="5,93,187,133"/>
-<area shape="rect" id="node3" href="$classquisp__test_1_1backends_1_1graph__state_1_1_backend.html" title=" " alt="" coords="19,181,173,221"/>
-<area shape="rect" id="node2" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="12,5,180,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,94,186,135"/>
+<area shape="rect" id="Node000003" href="$classquisp__test_1_1backends_1_1graph__state_1_1_backend.html" title=" " alt="" coords="19,183,172,223"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="98,150,98,182,93,182,93,150"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="12,5,179,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,62,98,94,93,94,93,62"/>
 </map>

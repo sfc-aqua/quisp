@@ -1,10 +1,17 @@
 <map id="quisp/backends/interfaces/IQuantumBackend.h" name="quisp/backends/interfaces/IQuantumBackend.h">
-<area shape="rect" id="node1" title=" " alt="" coords="175,5,349,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,93,148,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="172,93,240,119"/>
-<area shape="rect" id="node4" href="$_i_configuration_8h.html" title=" " alt="" coords="264,93,375,119"/>
-<area shape="rect" id="node6" href="$_i_qubit_id_8h.html" title=" " alt="" coords="399,93,477,119"/>
-<area shape="rect" id="node5" title=" " alt="" coords="292,167,347,192"/>
-<area shape="rect" id="node7" title=" " alt="" coords="388,167,453,192"/>
-<area shape="rect" id="node8" title=" " alt="" coords="477,167,556,192"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="175,5,349,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,94,148,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,49,120,90,118,85,215,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="172,94,240,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="250,48,225,83,221,79,246,45"/>
+<area shape="rect" id="Node000004" href="$_i_configuration_8h.html" title=" " alt="" coords="264,94,374,120"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="278,45,303,79,299,83,274,48"/>
+<area shape="rect" id="Node000006" href="$_i_qubit_id_8h.html" title=" " alt="" coords="398,94,475,120"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="307,44,397,85,395,90,304,49"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="293,168,346,193"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="322,120,322,152,317,152,317,120"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="387,168,451,193"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="436,121,428,153,423,152,431,119"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="475,168,553,193"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="451,118,492,155,488,159,448,122"/>
 </map>

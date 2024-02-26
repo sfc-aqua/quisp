@@ -23,6 +23,5 @@ var classquisp_1_1utils_1_1_component_provider =
     [ "isEPPSNodeType", "classquisp_1_1utils_1_1_component_provider.html#a9d7cd6a4ddb4258809058f164537f142", null ],
     [ "isQNodeType", "classquisp_1_1utils_1_1_component_provider.html#a3cde44b796de7f3789d359389cb24046", null ],
     [ "setStrategy", "classquisp_1_1utils_1_1_component_provider.html#abba267196c30c742e53b8ccdcac40455", null ],
-    [ "module", "classquisp_1_1utils_1_1_component_provider.html#a862000e20ec1c73da6baa792485a443c", null ],
     [ "strategy", "classquisp_1_1utils_1_1_component_provider.html#ad9f4a1cc768e0bce2f11c4309df6b5e0", null ]
 ];

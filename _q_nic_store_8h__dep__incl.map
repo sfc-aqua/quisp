@@ -1,6 +1,9 @@
 <map id="quisp/modules/QRSA/RuleEngine/QNicStore/QNicStore.h" name="quisp/modules/QRSA/RuleEngine/QNicStore/QNicStore.h">
-<area shape="rect" id="node1" title=" " alt="" coords="185,5,341,60"/>
-<area shape="rect" id="node2" href="$_q_nic_store_8cc.html" title=" " alt="" coords="5,108,161,163"/>
-<area shape="rect" id="node3" href="$_q_nic_store__test_8cc.html" title=" " alt="" coords="185,108,341,163"/>
-<area shape="rect" id="node4" href="$_rule_engine_8cc.html" title="RuleEngine." alt="" coords="365,115,543,155"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="185,5,341,61"/>
+<area shape="rect" id="Node000002" href="$_q_nic_store_8cc.html" title=" " alt="" coords="5,109,161,165"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,71,133,111,130,106,200,67"/>
+<area shape="rect" id="Node000003" href="$_q_nic_store__test_8cc.html" title=" " alt="" coords="185,109,341,165"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="266,77,266,108,260,108,260,77"/>
+<area shape="rect" id="Node000004" href="$_rule_engine_8cc.html" title="RuleEngine." alt="" coords="364,117,541,157"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="328,66,417,114,415,118,326,71"/>
 </map>

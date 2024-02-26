@@ -1,15 +1,28 @@
 <map id="quisp::backends::graph_state::GraphStateQubit" name="quisp::backends::graph_state::GraphStateQubit">
-<area shape="rect" id="node1" title=" " alt="" coords="757,291,919,331"/>
-<area shape="rect" id="node2" href="$classquisp_1_1backends_1_1abstract_1_1_i_qubit.html" title=" " alt="" coords="350,5,518,45"/>
-<area shape="rect" id="node3" href="$structquisp_1_1backends_1_1graph__state_1_1types_1_1_single_gate_error_model.html" title=" " alt="" coords="321,69,547,109"/>
-<area shape="rect" id="node4" href="$structquisp_1_1backends_1_1graph__state_1_1types_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="311,133,557,173"/>
-<area shape="rect" id="node5" href="$structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html" title=" " alt="" coords="313,197,555,237"/>
-<area shape="rect" id="node6" href="$structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html" title=" " alt="" coords="329,261,539,301"/>
-<area shape="rect" id="node7" title=" " alt="" coords="397,326,471,351"/>
-<area shape="rect" id="node8" title=" " alt="" coords="59,389,133,414"/>
-<area shape="rect" id="node11" href="$classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html" title=" " alt="" coords="343,444,525,484"/>
-<area shape="rect" id="node9" title=" " alt="" coords="378,546,490,571"/>
-<area shape="rect" id="node10" href="$classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html" title="a key to identify a qubit in a backend." alt="" coords="350,596,518,636"/>
-<area shape="rect" id="node12" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="12,449,180,489"/>
-<area shape="rect" id="node13" href="$classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend_1_1_i_callback.html" title=" " alt="" coords="5,514,187,569"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="754,296,914,337"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1backends_1_1abstract_1_1_i_qubit.html" title=" " alt="" coords="348,5,516,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="531,7,581,6,633,11,685,25,732,50,759,76,781,107,799,141,812,177,828,244,834,295,829,296,823,245,807,178,794,143,777,110,755,80,728,54,683,30,632,16,581,11,531,13"/>
+<area shape="rect" id="Node000003" href="$structquisp_1_1backends_1_1graph__state_1_1types_1_1_single_gate_error_model.html" title=" " alt="" coords="319,71,545,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="561,95,604,103,649,116,692,133,732,156,766,187,794,225,814,263,828,295,823,297,810,266,789,228,762,191,728,160,689,137,647,121,603,109,560,101"/>
+<area shape="rect" id="Node000004" href="$structquisp_1_1backends_1_1graph__state_1_1types_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="309,136,555,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="571,172,652,193,731,225,779,258,816,293,813,297,776,262,729,229,650,198,570,177"/>
+<area shape="rect" id="Node000005" href="$structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html" title=" " alt="" coords="311,201,553,242"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="568,240,649,256,731,276,781,293,779,298,729,282,648,262,567,246"/>
+<area shape="rect" id="Node000006" href="$structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html" title=" " alt="" coords="328,267,536,307"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="552,293,754,308,754,313,551,298"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="396,331,468,357"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="484,341,596,337,730,329,753,326,754,331,730,334,597,343,484,346"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="59,394,132,420"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="148,405,328,400,441,394,555,382,643,367,729,344,765,335,766,340,731,350,644,372,555,387,442,399,328,406,148,410"/>
+<area shape="rect" id="Node000011" href="$classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html" title=" " alt="" coords="342,449,522,490"/>
+<area shape="poly" id="edge12_Node000011_Node000008" title=" " alt="" coords="148,415,210,427,342,451,341,457,209,433,147,420"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="376,554,488,580"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="503,574,566,580,632,583,690,580,712,576,729,568,755,545,777,517,794,485,807,452,823,387,829,337,834,338,828,388,812,453,799,487,782,520,759,549,731,573,714,581,690,586,632,589,565,586,503,579"/>
+<area shape="rect" id="Node000010" href="$classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html" title="a key to identify a qubit in a backend." alt="" coords="348,604,516,645"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="531,641,581,644,633,641,683,628,728,604,758,576,781,542,798,505,811,467,826,393,830,337,835,337,831,393,816,468,803,507,785,545,762,579,732,608,685,633,633,646,581,649,531,647"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="537,461,648,448,696,439,729,428,757,408,782,384,818,336,823,339,786,387,761,412,731,432,697,444,649,454,538,466"/>
+<area shape="rect" id="Node000012" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="12,455,179,495"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="194,471,342,468,342,474,195,476"/>
+<area shape="rect" id="Node000013" href="$classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend_1_1_i_callback.html" title=" " alt="" coords="5,519,186,575"/>
+<area shape="poly" id="edge13_Node000011_Node000013" title=" " alt="" coords="200,520,341,488,342,493,201,526"/>
 </map>

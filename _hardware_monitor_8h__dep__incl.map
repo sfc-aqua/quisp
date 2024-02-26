@@ -1,6 +1,9 @@
 <map id="quisp/modules/QRSA/HardwareMonitor/HardwareMonitor.h" name="quisp/modules/QRSA/HardwareMonitor/HardwareMonitor.h">
-<area shape="rect" id="node1" title="HardwareMonitor." alt="" coords="270,5,509,45"/>
-<area shape="rect" id="node2" href="$_hardware_monitor_8cc.html" title="HardwareMonitor." alt="" coords="5,101,251,141"/>
-<area shape="rect" id="node3" href="$_hardware_monitor__test_8cc.html" title=" " alt="" coords="275,93,503,148"/>
-<area shape="rect" id="node4" href="$_real_time_controller__test_8cc.html" title=" " alt="" coords="527,93,710,148"/>
+<area shape="rect" id="Node000001" title="HardwareMonitor." alt="" coords="269,5,506,46"/>
+<area shape="rect" id="Node000002" href="$_hardware_monitor_8cc.html" title="HardwareMonitor." alt="" coords="5,102,250,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="320,54,183,103,181,98,318,49"/>
+<area shape="rect" id="Node000003" href="$_hardware_monitor__test_8cc.html" title=" " alt="" coords="274,94,501,150"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="390,61,390,93,385,93,385,61"/>
+<area shape="rect" id="Node000004" href="$_real_time_controller__test_8cc.html" title=" " alt="" coords="525,94,706,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="451,50,551,91,549,96,448,55"/>
 </map>

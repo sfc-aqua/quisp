@@ -37,49 +37,49 @@ var NAVTREE =
     [ "Learning more", "index.html#autotoc_md10", null ],
     [ "Contributing", "index.html#autotoc_md11", null ],
     [ "License", "index.html#autotoc_md12", null ],
-    [ "Logging", "md_quisp_modules__logger__r_e_a_d_m_e.html", [
-      [ "Usage", "md_quisp_modules__logger__r_e_a_d_m_e.html#autotoc_md14", null ]
+    [ "Logging", "md_quisp_2modules_2_logger_2_r_e_a_d_m_e.html", [
+      [ "Usage", "md_quisp_2modules_2_logger_2_r_e_a_d_m_e.html#autotoc_md14", null ]
     ] ],
-    [ "Bell State Analyzer", "md_quisp_modules__physical_connection__b_s_a__r_e_a_d_m_e.html", [
-      [ "How BellStateAnalyzer Module works", "md_quisp_modules__physical_connection__b_s_a__r_e_a_d_m_e.html#autotoc_md16", null ]
+    [ "Bell State Analyzer", "md_quisp_2modules_2_physical_connection_2_b_s_a_2_r_e_a_d_m_e.html", [
+      [ "How BellStateAnalyzer Module works", "md_quisp_2modules_2_physical_connection_2_b_s_a_2_r_e_a_d_m_e.html#autotoc_md16", null ]
     ] ],
-    [ "EPPS Modules and the MSM Protocol", "md_quisp_modules__physical_connection__e_p_p_s__r_e_a_d_m_e.html", [
-      [ "EntangledPhotonPairSource Module", "md_quisp_modules__physical_connection__e_p_p_s__r_e_a_d_m_e.html#autotoc_md18", null ],
-      [ "EPPSController Module", "md_quisp_modules__physical_connection__e_p_p_s__r_e_a_d_m_e.html#autotoc_md19", null ],
-      [ "Usage", "md_quisp_modules__physical_connection__e_p_p_s__r_e_a_d_m_e.html#autotoc_md20", null ],
-      [ "MSM protocol details which take part in EPPS modules", "md_quisp_modules__physical_connection__e_p_p_s__r_e_a_d_m_e.html#autotoc_md21", null ]
+    [ "EPPS Modules and the MSM Protocol", "md_quisp_2modules_2_physical_connection_2_e_p_p_s_2_r_e_a_d_m_e.html", [
+      [ "EntangledPhotonPairSource Module", "md_quisp_2modules_2_physical_connection_2_e_p_p_s_2_r_e_a_d_m_e.html#autotoc_md18", null ],
+      [ "EPPSController Module", "md_quisp_2modules_2_physical_connection_2_e_p_p_s_2_r_e_a_d_m_e.html#autotoc_md19", null ],
+      [ "Usage", "md_quisp_2modules_2_physical_connection_2_e_p_p_s_2_r_e_a_d_m_e.html#autotoc_md20", null ],
+      [ "MSM protocol details which take part in EPPS modules", "md_quisp_2modules_2_physical_connection_2_e_p_p_s_2_r_e_a_d_m_e.html#autotoc_md21", null ]
     ] ],
-    [ "MSM protocol details which take part in the RuleEngine", "md_quisp_modules__q_r_s_a__rule_engine__r_e_a_d_m_e.html", [
-      [ "- <tt>success_list</tt>: List to store the information of memory qubits that succeeded local BSM. Contains the qubit information and the correction information.", "md_quisp_modules__q_r_s_a__rule_engine__r_e_a_d_m_e.html#autotoc_md47", [
-        [ "Pseudocodes", "md_quisp_modules__q_r_s_a__rule_engine__r_e_a_d_m_e.html#autotoc_md45", [
-          [ "Global Variables", "md_quisp_modules__q_r_s_a__rule_engine__r_e_a_d_m_e.html#autotoc_md46", null ],
-          [ "Function to emit photons from qnodes in msm links", "md_quisp_modules__q_r_s_a__rule_engine__r_e_a_d_m_e.html#autotoc_md48", null ]
+    [ "MSM protocol details which take part in the RuleEngine", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html", [
+      [ "- <tt>success_list</tt>: List to store the information of memory qubits that succeeded local BSM. Contains the qubit information and the correction information.", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md47", [
+        [ "Pseudocodes", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md45", [
+          [ "Global Variables", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md46", null ],
+          [ "Function to emit photons from qnodes in msm links", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md48", null ]
         ] ]
       ] ],
-      [ "1. Wait for <tt>interval</tt> time and call EMIT_PHOTONS_MSM(<tt>interval</tt>)", "md_quisp_modules__q_r_s_a__rule_engine__r_e_a_d_m_e.html#autotoc_md49", null ],
-      [ "1. Free <tt>qubit</tt>", "md_quisp_modules__q_r_s_a__rule_engine__r_e_a_d_m_e.html#autotoc_md53", [
-        [ "Explanation of applying the Pauli Z gate for the case where the BSM results are different", "md_quisp_modules__q_r_s_a__rule_engine__r_e_a_d_m_e.html#autotoc_md54", null ]
+      [ "1. Wait for <tt>interval</tt> time and call EMIT_PHOTONS_MSM(<tt>interval</tt>)", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md49", null ],
+      [ "1. Free <tt>qubit</tt>", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md53", [
+        [ "Explanation of applying the Pauli Z gate for the case where the BSM results are different", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md54", null ]
       ] ]
     ] ],
-    [ "Runtime", "md_quisp_runtime__r_e_a_d_m_e.html", [
-      [ "Intermediate Representations (IR)", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md56", null ],
-      [ "RuleSet Execution with Runtime", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md57", null ],
-      [ "Storage Scopes", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md58", null ],
-      [ "Storage types", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md59", [
-        [ "Register", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md60", null ],
-        [ "Memory", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md61", null ],
-        [ "Flags (pc, should_exit, terminated, error, and return_code)", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md62", null ],
-        [ "Qubits", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md63", null ]
+    [ "Runtime", "md_quisp_2runtime_2_r_e_a_d_m_e.html", [
+      [ "Intermediate Representations (IR)", "md_quisp_2runtime_2_r_e_a_d_m_e.html#autotoc_md56", null ],
+      [ "RuleSet Execution with Runtime", "md_quisp_2runtime_2_r_e_a_d_m_e.html#autotoc_md57", null ],
+      [ "Storage Scopes", "md_quisp_2runtime_2_r_e_a_d_m_e.html#autotoc_md58", null ],
+      [ "Storage types", "md_quisp_2runtime_2_r_e_a_d_m_e.html#autotoc_md59", [
+        [ "Register", "md_quisp_2runtime_2_r_e_a_d_m_e.html#autotoc_md60", null ],
+        [ "Memory", "md_quisp_2runtime_2_r_e_a_d_m_e.html#autotoc_md61", null ],
+        [ "Flags (pc, should_exit, terminated, error, and return_code)", "md_quisp_2runtime_2_r_e_a_d_m_e.html#autotoc_md62", null ],
+        [ "Qubits", "md_quisp_2runtime_2_r_e_a_d_m_e.html#autotoc_md63", null ]
       ] ]
     ] ],
-    [ "Test Utilities", "md_quisp_test_utils__r_e_a_d_m_e.html", [
-      [ "Usage", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md65", null ],
-      [ "Grab a packet", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md66", null ],
-      [ "Example", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md67", null ]
+    [ "Test Utilities", "md_quisp_2test__utils_2_r_e_a_d_m_e.html", [
+      [ "Usage", "md_quisp_2test__utils_2_r_e_a_d_m_e.html#autotoc_md65", null ],
+      [ "Grab a packet", "md_quisp_2test__utils_2_r_e_a_d_m_e.html#autotoc_md66", null ],
+      [ "Example", "md_quisp_2test__utils_2_r_e_a_d_m_e.html#autotoc_md67", null ]
     ] ],
-    [ "quisp::utils", "md_quisp_utils__r_e_a_d_m_e.html", [
-      [ "ComponentProvider", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md69", null ],
-      [ "Unit Testing", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md70", null ]
+    [ "quisp::utils", "md_quisp_2utils_2_r_e_a_d_m_e.html", [
+      [ "ComponentProvider", "md_quisp_2utils_2_r_e_a_d_m_e.html#autotoc_md69", null ],
+      [ "Unit Testing", "md_quisp_2utils_2_r_e_a_d_m_e.html#autotoc_md70", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -125,17 +125,17 @@ var NAVTREEINDEX =
 "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#ab9b94278d5193dc0ea9c55d1129bcf67",
 "classquisp_1_1modules_1_1_connection_manager.html#a60bf9f1494aeb456bf02e2e7c07c1b50",
 "classquisp_1_1modules_1_1_i_routing_daemon.html",
-"classquisp_1_1modules_1_1_rule_engine.html#a40b0b79a4cdaaf2de4e346b61748d801",
-"classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html#afb96e5349baf66aa03c4fba962108633",
-"classquisp_1_1rules_1_1_clause.html#ae97df8f9427620897fb12333e98e07ad",
-"classquisp_1_1runtime_1_1_program.html#abf6369229b47351aaaedde7d594ebb66",
-"classquisp_1_1utils_1_1_component_provider.html#ad119a53fb7d1f5027c242e03b74c1100",
-"classquisp__test_1_1env_1_1_static_env.html#a465a2f8783fe4410b8016939a94bd4b5",
-"classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a29a214c1e0451b6caa045d6940903bc8",
-"functions_func_v.html",
-"namespacequisp_1_1modules_1_1ospf.html#a24e7fd8aa5f45c453a8300701214fe23",
-"structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html#acf0f14731f0fb53531035e8321b5aea8",
-"structquisp_1_1modules_1_1ospf_1_1_ospf_neighbor_info.html#a6b4f89fc5c99d41e97859dff5e6130b7"
+"classquisp_1_1modules_1_1_rule_engine.html#a44e6a6eeae38b4d52a8e5d3484b150f9",
+"classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html#a286203cf7087d7ecd82993bc859d69b6",
+"classquisp_1_1rules_1_1_condition.html#a4938f189312f7fb27a03008a056f3499",
+"classquisp_1_1runtime_1_1_rule.html",
+"classquisp_1_1utils_1_1_component_provider.html#ae33dab9921f0641590d51cfc2a7c6405",
+"classquisp__test_1_1env_1_1_static_env.html#a4e021b5370350e1ae34edac19f9939bf",
+"classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a9ade73c7f16973b19a7a1ae0c90bef03",
+"functions_j.html",
+"namespacequisp_1_1modules_1_1ospf.html#a8f2a5b04abd62934a86757a0e801d4c2aba7de5bc6888294e5884b024a4c894f1",
+"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a4e9b171be09c9a74f536b60d9ffa006e",
+"structquisp_1_1modules_1_1ospf_1_1_ospf_neighbor_info.html#af5195668ebab11566f27dfd23ee2535f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

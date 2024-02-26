@@ -1,5 +1,7 @@
 <map id="quisp/test_utils/RNG.h" name="quisp/test_utils/RNG.h">
-<area shape="rect" id="node1" title=" " alt="" coords="18,5,171,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,88,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="113,79,173,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="16,5,169,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,87,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,33,64,67,60,64,83,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="111,79,170,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="103,30,126,64,122,67,98,33"/>
 </map>

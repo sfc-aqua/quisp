@@ -1,6 +1,9 @@
 <map id="quisp::modules::RealTimeController" name="quisp::modules::RealTimeController">
-<area shape="rect" id="node1" title="RealTimeController." alt="" coords="166,183,335,223"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_real_time_controller.html" title=" " alt="" coords="5,80,179,120"/>
-<area shape="rect" id="node3" title=" " alt="" coords="9,5,175,31"/>
-<area shape="rect" id="node4" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="203,87,405,113"/>
+<area shape="rect" id="Node000001" title="RealTimeController." alt="" coords="113,184,281,225"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1_i_real_time_controller.html" title=" " alt="" coords="5,80,178,121"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,130,178,182,175,186,121,134"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="8,5,175,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,47,94,80,89,80,89,47"/>
+<area shape="rect" id="Node000004" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="202,88,405,114"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="282,126,219,185,216,181,278,123"/>
 </map>

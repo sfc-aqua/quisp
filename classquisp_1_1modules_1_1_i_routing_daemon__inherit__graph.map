@@ -1,6 +1,9 @@
 <map id="quisp::modules::IRoutingDaemon" name="quisp::modules::IRoutingDaemon">
-<area shape="rect" id="node1" title=" " alt="" coords="164,37,327,77"/>
-<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html" title=" " alt="" coords="413,5,587,45"/>
-<area shape="rect" id="node4" href="$classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html" title=" " alt="" coords="375,69,625,109"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,45,116,70"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="164,39,325,79"/>
+<area shape="rect" id="Node000003" href="$classquisp_1_1modules_1_1routing__daemon_1_1_routing_daemon.html" title=" " alt="" coords="412,5,584,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="340,44,411,34,412,40,341,49"/>
+<area shape="rect" id="Node000004" href="$classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html" title=" " alt="" coords="373,71,622,111"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="341,68,373,73,372,78,340,74"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,46,116,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,56,163,56,163,62,131,62"/>
 </map>

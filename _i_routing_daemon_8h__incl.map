@@ -1,4 +1,5 @@
 <map id="quisp/modules/QRSA/RoutingDaemon/IRoutingDaemon.h" name="quisp/modules/QRSA/RoutingDaemon/IRoutingDaemon.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,233,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="78,93,161,119"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,233,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="78,94,160,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,46,122,78,116,78,116,46"/>
 </map>

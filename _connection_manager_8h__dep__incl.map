@@ -1,6 +1,9 @@
 <map id="quisp/modules/QRSA/ConnectionManager/ConnectionManager.h" name="quisp/modules/QRSA/ConnectionManager/ConnectionManager.h">
-<area shape="rect" id="node1" title=" " alt="" coords="240,5,451,60"/>
-<area shape="rect" id="node2" href="$_connection_manager_8cc.html" title="ConnectionManager." alt="" coords="5,108,216,163"/>
-<area shape="rect" id="node3" href="$_connection_manager__test_8cc.html" title=" " alt="" coords="240,108,451,163"/>
-<area shape="rect" id="node4" href="$_rule_set_generator__test_8cc.html" title=" " alt="" coords="475,108,666,163"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="239,5,448,61"/>
+<area shape="rect" id="Node000002" href="$_connection_manager_8cc.html" title="ConnectionManager." alt="" coords="5,109,215,165"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="268,70,174,111,172,106,266,65"/>
+<area shape="rect" id="Node000003" href="$_connection_manager__test_8cc.html" title=" " alt="" coords="239,109,448,165"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="346,77,346,108,341,108,341,77"/>
+<area shape="rect" id="Node000004" href="$_rule_set_generator__test_8cc.html" title=" " alt="" coords="472,109,663,165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="418,65,508,106,506,111,416,70"/>
 </map>

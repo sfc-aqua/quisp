@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['quisp_0',['QUISP',['../index.html',1,'']]],
-  ['quisp_3a_3autils_1',['quisp::utils',['../md_quisp_utils__r_e_a_d_m_e.html',1,'']]]
+  ['in_20the_20ruleengine_0',['MSM protocol details which take part in the RuleEngine',['../md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html',1,'']]]
 ];

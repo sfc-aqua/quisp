@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['msm_20protocol_20details_20which_20take_20part_20in_20the_20ruleengine_0',['MSM protocol details which take part in the RuleEngine',['../md_quisp_modules__q_r_s_a__rule_engine__r_e_a_d_m_e.html',1,'']]]
+  ['epps_20modules_20and_20the_20msm_20protocol_0',['EPPS Modules and the MSM Protocol',['../md_quisp_2modules_2_physical_connection_2_e_p_p_s_2_r_e_a_d_m_e.html',1,'']]]
 ];

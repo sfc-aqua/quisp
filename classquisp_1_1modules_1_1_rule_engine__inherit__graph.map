@@ -1,6 +1,9 @@
 <map id="quisp::modules::RuleEngine" name="quisp::modules::RuleEngine">
-<area shape="rect" id="node1" title="RuleEngine." alt="" coords="103,167,282,192"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_rule_engine.html" title=" " alt="" coords="5,86,188,111"/>
-<area shape="rect" id="node3" title=" " alt="" coords="13,5,180,31"/>
-<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_logger_1_1_logger_base.html" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="213,79,367,119"/>
+<area shape="rect" id="Node000001" title="RuleEngine." alt="" coords="103,168,282,193"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1_i_rule_engine.html" title=" " alt="" coords="5,87,188,112"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,120,179,165,176,169,121,124"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="13,5,180,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,47,99,86,94,86,94,47"/>
+<area shape="rect" id="Node000004" href="$classquisp_1_1modules_1_1_logger_1_1_logger_base.html" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="212,79,365,120"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="255,132,209,169,206,165,251,127"/>
 </map>

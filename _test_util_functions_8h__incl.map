@@ -1,8 +1,15 @@
 <map id="quisp/test_utils/TestUtilFunctions.h" name="quisp/test_utils/TestUtilFunctions.h">
-<area shape="rect" id="node1" title=" " alt="" coords="51,5,211,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="90,167,173,192"/>
-<area shape="rect" id="node3" href="$test__utils_2_r_n_g_8h.html" title=" " alt="" coords="33,93,94,119"/>
-<area shape="rect" id="node5" href="$_simulation_8h.html" title=" " alt="" coords="169,93,262,119"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,167,65,192"/>
-<area shape="rect" id="node6" title=" " alt="" coords="197,167,351,192"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="50,5,209,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="89,168,170,193"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,46,132,152,127,152,127,46"/>
+<area shape="rect" id="Node000003" href="$test__utils_2_r_n_g_8h.html" title=" " alt="" coords="32,94,92,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="115,48,84,84,80,80,111,45"/>
+<area shape="rect" id="Node000005" href="$_simulation_8h.html" title=" " alt="" coords="168,94,260,120"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="152,44,192,81,188,85,149,48"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="75,118,110,155,106,158,71,122"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,168,65,193"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="60,121,47,154,42,152,55,119"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="201,122,157,159,154,155,198,118"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="195,168,347,193"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="225,118,254,154,250,157,221,122"/>
 </map>

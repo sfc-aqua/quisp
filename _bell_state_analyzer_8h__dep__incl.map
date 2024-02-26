@@ -1,7 +1,12 @@
 <map id="quisp/modules/PhysicalConnection/BSA/BellStateAnalyzer.h" name="quisp/modules/PhysicalConnection/BSA/BellStateAnalyzer.h">
-<area shape="rect" id="node1" title=" " alt="" coords="264,5,488,45"/>
-<area shape="rect" id="node2" href="$_b_s_a_controller_8h.html" title=" " alt="" coords="115,93,339,133"/>
-<area shape="rect" id="node4" href="$_hardware_monitor_8cc.html" title="HardwareMonitor." alt="" coords="253,181,499,221"/>
-<area shape="rect" id="node5" href="$_bell_state_analyzer_8cc.html" title="BellStateAnalyzer." alt="" coords="413,93,637,133"/>
-<area shape="rect" id="node3" href="$_b_s_a_controller_8cc.html" title=" " alt="" coords="5,181,229,221"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="263,5,486,46"/>
+<area shape="rect" id="Node000002" href="$_b_s_a_controller_8h.html" title=" " alt="" coords="113,94,337,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="329,56,260,96,257,91,326,52"/>
+<area shape="rect" id="Node000004" href="$_hardware_monitor_8cc.html" title="HardwareMonitor." alt="" coords="252,183,497,223"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="377,61,377,182,372,182,372,61"/>
+<area shape="rect" id="Node000005" href="$_bell_state_analyzer_8cc.html" title="BellStateAnalyzer." alt="" coords="412,94,635,135"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="423,52,491,91,489,96,420,56"/>
+<area shape="rect" id="Node000003" href="$_b_s_a_controller_8cc.html" title=" " alt="" coords="5,183,229,223"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="190,147,143,184,140,180,187,143"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="273,141,342,180,339,185,271,145"/>
 </map>

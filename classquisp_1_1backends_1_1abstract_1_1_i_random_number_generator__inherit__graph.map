@@ -1,5 +1,7 @@
 <map id="quisp::backends::abstract::IRandomNumberGenerator" name="quisp::backends::abstract::IRandomNumberGenerator">
-<area shape="rect" id="node1" title=" " alt="" coords="87,5,270,45"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1backend_1_1rng_1_1_r_n_g.html" title=" " alt="" coords="5,93,168,133"/>
-<area shape="rect" id="node3" href="$classquisp__test_1_1backends_1_1graph__state_1_1_test_r_n_g.html" title=" " alt="" coords="192,93,349,133"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="87,5,270,46"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1backend_1_1rng_1_1_r_n_g.html" title=" " alt="" coords="5,94,168,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,59,109,96,105,92,145,55"/>
+<area shape="rect" id="Node000003" href="$classquisp__test_1_1backends_1_1graph__state_1_1_test_r_n_g.html" title=" " alt="" coords="192,94,349,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,55,252,92,248,96,208,59"/>
 </map>

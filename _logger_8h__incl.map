@@ -1,8 +1,14 @@
 <map id="quisp/test_utils/Logger.h" name="quisp/test_utils/Logger.h">
-<area shape="rect" id="node1" title=" " alt="" coords="86,5,250,31"/>
-<area shape="rect" id="node2" href="$_i_logger_8h.html" title=" " alt="" coords="8,79,181,104"/>
-<area shape="rect" id="node6" title=" " alt="" coords="205,79,277,104"/>
-<area shape="rect" id="node3" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="85,152,203,177"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,225,88,251"/>
-<area shape="rect" id="node5" title=" " alt="" coords="112,225,243,251"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="84,5,248,31"/>
+<area shape="rect" id="Node000002" href="$_i_logger_8h.html" title=" " alt="" coords="8,79,180,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,33,119,70,115,66,152,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="204,79,275,105"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="180,29,218,66,214,70,176,33"/>
+<area shape="rect" id="Node000003" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="83,153,201,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,103,128,138,123,141,100,106"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,226,87,252"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="92,106,74,154,56,213,51,211,69,152,87,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="127,181,76,219,72,215,124,177"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="111,226,240,252"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="150,177,166,211,161,213,145,180"/>
 </map>

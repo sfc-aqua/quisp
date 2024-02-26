@@ -1,5 +1,7 @@
 <map id="quisp::utils::DefaultComponentProviderStrategy" name="quisp::utils::DefaultComponentProviderStrategy">
-<area shape="rect" id="node1" title=" " alt="" coords="56,108,252,148"/>
-<area shape="rect" id="node2" href="$classquisp_1_1utils_1_1_i_component_provider_strategy.html" title=" " alt="" coords="5,5,164,45"/>
-<area shape="rect" id="node3" title=" " alt="" coords="188,13,259,38"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="56,109,252,150"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1utils_1_1_i_component_provider_strategy.html" title=" " alt="" coords="5,5,164,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,57,143,107,138,110,104,60"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="188,13,258,39"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,53,169,110,165,107,204,50"/>
 </map>

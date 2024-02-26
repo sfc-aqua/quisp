@@ -1,6 +1,10 @@
 <map id="quisp/test_utils/Configuration.cc" name="quisp/test_utils/Configuration.cc">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,212,31"/>
-<area shape="rect" id="node2" href="$_configuration_8h.html" title=" " alt="" coords="55,79,162,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="67,225,150,251"/>
-<area shape="rect" id="node4" href="$_key_value_8h.html" title=" " alt="" coords="107,152,193,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,211,31"/>
+<area shape="rect" id="Node000002" href="$_configuration_8h.html" title=" " alt="" coords="55,79,161,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,31,111,63,105,63,105,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="67,226,149,252"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,106,96,153,96,183,102,211,97,212,91,183,91,152,101,105"/>
+<area shape="rect" id="Node000004" href="$_key_value_8h.html" title=" " alt="" coords="105,153,191,178"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="117,104,136,138,132,140,112,106"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="144,180,124,214,120,212,139,177"/>
 </map>

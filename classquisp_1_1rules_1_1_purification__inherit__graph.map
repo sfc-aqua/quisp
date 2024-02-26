@@ -1,4 +1,5 @@
 <map id="quisp::rules::Purification" name="quisp::rules::Purification">
-<area shape="rect" id="node1" title=" " alt="" coords="5,79,163,104"/>
-<area shape="rect" id="node2" href="$classquisp_1_1rules_1_1_action.html" title=" " alt="" coords="19,5,149,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,79,162,105"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1rules_1_1_action.html" title=" " alt="" coords="19,5,148,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,46,86,79,81,79,81,46"/>
 </map>

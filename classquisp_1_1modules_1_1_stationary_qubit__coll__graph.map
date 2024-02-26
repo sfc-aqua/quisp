@@ -1,8 +1,13 @@
 <map id="quisp::modules::StationaryQubit" name="quisp::modules::StationaryQubit">
-<area shape="rect" id="node1" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="551,88,723,128"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="235,5,411,45"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,13,172,38"/>
-<area shape="rect" id="node4" title=" " alt="" coords="283,70,362,95"/>
-<area shape="rect" id="node5" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="221,119,424,145"/>
-<area shape="rect" id="node6" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="239,169,407,209"/>
+<area shape="rect" id="Node000001" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="549,88,721,129"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="235,5,410,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="426,46,526,71,572,85,570,90,525,76,424,51"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,13,172,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="187,23,234,23,234,28,187,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="283,70,361,96"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="377,85,549,99,549,104,376,90"/>
+<area shape="rect" id="Node000005" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="221,120,423,145"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="439,130,525,125,548,122,549,127,526,130,439,135"/>
+<area shape="rect" id="Node000006" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="239,169,406,210"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="421,173,525,150,588,127,589,132,526,155,422,179"/>
 </map>

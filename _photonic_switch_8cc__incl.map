@@ -1,5 +1,7 @@
 <map id="quisp/modules/QNIC/PhotonicSwitch/PhotonicSwitch.cc" name="quisp/modules/QNIC/PhotonicSwitch/PhotonicSwitch.cc">
-<area shape="rect" id="node1" title="PhotonicSwitch." alt="" coords="5,5,235,45"/>
-<area shape="rect" id="node2" href="$_photonic_switch_8h.html" title="PhotonicSwitch." alt="" coords="59,93,181,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="79,167,161,192"/>
+<area shape="rect" id="Node000001" title="PhotonicSwitch." alt="" coords="5,5,234,46"/>
+<area shape="rect" id="Node000002" href="$_photonic_switch_8h.html" title="PhotonicSwitch." alt="" coords="58,94,181,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,46,122,78,117,78,117,46"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="79,168,160,193"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,120,122,152,117,152,117,120"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="quisp_test::gate::TestGate" name="quisp_test::gate::TestGate">
-<area shape="rect" id="node1" title="this class can store received messages currently this class only for output gate. we may need to adap..." alt="" coords="5,79,179,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="35,5,149,31"/>
+<area shape="rect" id="Node000001" title="this class can store received messages currently this class only for output gate. we may need to adap..." alt="" coords="5,79,178,105"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="35,5,148,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,46,94,79,89,79,89,46"/>
 </map>

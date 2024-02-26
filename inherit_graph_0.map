@@ -1,4 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,13,131,38"/>
-<area shape="rect" id="node2" href="$classquisp_1_1channels_1_1_quantum_channel.html" title="QuantumChannel." alt="" coords="179,5,349,45"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,13,130,39"/>
+<area shape="rect" id="Node000001" href="$classquisp_1_1channels_1_1_quantum_channel.html" title="QuantumChannel." alt="" coords="178,5,347,46"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="145,23,177,23,177,28,145,28"/>
 </map>

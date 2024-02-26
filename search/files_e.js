@@ -12,14 +12,13 @@ var searchData=
   ['qrsa_2eh_9',['QRSA.h',['../_q_r_s_a_8h.html',1,'']]],
   ['quantumchannel_2ecc_10',['QuantumChannel.cc',['../_quantum_channel_8cc.html',1,'']]],
   ['qubit_2ecc_11',['Qubit.cc',['../_qubit_8cc.html',1,'']]],
-  ['qubit_2eh_12',['QUBIT.h',['../modules_2_qubit_8h.html',1,'']]],
-  ['qubit_2eh_13',['Qubit.h',['../backends_2_graph_state_2_qubit_8h.html',1,'']]],
-  ['qubit_5ftest_2ecc_14',['Qubit_test.cc',['../_qubit__test_8cc.html',1,'']]],
-  ['qubitconfiguration_2eh_15',['QubitConfiguration.h',['../_qubit_configuration_8h.html',1,'']]],
-  ['qubitid_2eh_16',['QubitId.h',['../_qubit_id_8h.html',1,'']]],
-  ['qubitrecord_2ecc_17',['QubitRecord.cc',['../_qubit_record_8cc.html',1,'']]],
-  ['qubitrecord_2eh_18',['QubitRecord.h',['../_qubit_record_8h.html',1,'']]],
-  ['qubitrecord_5ftest_2ecc_19',['QubitRecord_test.cc',['../_qubit_record__test_8cc.html',1,'']]],
-  ['queue_2ecc_20',['Queue.cc',['../_queue_8cc.html',1,'']]],
-  ['queue_2eh_21',['Queue.h',['../_queue_8h.html',1,'']]]
+  ['qubit_2eh_12',['qubit.h',['../backends_2_graph_state_2_q_u_b_i_t_8h.html',1,'(Global Namespace)'],['../modules_2_q_u_b_i_t_8h.html',1,'(Global Namespace)']]],
+  ['qubit_5ftest_2ecc_13',['Qubit_test.cc',['../_qubit__test_8cc.html',1,'']]],
+  ['qubitconfiguration_2eh_14',['QubitConfiguration.h',['../_qubit_configuration_8h.html',1,'']]],
+  ['qubitid_2eh_15',['QubitId.h',['../_qubit_id_8h.html',1,'']]],
+  ['qubitrecord_2ecc_16',['QubitRecord.cc',['../_qubit_record_8cc.html',1,'']]],
+  ['qubitrecord_2eh_17',['QubitRecord.h',['../_qubit_record_8h.html',1,'']]],
+  ['qubitrecord_5ftest_2ecc_18',['QubitRecord_test.cc',['../_qubit_record__test_8cc.html',1,'']]],
+  ['queue_2ecc_19',['Queue.cc',['../_queue_8cc.html',1,'']]],
+  ['queue_2eh_20',['Queue.h',['../_queue_8h.html',1,'']]]
 ];

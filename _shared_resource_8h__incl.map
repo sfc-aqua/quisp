@@ -1,7 +1,11 @@
 <map id="quisp/modules/SharedResource/SharedResource.h" name="quisp/modules/SharedResource/SharedResource.h">
-<area shape="rect" id="node1" title=" " alt="" coords="81,5,287,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,93,88,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="113,93,170,119"/>
-<area shape="rect" id="node4" title=" " alt="" coords="195,93,261,119"/>
-<area shape="rect" id="node5" title=" " alt="" coords="286,93,397,119"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="79,5,285,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,94,87,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,49,81,88,78,84,147,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="111,94,168,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="174,48,156,81,151,79,169,45"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="192,94,258,120"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="195,45,213,79,208,81,190,48"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="282,94,392,120"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="222,44,301,84,298,89,219,49"/>
 </map>

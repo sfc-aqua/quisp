@@ -1,5 +1,7 @@
 <map id="quisp::modules::Queue" name="quisp::modules::Queue">
-<area shape="rect" id="node1" title="Queue." alt="" coords="87,93,239,119"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,172,31"/>
-<area shape="rect" id="node3" title=" " alt="" coords="197,5,279,31"/>
+<area shape="rect" id="Node000001" title="Queue." alt="" coords="86,94,238,120"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,172,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,41,154,92,150,95,106,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="196,5,277,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,45,174,95,170,92,214,41"/>
 </map>

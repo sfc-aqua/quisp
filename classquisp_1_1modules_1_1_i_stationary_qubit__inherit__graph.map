@@ -1,6 +1,9 @@
 <map id="quisp::modules::IStationaryQubit" name="quisp::modules::IStationaryQubit">
-<area shape="rect" id="node1" title=" " alt="" coords="220,37,396,77"/>
-<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="452,5,624,45"/>
-<area shape="rect" id="node4" href="$classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html" title=" " alt="" coords="444,69,632,109"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,45,172,70"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="220,39,395,79"/>
+<area shape="rect" id="Node000003" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="451,5,622,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="410,41,450,36,451,41,411,47"/>
+<area shape="rect" id="Node000004" href="$classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html" title=" " alt="" coords="443,71,630,111"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="411,71,443,75,442,81,410,76"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,46,172,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,56,219,56,219,62,188,62"/>
 </map>

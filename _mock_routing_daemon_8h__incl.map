@@ -1,6 +1,9 @@
 <map id="quisp/test_utils/mock_modules/MockRoutingDaemon.h" name="quisp/test_utils/mock_modules/MockRoutingDaemon.h">
-<area shape="rect" id="node1" title=" " alt="" coords="47,5,263,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,101,120,126"/>
-<area shape="rect" id="node3" href="$_i_routing_daemon_8h.html" title=" " alt="" coords="144,93,352,133"/>
-<area shape="rect" id="node4" title=" " alt="" coords="207,181,289,207"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="46,5,262,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,102,119,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,48,88,93,84,89,131,45"/>
+<area shape="rect" id="Node000003" href="$_i_routing_daemon_8h.html" title=" " alt="" coords="142,94,350,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,45,216,81,212,85,173,48"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="205,183,287,208"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="249,135,249,167,243,167,243,135"/>
 </map>

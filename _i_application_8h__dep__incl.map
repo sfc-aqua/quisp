@@ -1,6 +1,9 @@
 <map id="quisp/modules/Application/IApplication.h" name="quisp/modules/Application/IApplication.h">
-<area shape="rect" id="node1" title=" " alt="" coords="104,5,279,45"/>
-<area shape="rect" id="node2" href="$_application_8h.html" title=" " alt="" coords="104,93,279,133"/>
-<area shape="rect" id="node3" href="$_application_8cc.html" title="Application." alt="" coords="5,181,180,221"/>
-<area shape="rect" id="node4" href="$_application__test_8cc.html" title=" " alt="" coords="204,181,379,221"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="104,5,277,46"/>
+<area shape="rect" id="Node000002" href="$_application_8h.html" title=" " alt="" coords="104,94,277,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,62,193,94,188,94,188,62"/>
+<area shape="rect" id="Node000003" href="$_application_8cc.html" title="Application." alt="" coords="5,183,179,223"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="159,147,116,184,113,180,155,143"/>
+<area shape="rect" id="Node000004" href="$_application__test_8cc.html" title=" " alt="" coords="203,183,376,223"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="226,143,269,180,265,184,223,147"/>
 </map>

@@ -1,7 +1,11 @@
 <map id="quisp::modules::routing_daemon::RoutingDaemon" name="quisp::modules::routing_daemon::RoutingDaemon">
-<area shape="rect" id="node1" title=" " alt="" coords="536,63,709,103"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="185,5,348,45"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,13,116,38"/>
-<area shape="rect" id="node4" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="165,70,368,95"/>
-<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1ospf_1_1_link_state_database.html" title="Represents the database that holds link&#45;state advertisements of nodes. Effectively,..." alt="" coords="197,120,336,160"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="534,63,707,103"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="186,5,347,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="363,37,511,60,535,65,534,70,510,66,362,42"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,13,116,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="131,23,185,23,185,28,131,28"/>
+<area shape="rect" id="Node000004" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="165,70,367,96"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="383,80,534,80,534,86,383,86"/>
+<area shape="rect" id="Node000005" href="$classquisp_1_1modules_1_1ospf_1_1_link_state_database.html" title="Represents the database that holds link&#45;state advertisements of nodes. Effectively,..." alt="" coords="197,120,335,161"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="350,126,510,101,534,97,535,102,511,106,351,131"/>
 </map>

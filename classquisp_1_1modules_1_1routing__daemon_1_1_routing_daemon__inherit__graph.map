@@ -1,5 +1,7 @@
 <map id="quisp::modules::routing_daemon::RoutingDaemon" name="quisp::modules::routing_daemon::RoutingDaemon">
-<area shape="rect" id="node1" title=" " alt="" coords="5,167,179,207"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="11,79,173,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="37,5,147,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,168,178,208"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="11,79,172,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,135,94,167,89,167,89,135"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="36,5,147,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,46,94,79,89,79,89,46"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="quisp::runtime::Runtime::ICallBack" name="quisp::runtime::Runtime::ICallBack">
-<area shape="rect" id="node1" title="ICallBack is an interface for the callback of the Runtime." alt="" coords="130,5,286,45"/>
-<area shape="rect" id="node2" href="$structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback.html" title=" " alt="" coords="5,93,187,133"/>
-<area shape="rect" id="node3" href="$classquisp__test_1_1_mock_runtime_callback.html" title=" " alt="" coords="211,101,429,126"/>
+<area shape="rect" id="Node000001" title="ICallBack is an interface for the callback of the Runtime." alt="" coords="129,5,284,46"/>
+<area shape="rect" id="Node000002" href="$structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback.html" title=" " alt="" coords="5,94,186,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,58,122,96,119,91,168,54"/>
+<area shape="rect" id="Node000003" href="$classquisp__test_1_1_mock_runtime_callback.html" title=" " alt="" coords="210,102,427,127"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="245,54,304,99,301,103,242,58"/>
 </map>

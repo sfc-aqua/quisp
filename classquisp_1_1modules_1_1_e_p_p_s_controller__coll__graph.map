@@ -1,8 +1,15 @@
 <map id="quisp::modules::EPPSController" name="quisp::modules::EPPSController">
-<area shape="rect" id="node1" title="EPPSController." alt="" coords="659,170,863,195"/>
-<area shape="rect" id="node2" title=" " alt="" coords="23,239,190,265"/>
-<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_entangled_photon_pair_source.html" title=" " alt="" coords="309,185,480,225"/>
-<area shape="rect" id="node3" title=" " alt="" coords="355,135,434,161"/>
-<area shape="rect" id="node5" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="5,57,208,82"/>
-<area shape="rect" id="node6" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="23,165,191,205"/>
+<area shape="rect" id="Node000001" title="EPPSController." alt="" coords="656,174,859,200"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="23,244,190,269"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,254,403,246,518,235,631,216,708,198,709,203,633,222,519,240,403,251,205,259"/>
+<area shape="rect" id="Node000004" href="$classquisp_1_1modules_1_1_entangled_photon_pair_source.html" title=" " alt="" coords="308,189,478,230"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="204,238,307,221,308,226,205,243"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="354,140,432,165"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="448,155,502,160,656,175,655,180,502,165,448,160"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="494,210,632,206,691,198,692,203,632,211,494,216"/>
+<area shape="rect" id="Node000005" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="5,58,208,84"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="168,51,261,32,380,19,444,18,508,23,572,35,633,55,673,80,707,113,734,146,751,172,747,175,729,149,703,116,670,84,631,60,571,40,508,28,443,23,380,24,262,37,169,56"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="145,89,220,131,309,175,335,186,333,191,307,180,217,136,142,94"/>
+<area shape="rect" id="Node000006" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="23,169,190,210"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="206,194,307,201,307,206,205,199"/>
 </map>

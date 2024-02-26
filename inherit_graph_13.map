@@ -1,4 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classquisp_1_1backends_1_1abstract_1_1_i_configuration.html" title="just an interface for the configuration to the backend" alt="" coords="5,5,173,45"/>
-<area shape="rect" id="node2" href="$classquisp_1_1backends_1_1_stationary_qubit_configuration.html" title="Configuration class contains all parameters and provides the way to retrieve it." alt="" coords="221,5,400,45"/>
+<area shape="rect" id="Node000000" href="$classquisp_1_1backends_1_1abstract_1_1_i_configuration.html" title="just an interface for the configuration to the backend" alt="" coords="5,5,173,46"/>
+<area shape="rect" id="Node000001" href="$classquisp_1_1backends_1_1_stationary_qubit_configuration.html" title="Configuration class contains all parameters and provides the way to retrieve it." alt="" coords="221,5,399,46"/>
+<area shape="poly" id="edge45_Node000000_Node000001" title=" " alt="" coords="188,23,220,23,220,28,188,28"/>
 </map>

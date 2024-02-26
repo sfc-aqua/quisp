@@ -1,8 +1,14 @@
 <map id="quisp::runtime::InstructionVisitor" name="quisp::runtime::InstructionVisitor">
-<area shape="rect" id="node1" title="Visitor class for instructions in a Program." alt="" coords="337,5,507,45"/>
-<area shape="rect" id="node2" href="$classquisp_1_1runtime_1_1_runtime.html" title="Runtime class is responsible for executing the given RuleSet and the states&#39; management." alt="" coords="608,93,764,118"/>
-<area shape="rect" id="node3" href="$structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html" title="ICallBack is an interface for the callback of the Runtime." alt="" coords="344,79,500,119"/>
-<area shape="rect" id="node4" href="$structquisp_1_1runtime_1_1_register.html" title=" " alt="" coords="344,143,500,169"/>
-<area shape="rect" id="node5" href="$classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet." alt="" coords="345,193,499,218"/>
-<area shape="rect" id="node6" href="$classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program." alt="" coords="5,193,163,218"/>
+<area shape="rect" id="Node000001" title="Visitor class for instructions in a Program." alt="" coords="336,5,504,46"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1runtime_1_1_runtime.html" title="Runtime class is responsible for executing the given RuleSet and the states&#39; management." alt="" coords="605,94,760,120"/>
+<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="520,29,582,43,629,66,666,92,663,96,626,71,580,48,519,34"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="621,92,527,63,484,49,485,44,529,58,622,87"/>
+<area shape="rect" id="Node000003" href="$structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html" title="ICallBack is an interface for the callback of the Runtime." alt="" coords="342,80,498,121"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="513,103,528,103,605,105,604,110,528,109,512,108"/>
+<area shape="rect" id="Node000004" href="$structquisp_1_1runtime_1_1_register.html" title=" " alt="" coords="342,145,498,171"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="508,139,580,125,615,118,616,123,582,130,509,144"/>
+<area shape="rect" id="Node000005" href="$classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet." alt="" coords="343,194,497,220"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="482,187,503,180,542,169,580,156,656,118,659,123,582,160,544,174,505,186,484,192"/>
+<area shape="rect" id="Node000006" href="$classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program." alt="" coords="5,194,162,220"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="177,204,343,204,343,210,177,210"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="quisp::modules::HardwareMonitor::SingleQubitError" name="quisp::modules::HardwareMonitor::SingleQubitError">
-<area shape="rect" id="node1" title=" " alt="" coords="5,137,176,177"/>
-<area shape="rect" id="node2" title=" " alt="" coords="51,5,130,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,139,175,180"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="51,5,129,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,46,93,139,87,139,87,46"/>
 </map>

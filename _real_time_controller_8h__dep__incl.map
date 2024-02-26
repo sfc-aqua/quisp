@@ -1,5 +1,7 @@
 <map id="quisp/modules/QRSA/RealTimeController/RealTimeController.h" name="quisp/modules/QRSA/RealTimeController/RealTimeController.h">
-<area shape="rect" id="node1" title="RealTimeController." alt="" coords="105,5,251,60"/>
-<area shape="rect" id="node2" href="$_real_time_controller_8cc.html" title="RealTimeController." alt="" coords="5,108,159,163"/>
-<area shape="rect" id="node3" href="$_real_time_controller__test_8cc.html" title=" " alt="" coords="183,108,365,163"/>
+<area shape="rect" id="Node000001" title="RealTimeController." alt="" coords="103,5,249,61"/>
+<area shape="rect" id="Node000002" href="$_real_time_controller_8cc.html" title="RealTimeController." alt="" coords="5,109,158,165"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,74,109,110,105,107,139,71"/>
+<area shape="rect" id="Node000003" href="$_real_time_controller__test_8cc.html" title=" " alt="" coords="182,109,363,165"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="214,71,248,107,244,110,210,74"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="quisp/modules/dummyModule.cc" name="quisp/modules/dummyModule.cc">
-<area shape="rect" id="node1" title="dummyModule" alt="" coords="5,5,216,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="69,79,152,104"/>
+<area shape="rect" id="Node000001" title="dummyModule" alt="" coords="5,5,216,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="70,79,151,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,31,113,63,108,63,108,31"/>
 </map>

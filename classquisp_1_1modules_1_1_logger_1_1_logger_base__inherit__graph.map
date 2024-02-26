@@ -1,6 +1,9 @@
 <map id="quisp::modules::Logger::LoggerBase" name="quisp::modules::Logger::LoggerBase">
-<area shape="rect" id="node1" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="5,55,160,95"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_application.html" title="Application." alt="" coords="208,5,387,31"/>
-<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager." alt="" coords="208,55,387,95"/>
-<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine." alt="" coords="208,120,387,145"/>
+<area shape="rect" id="Node000001" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="5,55,159,96"/>
+<area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1_application.html" title="Application." alt="" coords="207,5,385,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,48,244,29,246,34,174,54"/>
+<area shape="rect" id="Node000003" href="$classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager." alt="" coords="207,55,385,96"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="174,73,206,73,206,78,174,78"/>
+<area shape="rect" id="Node000004" href="$classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine." alt="" coords="207,120,385,146"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="174,97,246,117,244,122,173,103"/>
 </map>

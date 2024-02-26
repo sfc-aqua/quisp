@@ -1,7 +1,13 @@
 <map id="quisp/test_utils/StaticEnv.h" name="quisp/test_utils/StaticEnv.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,185,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="14,225,97,251"/>
-<area shape="rect" id="node3" href="$_configuration_8h.html" title=" " alt="" coords="42,79,149,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="173,79,340,104"/>
-<area shape="rect" id="node4" href="$_key_value_8h.html" title=" " alt="" coords="93,152,180,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,185,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="14,226,96,252"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,33,52,53,32,80,24,114,26,149,34,183,45,211,40,213,29,184,21,150,19,113,27,78,48,49,73,29"/>
+<area shape="rect" id="Node000003" href="$_configuration_8h.html" title=" " alt="" coords="42,79,148,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="98,31,98,63,92,63,92,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="172,79,338,105"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="123,29,215,70,213,75,121,34"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="94,106,65,212,60,211,89,104"/>
+<area shape="rect" id="Node000004" href="$_key_value_8h.html" title=" " alt="" coords="92,153,178,178"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="104,104,123,138,119,140,99,106"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="123,181,81,218,78,214,120,177"/>
 </map>
