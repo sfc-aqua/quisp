@@ -8,6 +8,7 @@
 * Kentaro 'zigen' Teramoto
 * Sara Metwalli
 * Michal Hadjusek
+* Makoto Nakai
 
 ## Senior Advisors:
 
