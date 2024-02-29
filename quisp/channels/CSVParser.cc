@@ -35,12 +35,12 @@ double CSVParser::getPropertyAtTime(const double time) {
     last_polled_time = time;
     auto u_b = property.upper_bound(time);
     if (u_b == property.end()) {
-      last_polled_value = --(u_b)->second;
+      last_polled_value = (--u_b)->second;
     } else if (u_b == property.begin()) {
       last_polled_value = u_b->second;
     } else {
       auto l_b = u_b;
-      --u_b;
+      --l_b;
       const double delta = (time - l_b->first) / (u_b->first - l_b->first);
       last_polled_value = delta * u_b->second + (1 - delta) * l_b->second;
     }
