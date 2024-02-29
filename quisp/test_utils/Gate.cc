@@ -29,5 +29,10 @@ bool TestGate::deliver(cMessage *msg, const omnetpp::SendOptions &options, simti
   return true;
 }
 
+void TestGate::quiet_connectTo(cGate *target) {
+  nextGate = target;
+  // target->prevGate = this;
+}
+
 }  // namespace gate
 }  // namespace quisp_test
