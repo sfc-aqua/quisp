@@ -42,7 +42,7 @@ plt.bar(xaxis+0.2, ymsm, label='MSM', width=0.4)
 plt.errorbar(xaxis-0.2 , ymim, yerr=emim, fmt='.', capsize=3,markersize=10,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
 plt.errorbar(xaxis+0.2, ymsm, yerr=emsm, fmt='.', capsize=3,markersize=10,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
 
-plt.xticks(xaxis, x, fontsize=11)
+plt.xticks(xaxis, x, fontsize=10)
 # Add labels and legend
 plt.xlabel('Purification level', fontsize=15)
 plt.ylabel('Fidelity', fontsize=15)
