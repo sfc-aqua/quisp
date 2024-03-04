@@ -6,6 +6,7 @@
 #include <PhotonicQubit_m.h>
 #include <messages/classical_messages.h>
 #include <omnetpp.h>
+#include <cmath>
 #include <vector>
 #include "messages/QNode_ipc_messages_m.h"
 #include "messages/link_generation_messages_m.h"
@@ -13,6 +14,7 @@
 #include "omnetpp/cmessage.h"
 #include "omnetpp/csimulation.h"
 #include "omnetpp/simtime.h"
+#include "omnetpp/simtime_t.h"
 using namespace omnetpp;
 
 namespace quisp::modules {
@@ -27,7 +29,6 @@ void EPPSController::finish() { std::cout << "last EPPS message that was sent " 
 
 void EPPSController::initialize() {
   epps = check_and_cast<EntangledPhotonPairSource *>(getParentModule()->getSubmodule("epps"));
-  photon_emission_per_second = par("photon_emission_per_second");
   address = getParentModule()->par("address").intValue();
   left_addr = getExternalAdressFromPort(0);
   right_addr = getExternalAdressFromPort(1);
@@ -37,7 +38,7 @@ void EPPSController::initialize() {
   right_travel_time = getTravelTimeFromPort(1);
   time_out_count = 0;
   emission_stopped = false;
-  checkNeighborsBSACapacity();
+  setEPPSFrequency();
   time_out_message = new EPPSNotificationTimeout();
   simtime_t first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
   scheduleAt(first_notification_timer, time_out_message);
@@ -86,7 +87,7 @@ EPPSTimingNotification *EPPSController::generateNotifier(bool is_left) {
   return pk;
 }
 
-void EPPSController::checkNeighborsBSACapacity() {
+void EPPSController::setEPPSFrequency() {
   int left_photon_detection_per_second = getParentModule()
                                              ->getSubmodule("epps")
                                              ->gate("quantum_port$i", 0)
@@ -121,15 +122,23 @@ void EPPSController::checkNeighborsBSACapacity() {
                               ->getPreviousGate()  // QNIC quantum_port
                               ->getOwnerModule()  // QNIC
                               ->par("num_buffer");
-  int min_photon_detection_per_second = std::min(left_photon_detection_per_second, right_photon_detection_per_second);
-  time_interval_between_photons = (double)1 / (double)min_photon_detection_per_second;
+  double left_success_prob = getBSASuccessProbability(0);
+  double right_success_prob = getBSASuccessProbability(1);
+  double min_photon_detection_per_second = std::min(left_photon_detection_per_second, right_photon_detection_per_second);
+  double frequency_epps = std::min(left_memory_size / (2 * left_travel_time.dbl() * left_success_prob), right_memory_size / (2 * right_travel_time.dbl() * right_success_prob));
+
+  time_interval_between_photons = (double)1 / frequency_epps;
+  if (min_photon_detection_per_second < frequency_epps) {
+    time_interval_between_photons = (double)1 / min_photon_detection_per_second;
+  
+  return;
 }
 
 double EPPSController::getTravelTimeFromPort(int port) {
   cChannel *channel = getParentModule()->getSubmodule("epps")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
   double distance = channel->par("distance").doubleValue();
-  double speed_of_light_in_channel = channel->par("speed_of_light_in_fiber");
-  return distance / speed_of_light_in_channel;
+  double speed_of_light_in_fiber = channel->par("speed_of_light_in_fiber");
+  return distance / speed_of_light_in_fiber;
 }
 
 int EPPSController::getExternalAdressFromPort(int port) {
@@ -151,6 +160,32 @@ int EPPSController::getExternalQNICIndexFromPort(int port) {
       ->getPreviousGate()  // QNIC quantum_port
       ->getOwnerModule()  // QNIC
       ->par("self_qnic_index");
+}
+
+double EPPSController::getBSASuccessProbability(int port) {
+  double collection_efficiency = getParentModule()
+                                     ->getSubmodule("epps")
+                                     ->gate("quantum_port$i", port)
+                                     ->getPreviousGate()  // EPPSNode quantum_port
+                                     ->getPreviousGate()  // QNode quantum_port_receiver_passive
+                                     ->getPreviousGate()  // QNIC quantum_port
+                                     ->getOwnerModule()  // QNIC
+                                     ->getSubmodule("bsa")  // BellStateAnalyzer
+                                     ->par("collection_efficiency");
+
+  double detection_efficiency = getParentModule()
+                                    ->getSubmodule("epps")
+                                    ->gate("quantum_port$i", port)
+                                    ->getPreviousGate()  // EPPSNode quantum_port
+                                    ->getPreviousGate()  // QNode quantum_port_receiver_passive
+                                    ->getPreviousGate()  // QNIC quantum_port
+                                    ->getOwnerModule()  // QNIC
+                                    ->getSubmodule("bsa")  // BellStateAnalyzer
+                                    ->par("detection_efficiency");
+  cChannel *channel = getParentModule()->getSubmodule("epps")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
+  double distance = channel->par("distance").doubleValue();
+  double fiber_attenuation = exp(-distance / 21);
+  return collection_efficiency * detection_efficiency * fiber_attenuation * 0.5;
 }
 
 }  // namespace quisp::modules

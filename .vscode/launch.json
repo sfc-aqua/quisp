@@ -45,7 +45,7 @@
                 "./networks:./channels:./modules",
                 "-i",
                 "./images",
-                "./simulations/msm_generation_test.ini",
+                "./simulations/link_generation_test.ini",
                 "-u",
                 "Cmdenv",
                 "-c",
@@ -63,11 +63,29 @@
                 "./networks:./channels:./modules",
                 "-i",
                 "./images",
-                "./simulations/msm_generation_test.ini",
+                "./simulations/link_generation_test.ini",
                 "-u",
                 "Cmdenv",
                 "-c",
                 "Testing_MSM_one_memory"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Simulation MSM sixtyfour memory",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/link_generation_test.ini",
+                "-u",
+                "Cmdenv",
+                "-c",
+                "Testing_MSM_sixtyfour_memory"
             ],
             "cwd": "${workspaceFolder}/quisp"
         },

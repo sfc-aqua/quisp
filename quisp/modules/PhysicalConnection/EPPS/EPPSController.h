@@ -29,12 +29,14 @@ class EPPSController : public cSimpleModule {
   virtual void initialize() override;
   virtual void handleMessage(cMessage *msg) override;
   virtual void finish() override;
-  virtual void checkNeighborsBSACapacity();
   virtual EPPSTimingNotification *generateNotifier(bool is_left);
 
  private:
   double getTravelTimeFromPort(int port);
   int getExternalQNICIndexFromPort(int port);
+  double getBSASuccessProbability(int port);
+  void setEPPSFrequency();
+
 
   // information for communications
   int address;
@@ -44,9 +46,7 @@ class EPPSController : public cSimpleModule {
   int right_qnic_index;
   simtime_t left_travel_time;
   simtime_t right_travel_time;
-  simtime_t minimal_time_interval_between_photons;
   simtime_t time_interval_between_photons;
-  double photon_emission_per_second;
   simtime_t emit_time;
   EPPSNotificationTimeout *time_out_message;
   int time_out_count;

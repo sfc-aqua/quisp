@@ -2,16 +2,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Read data from the file
-data = open("hundredbellpairadaptiveshort")
+data = open("hundredbellpairadaptiveshortmsm")
 lines = data.readlines()
 data.close()
 
 # Create a dictionary to store the results
-results = {"MIM": {}, "MSM": {}}
+results = {"MSM": {}, "MSMa": {}}
 for line in lines:
     line = line.split(",")
     line.pop(-1)
-    for link in ["MIM","MSM"]:
+    for link in ["MSM","MSMa"]:
         i = 0
         for memory in ["one","two", "four", "eight", "sixteen", "thirtytwo", "sixtyfour", "onetwentyeight"]:
             if line[0] == f"{link}_{memory}":
@@ -19,22 +19,22 @@ for line in lines:
             i += 1
 
 x = [pow(2,i-1) for i in range(1,9)]
-ymim = []
 ymsm = []
-emim = []
+ymsma = []
 emsm = []
+emsma = []
 # Create the plot
 for i in range(8):
-    ymim.append(np.array(results["MIM"][i]).mean())
-    emim.append(np.array(results["MIM"][i]).std())
     ymsm.append(np.array(results["MSM"][i]).mean())
     emsm.append(np.array(results["MSM"][i]).std())
+    ymsma.append(np.array(results["MSMa"][i]).mean())
+    emsma.append(np.array(results["MSMa"][i]).std())
 
 xaxis = np.arange(len(x))
-plt.bar(xaxis-0.2, ymim, label='MIM', log=True, width=0.4)
-plt.bar(xaxis+0.2, ymsm, label='MSM', log=True, width=0.4)
-plt.errorbar(xaxis-0.2, ymim, yerr=emim, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
-plt.errorbar(xaxis+0.2, ymsm, yerr=emsm, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
+plt.bar(xaxis-0.2, ymsm, label='MSM', log=True, width=0.4)
+plt.bar(xaxis+0.2, ymsma, label='Adaptive MSM', log=True, width=0.4)
+plt.errorbar(xaxis-0.2, ymsm, yerr=emsm, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
+plt.errorbar(xaxis+0.2, ymsma, yerr=emsma, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
 
 plt.xticks(xaxis, x)
 # Add labels and legend
@@ -44,4 +44,4 @@ plt.ylabel('Time to create 100 Bell pairs (s)', fontsize=15)
 plt.legend(fontsize=15)
 
 # # Show the plot
-plt.savefig("hundredbellpair_log_short_adaptive.png", dpi=1000)
+plt.savefig("hundredbellpair_log_short_adaptive_msm_comparision.pdf", dpi=1000)
