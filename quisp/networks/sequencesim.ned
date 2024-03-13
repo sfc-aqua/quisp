@@ -39,6 +39,60 @@ network Simple_MIM_middle
         EndNode1.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA.quantum_port++;
         BSA.quantum_port++      <--> QuantumChannel {  distance = 10km; } <--> EndNode2.quantum_port++;
 }
+network Simple_MM_20
+{
+    parameters:
+        **.speed_of_light_in_fiber = 208189.206944 km;
+
+    submodules:
+        backend: Backend;
+        logger: Logger;
+        sharedResource: SharedResource;
+        EndNode1: QNode {
+            address = 1;
+            node_type = "EndNode";
+            @display("i=COMP;p=104,48,m,5,60,60");
+        }
+        EndNode2: QNode {
+            address = 2;
+            node_type = "EndNode";
+            @display("i=COMP;p=248,39,m,5,60,60");
+        }
+
+    connections:
+        EndNode1.port++ <--> ClassicalChannel {  distance = 20km; } <--> EndNode2.port++;
+        EndNode1.quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> EndNode2.quantum_port_receiver++;
+}
+network Simple_MIM_20_0
+{
+    parameters:
+        **.speed_of_light_in_fiber = 208189.206944 km;
+
+    submodules:
+        backend: Backend;
+        logger: Logger;
+        sharedResource: SharedResource;
+        EndNode1: QNode {
+            address = 1;
+            node_type = "EndNode";
+            @display("i=COMP;p=98,62,m,5,60,60");
+        }
+        EndNode2: QNode {
+            address = 2;
+            node_type = "EndNode";
+            @display("i=COMP;p=268,62,m,5,60,60");
+        }
+        BSA: BSANode {
+            address = 3;
+            @display("p=184,85,m,5,60,60");
+        }
+
+    connections:
+        EndNode1.port++ <--> ClassicalChannel {  distance = 20km; } <--> BSA.port++;
+        BSA.port++      <--> ClassicalChannel {  distance = 0km; } <--> EndNode2.port++;
+        EndNode1.quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> BSA.quantum_port++;
+        BSA.quantum_port++      <--> QuantumChannel {  distance = 0km; } <--> EndNode2.quantum_port++;
+}
 network Simple_MIM_19_1
 {
     parameters:
