@@ -54,6 +54,9 @@ void RuleEngine::initialize() {
   number_of_qnics = par("number_of_qnics");
   number_of_qnics_r = par("number_of_qnics_r");
   number_of_qnics_rp = par("number_of_qnics_rp");
+
+  bell_pair_counter = 0;
+
   if (qnic_store == nullptr) {
     qnic_store = std::make_unique<QNicStore>(provider, number_of_qnics, number_of_qnics_r, number_of_qnics_rp, logger);
   }
@@ -303,7 +306,17 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
     std::advance(iterator, emitted_index);
     bell_pair_store.insertEntangledQubit(partner_address, qubit_record);
     emitted_indices.erase(iterator);
-
+    // log the simtime when we get 1000 bell pairs, in a MIM/MM link
+    if (parentAddress == 1) {
+      bell_pair_counter++;
+      if (bell_pair_counter == 1000) {
+        // write into file the current simulation time
+        std::ofstream myfile;
+        myfile.open("bellpairtimings", std::ios_base::app);
+        myfile << simTime() << ",";
+        myfile.close();
+      }
+    }
     auto correction_operation = bsa_result->getCorrectionOperationList(i);
     if (correction_operation == PauliOperator::X) {
       realtime_controller->applyXGate(qubit_record);

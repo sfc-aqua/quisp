@@ -4,6 +4,7 @@
  */
 #pragma once
 
+#include <cstdint>
 #include <unordered_map>
 #include <vector>
 
@@ -117,6 +118,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
     // map of photon index and qubit info
     std::unordered_map<int, QubitInfo> qubit_postprocess_info;
   };
+  int bell_pair_counter;
 
   // [Key: qnic_index, Value: qubit_index]
   std::unordered_map<int, MSMInfo> msm_info_map;
