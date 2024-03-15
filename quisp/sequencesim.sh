@@ -42,3 +42,11 @@ echo  >> "$output_file"
 echo "inbalanced_nineteen_one," >> "$output_file"
 ./quisp -u Cmdenv simulations/sequencesim.ini -c inbalanced_nineteen_one
 echo  >> "$output_file"
+
+echo "inbalanced_twenty_zero," >> "$output_file"
+./quisp -u Cmdenv simulations/sequencesim.ini -c inbalanced_twenty_zero
+echo  >> "$output_file"
+
+echo "inbalanced_MM," >> "$output_file"
+./quisp -u Cmdenv simulations/sequencesim.ini -c inbalanced_twenty_zero_v2
+echo  >> "$output_file"

@@ -28,5 +28,23 @@
             ],
             "cwd": "${workspaceFolder}/quisp"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Simulation MIM one memory",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/sequencesim.ini",
+                "-u",
+                "Cmdenv",
+                "-c",
+                "balanced_one"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
     ],
 }
