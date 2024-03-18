@@ -37,7 +37,6 @@ class EPPSController : public cSimpleModule {
   double getBSASuccessProbability(int port);
   void setEPPSFrequency();
 
-
   // information for communications
   int address;
   int left_addr;

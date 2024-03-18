@@ -130,14 +130,14 @@ void EPPSController::setEPPSFrequency() {
   // if adaptive epps option is enabled, the frequency is determined by our previous results.
   bool adaptive_epps = par("adaptive_epps").boolValue();
   double frequency_epps = DBL_MAX;
-  if(adaptive_epps) {
+  if (adaptive_epps) {
     frequency_epps = std::min(left_memory_size / (2 * left_travel_time.dbl() * left_success_prob), right_memory_size / (2 * right_travel_time.dbl() * right_success_prob));
   }
   // However if that value is larger than the minimum photon detection rate of BSA, or/and maximum photon emission rate of EPPS, we use the smallest value of those.
   if (min_photon_detection_per_second_bsa < frequency_epps) {
     frequency_epps = min_photon_detection_per_second_bsa;
   }
-  if(max_photon_detection_per_second_epps < frequency_epps){
+  if (max_photon_detection_per_second_epps < frequency_epps) {
     frequency_epps = max_photon_detection_per_second_epps;
   }
   time_interval_between_photons = (double)1 / frequency_epps;
