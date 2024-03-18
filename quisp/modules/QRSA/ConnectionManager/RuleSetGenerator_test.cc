@@ -169,15 +169,6 @@ TEST_F(RuleSetGeneratorTest, Simple) {
               "num_resource": 1
             },
             "type": "enough_resource"
-          },
-          {
-            "options": {
-              "interface": {
-                "partner_address": 5
-              },
-              "num_measure": 0
-            },
-            "type": "measure_count"
           }
         ]
       },
@@ -334,15 +325,6 @@ TEST_F(RuleSetGeneratorTest, tomographyRule) {
           "num_resource": 1
         },
         "type": "enough_resource"
-      },
-      {
-        "options": {
-          "interface": {
-            "partner_address": 1
-          },
-          "num_measure": 5000
-        },
-        "type": "measure_count"
       }
     ]
   },
