@@ -1,6 +1,8 @@
 #include "Runtime.h"
 
 #include <omnetpp.h>
+#include <fstream>
+#include "omnetpp/simtime_t.h"
 
 namespace quisp::runtime {
 
@@ -71,6 +73,10 @@ void Runtime::exec() {
       execProgram(rule.action);
       execProgram(ruleset.termination_condition);
       if (return_code == ReturnCode::RS_TERMINATED) {
+        std::ofstream logfile;
+        logfile.open("bellpairtimings", std::ios_base::app);
+        logfile << simTime() << ",";
+        logfile.close();
         terminated = true;
         return;
       }
