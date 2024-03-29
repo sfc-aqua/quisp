@@ -41,16 +41,39 @@ for simulation in simulations:
             results[simulation][32] = [np.array(results[simulation][32]).mean(), np.array(results[simulation][32]).std()]
 
 x = [8, 16, 32]
-for simulation in simulations:
-    plt.clf()
+simulation_simple = ["mxm_simple", "mxm_simple_adaptive", "mim_simple", "msm_simple", "msm_simple_adaptive"]
+simulation_long = ["mxm_long", "mxm_long_adaptive", "mim_long", "msm_long", "msm_long_adaptive"]
+dist = 0
+for simulation in simulation_simple:
     xaxis = np.arange(len(x))
     y = [results[simulation][8][0], results[simulation][16][0], results[simulation][32][0]]
     err = [results[simulation][8][1], results[simulation][16][1], results[simulation][32][1]]
-    plt.bar(xaxis, y, label='', log=False, width=0.4)
-    plt.errorbar(xaxis, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
-    plt.xticks(xaxis, x)
-    plt.xlabel('Memory size (qubits)', fontsize=15)
-    plt.ylabel('Time to create 100 Bell pairs (s)', fontsize=15)
-    plt.savefig(f"{simulation}.png", dpi=1000)
-    plt.savefig(f"{simulation}.pdf", dpi=1000)
+    simulation = simulation.replace("_simple_", " ")
+    simulation = simulation.replace("_simple", " ")
+    plt.bar(xaxis-0.2+dist, y, label=f'{simulation}', log=False, width=0.1)
+    plt.errorbar(xaxis-0.2+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
+    dist += 0.1
+plt.legend()
+plt.xticks(xaxis, x)
+plt.xlabel('Memory size (qubits)', fontsize=15)
+plt.ylabel('Time to create 100 Bell pairs (s)', fontsize=15)
+plt.savefig(f"1kmdist.png", dpi=1000)
+plt.savefig(f"1kmdist.pdf", dpi=1000)
 
+plt.clf()
+dist = 0
+for simulation in simulation_long:
+    xaxis = np.arange(len(x))
+    y = [results[simulation][8][0], results[simulation][16][0], results[simulation][32][0]]
+    err = [results[simulation][8][1], results[simulation][16][1], results[simulation][32][1]]
+    simulation = simulation.replace("_long_", " ")
+    simulation = simulation.replace("_long", " ")
+    plt.bar(xaxis-0.2+dist, y, label=f'{simulation}', log=False, width=0.1)
+    plt.errorbar(xaxis-0.2+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
+    dist += 0.1
+plt.legend()
+plt.xticks(xaxis, x)
+plt.xlabel('Memory size (qubits)', fontsize=15)
+plt.ylabel('Time to create 100 Bell pairs (s)', fontsize=15)
+plt.savefig("20kmdist.png", dpi=1000)
+plt.savefig("20kmdist.pdf", dpi=1000)
