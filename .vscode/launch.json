@@ -90,6 +90,24 @@
             "cwd": "${workspaceFolder}/quisp"
         },
         {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Simulation mixer",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/heterogeneous.ini",
+                "-u",
+                "Cmdenv",
+                "-c",
+                "mixer"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
+        {
             "type": "python",
             "request": "launch",
             "name": "Python: usage analysis",

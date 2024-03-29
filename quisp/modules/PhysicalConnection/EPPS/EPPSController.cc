@@ -31,6 +31,9 @@ void EPPSController::finish() { std::cout << "last EPPS message that was sent " 
 void EPPSController::initialize() {
   epps = check_and_cast<EntangledPhotonPairSource *>(getParentModule()->getSubmodule("epps"));
   address = getParentModule()->par("address").intValue();
+  if(address == par("replacing_address").intValue()) {
+    return;
+  }
   left_addr = getExternalAdressFromPort(0);
   right_addr = getExternalAdressFromPort(1);
   left_qnic_index = getExternalQNICIndexFromPort(0);

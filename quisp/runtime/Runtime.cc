@@ -74,7 +74,7 @@ void Runtime::exec() {
       execProgram(ruleset.termination_condition);
       if (return_code == ReturnCode::RS_TERMINATED) {
         std::ofstream logfile;
-        logfile.open("bellpairtimings", std::ios_base::app);
+        logfile.open(par("logfilename").stringValue(), std::ios_base::app);
         logfile << simTime() << ",";
         logfile.close();
         terminated = true;
