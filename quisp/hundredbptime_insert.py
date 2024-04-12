@@ -42,9 +42,9 @@ def genplot(memory):
         err = [result_simple[simulation]["zero"][1], result_simple[simulation]["one"][1], result_simple[simulation]["two"][1], result_simple[simulation]["three"][1], result_simple[simulation]["four"][1]]
         simulation = simulation.replace("_simple_", " ")
         simulation = simulation.replace("_simple", " ")
-        plt.bar(xaxis-0.2+dist, y, label=f'{simulation}', log=False, width=0.2)
+        plt.bar(xaxis-0.2+dist, y, label=f'{simulation}', log=False, width=0.4)
         plt.errorbar(xaxis-0.2+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
-        dist += 0.2
+        dist += 0.4
     plt.legend()
     plt.xticks(xaxis, locations)
     plt.xlabel('replaced link', fontsize=15)
@@ -82,9 +82,9 @@ def genplot(memory):
         err = [result_long[simulation]["zero"][1], result_long[simulation]["one"][1], result_long[simulation]["two"][1], result_long[simulation]["three"][1], result_long[simulation]["four"][1]]
         simulation = simulation.replace("_long_", " ")
         simulation = simulation.replace("_long", " ")
-        plt.bar(xaxis-0.2+dist, y, label=f'{simulation}', log=False, width=0.2)
+        plt.bar(xaxis-0.2+dist, y, label=f'{simulation}', log=False, width=0.4)
         plt.errorbar(xaxis-0.2+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
-        dist += 0.2
+        dist += 0.4
     plt.legend()
     plt.xticks(xaxis, locations)
     plt.xlabel('replaced link', fontsize=15)
