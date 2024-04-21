@@ -13,7 +13,7 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   int getNodeAddr() override;
   bool isQNodeType(const cModuleType *const type) override;
   bool isBSANodeType(const cModuleType *const type) override;
-  bool isSPDCNodeType(const cModuleType *const type) override;
+  bool isEPPSNodeType(const cModuleType *const type) override;
   IStationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
   cModule *getQNIC(int qnic_index, QNIC_type qnic_type) override;
   int getNumQubits(int qnic_index, QNIC_type qnic_type) override;
@@ -26,7 +26,7 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
 
  private:
   const cModuleType *const QNodeType = cModuleType::get("modules.QNode");
-  const cModuleType *const SPDCType = cModuleType::get("modules.SPDC");
+  const cModuleType *const EPPSType = cModuleType::get("modules.EPPSNode");
   const cModuleType *const BSAType = cModuleType::get("modules.BSANode");
   cModule *self;
   cModule *getQRSA();

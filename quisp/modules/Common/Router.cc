@@ -4,7 +4,9 @@
  *  \brief Router
  */
 #include "Router.h"
+#include "messages/BSA_ipc_messages_m.h"
 #include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
+#include "messages/link_generation_messages_m.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -74,9 +76,21 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Timing Notifier from BSA (stand-alone or internal) received");
     send(pk, "rePort$o");  // send to Application locally
     return;
-  } else if (dest_addr == my_address && dynamic_cast<EPPStimingNotifier *>(msg)) {  // Timing for BSM
+  } else if (dest_addr == my_address && dynamic_cast<EPPSTimingNotification *>(msg)) {  // Timing for BSM
     bubble("Timing Notifier from EPPS received");
     send(pk, "rePort$o");  // send to Application locally
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<SingleClickResult *>(msg)) {
+    bubble("Single click result from BSA received");
+    send(pk, "rePort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<MSMResult *>(msg)) {
+    bubble("MSM BSA result from partner RE received");
+    send(pk, "rePort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<StopEPPSEmission *>(msg)) {
+    bubble("Stop EPPS emission signal received");
+    send(pk, "toApp");
     return;
   } else if (dest_addr == my_address && dynamic_cast<ConnectionSetupRequest *>(msg)) {
     bubble("Connection setup request received");

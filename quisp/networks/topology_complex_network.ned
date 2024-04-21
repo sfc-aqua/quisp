@@ -23,7 +23,7 @@ network ispMap_1239_node_23_48_hetero_distance
         hom[177]: BSANode {
             address = index+1000;
             @display("p=105.85,66.7,m,5,60,60");
-            hom_photon_detection_per_sec = default(uniform(1000,40000));
+            bsa.photon_detection_per_second = default(uniform(1000,40000));
         }
         repeater[118]: QNode {
             address = index+10000;

@@ -29,9 +29,9 @@ bool ComponentProvider::isBSANodeType(const cModuleType *const type) {
   return strategy->isBSANodeType(type);
 }
 
-bool ComponentProvider::isSPDCNodeType(const cModuleType *const type) {
+bool ComponentProvider::isEPPSNodeType(const cModuleType *const type) {
   ensureStrategy();
-  return strategy->isSPDCNodeType(type);
+  return strategy->isEPPSNodeType(type);
 }
 
 bool ComponentProvider::isQNodeType(const cModuleType *const type) {

@@ -6,6 +6,11 @@
 
 #include <cstring>
 #include <stdexcept>
+#include "messages/BSA_ipc_messages_m.h"
+#include "messages/base_messages_m.h"
+#include "messages/link_generation_messages_m.h"
+#include "omnetpp/cexception.h"
+#include "omnetpp/cmessage.h"
 
 namespace quisp::modules {
 
@@ -20,24 +25,27 @@ void BSAController::finish() { std::cout << "last BSM message that was sent " <<
 void BSAController::initialize() {
   bsa = check_and_cast<BellStateAnalyzer *>(getParentModule()->getSubmodule("bsa"));
   // if this BSA is internal set left to be self node
-  if (strcmp(getParentModule()->getName(), "qnic_r") == 0) {
+  if (strcmp(getParentModule()->getName(), "qnic_r") == 0 || strcmp(getParentModule()->getName(), "qnic_rp") == 0) {
     address = provider.getNodeAddr();
     left_qnic.parent_node_addr = address;
     left_qnic.index = getParentModule()->par("self_qnic_index").intValue();
-    left_qnic.type = QNIC_R;
+    left_qnic.type = strcmp(getParentModule()->getName(), "qnic_r") == 0 ? QNIC_R : QNIC_RP;
   } else {
     address = getParentModule()->par("address").intValue();
     left_qnic = getExternalQNICInfoFromPort(0);
   }
-  time_interval_between_photons = SimTime(1, SIMTIME_S) / SimTime(getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue(), SIMTIME_S);
-  simtime_t first_notification_timer = SimTime(par("initial_notification_timing_buffer").doubleValue());
-  right_qnic = getExternalQNICInfoFromPort(1);
-  offset_time_for_first_photon = calculateOffsetTimeFromDistance();
+  is_active = strcmp(par("mode").stringValue(), "active") == 0;
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
   time_out_count = 0;
   time_out_message = new BSMNotificationTimeout("bsm_notification_timeout");
-  scheduleAt(first_notification_timer, time_out_message);
+  if (is_active) {
+    time_interval_between_photons = SimTime(1, SIMTIME_S) / SimTime(getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue(), SIMTIME_S);
+    simtime_t first_notification_timer = SimTime(par("initial_notification_timing_buffer").doubleValue());
+    right_qnic = getExternalQNICInfoFromPort(1);
+    offset_time_for_first_photon = calculateOffsetTimeFromDistance();
+    scheduleAt(first_notification_timer, time_out_message);
+  }
 }
 
 void BSAController::handleMessage(cMessage *msg) {
@@ -50,13 +58,11 @@ void BSAController::handleMessage(cMessage *msg) {
     scheduleAt(simTime() + (2 + time_out_count) * (offset_time_for_first_photon), msg);
     return;
   }
-
   if (dynamic_cast<CancelBSMTimeOutMsg *>(msg)) {
     cancelBSMTimeOut();
     delete msg;
     return;
   }
-
   if (auto *batch_click_msg = dynamic_cast<BatchClickEvent *>(msg)) {
     sendMeasurementResults(batch_click_msg);
     delete msg;
@@ -68,23 +74,33 @@ void BSAController::handleMessage(cMessage *msg) {
 }
 
 void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
-  // we will apply corrections at right nodes
-  auto *leftpk = generateNextNotificationTiming(true);
-  auto *rightpk = generateNextNotificationTiming(false);
-  for (int index = 0; index < batch_click_msg->numberOfClicks(); index++) {
-    if (!batch_click_msg->getClickResults(index).success) continue;
-    leftpk->appendSuccessIndex(index);
-    leftpk->appendCorrectionOperation(PauliOperator::I);
-    leftpk->setNeighborAddress(right_qnic.parent_node_addr);
-    rightpk->appendSuccessIndex(index);
-    rightpk->appendCorrectionOperation(batch_click_msg->getClickResults(index).correction_operation);
-    rightpk->setNeighborAddress(left_qnic.parent_node_addr);
+  if (is_active) {
+    CombinedBSAresults *leftpk = generateNextNotificationTiming(true);
+    CombinedBSAresults *rightpk = generateNextNotificationTiming(false);
+    for (int index = 0; index < batch_click_msg->numberOfClicks(); index++) {
+      if (!batch_click_msg->getClickResults(index).success) continue;
+      leftpk->appendSuccessIndex(index);
+      leftpk->appendCorrectionOperation(PauliOperator::I);
+      leftpk->setNeighborAddress(right_qnic.parent_node_addr);
+      rightpk->appendSuccessIndex(index);
+      rightpk->appendCorrectionOperation(batch_click_msg->getClickResults(index).correction_operation);
+      rightpk->setNeighborAddress(left_qnic.parent_node_addr);
+    }
+    send(leftpk, "to_router");
+    send(rightpk, "to_router");
+    scheduleAt(simTime() + 1.1 * offset_time_for_first_photon, time_out_message);
+  } else {
+    SingleClickResult *click_result = new SingleClickResult();
+    if (batch_click_msg->numberOfClicks() != 1) {
+      throw cRuntimeError("Number of clicks of BSA should be one");
+    }
+    click_result->setClickResult(batch_click_msg->getClickResults(0));
+    click_result->setQnicIndex(left_qnic.index);
+    click_result->setDestAddr(left_qnic.parent_node_addr);
+    click_result->setSrcAddr(left_qnic.parent_node_addr);
+    send(click_result, "to_router");
   }
-  send(leftpk, "to_router");
-  send(rightpk, "to_router");
   last_result_send_time = simTime();
-
-  scheduleAt(simTime() + 1.1 * offset_time_for_first_photon, time_out_message);
 }
 
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
@@ -193,7 +209,7 @@ simtime_t BSAController::getTravelTimeFromPort(int port) {
   cChannel *channel;
   // this port connects to internal QNIC
   // since only port 0 is supposed to be connected to internal QNIC
-  if (port == 0 && strcmp(getParentModule()->getName(), "qnic_r") == 0) {
+  if (port == 0 && (strcmp(getParentModule()->getName(), "qnic_r") == 0 || strcmp(getParentModule()->getName(), "qnic_rp") == 0)) {
     return 0;
   } else {
     // this port connects to outside QNode

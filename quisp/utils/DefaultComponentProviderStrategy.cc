@@ -20,7 +20,7 @@ cModule *DefaultComponentProviderStrategy::getQNode() {
 cModule *DefaultComponentProviderStrategy::getNode() {
   cModule *currentModule = self->getParentModule();
   auto *mod_type = currentModule->getModuleType();
-  while (mod_type != QNodeType && mod_type != BSAType && mod_type != SPDCType) {
+  while (mod_type != QNodeType && mod_type != BSAType && mod_type != EPPSType) {
     currentModule = currentModule->getParentModule();
     mod_type = currentModule->getModuleType();
     if (currentModule == nullptr) {
@@ -119,5 +119,5 @@ cModule *DefaultComponentProviderStrategy::getQRSA() {
 
 bool DefaultComponentProviderStrategy::isBSANodeType(const cModuleType *const type) { return type == BSAType; }
 bool DefaultComponentProviderStrategy::isQNodeType(const cModuleType *const type) { return type == QNodeType; }
-bool DefaultComponentProviderStrategy::isSPDCNodeType(const cModuleType *const type) { return type == SPDCType; }
+bool DefaultComponentProviderStrategy::isEPPSNodeType(const cModuleType *const type) { return type == EPPSType; }
 }  // namespace quisp::utils

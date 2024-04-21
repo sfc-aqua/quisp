@@ -17,6 +17,7 @@
 #include "messages/classical_messages.h"
 #include "modules/PhysicalConnection/BSA/BSAController.h"
 #include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
+#include "modules/PhysicalConnection/EPPS/EPPSController.h"
 #include "rules/RuleSet.h"
 
 using namespace quisp::messages;
@@ -262,7 +263,7 @@ void HardwareMonitor::finish() {
   std::string file_name_dm = file_name + std::string("_dm");
   std::ofstream tomography_stats(file_name, std::ios_base::app);
   std::ofstream tomography_dm(file_name_dm, std::ios_base::app);
-  std::cout << "Opened new file to write.\n";
+  std::cout << "Opened new file to write. Address is " << my_address << "\n";
 
   // here generate tomography data storage
   tomography_data = new RawData[num_qnic_total];
@@ -537,7 +538,7 @@ void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double lin
   const cModuleType *const neighbor_node_type = neighbor_node->getModuleType();
   cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
   double dis = channel->par("distance");
-  if (provider.isQNodeType(neighbor_node_type) && provider.isBSANodeType(neighbor_node_type) && provider.isSPDCNodeType(neighbor_node_type)) {
+  if (provider.isQNodeType(neighbor_node_type) && provider.isBSANodeType(neighbor_node_type) && provider.isEPPSNodeType(neighbor_node_type)) {
     error("Module Type not recognized when writing to file...");
   }
 
@@ -1075,7 +1076,7 @@ InterfaceInfo HardwareMonitor::getQnicInterfaceByQnicAddr(int qnic_index, QNIC_t
   // This is false because the channel may only be between the node and BSA.
 
   // Dummy it up. This cost must be the cost based on the neighboring QNode
-  // (excluding SPDC and BSA nodes)
+  // (excluding EPPS and BSA nodes)
   inf.link_cost = 1;
 
   return inf;
@@ -1194,8 +1195,29 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     return inf;
   }
 
-  if (provider.isSPDCNodeType(type)) {
-    error("TO BE IMPLEMENTED");
+  if (provider.isEPPSNodeType(type)) {
+    auto *controller = dynamic_cast<EPPSController *>(thisNode.getSubmodule("epps_controller"));
+    if (controller == nullptr) {
+      error("EPPS controller not found");
+    }
+
+    int address_one = controller->getExternalAdressFromPort(0);
+    int address_two = controller->getExternalAdressFromPort(1);
+    int myaddress = provider.getNodeAddr();
+
+    EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
+
+    if (address_one == -1 && address_two == -1) {
+      error("EPPS Controller is not initialized properly");
+    }
+
+    if (address_one == myaddress) {
+      inf->neighborQNode_address = address_two;
+    } else if (address_two == myaddress) {
+      inf->neighborQNode_address = address_one;
+    }
+
+    return inf;
   }
 
   error(

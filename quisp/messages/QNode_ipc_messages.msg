@@ -14,18 +14,7 @@ packet EmitPhotonRequest extends Header
     simtime_t interval_between_photons @setter(setIntervalBetweenPhotons) @getter(getIntervalBetweenPhotons);
     bool is_first @getter(isFirst) @setter(setFirst);
     bool is_last  @getter(isLast)  @setter(setLast);
-}
-
-packet SchedulePhotonTransmissionsOnebyOne extends Header
-{
-    int qnic_index = -1;
-    int qnic_address;
-    int num_sent = 0;
-    int number_of_qubits_to_send;
-    int trial;
-    simtime_t interval;
-    simtime_t timing;
-    int internal_hom = 0;
+    bool is_msm @getter(isMSM) @setter(setMSM);
 }
 
 packet StopEmitting extends Header{

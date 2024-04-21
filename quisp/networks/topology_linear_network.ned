@@ -190,7 +190,7 @@ network Linear_One_MSM
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
-        epps: SPDC {//needs to check the buffersize, and tell each node how many photon arrivals to expect.
+        epps: EPPSNode {//needs to check the buffersize, and tell each node how many photon arrivals to expect.
             address = 2;
             @display("i=EPPS;p=132,48");
         }
@@ -289,7 +289,7 @@ network Linear_One_MIM_MM_MSM
             node_type = "EndNode";
             @display("i=COMP;p=207,31");
         }
-        epps: SPDC {
+        epps: EPPSNode {
             address = 5;
             @display("i=EPPS;p=110,132");
         }

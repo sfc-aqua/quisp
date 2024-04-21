@@ -103,6 +103,8 @@ void BellStateAnalyzer::processPhotonRecords() {
       batch_click_msg->appendClickResults(processIndistinguishPhotons(p, q));
     } else {
       batch_click_msg->appendClickResults({.success = false, .correction_operation = PauliOperator::I});
+      discardPhoton(p);
+      discardPhoton(q);
     }
   }
   first_port_records.clear();
@@ -146,6 +148,8 @@ BSAClickResult BellStateAnalyzer::processIndistinguishPhotons(PhotonRecord &p, P
   if (!p.is_lost && !q.is_lost && isPsi && left_click && right_click) {
     bool isPsiPlus = dblrand() < 0.5;
     measureSuccessfully(p, q, isPsiPlus);
+    discardPhoton(p);
+    discardPhoton(q);
     return {.success = true, .correction_operation = isPsiPlus ? PauliOperator::X : PauliOperator::Y};
   }
 
@@ -211,6 +215,6 @@ void BellStateAnalyzer::finish() {
   std::cout << "    " << no_error_count << ' ' << x_error_count << ' ' << y_error_count << ' ' << z_error_count << '\n';
 }
 
-void BellStateAnalyzer::discardPhoton(PhotonRecord &photon) { photon.qubit_ref->noiselessMeasureZ(); };
+void BellStateAnalyzer::discardPhoton(PhotonRecord &photon) { photon.qubit_ref->relaseBackToPool(); };
 
 }  // namespace quisp::modules

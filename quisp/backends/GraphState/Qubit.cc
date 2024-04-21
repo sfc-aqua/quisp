@@ -1,5 +1,6 @@
 #include "Qubit.h"
 #include <stdexcept>
+#include <string>
 #include "Backend.h"
 #include "backends/interfaces/IQubit.h"
 #include "backends/interfaces/IQubitId.h"
@@ -487,6 +488,60 @@ EigenvalueResult GraphStateQubit::noiselessMeasureZ(EigenvalueResult eigenvalue)
 EigenvalueResult GraphStateQubit::noiselessMeasureX(EigenvalueResult eigenvalue) {
   applyClifford(CliffordOperator::H);
   return graphMeasureZ(eigenvalue);
+}
+
+// map clifford operator to string
+std::string GraphStateQubit::cliffordToString(CliffordOperator op) {
+  switch (op) {
+    case CliffordOperator::Id:
+      return "Id";
+    case CliffordOperator::X:
+      return "X";
+    case CliffordOperator::Y:
+      return "Y";
+    case CliffordOperator::Z:
+      return "Z";
+    case CliffordOperator::RX_INV:
+      return "RX_INV";
+    case CliffordOperator::Z_RX_INV:
+      return "Z_RX_INV";
+    case CliffordOperator::Z_RX:
+      return "Z_RX";
+    case CliffordOperator::RY_INV:
+      return "RY_INV";
+    case CliffordOperator::RY:
+      return "RY";
+    case CliffordOperator::H:
+      return "H";
+    case CliffordOperator::Z_RY:
+      return "Z_RY";
+    case CliffordOperator::S_INV:
+      return "S_INV";
+    case CliffordOperator::S:
+      return "S";
+    case CliffordOperator::X_S_INV:
+      return "X_S_INV";
+    case CliffordOperator::X_S:
+      return "X_S";
+    case CliffordOperator::S_INV_RX_INV:
+      return "S_INV_RX_INV";
+    case CliffordOperator::S_INV_RX:
+      return "S_INV_RX";
+    case CliffordOperator::S_RX_INV:
+      return "S_RX_INV";
+    case CliffordOperator::S_RX:
+      return "S_RX";
+    case CliffordOperator::S_INV_RY_INV:
+      return "S_INV_RY_INV";
+    case CliffordOperator::S_INV_RY:
+      return "S_INV_RY";
+    case CliffordOperator::S_RY_INV:
+      return "S_RY_INV";
+    case CliffordOperator::S_RY:
+      return "S_RY";
+    default:
+      return "UNKNOWN";
+  }
 }
 
 // initialize static variables

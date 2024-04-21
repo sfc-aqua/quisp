@@ -58,6 +58,7 @@ void StationaryQubit::initialize() {
   // watch variables to show them in the GUI
   WATCH(emitted_time);
   WATCH(is_busy);
+  WATCH(qubit_ref);
 }
 
 std::unique_ptr<IConfiguration> StationaryQubit::prepareBackendQubitConfiguration(bool overwrite) {
@@ -217,7 +218,7 @@ PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   auto *photon_ref = backend->getShortLiveQubit();
   qubit_ref->noiselessH();
   qubit_ref->noiselessCNOT(photon_ref);
-  photon->setQubit_ref(photon_ref);
+  photon->setQubitRef(photon_ref);
   return photon;
 }
 

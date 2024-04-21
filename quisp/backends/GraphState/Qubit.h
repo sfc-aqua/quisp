@@ -112,6 +112,9 @@ class GraphStateQubit : public IQubit {
   const IQubitId *id;
   GraphStateBackend *const backend;
   const bool is_short_live;
+
+  // for debugging
+  std::string cliffordToString(CliffordOperator op);
 };
 
 }  // namespace backends::graph_state

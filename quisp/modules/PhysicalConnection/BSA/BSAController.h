@@ -34,7 +34,7 @@ namespace quisp::modules {
  *  not on every photon pairs/single coming in.
  *
  *  In the passive mode, this assumes that the BSA is internal and EPPS will tell us
- *  how many photons will arrive, when the first one will arrive, and what the iterval is.
+ *  how many photons will arrive, when the first one will arrive, and what the interval is.
  */
 class BSAController : public cSimpleModule {
  private:
@@ -83,6 +83,7 @@ class BSAController : public cSimpleModule {
   simtime_t time_interval_between_photons;  ///< how separated should the photons be; is calculated by the dead time of the detector
   simtime_t speed_of_light_in_channel;  ///< Speed of light in optical fiber (in km per sec).
   utils::ComponentProvider provider;
+  bool is_active;
   BellStateAnalyzer* bsa;
 
   // testing and debugging members
