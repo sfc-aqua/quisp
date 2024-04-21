@@ -45,15 +45,15 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
   // // if you want to do e2e purification before tomography do it here
   // int left_addr = path.front();
   // int right_addr = path.back();
-  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::Single_Selection_X_Purification, ++shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::Single_Selection_X_Purification, shared_rule_tag));
-  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::Single_Selection_X_Purification, shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::Single_Selection_X_Purification, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, ++shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
 
-  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::Single_Selection_Z_Purification, ++shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::Single_Selection_Z_Purification, shared_rule_tag));
-  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::Single_Selection_Z_Purification, shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::Single_Selection_Z_Purification, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_SELECTION_Z_PURIFICATION, ++shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_SELECTION_Z_PURIFICATION, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_SELECTION_Z_PURIFICATION, shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_SELECTION_Z_PURIFICATION, shared_rule_tag));
 
   // add tomography rules
   auto initiator_addr = path.front();
@@ -113,16 +113,16 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
 
   // decide how many Bell pairs are required
   int num_resource;
-  if (purification_type == PurType::Single_Selection_X_Purification || purification_type == PurType::Single_Selection_Z_Purification ||
-      purification_type == PurType::Single_Selection_Y_Purification) {
+  if (purification_type == PurType::SINGLE_SELECTION_X_PURIFICATION || purification_type == PurType::SINGLE_SELECTION_Z_PURIFICATION ||
+      purification_type == PurType::SINGLE_SELECTION_Y_PURIFICATION) {
     num_resource = 2;
-  } else if (purification_type == PurType::Single_Selection_XZ_Purification || purification_type == PurType::Single_Selection_ZX_Purification ||
-             purification_type == PurType::Double_Selection_X_Purification || purification_type == PurType::Double_Selection_Z_Purification) {
+  } else if (purification_type == PurType::SINGLE_SELECTION_XZ_PURIFICATION || purification_type == PurType::SINGLE_SELECTION_ZX_PURIFICATION ||
+             purification_type == PurType::DOUBLE_SELECTION_X_PURIFICATION || purification_type == PurType::DOUBLE_SELECTION_Z_PURIFICATION) {
     num_resource = 3;
-  } else if (purification_type == PurType::Double_Selection_X_Purification_Single_Selection_Z_Purification ||
-             purification_type == PurType::Double_Selection_Z_Purification_Single_Selection_X_Purification) {
+  } else if (purification_type == PurType::DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION ||
+             purification_type == PurType::DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION) {
     num_resource = 4;
-  } else if (purification_type == PurType::Double_Selection_XZ_Purification || purification_type == PurType::Double_Selection_ZX_Purification) {
+  } else if (purification_type == PurType::DOUBLE_SELECTION_XZ_PURIFICATION || purification_type == PurType::DOUBLE_SELECTION_ZX_PURIFICATION) {
     num_resource = 5;
   } else {
     throw std::runtime_error("unknown purification type");

@@ -127,38 +127,38 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 }
 
 PurType ConnectionManager::parsePurType(const std::string &pur_type) {
-  if (pur_type == "Single_Selection_X_Purification") {
-    return PurType::Single_Selection_X_Purification;
+  if (pur_type == "SINGLE_SELECTION_X_PURIFICATION") {
+    return PurType::SINGLE_SELECTION_X_PURIFICATION;
   }
-  if (pur_type == "Single_Selection_Z_Purification") {
-    return PurType::Single_Selection_Z_Purification;
+  if (pur_type == "SINGLE_SELECTION_Z_PURIFICATION") {
+    return PurType::SINGLE_SELECTION_Z_PURIFICATION;
   }
-  if (pur_type == "Single_Selection_Y_Purification") {
-    return PurType::Single_Selection_Y_Purification;
+  if (pur_type == "SINGLE_SELECTION_Y_PURIFICATION") {
+    return PurType::SINGLE_SELECTION_Y_PURIFICATION;
   }
-  if (pur_type == "Single_Selection_XZ_Purification") {
-    return PurType::Single_Selection_XZ_Purification;
+  if (pur_type == "SINGLE_SELECTION_XZ_PURIFICATION") {
+    return PurType::SINGLE_SELECTION_XZ_PURIFICATION;
   }
-  if (pur_type == "Single_Selection_ZX_Purification") {
-    return PurType::Single_Selection_ZX_Purification;
+  if (pur_type == "SINGLE_SELECTION_ZX_PURIFICATION") {
+    return PurType::SINGLE_SELECTION_ZX_PURIFICATION;
   }
-  if (pur_type == "Double_Selection_X_Purification") {
-    return PurType::Double_Selection_X_Purification;
+  if (pur_type == "DOUBLE_SELECTION_X_PURIFICATION") {
+    return PurType::DOUBLE_SELECTION_X_PURIFICATION;
   }
-  if (pur_type == "Double_Selection_Z_Purification") {
-    return PurType::Double_Selection_Z_Purification;
+  if (pur_type == "DOUBLE_SELECTION_Z_PURIFICATION") {
+    return PurType::DOUBLE_SELECTION_Z_PURIFICATION;
   }
-  if (pur_type == "Double_Selection_XZ_Purification") {
-    return PurType::Double_Selection_XZ_Purification;
+  if (pur_type == "DOUBLE_SELECTION_XZ_PURIFICATION") {
+    return PurType::DOUBLE_SELECTION_XZ_PURIFICATION;
   }
-  if (pur_type == "Double_Selection_ZX_Purification") {
-    return PurType::Double_Selection_ZX_Purification;
+  if (pur_type == "DOUBLE_SELECTION_ZX_PURIFICATION") {
+    return PurType::DOUBLE_SELECTION_ZX_PURIFICATION;
   }
-  if (pur_type == "Double_Selection_X_Purification_Single_Selection_Z_Purification") {
-    return PurType::Double_Selection_X_Purification_Single_Selection_Z_Purification;
+  if (pur_type == "DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION") {
+    return PurType::DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION;
   }
-  if (pur_type == "Double_Selection_Z_Purification_Single_Selection_X_Purification") {
-    return PurType::Double_Selection_Z_Purification_Single_Selection_X_Purification;
+  if (pur_type == "DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION") {
+    return PurType::DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION;
   }
   return PurType::INVALID;
 }

@@ -14,32 +14,32 @@ struct QnicInterface {
 
 enum PurType : int {
   INVALID,  ///< Invalid purification type
-  Single_Selection_X_Purification,  ///< Single purification for X error
-  Single_Selection_Z_Purification,  ///< Single purification for Z error
-  Single_Selection_Y_Purification,
-  Single_Selection_XZ_Purification,  ///< Double purification both for X and Z errors
-  Single_Selection_ZX_Purification,  ///< Double inverse purification both for X and Z errors
-  Double_Selection_X_Purification,  ///< Double selection XZ and single action (DoubleSelectionAction) for X error
-  Double_Selection_Z_Purification,  ///< Inverse Double selection XZ and single action(DoubleSelectionAction) for X error
-  Double_Selection_XZ_Purification,  ///< Double Selection and Dual Action for both X and Z errors
-  Double_Selection_ZX_Purification,  ///< Inverse Double Selection and Dual Action for both X and Z errors
-  Double_Selection_X_Purification_Single_Selection_Z_Purification,  ///< Different type of Double Selection and Dual Action for both X and Z errors
-  Double_Selection_Z_Purification_Single_Selection_X_Purification,  ///< Different type of Inverse Double Selection and Dual Action for both X and Z errors
+  SINGLE_SELECTION_X_PURIFICATION,  ///< Single purification for X error
+  SINGLE_SELECTION_Z_PURIFICATION,  ///< Single purification for Z error
+  SINGLE_SELECTION_Y_PURIFICATION,
+  SINGLE_SELECTION_XZ_PURIFICATION,  ///< Double purification both for X and Z errors
+  SINGLE_SELECTION_ZX_PURIFICATION,  ///< Double inverse purification both for X and Z errors
+  DOUBLE_SELECTION_X_PURIFICATION,  ///< Double selection XZ and single action (DoubleSelectionAction) for X error
+  DOUBLE_SELECTION_Z_PURIFICATION,  ///< Inverse Double selection XZ and single action(DoubleSelectionAction) for X error
+  DOUBLE_SELECTION_XZ_PURIFICATION,  ///< Double Selection and Dual Action for both X and Z errors
+  DOUBLE_SELECTION_ZX_PURIFICATION,  ///< Inverse Double Selection and Dual Action for both X and Z errors
+  DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION,  ///< Different type of Double Selection and Dual Action for both X and Z errors
+  DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION,  ///< Different type of Inverse Double Selection and Dual Action for both X and Z errors
 };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
                                           {INVALID, "INVALID"},
-                                          {Single_Selection_X_Purification, "Single_Selection_X_Purification"},
-                                          {Single_Selection_Z_Purification, "Single_Selection_Z_Purification"},
-                                          {Single_Selection_Y_Purification, "Single_Selection_Y_Purification"},
-                                          {Single_Selection_XZ_Purification, "Single_Selection_XZ_Purification"},
-                                          {Single_Selection_ZX_Purification, "Single_Selection_ZX_Purification"},
-                                          {Double_Selection_X_Purification, "Double_Selection_X_Purification"},
-                                          {Double_Selection_Z_Purification, "Double_Selection_Z_Purification"},
-                                          {Double_Selection_XZ_Purification, "Double_Selection_XZ_Purification"},
-                                          {Double_Selection_ZX_Purification, "Double_Selection_ZX_Purification"},
-                                          {Double_Selection_X_Purification_Single_Selection_Z_Purification, "Double_Selection_X_Purification_Single_Selection_Z_Purification"},
-                                          {Double_Selection_Z_Purification_Single_Selection_X_Purification, "Double_Selection_Z_Purification_Single_Selection_X_Purification"},
+                                          {SINGLE_SELECTION_X_PURIFICATION, "SINGLE_SELECTION_X_PURIFICATION"},
+                                          {SINGLE_SELECTION_Z_PURIFICATION, "SINGLE_SELECTION_Z_PURIFICATION"},
+                                          {SINGLE_SELECTION_Y_PURIFICATION, "SINGLE_SELECTION_Y_PURIFICATION"},
+                                          {SINGLE_SELECTION_XZ_PURIFICATION, "SINGLE_SELECTION_XZ_PURIFICATION"},
+                                          {SINGLE_SELECTION_ZX_PURIFICATION, "SINGLE_SELECTION_ZX_PURIFICATION"},
+                                          {DOUBLE_SELECTION_X_PURIFICATION, "DOUBLE_SELECTION_X_PURIFICATION"},
+                                          {DOUBLE_SELECTION_Z_PURIFICATION, "DOUBLE_SELECTION_Z_PURIFICATION"},
+                                          {DOUBLE_SELECTION_XZ_PURIFICATION, "DOUBLE_SELECTION_XZ_PURIFICATION"},
+                                          {DOUBLE_SELECTION_ZX_PURIFICATION, "DOUBLE_SELECTION_ZX_PURIFICATION"},
+                                          {DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION, "DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION"},
+                                          {DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION, "DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION"},
                                       })
 
 inline void to_json(json& j, const QnicInterface& qi) { j = json{{"partner_address", qi.partner_addr}}; }

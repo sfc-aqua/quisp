@@ -329,8 +329,8 @@ Program RuleSetConverter::constructEntanglementSwappingAction(const Entanglement
 }
 Program RuleSetConverter::constructPurificationAction(const Purification *act) {
   auto pur_type = act->purification_type;
-  if (pur_type == rules::PurType::Single_Selection_X_Purification || pur_type == rules::PurType::Single_Selection_Z_Purification ||
-      pur_type == rules::PurType::Single_Selection_Y_Purification) {
+  if (pur_type == rules::PurType::SINGLE_SELECTION_X_PURIFICATION || pur_type == rules::PurType::SINGLE_SELECTION_Z_PURIFICATION ||
+      pur_type == rules::PurType::SINGLE_SELECTION_Y_PURIFICATION) {
     /*
       qubitId: qubit, trash_qubit
       Reg: result, seq_no // the sequence number of the qubit in the next rule
@@ -357,10 +357,10 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
 
     std::string program_name;
     InstructionTypes purify_instruction = (InstructionTypes)INSTR_PURIFY_X_RegId_int_QubitId_QubitId_{{measure_result, 0, qubit, trash_qubit}};
-    if (pur_type == rules::PurType::Single_Selection_X_Purification) {
+    if (pur_type == rules::PurType::SINGLE_SELECTION_X_PURIFICATION) {
       purify_instruction = (InstructionTypes)INSTR_PURIFY_X_RegId_int_QubitId_QubitId_{{measure_result, 0, qubit, trash_qubit}};
       program_name = "X Purification";
-    } else if (pur_type == rules::PurType::Single_Selection_Y_Purification) {
+    } else if (pur_type == rules::PurType::SINGLE_SELECTION_Y_PURIFICATION) {
       program_name = "Y Purification";
       purify_instruction = (InstructionTypes)INSTR_PURIFY_Y_RegId_int_QubitId_QubitId_{{measure_result, 0, qubit, trash_qubit}};
     } else {
@@ -384,7 +384,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
 
   // single selection double purification;
   // (i.e., reducing both X & Z errors but without checking error propagation from trash_qubits back to keep qubit)
-  if (pur_type == rules::PurType::Single_Selection_XZ_Purification || pur_type == rules::PurType::Single_Selection_ZX_Purification) {
+  if (pur_type == rules::PurType::SINGLE_SELECTION_XZ_PURIFICATION || pur_type == rules::PurType::SINGLE_SELECTION_ZX_PURIFICATION) {
     /*
       qubitId: qubit, trash_qubit_x, trash_qubit_z
       Reg: result, seq_no // the sequence number of the qubit in the next rule
@@ -394,7 +394,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
       GET_QUBIT qubit partner_addr 0
       GET_QUBIT trash_qubit_x partner_addr 1
       GET_QUBIT trash_qubit_z partner_addr 2
-      # if Single_Selection_XZ_Purification:
+      # if SINGLE_SELECTION_XZ_PURIFICATION:
         PURIFY_X result 0 qubit trash_qubit_x
         PURIFY_Z result 1 qubit trash_qubit_z
       # else: // just change the order, no reason to also change the bitset index
@@ -421,7 +421,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     InstructionTypes purify_instruction_1 = (InstructionTypes)INSTR_PURIFY_X_RegId_int_QubitId_QubitId_{{measure_result, 0, qubit, trash_qubit_x}};
     InstructionTypes purify_instruction_2 = (InstructionTypes)INSTR_PURIFY_Z_RegId_int_QubitId_QubitId_{{measure_result, 1, qubit, trash_qubit_z}};
     ;
-    if (pur_type == rules::PurType::Single_Selection_ZX_Purification) {
+    if (pur_type == rules::PurType::SINGLE_SELECTION_ZX_PURIFICATION) {
       program_name = "Single Selection Double Purification ZX (Inverse)";
       std::swap(purify_instruction_1, purify_instruction_2);
     }
@@ -446,9 +446,9 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
   // https://arxiv.org/abs/0811.2639 (Fujii & Yamamoto double selection (single error) purification)
   // The naming is misleading,
   // TODO: change purification type naming
-  // Double_Selection_XZ_Purification -> double selection X purification
-  // Double_Selection_ZX_Purification -> double selection Z purification
-  if (pur_type == rules::PurType::Double_Selection_X_Purification || pur_type == rules::PurType::Double_Selection_Z_Purification) {
+  // DOUBLE_SELECTION_XZ_PURIFICATION -> double selection X purification
+  // DOUBLE_SELECTION_ZX_PURIFICATION -> double selection Z purification
+  if (pur_type == rules::PurType::DOUBLE_SELECTION_X_PURIFICATION || pur_type == rules::PurType::DOUBLE_SELECTION_Z_PURIFICATION) {
     /*
       qubitId: qubit, trash_qubit_z, trash_qubit_x
       Reg: result, seq_no // the sequence number of the qubit in the next rule
@@ -458,12 +458,12 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
       GET_QUBIT qubit partner_addr 0
       GET_QUBIT trash_qubit_z partner_addr 1
       GET_QUBIT trash_qubit_x partner_addr 1
-      # if Double_Selection_X_Purification (double selection X purification) :
+      # if DOUBLE_SELECTION_X_PURIFICATION (double selection X purification) :
         CNOT qubit trash_qubit_z
         CNOT trash_qubit_x trash_qubit_z
         MEASURE result 0 trash_qubit_z Z
         MEASURE result 1 trash_qubit_x X
-      # if Double_Selection_Z_Purification (double selection Z purification):
+      # if DOUBLE_SELECTION_Z_PURIFICATION (double selection Z purification):
         CNOT trash_qubit_x qubit
         CNOT trash_qubit_x trash_qubit_z
         MEASURE result 0 trash_qubit_z Z
@@ -487,7 +487,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
 
     std::string program_name = "Double Selection Single Purification X";
     InstructionTypes first_cnot = (InstructionTypes)INSTR_GATE_CNOT_QubitId_QubitId_{{qubit, trash_qubit_z}};
-    if (pur_type == rules::PurType::Double_Selection_Z_Purification) {
+    if (pur_type == rules::PurType::DOUBLE_SELECTION_Z_PURIFICATION) {
       program_name = "Double Selection Single Purification Z";
       first_cnot = (InstructionTypes)INSTR_GATE_CNOT_QubitId_QubitId_{{trash_qubit_x, qubit}};
     }
@@ -511,8 +511,8 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     return Program{program_name, opcodes};
   }
 
-  if (pur_type == rules::PurType::Double_Selection_X_Purification_Single_Selection_Z_Purification ||
-      pur_type == rules::PurType::Double_Selection_Z_Purification_Single_Selection_X_Purification) {
+  if (pur_type == rules::PurType::DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION ||
+      pur_type == rules::PurType::DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION) {
     /*
       qubitId: qubit, dssp_z, dssp_x, sssp_q;
       Reg: result, seq_no // the sequence number of the qubit in the next rule
@@ -523,14 +523,14 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
       GET_QUBIT dssp_z partner_addr 1
       GET_QUBIT dssp_x partner_addr 2
       GET_QUBIT sssp_q  partner_addr 3
-      # if Double_Selection_X_Purification_Single_Selection_Z_Purification (double selection X purification -> single selection single purification Z) :
+      # if DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION (double selection X purification -> single selection single purification Z) :
         CNOT qubit dssp_z               << diff
         CNOT dssp_x dssp_z
         CNOT sssp_q qubit               << diff
         MEASURE result 0 dssp_z Z
         MEASURE result 1 dssp_x X
         MEASURE result 2 sssp_q X       << diff
-      # if Double_Selection_Z_Purification_Single_Selection_X_Purification (double selection Z purification -> double selection single purification X):
+      # if DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION (double selection Z purification -> double selection single purification X):
         CNOT dssp_x qubit               << diff
         CNOT dssp_x dssp_z
         CNOT qubit sssp_q               << diff
@@ -560,7 +560,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     InstructionTypes first_cnot = (InstructionTypes)INSTR_GATE_CNOT_QubitId_QubitId_{{qubit, dssp_z}};
     InstructionTypes last_cnot = (InstructionTypes)INSTR_GATE_CNOT_QubitId_QubitId_{{sssp_q, qubit}};
     InstructionTypes sssp_measure = (InstructionTypes)INSTR_MEASURE_RegId_int_QubitId_Basis_{{measure_result, 2, sssp_q, Basis::X}};
-    if (pur_type == rules::PurType::Double_Selection_Z_Purification_Single_Selection_X_Purification) {
+    if (pur_type == rules::PurType::DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION) {
       program_name = "Ds-Sp Z followed by Ss-Sp X";
       first_cnot = (InstructionTypes)INSTR_GATE_CNOT_QubitId_QubitId_{{dssp_x, qubit}};
       last_cnot = (InstructionTypes)INSTR_GATE_CNOT_QubitId_QubitId_{{qubit, sssp_q}};
@@ -590,7 +590,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     return Program{program_name, opcodes};
   }
 
-  if (pur_type == rules::PurType::Double_Selection_XZ_Purification || pur_type == rules::PurType::Double_Selection_ZX_Purification) {
+  if (pur_type == rules::PurType::DOUBLE_SELECTION_XZ_PURIFICATION || pur_type == rules::PurType::DOUBLE_SELECTION_ZX_PURIFICATION) {
     /*
       qubitId: qubit, dssp_1_z, dssp_1_x, dssp_2_x, dssp_2_z;
       Reg: result, seq_no // the sequence number of the qubit in the next rule
@@ -602,7 +602,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
       GET_QUBIT dssp_1_z partner_addr 2
       GET_QUBIT dssp_2_x partner_addr 3
       GET_QUBIT dssp_2_z partner_addr 4
-      # if Double_Selection_XZ_Purification (double selection X purification -> double selection Z purification) :
+      # if DOUBLE_SELECTION_XZ_PURIFICATION (double selection X purification -> double selection Z purification) :
         CNOT qubit dssp_1_z            << cnot_1
         CNOT dssp_1_x dssp_1_z         << cnot_2
         MEASURE result 0 dssp_1_z Z
@@ -612,7 +612,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
         CNOT dssp_2_x dssp_2_z         << cnot_4
         MEASURE result 2 dssp_2_z Z
         MEASURE result 3 dssp_2_x X
-      # if Double_Selection_ZX_Purification (double selection Z purification -> double selection X purification):
+      # if DOUBLE_SELECTION_ZX_PURIFICATION (double selection Z purification -> double selection X purification):
         # measurement index stay the same for simplicity
         CNOT dssp_2_x qubit            << cnot_1
         CNOT dssp_2_x dssp_2_z         << cnot_2
@@ -649,7 +649,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     InstructionTypes cnot_2 = (InstructionTypes)INSTR_GATE_CNOT_QubitId_QubitId_{{dssp_1_x, dssp_1_z}};
     InstructionTypes cnot_3 = (InstructionTypes)INSTR_GATE_CNOT_QubitId_QubitId_{{dssp_2_x, qubit}};
     InstructionTypes cnot_4 = (InstructionTypes)INSTR_GATE_CNOT_QubitId_QubitId_{{dssp_2_x, dssp_2_z}};
-    if (pur_type == rules::PurType::Double_Selection_X_Purification_Single_Selection_Z_Purification) {
+    if (pur_type == rules::PurType::DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION) {
       program_name = "Ds-Sp Z followed by Ds-Sp Z";
       std::swap(cnot_1, cnot_3);
       std::swap(cnot_2, cnot_4);
