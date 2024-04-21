@@ -127,38 +127,38 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 }
 
 PurType ConnectionManager::parsePurType(const std::string &pur_type) {
-  if (pur_type == "SINGLE_X") {
-    return PurType::SINGLE_X;
+  if (pur_type == "Single_Selection_X_Purification") {
+    return PurType::Single_Selection_X_Purification;
   }
-  if (pur_type == "SINGLE_Z") {
-    return PurType::SINGLE_Z;
+  if (pur_type == "Single_Selection_Z_Purification") {
+    return PurType::Single_Selection_Z_Purification;
   }
-  if (pur_type == "SINGLE_Y") {
-    return PurType::SINGLE_Y;
+  if (pur_type == "Single_Selection_Y_Purification") {
+    return PurType::Single_Selection_Y_Purification;
   }
-  if (pur_type == "DOUBLE") {
-    return PurType::DOUBLE;
+  if (pur_type == "Single_Selection_XZ_Purification") {
+    return PurType::Single_Selection_XZ_Purification;
   }
-  if (pur_type == "DOUBLE_INV") {
-    return PurType::DOUBLE_INV;
+  if (pur_type == "Single_Selection_ZX_Purification") {
+    return PurType::Single_Selection_ZX_Purification;
   }
-  if (pur_type == "DSSA") {
-    return PurType::DSSA;
+  if (pur_type == "Double_Selection_X_Purification") {
+    return PurType::Double_Selection_X_Purification;
   }
-  if (pur_type == "DSSA_INV") {
-    return PurType::DSSA_INV;
+  if (pur_type == "Double_Selection_Z_Purification") {
+    return PurType::Double_Selection_Z_Purification;
   }
-  if (pur_type == "DSDA") {
-    return PurType::DSDA;
+  if (pur_type == "Double_Selection_XZ_Purification") {
+    return PurType::Double_Selection_XZ_Purification;
   }
-  if (pur_type == "DSDA_INV") {
-    return PurType::DSDA_INV;
+  if (pur_type == "Double_Selection_ZX_Purification") {
+    return PurType::Double_Selection_ZX_Purification;
   }
-  if (pur_type == "DSDA_SECOND") {
-    return PurType::DSDA_SECOND;
+  if (pur_type == "Double_Selection_X_Purification_Single_Selection_Z_Purification") {
+    return PurType::Double_Selection_X_Purification_Single_Selection_Z_Purification;
   }
-  if (pur_type == "DSDA_SECOND_INV") {
-    return PurType::DSDA_SECOND_INV;
+  if (pur_type == "Double_Selection_Z_Purification_Single_Selection_X_Purification") {
+    return PurType::Double_Selection_Z_Purification_Single_Selection_X_Purification;
   }
   return PurType::INVALID;
 }

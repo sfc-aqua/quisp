@@ -11,7 +11,7 @@
 #include "test_utils/TestUtilFunctions.h"
 
 namespace {
-using json = nlohmann::json;
+using Json = nlohmann::json;
 using OriginalRSG = quisp::modules::ruleset_gen::RuleSetGenerator;
 using quisp::modules::NULL_CONNECTION_SETUP_INFO;
 using quisp::modules::QNIC_E;
@@ -200,12 +200,12 @@ TEST_F(RuleSetGeneratorTest, Simple) {
 TEST_F(RuleSetGeneratorTest, PurificationRule) {
   // rule arguments
   int partner_addr = 1;
-  PurType purification_type = PurType::DOUBLE;
+  PurType purification_type = PurType::Single_Selection_XZ_Purification;
 
   auto purification_rule = rsg->purifyRule(partner_addr, purification_type, 15);
   auto serialized = purification_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
-  json expected = R"({
+  Json expected = R"({
    "name":"purification with 1",
    "send_tag": 15,
    "receive_tag": -1,
@@ -252,7 +252,7 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
 
   auto serialized = swap_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
-  json expected = R"({
+  Json expected = R"({
    "name": "swap between 1 and 3",
    "send_tag": 14,
    "receive_tag": -1,
@@ -311,7 +311,7 @@ TEST_F(RuleSetGeneratorTest, tomographyRule) {
 
   auto serialized = tomography_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
-  json expected = R"({
+  Json expected = R"({
   "action": {
     "options": {
       "interface": [
