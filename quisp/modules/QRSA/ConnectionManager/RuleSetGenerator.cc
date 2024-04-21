@@ -113,11 +113,14 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
 
   // decide how many Bell pairs are required
   int num_resource;
-  if (purification_type == PurType::Single_Selection_X_Purification || purification_type == PurType::Single_Selection_Z_Purification || purification_type == PurType::Single_Selection_Y_Purification) {
+  if (purification_type == PurType::Single_Selection_X_Purification || purification_type == PurType::Single_Selection_Z_Purification ||
+      purification_type == PurType::Single_Selection_Y_Purification) {
     num_resource = 2;
-  } else if (purification_type == PurType::Single_Selection_XZ_Purification || purification_type == PurType::Single_Selection_ZX_Purification || purification_type == PurType::Double_Selection_X_Purification || purification_type == PurType::Double_Selection_Z_Purification) {
+  } else if (purification_type == PurType::Single_Selection_XZ_Purification || purification_type == PurType::Single_Selection_ZX_Purification ||
+             purification_type == PurType::Double_Selection_X_Purification || purification_type == PurType::Double_Selection_Z_Purification) {
     num_resource = 3;
-  } else if (purification_type == PurType::Double_Selection_X_Purification_Single_Selection_Z_Purification || purification_type == PurType::Double_Selection_Z_Purification_Single_Selection_X_Purification) {
+  } else if (purification_type == PurType::Double_Selection_X_Purification_Single_Selection_Z_Purification ||
+             purification_type == PurType::Double_Selection_Z_Purification_Single_Selection_X_Purification) {
     num_resource = 4;
   } else if (purification_type == PurType::Double_Selection_XZ_Purification || purification_type == PurType::Double_Selection_ZX_Purification) {
     num_resource = 5;

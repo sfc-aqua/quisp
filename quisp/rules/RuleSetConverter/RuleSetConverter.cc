@@ -329,7 +329,8 @@ Program RuleSetConverter::constructEntanglementSwappingAction(const Entanglement
 }
 Program RuleSetConverter::constructPurificationAction(const Purification *act) {
   auto pur_type = act->purification_type;
-  if (pur_type == rules::PurType::Single_Selection_X_Purification || pur_type == rules::PurType::Single_Selection_Z_Purification || pur_type == rules::PurType::Single_Selection_Y_Purification) {
+  if (pur_type == rules::PurType::Single_Selection_X_Purification || pur_type == rules::PurType::Single_Selection_Z_Purification ||
+      pur_type == rules::PurType::Single_Selection_Y_Purification) {
     /*
       qubitId: qubit, trash_qubit
       Reg: result, seq_no // the sequence number of the qubit in the next rule
@@ -510,7 +511,8 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     return Program{program_name, opcodes};
   }
 
-  if (pur_type == rules::PurType::Double_Selection_X_Purification_Single_Selection_Z_Purification || pur_type == rules::PurType::Double_Selection_Z_Purification_Single_Selection_X_Purification) {
+  if (pur_type == rules::PurType::Double_Selection_X_Purification_Single_Selection_Z_Purification ||
+      pur_type == rules::PurType::Double_Selection_Z_Purification_Single_Selection_X_Purification) {
     /*
       qubitId: qubit, dssp_z, dssp_x, sssp_q;
       Reg: result, seq_no // the sequence number of the qubit in the next rule
