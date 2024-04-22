@@ -9,19 +9,19 @@ var _action_8h =
     [ "quisp::rules::Tomography", "classquisp_1_1rules_1_1_tomography.html", "classquisp_1_1rules_1_1_tomography" ],
     [ "PurType", "_action_8h.html#a5693ea435ef2194a383d996d838b066d", [
       [ "INVALID", "_action_8h.html#a5693ea435ef2194a383d996d838b066da99370beed01a4f675d525ca0a62b4a7e", null ],
-      [ "SINGLE_X", "_action_8h.html#a5693ea435ef2194a383d996d838b066da65eeead068a36831adbb2aa61e7513b1", null ],
-      [ "SINGLE_Z", "_action_8h.html#a5693ea435ef2194a383d996d838b066daec7ccc4b9ca43c2b37ceafd93d0b16eb", null ],
-      [ "SINGLE_Y", "_action_8h.html#a5693ea435ef2194a383d996d838b066da050db8f23a0a9c970de8c3b6c0384d26", null ],
-      [ "DOUBLE", "_action_8h.html#a5693ea435ef2194a383d996d838b066daa00d9553fe5f499209eb6adb9f54f34e", null ],
-      [ "DOUBLE_INV", "_action_8h.html#a5693ea435ef2194a383d996d838b066da836a01f283e3f7aea24b9c2c1293a95e", null ],
-      [ "DSSA", "_action_8h.html#a5693ea435ef2194a383d996d838b066daa680c3a0e9f1e1869cbb0f535cd91beb", null ],
-      [ "DSSA_INV", "_action_8h.html#a5693ea435ef2194a383d996d838b066daf15dcc66ddd54a074b72b011ec404810", null ],
-      [ "DSDA", "_action_8h.html#a5693ea435ef2194a383d996d838b066da85c7a2dfe0f3a69dfd6a106ab74cf05f", null ],
-      [ "DSDA_INV", "_action_8h.html#a5693ea435ef2194a383d996d838b066da4f24cf424ea19d28f561af19592511e5", null ],
-      [ "DSDA_SECOND", "_action_8h.html#a5693ea435ef2194a383d996d838b066dafaeca5648c5503b31494b95b7883d6c5", null ],
-      [ "DSDA_SECOND_INV", "_action_8h.html#a5693ea435ef2194a383d996d838b066da16b5a710f0e1ace1025ddebdbd03384e", null ]
+      [ "SINGLE_SELECTION_X_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066da02250d37785967636c230eed23ca58ca", null ],
+      [ "SINGLE_SELECTION_Z_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066dab6c099e16e0d229a0123a48621c1bd50", null ],
+      [ "SINGLE_SELECTION_Y_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066da94516f4ba16cec8085b803ef4e511492", null ],
+      [ "SINGLE_SELECTION_XZ_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066dac01306f8a0e94dfc7ca5977011665843", null ],
+      [ "SINGLE_SELECTION_ZX_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066dab43dd06dbd2a5d942d230ceddc065b71", null ],
+      [ "DOUBLE_SELECTION_X_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066da6cda54f11d1050939a2a2ae1cbf33765", null ],
+      [ "DOUBLE_SELECTION_Z_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066daa89e091c4ff1b46baeb864316278ef64", null ],
+      [ "DOUBLE_SELECTION_XZ_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066da3a033adb0b41fdcffa4152fc45cba29f", null ],
+      [ "DOUBLE_SELECTION_ZX_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066da590a5693e39bc95f93f281900f985638", null ],
+      [ "DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066daa2433f3c3919c427b6515bbc93ca394d", null ],
+      [ "DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION", "_action_8h.html#a5693ea435ef2194a383d996d838b066dae5ba70a94d4e1bdffa023003a4103dd4", null ]
     ] ],
     [ "from_json", "_action_8h.html#af34662426ca77de6ead9099ecc3770e2", null ],
-    [ "NLOHMANN_JSON_SERIALIZE_ENUM", "_action_8h.html#aa33409d23c94ab9d6e98ea66e54c1130", null ],
+    [ "NLOHMANN_JSON_SERIALIZE_ENUM", "_action_8h.html#ac18741487e9bd9894cccb74ae423e01a", null ],
     [ "qi", "_action_8h.html#a0dae1416cf15ad53fc2b80547a564928", null ]
 ];
