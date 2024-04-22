@@ -45,15 +45,15 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
   // // if you want to do e2e purification before tomography do it here
   // int left_addr = path.front();
   // int right_addr = path.back();
-  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_X, ++shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
-  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_X, shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, ++shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
 
-  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_Z, ++shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
-  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_Z, shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_SELECTION_Z_PURIFICATION, ++shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_SELECTION_Z_PURIFICATION, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_SELECTION_Z_PURIFICATION, shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_SELECTION_Z_PURIFICATION, shared_rule_tag));
 
   // add tomography rules
   auto initiator_addr = path.front();
@@ -113,13 +113,16 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
 
   // decide how many Bell pairs are required
   int num_resource;
-  if (purification_type == PurType::SINGLE_X || purification_type == PurType::SINGLE_Z || purification_type == PurType::SINGLE_Y) {
+  if (purification_type == PurType::SINGLE_SELECTION_X_PURIFICATION || purification_type == PurType::SINGLE_SELECTION_Z_PURIFICATION ||
+      purification_type == PurType::SINGLE_SELECTION_Y_PURIFICATION) {
     num_resource = 2;
-  } else if (purification_type == PurType::DOUBLE || purification_type == PurType::DOUBLE_INV || purification_type == PurType::DSSA || purification_type == PurType::DSSA_INV) {
+  } else if (purification_type == PurType::SINGLE_SELECTION_XZ_PURIFICATION || purification_type == PurType::SINGLE_SELECTION_ZX_PURIFICATION ||
+             purification_type == PurType::DOUBLE_SELECTION_X_PURIFICATION || purification_type == PurType::DOUBLE_SELECTION_Z_PURIFICATION) {
     num_resource = 3;
-  } else if (purification_type == PurType::DSDA_SECOND || purification_type == PurType::DSDA_SECOND_INV) {
+  } else if (purification_type == PurType::DOUBLE_SELECTION_X_PURIFICATION_SINGLE_SELECTION_Z_PURIFICATION ||
+             purification_type == PurType::DOUBLE_SELECTION_Z_PURIFICATION_SINGLE_SELECTION_X_PURIFICATION) {
     num_resource = 4;
-  } else if (purification_type == PurType::DSDA || purification_type == PurType::DSDA_INV) {
+  } else if (purification_type == PurType::DOUBLE_SELECTION_XZ_PURIFICATION || purification_type == PurType::DOUBLE_SELECTION_ZX_PURIFICATION) {
     num_resource = 5;
   } else {
     throw std::runtime_error("unknown purification type");

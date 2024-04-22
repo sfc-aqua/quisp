@@ -181,7 +181,7 @@ TEST_F(ActionExecutionTest, Swapping) {
 }
 
 TEST_F(ActionExecutionTest, PurifyX) {
-  PurType pur_type = PurType::SINGLE_X;
+  PurType pur_type = PurType::SINGLE_SELECTION_X_PURIFICATION;
   Purification action{pur_type, partner_addr, 231};
   setAction(&action, 231);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
