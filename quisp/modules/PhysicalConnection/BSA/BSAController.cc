@@ -27,11 +27,17 @@ void BSAController::initialize() {
   // if this BSA is internal set left to be self node
   if (strcmp(getParentModule()->getName(), "qnic_r") == 0 || strcmp(getParentModule()->getName(), "qnic_rp") == 0) {
     address = provider.getNodeAddr();
+    if(address == par("replacing_address_bsa").intValue()) {
+    return;
+  }
     left_qnic.parent_node_addr = address;
     left_qnic.index = getParentModule()->par("self_qnic_index").intValue();
     left_qnic.type = strcmp(getParentModule()->getName(), "qnic_r") == 0 ? QNIC_R : QNIC_RP;
   } else {
     address = getParentModule()->par("address").intValue();
+    if(address == par("replacing_address_bsa").intValue()) {
+    return;
+  }
     left_qnic = getExternalQNICInfoFromPort(0);
   }
   is_active = strcmp(par("mode").stringValue(), "active") == 0;

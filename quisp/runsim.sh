@@ -2,7 +2,7 @@
 
 output_file="bellpairtimings"
 
-# mxm mim msm simple chains
+# # mxm mim msm simple chains
 # for chain in mxm mim msm;
 # do
 #     for length in simple long

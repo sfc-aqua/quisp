@@ -263,6 +263,7 @@ void RuleEngine::handleSingleClickResult(SingleClickResult *click_result) {
 void RuleEngine::handleMSMResult(MSMResult *msm_result) {
   auto qnic_index = msm_result->getQnicIndex();
   auto &msm_info = msm_info_map[qnic_index];
+  // If we can find the qubits entangled with photon index less than msm_result->getPhotonIndex, it should be freed.
   auto qubit_itr = msm_info.qubit_postprocess_info.find(msm_result->getPhotonIndex());
   // local: fail | partner: success/fail
   // qubit on photon index is not included in msm_info

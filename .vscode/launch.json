@@ -92,7 +92,25 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Simulation mixer",
+            "name": "Simulation adaptive",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/link_generation_test.ini",
+                "-u",
+                "Cmdenv",
+                "-c",
+                "Testing_MSM_one_memory"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Simulation mimwithonemsm",
             "program": "${workspaceFolder}/quisp/quisp_dbg",
             "args": [
                 "-n",
@@ -103,7 +121,7 @@
                 "-u",
                 "Cmdenv",
                 "-c",
-                "mixer"
+                "mim_ten_nodes_msm_one_long_adaptive"
             ],
             "cwd": "${workspaceFolder}/quisp"
         },

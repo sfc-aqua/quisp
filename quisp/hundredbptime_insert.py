@@ -22,7 +22,7 @@ def genplot(memory):
                 line.pop(-1)
                 if line[0] == f"msm_ten_nodes_mim_{location}_{simulation}":
                     print(line[0])
-                    tmp = [(float(x)-10) for x in line[1:]]
+                    tmp = [100/(float(x)-10) for x in line[1:]]
                     # For some cases (especially when the link is asymmetric) the time to generate 100 BP are different between the two nodes. We use the longer time, since that is when we can confirm to have a bell pair among the link.
                     # Initialize variables to store principal components and current maximum
                     tmp_step1 = []
@@ -48,7 +48,7 @@ def genplot(memory):
     plt.legend()
     plt.xticks(xaxis, locations)
     plt.xlabel('replaced link', fontsize=15)
-    plt.ylabel('Time to create 100 Bell pairs (s)', fontsize=15)
+    plt.ylabel('Bell pair generation rate (BP/s)', fontsize=15)
     plt.savefig(f"1kmdist_inserted_{memory}mem.png", dpi=1000)
     plt.savefig(f"1kmdist_inserted_{memory}mem.pdf", dpi=1000)
     plt.clf()
@@ -61,7 +61,7 @@ def genplot(memory):
                 line.pop(-1)
                 if line[0] == f"msm_ten_nodes_mim_{location}_{simulation}":
                     print(line[0])
-                    tmp = [(float(x)-10) for x in line[1:]]
+                    tmp = [100/(float(x)-10) for x in line[1:]]
                     # For some cases (especially when the link is asymmetric) the time to generate 100 BP are different between the two nodes. We use the longer time, since that is when we can confirm to have a bell pair among the link.
                     
                     # Initialize variables to store principal components and current maximum
@@ -88,7 +88,7 @@ def genplot(memory):
     plt.legend()
     plt.xticks(xaxis, locations)
     plt.xlabel('replaced link', fontsize=15)
-    plt.ylabel('Time to create 100 Bell pairs (s)', fontsize=15)
+    plt.ylabel('Bell pair generation rate (BP/s)', fontsize=15)
     plt.savefig(f"20kmdist_inserted_{memory}mem.png", dpi=1000)
     plt.savefig(f"20kmdist_inserted_{memory}mem.pdf", dpi=1000)
 for (memory) in ["4", "8", "16", "32"]:

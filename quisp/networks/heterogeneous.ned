@@ -402,7 +402,7 @@ network oneMSMinMIMs
             EndNode[0].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> EPPS.port++;
             EPPS.port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> Repeater[0].port++;
             EndNode[0].quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> EPPS.quantum_port++;
-            BSA.quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[0].quantum_port++;
+            EPPS.quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[0].quantum_port++;
         }
         if replacingLink!=0 {
             EndNode[0].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> BSA[0].port++;
@@ -411,27 +411,27 @@ network oneMSMinMIMs
             BSA[0].quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[0].quantum_port_receiver_passive++;
         }
         for i = 0..numRepeaters-2 {
-                Repeater[i].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> BSA.port++ if replacingLink==i+1;
-                BSA.port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> Repeater[i+1].port++ if replacingLink==i+1;
-                Repeater[i].quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> BSA.quantum_port++ if replacingLink==i+1;
-                BSA.quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[i+1].quantum_port++ if replacingLink==i+1;
+                Repeater[i].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> EPPS.port++ if replacingLink==i+1;
+                EPPS.port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> Repeater[i+1].port++ if replacingLink==i+1;
+                Repeater[i].quantum_port_receiver_passive++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> EPPS.quantum_port_receiver_passive++ if replacingLink==i+1;
+                EPPS.quantum_port_receiver_passive++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[i+1].quantum_port_receiver_passive++ if replacingLink==i+1;
         
-                Repeater[i].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> EPPS[i+1].port++ if replacingLink!=i+1;
-                EPPS[i+1].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> Repeater[i+1].port++ if replacingLink!=i+1;
-                Repeater[i].quantum_port_receiver_passive++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> EPPS[i+1].quantum_port++ if replacingLink!=i+1;
-                EPPS[i+1].quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[i+1].quantum_port_receiver_passive++ if replacingLink!=i+1;
+                Repeater[i].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> BSA[i+1].port++ if replacingLink!=i+1;
+                BSA[i+1].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> Repeater[i+1].port++ if replacingLink!=i+1;
+                Repeater[i].quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> BSA[i+1].quantum_port++ if replacingLink!=i+1;
+                BSA[i+1].quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[i+1].quantum_port++ if replacingLink!=i+1;
         }
         if replacingLink==lastRepeaterIndex+1{
-            EndNode[1].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> BSA.port++;
-            BSA.port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> Repeater[lastRepeaterIndex].port++;
-            EndNode[1].quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> BSA.quantum_port++;
-            BSA.quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[lastRepeaterIndex].quantum_port++;
+            EndNode[1].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> EPPS.port++;
+            EPPS.port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> Repeater[lastRepeaterIndex].port++;
+            EndNode[1].quantum_port_receiver_passive++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> EPPS.quantum_port++;
+            EPPS.quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[lastRepeaterIndex].quantum_port_receiver_passive++;
         }
         if replacingLink!=lastRepeaterIndex+1{
             EndNode[1].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> BSA[sizeof(BSA)-1].port++;
             BSA[sizeof(BSA)-1].port++ <--> ClassicalChannel{ distance = parent.classicalDistance / 2;} <--> Repeater[lastRepeaterIndex].port++;
             EndNode[1].quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> BSA[sizeof(BSA)-1].quantum_port++;
-            BSA[sizeof(BSA)-1].quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[lastRepeaterIndex].quantum_port_receiver+;
+            BSA[sizeof(BSA)-1].quantum_port++ <--> QuantumChannel{ distance = parent.quantumDistance / 2;} <--> Repeater[lastRepeaterIndex].quantum_port++;
         }
 
 }

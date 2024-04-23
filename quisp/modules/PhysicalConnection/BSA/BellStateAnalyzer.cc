@@ -28,7 +28,7 @@ void BellStateAnalyzer::initialize() {
   indistinguishability_window = SimTime(par("indistinguishable_time_window").doubleValue() * 1000, SIMTIME_PS);
   collection_efficiency = par("collection_efficiency").doubleValue();
   backend = provider.getQuantumBackend();
-  validateProperties();
+  // validateProperties();
 }
 
 /**
