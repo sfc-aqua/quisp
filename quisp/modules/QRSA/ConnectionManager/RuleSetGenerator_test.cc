@@ -200,7 +200,7 @@ TEST_F(RuleSetGeneratorTest, Simple) {
 TEST_F(RuleSetGeneratorTest, PurificationRule) {
   // rule arguments
   int partner_addr = 1;
-  PurType purification_type = PurType::DOUBLE;
+  PurType purification_type = PurType::SINGLE_SELECTION_XZ_PURIFICATION;
 
   auto purification_rule = rsg->purifyRule(partner_addr, purification_type, 15);
   auto serialized = purification_rule->serialize_json();
@@ -228,7 +228,7 @@ TEST_F(RuleSetGeneratorTest, PurificationRule) {
    "action":{
       "type":"purification",
       "options":{
-         "purification_type":"DOUBLE",
+         "purification_type":"SINGLE_SELECTION_XZ_PURIFICATION",
          "shared_rule_tag": 15,
          "interface": [
            {"partner_address":1}

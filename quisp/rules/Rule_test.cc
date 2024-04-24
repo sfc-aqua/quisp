@@ -30,7 +30,7 @@ TEST(RuleTest, serialize_json_purification_rule) {
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 1);
   condition->addClause(std::move(enough_resource_clause));
   // purification_type, partner_addr, qnic_type, qnic_id
-  auto action = std::make_unique<Purification>(PurType::DSSA, 1, 2);
+  auto action = std::make_unique<Purification>(PurType::DOUBLE_SELECTION_X_PURIFICATION, 1, 2);
   // add condition and action
   purification->setCondition(std::move(condition));
   purification->setAction(std::move(action));
@@ -52,7 +52,7 @@ TEST(RuleTest, serialize_json_purification_rule) {
   EXPECT_EQ(clause_json["options"]["interface"]["partner_address"], 1);
   auto action_json = purification_json["action"];
   EXPECT_EQ(action_json["type"], "purification");
-  EXPECT_EQ(action_json["options"]["purification_type"], "DSSA");
+  EXPECT_EQ(action_json["options"]["purification_type"], "DOUBLE_SELECTION_X_PURIFICATION");
   EXPECT_EQ(action_json["options"]["interface"][0]["partner_address"], 1);
 }
 
@@ -127,7 +127,7 @@ TEST(RuleTest, deserialize_json_purification_rule) {
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 1);
   condition->addClause(std::move(enough_resource_clause));
   // purification_type, partner_addr, qnic_type, qnic_id
-  auto action = std::make_unique<Purification>(PurType::DSSA, 1, 3);
+  auto action = std::make_unique<Purification>(PurType::DOUBLE_SELECTION_X_PURIFICATION, 1, 3);
   // add condition and action
   purification->setCondition(std::move(condition));
   purification->setAction(std::move(action));

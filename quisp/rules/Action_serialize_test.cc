@@ -16,10 +16,10 @@ using quisp::modules::QNIC_type;
 TEST(ActionTest, Purification_serialize_json) {
   prepareSimulation();
   // purification_type, partner_addr, qnic_type, qnic_id
-  auto purification = std::make_unique<Purification>(PurType::DSDA, 3, 11);
+  auto purification = std::make_unique<Purification>(PurType::DOUBLE_SELECTION_XZ_PURIFICATION, 3, 11);
   json purification_json = purification->serialize_json();
   EXPECT_EQ(purification_json["type"], "purification");
-  EXPECT_EQ(purification_json["options"]["purification_type"], "DSDA");
+  EXPECT_EQ(purification_json["options"]["purification_type"], "DOUBLE_SELECTION_XZ_PURIFICATION");
   EXPECT_EQ(purification_json["options"]["interface"][0]["partner_address"], 3);
   EXPECT_EQ(purification_json["options"]["shared_rule_tag"], 11);
 }
@@ -29,7 +29,7 @@ TEST(ActionTest, Purification_deserialize_json) {
   auto serialized = json::parse(R"({
     "type": "purification",
     "options": {
-      "purification_type": "DOUBLE_INV",
+      "purification_type": "SINGLE_SELECTION_ZX_PURIFICATION",
       "interface": [
         {"partner_address": 1}
         ],
@@ -38,7 +38,7 @@ TEST(ActionTest, Purification_deserialize_json) {
     })");
   auto empty_purification = std::make_unique<Purification>(serialized);
   auto qnic_interface = empty_purification->qnic_interfaces.at(0);
-  EXPECT_EQ(empty_purification->purification_type, PurType::DOUBLE_INV);
+  EXPECT_EQ(empty_purification->purification_type, PurType::SINGLE_SELECTION_ZX_PURIFICATION);
   EXPECT_EQ(empty_purification->shared_rule_tag, 11);
   EXPECT_EQ(qnic_interface.partner_addr, 1);
 }
