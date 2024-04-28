@@ -197,3 +197,66 @@ plt.xlabel('Memory size (qubits)', fontsize=15)
 plt.ylabel('Bell pair generation rate (BP/s)', fontsize=15)
 plt.savefig("1kmdist_comparetolink.png", dpi=1000)
 plt.savefig("1kmdist_comparetolink.pdf", dpi=1000)
+
+simulation_simple = ["mxm_simple_adaptive", "MIM_simple", "MSMa_simple"]
+simulation_long = ["mxm_long_adaptive", "MIM_long", "MSMa_long"]
+dist = 0
+plt.clf()
+dist = 0
+for simulation in simulation_long:
+    xaxis = np.arange(len(x))
+    y = [results[simulation][1][0], results[simulation][2][0], results[simulation][4][0], results[simulation][8][0], results[simulation][16][0], results[simulation][32][0]]
+    err = [results[simulation][1][1], results[simulation][2][1], results[simulation][4][1], results[simulation][8][1], results[simulation][16][1], results[simulation][32][1]]
+    simulation = simulation.replace("_long_", " ")
+    simulation = simulation.replace("_long", " ")
+    if simulation == "mxm ":
+        simulation = "MSM and MIM"
+    if simulation == "mim ":
+        simulation = "MIM-only"
+    if simulation == "msm ":
+        simulation = "MSM-only"
+    if simulation == "mxm adaptive":
+        simulation = "MSM-adaptive and MIM"
+    if simulation == "msm adaptive":
+        simulation = "MSM-adaptive-only"
+    if simulation == "MSMa ":
+        simulation = "MSM-adaptive"
+    plt.bar(xaxis-0.3+dist, y, label=f'{simulation}', log=True, width=0.3)
+    plt.errorbar(xaxis-0.3+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
+    dist += 0.3
+plt.legend()
+plt.xticks(xaxis, x)
+plt.xlabel('Memory size (qubits)', fontsize=15)
+plt.ylabel('Bell pair generation rate (BP/s)', fontsize=15)
+plt.savefig("20kmdist_comparetolink_adaptive.png", dpi=1000)
+plt.savefig("20kmdist_comparetolink_adaptive.pdf", dpi=1000)
+
+plt.clf()
+dist = 0
+for simulation in simulation_simple:
+    xaxis = np.arange(len(x))
+    y = [results[simulation][1][0], results[simulation][2][0], results[simulation][4][0], results[simulation][8][0], results[simulation][16][0], results[simulation][32][0]]
+    err = [results[simulation][1][1], results[simulation][2][1], results[simulation][4][1], results[simulation][8][1], results[simulation][16][1], results[simulation][32][1]]
+    simulation = simulation.replace("_simple_", " ")
+    simulation = simulation.replace("_simple", " ")
+    if simulation == "mxm ":
+        simulation = "MSM and MIM"
+    if simulation == "mim ":
+        simulation = "MIM-only"
+    if simulation == "msm ":
+        simulation = "MSM-only"
+    if simulation == "mxm adaptive":
+        simulation = "MSM-adaptive and MIM"
+    if simulation == "msm adaptive":
+        simulation = "MSM-adaptive-only"
+    if simulation == "MSMa ":
+        simulation = "MSM-adaptive"
+    plt.bar(xaxis-0.3+dist, y, label=f'{simulation}', log=True, width=0.3)
+    plt.errorbar(xaxis-0.3+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
+    dist += 0.3
+plt.legend()
+plt.xticks(xaxis, x)
+plt.xlabel('Memory size (qubits)', fontsize=15)
+plt.ylabel('Bell pair generation rate (BP/s)', fontsize=15)
+plt.savefig("1kmdist_comparetolink_adaptive.png", dpi=1000)
+plt.savefig("1kmdist_comparetolink_adaptive.pdf", dpi=1000)
