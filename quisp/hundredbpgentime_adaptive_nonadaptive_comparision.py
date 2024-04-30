@@ -48,7 +48,7 @@ for i in range(8):
 
 xaxis = np.arange(len(x))
 plt.bar(xaxis-0.3, ymsm, label='MSM', log=True, width=0.3)
-plt.bar(xaxis, ymsma, label='Adaptive MSM', log=True, width=0.3)
+plt.bar(xaxis, ymsma, label='adaptive MSM', log=True, width=0.3)
 plt.bar(xaxis+0.3, ymim, label='MIM', log=True, width=0.3)
 plt.errorbar(xaxis-0.3, ymsm, yerr=emsm, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
 plt.errorbar(xaxis, ymsma, yerr=emsma, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
@@ -115,7 +115,7 @@ for i in range(8):
 xaxis = np.arange(len(x))
 plt.clf()
 plt.bar(xaxis-0.3, ymsm, label='MSM', log=True, width=0.3)
-plt.bar(xaxis, ymsma, label='Adaptive MSM', log=True, width=0.3)
+plt.bar(xaxis, ymsma, label='adaptive MSM', log=True, width=0.3)
 plt.bar(xaxis+0.3, ymim, label='MIM', log=True, width=0.3)
 plt.errorbar(xaxis-0.3, ymsm, yerr=emsm, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
 plt.errorbar(xaxis, ymsma, yerr=emsma, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')

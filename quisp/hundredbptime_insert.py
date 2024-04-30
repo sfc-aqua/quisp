@@ -40,8 +40,10 @@ def genplot(memory):
         xaxis = np.arange(len(locations))
         y = [result_simple[simulation]["homogeneous"][0], result_simple[simulation]["zero"][0], result_simple[simulation]["one"][0], result_simple[simulation]["two"][0], result_simple[simulation]["three"][0], result_simple[simulation]["four"][0]]
         err = [result_simple[simulation]["homogeneous"][1], result_simple[simulation]["zero"][1], result_simple[simulation]["one"][1], result_simple[simulation]["two"][1], result_simple[simulation]["three"][1], result_simple[simulation]["four"][1]]
-        simulation = simulation.replace("_simple_", " ")
-        simulation = simulation.replace("_simple", " ")
+        if(simulation == "simple"):
+            simulation = "non-adaptive MSM"
+        else:
+            simulation = "adaptive MSM"
         print(y)
         plt.bar(xaxis-0.2+dist, y, label=f'{simulation}', log=False, width=0.4)
         plt.errorbar(xaxis-0.2+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
@@ -50,8 +52,8 @@ def genplot(memory):
     plt.xticks(xaxis, locations)
     plt.xlabel('Replaced link', fontsize=15)
     plt.ylabel('Bell pair generation rate (BP/s)', fontsize=15)
-    plt.savefig(f"1kmdist_inserted_{memory}mem.png", dpi=1000)
-    plt.savefig(f"1kmdist_inserted_{memory}mem.pdf", dpi=1000)
+    plt.savefig(f"1kmdist_inserted_{memory}mem.png", dpi=1000, bbox_inches='tight')
+    plt.savefig(f"1kmdist_inserted_{memory}mem.pdf", dpi=1000, bbox_inches='tight')
     plt.clf()
     result_long = {"long": {"homogeneous": {}, "zero": {}, "one": {}, "two": {}, "three": {}, "four": {} }, "long_adaptive": {"homogeneous": {}, "zero": {}, "one": {}, "two": {}, "three": {}, "four": {} }}
     dist = 0
@@ -81,8 +83,10 @@ def genplot(memory):
         xaxis = np.arange(len(locations))
         y = [result_long[simulation]["homogeneous"][0], result_long[simulation]["zero"][0], result_long[simulation]["one"][0], result_long[simulation]["two"][0], result_long[simulation]["three"][0], result_long[simulation]["four"][0]]
         err = [result_long[simulation]["homogeneous"][1], result_long[simulation]["zero"][1], result_long[simulation]["one"][1], result_long[simulation]["two"][1], result_long[simulation]["three"][1], result_long[simulation]["four"][1]]
-        simulation = simulation.replace("_long_", " ")
-        simulation = simulation.replace("_long", " ")
+        if(simulation == "long"):
+            simulation = "non-adaptive MSM"
+        else:
+            simulation = "adaptive MSM"
         plt.bar(xaxis-0.2+dist, y, label=f'{simulation}', log=False, width=0.4)
         plt.errorbar(xaxis-0.2+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
         dist += 0.4
@@ -90,7 +94,7 @@ def genplot(memory):
     plt.xticks(xaxis, locations)
     plt.xlabel('Replaced link', fontsize=15)
     plt.ylabel('Bell pair generation rate (BP/s)', fontsize=15)
-    plt.savefig(f"20kmdist_inserted_{memory}mem.png", dpi=1000)
-    plt.savefig(f"20kmdist_inserted_{memory}mem.pdf", dpi=1000)
+    plt.savefig(f"20kmdist_inserted_{memory}mem.png", dpi=1000, bbox_inches='tight')
+    plt.savefig(f"20kmdist_inserted_{memory}mem.pdf", dpi=1000, bbox_inches='tight')
 for (memory) in ["4", "32"]:
     genplot(memory)

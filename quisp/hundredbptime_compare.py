@@ -135,7 +135,7 @@ for simulation in simulations:
             results[simulation][32] = [np.array(results[simulation][32]).mean(), np.array(results[simulation][32]).std()]
 
 x = [1, 2, 4, 8, 16, 32]
-simulation_simple = ["mxm_simple", "MIM_simple", "MSM_simple"]
+simulation_simple = ["mxm_simple","mxm_simple_adaptive", "MIM_simple", "MSM_simple"]
 simulation_long = ["mxm_long", "MIM_long", "MSM_long"]
 dist = 0
 plt.clf()
@@ -153,11 +153,11 @@ for simulation in simulation_long:
     if simulation == "msm ":
         simulation = "MSM-only"
     if simulation == "mxm adaptive":
-        simulation = "MSM-adaptive and MIM"
+        simulation = "adaptive MSM and MIM"
     if simulation == "msm adaptive":
-        simulation = "MSM-adaptive-only"
+        simulation = "adaptive MSM-only"
     if simulation == "MSMa ":
-        simulation = "MSM-adaptive"
+        simulation = "adaptive MSM"
     plt.bar(xaxis-0.3+dist, y, label=f'{simulation}', log=True, width=0.3)
     plt.errorbar(xaxis-0.3+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
     dist += 0.3
@@ -183,11 +183,11 @@ for simulation in simulation_simple:
     if simulation == "msm ":
         simulation = "MSM-only"
     if simulation == "mxm adaptive":
-        simulation = "MSM-adaptive and MIM"
+        simulation = "adaptiveMSM and MIM"
     if simulation == "msm adaptive":
-        simulation = "MSM-adaptive-only"
+        simulation = "adaptive MSM-only"
     if simulation == "MSMa ":
-        simulation = "MSM-adaptive"
+        simulation = "adaptive MSM"
     plt.bar(xaxis-0.3+dist, y, label=f'{simulation}', log=True, width=0.3)
     plt.errorbar(xaxis-0.3+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
     dist += 0.3
@@ -216,11 +216,11 @@ for simulation in simulation_long:
     if simulation == "msm ":
         simulation = "MSM-only"
     if simulation == "mxm adaptive":
-        simulation = "MSM-adaptive and MIM"
+        simulation = "adaptive MSM and MIM"
     if simulation == "msm adaptive":
-        simulation = "MSM-adaptive-only"
+        simulation = "adaptive MSM-only"
     if simulation == "MSMa ":
-        simulation = "MSM-adaptive"
+        simulation = "adaptive MSM"
     plt.bar(xaxis-0.3+dist, y, label=f'{simulation}', log=True, width=0.3)
     plt.errorbar(xaxis-0.3+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
     dist += 0.3
@@ -246,9 +246,9 @@ for simulation in simulation_simple:
     if simulation == "msm ":
         simulation = "MSM-only"
     if simulation == "mxm adaptive":
-        simulation = "MSM-adaptive and MIM"
+        simulation = "adaptive MSM and MIM"
     if simulation == "msm adaptive":
-        simulation = "MSM-adaptive-only"
+        simulation = "adaptive MSM-only"
     if simulation == "MSMa ":
         simulation = "MSM-adaptive"
     plt.bar(xaxis-0.3+dist, y, label=f'{simulation}', log=True, width=0.3)

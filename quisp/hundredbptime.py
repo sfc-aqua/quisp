@@ -155,11 +155,11 @@ for simulation in simulation_long:
     if simulation == "msm ":
         simulation = "MSM-only"
     if simulation == "mxm adaptive":
-        simulation = "MSM-adaptive and MIM"
+        simulation = "adaptive MSM and MIM"
     if simulation == "msm adaptive":
-        simulation = "MSM-adaptive-only"
+        simulation = "adaptive MSM-only"
     if simulation == "MSMa ":
-        simulation = "MSM-adaptive"
+        simulation = "adaptive MSM"
     plt.bar(xaxis-0.3+dist, y, label=f'{simulation}', log=True, width=0.15)
     plt.errorbar(xaxis-0.3+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
     dist += 0.15
@@ -185,11 +185,11 @@ for simulation in simulation_simple:
     if simulation == "msm ":
         simulation = "MSM-only"
     if simulation == "mxm adaptive":
-        simulation = "MSM-adaptive and MIM"
+        simulation = "adaptive MSM and MIM"
     if simulation == "msm adaptive":
-        simulation = "MSM-adaptive-only"
+        simulation = "adaptive MSM-only"
     if simulation == "MSMa ":
-        simulation = "MSM-adaptive"
+        simulation = "adaptive MSM"
     plt.bar(xaxis-0.3+dist, y, label=f'{simulation}', log=True, width=0.15)
     plt.errorbar(xaxis-0.3+dist, y, yerr=err, fmt='.', capsize=3,markersize=6,ecolor='black',elinewidth=0.5,markeredgecolor = 'black', color='w')
     dist += 0.15
