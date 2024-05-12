@@ -855,8 +855,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                                                                     partner_address, qnic_type, qnic_index, shared_tag++));
         }
       }
-    } else if (purification_type == "R1_Double_X-R2_Double_ZX--R1_Single_X-R2_Single_Z") {  // Predefined purification method
-      /// # Purification_type "R1_Double_X-R2_Double_ZX--R1_Single_X-R2_Single_Z": #
+    } else if (purification_type == "CR1_Double_X-CR2_Double_ZX--R1_Single_X-R2_Single_Z") {  // Predefined purification method
+      /// # Purification_type "CR1_Double_X-CR2_Double_ZX--R1_Single_X-R2_Single_Z": #
       /// - name: Switching (B)
       /// - rounds: n
       /// - input Bell pairs per round: 3 in first two rounds, then 2
