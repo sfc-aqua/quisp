@@ -61,7 +61,8 @@ void HardwareMonitor::initialize(int stage) {
   num_purification = par("initial_purification");
   X_Purification = par("x_purification");
   Z_Purification = par("z_purification");
-  purification_type = par("purification_type");
+  purification_type = par("purification_type").str();
+  purification_type = purification_type.substr(1, purification_type.length() - 2);
   num_measure = par("num_measure");
   my_address = provider.getNodeAddr();
 
@@ -562,7 +563,7 @@ work proceeds, a resource gets promoted from rule to rule (on
 purification success), so if you ask for three rounds of purification,
 it will emit three purification rules.
 
-For example, with 2002, the first instance of "first stage X
+For example, with "R1_Single_X-R1_Single_Z", the first instance of "first stage X
 purification" (Rule0) includes allocating the resources from the base
 pair pool, executing the purification circuit (including measurement),
 exchanging the result messages, comparing and either promoting or
@@ -611,8 +612,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   std::vector<int> partners = {partner_address};
 
   if (num_purification > 0) {
-    if (purification_type == 2002) {  // Performs both X and Z purification for each n.
-      /// # Purification_type 2002: #
+    if (purification_type == "R1_Single_X-R1_Single_Z") {  // Performs both X and Z purification for each n.
+      /// # Purification_type "R1_Single_X-R1_Single_Z": #
       /// - name: Ss-Sp / perfect binary tree, even rounds
       /// - rounds: 2n
       /// - input Bell pairs per round: 2
@@ -625,7 +626,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// to switch basis, creating alternating
       /// rounds of X and Z purification.
       ///
-      /// The only difference between 2002 and 3003
+      /// The only difference between "R1_Single_X-R1_Single_Z" and "R1_Single_X-R2_Single_Z"
       /// is the semantics of initial_purification.
       /// Here, each iteration results in two rules,
       /// guaranteeing an even number of rounds.
@@ -650,8 +651,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
               constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_SELECTION_Z_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
         }
       }
-    } else if (purification_type == 3003) {
-      /// # Purification_type 3003: #
+    } else if (purification_type == "R1_Single_X-R2_Single_Z") {
+      /// # Purification_type "R1_Single_X-R2_Single_Z": #
       /// - name: Ss-Sp / perfect binary tree, odd or even rounds
       /// - rounds: n
       /// - input Bell pairs per round: 2
@@ -664,7 +665,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// to switch basis, creating alternating
       /// rounds of X and Z purification.
       ///
-      /// The only difference between 2002 and 3003
+      /// The only difference between "R1_Single_X-R1_Single_Z" and "R1_Single_X-R2_Single_Z"
       /// is the semantics of initial_purification.
       /// Here, each iteration results in one rule,
       /// X for even-numbered rounds (counting from zero),
@@ -688,8 +689,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
               constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_SELECTION_Z_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
         }
       }
-    } else if (purification_type == 1001) {
-      /// # Purification_type 1001: #
+    } else if (purification_type == "R1_Single_XZ") {
+      /// # Purification_type "R1_Single_XZ": #
       /// - name: Ss-Dp XZ Purification
       /// - rounds: n
       /// - input Bell pairs per round: 3
@@ -702,7 +703,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// CNOT(A,C), MEAS(C), CNOT(E,A), MEAS(E)
       /// then select after comparing outcomes.
       /// Note that bases are not flipped between rounds.
-      /// Similar to 1221.
+      /// Similar to "R1_Single_XZ-R2_Single_ZX".
       /// ![](../img/PhysRevA.100.052320-Fig12.png)
       for (int i = 0; i < num_purification; i++) {
         rule_name = "Double purification with: " + std::to_string(partner_address);
@@ -711,8 +712,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         tomography_RuleSet->addRule(
             constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_SELECTION_XZ_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
       }
-    } else if (purification_type == 1221) {
-      /// # Purification_type 1221: #
+    } else if (purification_type == "R1_Single_XZ-R2_Single_ZX") {
+      /// # Purification_type "R1_Single_XZ-R2_Single_ZX": #
       /// - name: Ss-Dp XZ, ZX alternating
       /// - rounds: n
       /// - input Bell pairs per round: 3
@@ -721,7 +722,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// of CNOTs reversed in alternating rounds
       /// - scheduling: symmetric tree
       /// ## description: ##
-      /// Almost the same as 1001, but first round
+      /// Almost the same as "R1_Single_XZ", but first round
       /// is XZ, second round is ZX.  Results in better alternating
       /// error suppression, but still not great.
       /// ![](../img/PhysRevA.100.052320-Fig12.png)
@@ -741,8 +742,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
               constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_SELECTION_ZX_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
         }
       }
-    } else if (purification_type == 1011) {
-      /// # Purification_type 1011: #
+    } else if (purification_type == "R1_Double_X") {
+      /// # Purification_type "R1_Double_X": #
       /// - name: Ds-Sp: Fujii-san's Double selection purification
       /// - rounds: n
       /// - input Bell pairs per round: 3
@@ -750,7 +751,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// - circuit: Fig. 13 in arXiv:1904.08605
       /// - scheduling: symmetric tree
       /// ## description: ##
-      /// Similar to 1001 and 1221 except that the control and target
+      /// Similar to "R1_Single_XZ" and "R1_Single_XZ-R2_Single_ZX" except that the control and target
       /// of the first CNOT are flipped, corresponding to Fujii-san's
       /// paper (PRA 80, 042308).
       /// Every round is identical.
@@ -763,8 +764,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         tomography_RuleSet->addRule(
             constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_SELECTION_X_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
       }
-    } else if (purification_type == 1021) {  // Fujii-san's Double selection purification
-      /// # Purification_type 1021: #
+    } else if (purification_type == "R1_Double_X-R2_Double_Z") {  // Fujii-san's Double selection purification
+      /// # Purification_type "R1_Double_X-R2_Double_Z": #
       /// - name: Ds-Sp: Fujii-san's Double selection purification (alternating)
       /// - rounds: n
       /// - input Bell pairs per round: 3
@@ -773,7 +774,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// the order of the CNOTs alternates between rounds
       /// - scheduling: symmetric tree
       /// ## description: ##
-      /// Similar to 1011, almost corresponding to Fujii-san's paper (PRA 80,
+      /// Similar to "R1_Double_X", almost corresponding to Fujii-san's paper (PRA 80,
       /// 042308). Note there is no basis change between rounds, but that the
       /// first round is XZ, second is ZX.
       /// ![](../img/arxiv.1904.08605-Fig13.png)
@@ -793,8 +794,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
               constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_SELECTION_Z_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
         }
       }
-    } else if (purification_type == 1031) {
-      /// # Purification_type 1031: #
+    } else if (purification_type == "R1_Double_XZ-R2_Double_ZX") {
+      /// # Purification_type "R1_Double_XZ-R2_Double_ZX": #
       /// - name: Ds-Dp: full double selection purification (alternating)
       /// - rounds: n
       /// - input Bell pairs per round: 5
@@ -803,7 +804,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// the order of the CNOTs alternates between rounds
       /// - scheduling: symmetric tree
       /// ## description: ##
-      /// A combination of 1001 and 1011 (Figs. 12 & 13).  Resource requirements
+      /// A combination of "R1_Single_XZ" and "R1_Double_X" (Figs. 12 & 13).  Resource requirements
       /// are high; two rounds of this requires 25 Bell pairs.  With a low base
       /// Bell pair generation rate and realistic memory decoherence, this will
       /// be impractical.
@@ -815,17 +816,17 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           rule = constructPurifyRule(rule_name, PurType::DOUBLE_SELECTION_XZ_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag);
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(
-              constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_SELECTION_X_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
+              constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_SELECTION_XZ_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
         } else {
           rule_name = "Double selection Dual action Inverse with: " + std::to_string(partner_address);
           rule = constructPurifyRule(rule_name, PurType::DOUBLE_SELECTION_ZX_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag);
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(
-              constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_SELECTION_Z_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
+              constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_SELECTION_ZX_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
         }
       }
-    } else if (purification_type == 1061) {
-      /// # Purification_type 1061: #
+    } else if (purification_type == "R1_Double_X_Single_Z-R2_Double_Z_Single_X") {
+      /// # Purification_type "R1_Double_X_Single_Z-R2_Double_Z_Single_X": #
       /// - name: half double selection, half single selection
       /// - rounds: n
       /// - input Bell pairs per round: 4
@@ -854,8 +855,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                                                                     partner_address, qnic_type, qnic_index, shared_tag++));
         }
       }
-    } else if (purification_type == 5555) {  // Predefined purification method
-      /// # Purification_type 5555: #
+    } else if (purification_type == "R1_Double_X-R2_Double_ZX--R1_Single_X-R2_Single_Z") {  // Predefined purification method
+      /// # Purification_type "R1_Double_X-R2_Double_ZX--R1_Single_X-R2_Single_Z": #
       /// - name: Switching (B)
       /// - rounds: n
       /// - input Bell pairs per round: 3 in first two rounds, then 2
@@ -909,8 +910,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
               constructCorrelationCheckRule("purification correlation check", PurType::SINGLE_SELECTION_Z_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
         }
       }
-    } else if (purification_type == 5556) {  // Predefined purification method
-      /// # Purification_type 5556: #
+    } else if (purification_type == "CR1_Double_X-R1_Single_Z-R2_Single_X") {  // Predefined purification method
+      /// # Purification_type "CR1_Double_X-R1_Single_Z-R2_Single_X": #
       /// - name: Switching (A)
       /// - rounds: n
       /// - input Bell pairs per round: 3 in first round, then 2
