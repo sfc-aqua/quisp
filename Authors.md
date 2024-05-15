@@ -9,6 +9,11 @@
 * Sara Metwalli
 * Michal Hadjusek
 * Makoto Nakai
+* Paolo Fittipaldi
+
+## Space Network Supervisor
+
+* Frédéric Grosshans
 
 ## Senior Advisors:
 
