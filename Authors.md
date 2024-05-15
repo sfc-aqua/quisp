@@ -60,6 +60,6 @@ quantum networks over the last decade-plus:
 Angela Sara Cacciapuoti, Marcello Caleffi, Byung-Soo Choi, Simon
 Devitt, Hiroshi Esaki, Austin Fowler, Andrew Greentree, Lajos Hanzo,
 Charles D. Hill, Lloyd Hollenberg, Dominic Horsman, Kaori Ishizaki,
-Liang Jiang, Sebastein G.R. Louis, Misha Lukin, Jun Murai, Bill Munro,
+Liang Jiang, Sebastien G.R. Louis, Misha Lukin, Jun Murai, Bill Munro,
 Kae Nemoto, Takafumi Oka, Poramet Pathumsoot, Ashley Stephens, Sujin
 Suwanna, Jake Taylor, Joe Touch, David S. Wang.
