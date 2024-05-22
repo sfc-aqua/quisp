@@ -17,7 +17,7 @@ using omnetpp::simtime_t;
  */
 class TempGate : public omnetpp::cGate {
  public:
-  TempGate();
+  explicit TempGate(cModule *mod);
 
  protected:
   bool deliver(cMessage *msg, const omnetpp::SendOptions &options, simtime_t at) override;
@@ -34,7 +34,7 @@ class TestGate : public omnetpp::cGate {
   void quiet_connectTo(cGate *target);  // To connect to a gate skipping all the listeners checks, which create problems if a full-fledged sim environment is not up.
 
  protected:
-  TempGate temp_gate;
+  TempGate *temp_gate;
   bool deliver(cMessage *msg, const omnetpp::SendOptions &options, simtime_t at) override;
 };
 

@@ -34,7 +34,6 @@ class CSVParserTest : public ::testing::Test {
 };
 
 TEST_F(CSVParserTest, lowerBound) {
-  printf("ciao");
   ASSERT_DOUBLE_EQ(csv_parser->getLowestDatapoint(),200);
   ASSERT_DOUBLE_EQ(csv_parser->getLowestDatavalue(),100000);
 }
