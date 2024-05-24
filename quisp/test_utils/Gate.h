@@ -17,7 +17,7 @@ using omnetpp::simtime_t;
  */
 class TempGate : public omnetpp::cGate {
  public:
-  explicit TempGate(cModule *mod);
+  TempGate();
 
  protected:
   bool deliver(cMessage *msg, const omnetpp::SendOptions &options, simtime_t at) override;

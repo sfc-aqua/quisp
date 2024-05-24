@@ -7,11 +7,7 @@ namespace gate {
 
 using omnetpp::cSimulation;
 
-TempGate::TempGate(cModule *mod) {
-  desc = new omnetpp::cGate::Desc;
-  desc->name = new omnetpp::cGate::Name{"TEMP_GATE", omnetpp::cGate::Type::OUTPUT};
-  desc->owner = mod;
-  }
+TempGate::TempGate() {}
 
 bool TempGate::deliver(cMessage *msg, const omnetpp::SendOptions &options, simtime_t at) { return true; }
 
@@ -21,7 +17,7 @@ TestGate::TestGate(cModule *mod, const char *name) {
   desc->name = new omnetpp::cGate::Name{name, omnetpp::cGate::Type::OUTPUT};
   desc->owner = mod;
   // output gate needs nextGate to be filled. actually temp_gate do nothing.
-  temp_gate = new TempGate(mod);
+  temp_gate = new TempGate();
   nextGate = temp_gate;
   desc->setOutputGate(this);
 }
