@@ -19,13 +19,13 @@ channel FSChannel extends DatarateChannel {
 
 channel FiberChannel extends DatarateChannel {
 	double cost = default(1);
-    double distance @unit(m) = default(20km);
-    double speed_of_light_in_fiber @unit(m) = default(208189.206944km);
+    double distance @unit(km) = default(20km);
+    double speed_of_light_in_fiber @unit(km) = default(208189.206944km);
     delay = this.distance / speed_of_light_in_fiber * 1s;
-    datarate = uniform(1kbps, 100kbps);
-}
+    }
 
 channel ClassicalChannel extends FiberChannel {
+    datarate = uniform(1kbps, 100kbps);
 }
 
 channel QuantumChannel extends FiberChannel
