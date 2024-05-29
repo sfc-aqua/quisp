@@ -29,7 +29,8 @@ public:
 private:
     std::ifstream file;
     char* name;
-    std::map<int,float> property;
+    double last_polled_value;
+    std::map<double,double> property;
 
 };
 
