@@ -23,23 +23,29 @@ CSVParser::CSVParser(const string filename) {
 }
 
 double CSVParser::getPropertyAtTime(const double time) {
-    auto property_value = property.find(time);
-    if (property_value == property.end()) {
-      // not found, calculate
-        double lowWeight = 0,highWeight = 0;
-        double lowKey = 0, highKey = 0;
-        lowKey = (--property.upper_bound(time))->first;
-        highKey = property.upper_bound(time)->first;
+  if (time < getLowestDatapoint()) return getLowestDatavalue();
+  if (time > getHighestDatapoint()) return getHighestDatavalue();
 
-        lowWeight = simTime().dbl() - lowKey;
-        highWeight = highKey - simTime().dbl();
-        last_polled_value = (lowWeight*property[lowKey] + highWeight*property[highKey])/(lowWeight+highWeight);
+  // These two first lines are there just to provide mathematically sound results.
+  // They should never be used in actual simulation, as they are NOT in any way
+  // guaranteed to be accurate.
+
+  if (time != last_polled_time) {
+    last_polled_time = time;
+    auto u_b = property.upper_bound(time);
+    if (u_b == property.end()) {
+      last_polled_value = (--u_b)->second;
+    } else if (u_b == property.begin()) {
+      last_polled_value = u_b->second;
     } else {
-      // found
-    last_polled_value = property_value->second;
+      auto l_b = u_b;
+      --l_b;
+      const double delta = (time - l_b->first) / (u_b->first - l_b->first);
+      last_polled_value = delta * u_b->second + (1 - delta) * l_b->second;
     }
-      return last_polled_value;
-    }
+  }
+  return last_polled_value;
+}
 
 
 int CSVParser::getLowestDatapoint() {
