@@ -23,13 +23,16 @@ public:
     CSVParser(const string filename);
     virtual ~CSVParser();
     double getPropertyAtTime(const double time);
-    int getLowestDatapoint();
-    int getHighestDatapoint();
+    double getLowestDatapoint();
+    double getHighestDatapoint();
+    double getLowestDatavalue();
+    double getHighestDatavalue();
     char* getName;
 private:
     std::ifstream file;
     char* name;
-    double last_polled_value;
+    double last_polled_time = -1;
+    double last_polled_value = -1;
     std::map<double,double> property;
 
 };

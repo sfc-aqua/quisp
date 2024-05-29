@@ -48,13 +48,17 @@ double CSVParser::getPropertyAtTime(const double time) {
 }
 
 
-int CSVParser::getLowestDatapoint() {
+double CSVParser::getLowestDatapoint() {
     return property.begin()->first;
 }
 
-int CSVParser::getHighestDatapoint() {
+double CSVParser::getHighestDatapoint() {
     return property.rbegin()->first;
 }
+
+double CSVParser::getLowestDatavalue() { return property.begin()->second; }
+
+double CSVParser::getHighestDatavalue() { return property.rbegin()->second; }
 
 
 
