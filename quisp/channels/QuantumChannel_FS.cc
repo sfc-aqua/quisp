@@ -4,11 +4,14 @@
  */
 #include <omnetpp.h>
 #include <stdexcept>
+#include "PhotonicQubit_m.h"
 #include <math.h>
 #include "FSChannel.h"
 
 
 using namespace omnetpp;
+using namespace quisp::messages;
+
 
 namespace channels {
 
@@ -59,8 +62,13 @@ void QuantumChannel_FS::initialize() {
 }
 
 cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
+  PhotonicQubit *q = dynamic_cast<PhotonicQubit *>(msg);
+  if (q == nullptr) {
+    throw new cRuntimeError("something other than photonic qubit is sent through quantum channel");
+  }
 
-  return {!getLOS(), getDelay(), 0};
+  if (!getLOS()) q->setLost(true);
+  return {false,getDelay(),0};
   }
 
 void QuantumChannel_FS::validateParameters() {
