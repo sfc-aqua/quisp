@@ -1,4 +1,5 @@
 package channels;
+@namespace(quisp::channels);
 
 import ned.DatarateChannel;
 import ned.DelayChannel;
@@ -9,7 +10,6 @@ channel FiberChannel extends DatarateChannel {
     double distance @unit(km) = default(20km);
     double speed_of_light_in_fiber @unit(km) = default(208189.206944km);
     delay = this.distance / speed_of_light_in_fiber * 1s;
-    datarate = uniform(1kbps, 100kbps);
 }
 
 channel FSChannel extends DatarateChannel {
@@ -23,6 +23,7 @@ channel FSChannel extends DatarateChannel {
 
 channel ClassicalChannel extends FiberChannel
 {
+    datarate = uniform(1kbps, 100kbps);
 
 }
 
