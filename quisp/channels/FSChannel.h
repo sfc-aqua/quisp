@@ -9,6 +9,11 @@
 #define CHANNELS_FSCHANNEL_H_
 
 #include <omnetpp.h>
+#include <stdexcept>
+#include <unsupported/Eigen/MatrixFunctions>
+#include "PhotonicQubit_m.h"
+#include "omnetpp/cexception.h"
+#include <cmath>
 
 using namespace omnetpp;
 
