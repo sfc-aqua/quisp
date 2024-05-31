@@ -23,20 +23,22 @@ def genplot(memory):
                 if line[0] == f"msm_ten_nodes_mim_{location}_{simulation}":
                     print(line[0])
                     tmp = [100/(float(x)-10) for x in line[1:]]
-                    # For some cases (especially when the link is asymmetric) the time to generate 100 BP are different between the two nodes. We use the longer time, since that is when we can confirm to have a bell pair among the link.
-                    # Initialize variables to store principal components and current maximum
-                    tmp_step1 = []
-                    max_value = tmp[0]
-                    # Iterate through the array to find principal components
-                    for value in tmp[1:]:
-                        if value > max_value:
-                            max_value = value
+                    print(tmp)
+                    ans = []
+                    cnt = 0
+                    tmp_val = tmp[0]
+                    for value in tmp:
+                        if cnt == 0:
+                            tmp_val = value
+                            cnt += 1
                         else:
-                            tmp_step1.append(max_value)
-                            max_value = value
-                    # Add the last maximum value as the principal component
-                    tmp_step1.append(max_value)
-                    result_simple[simulation][location] = [np.array(tmp_step1).mean(), np.array(tmp_step1).std()]
+                            if value < tmp_val:
+                                ans.append(value)
+                            else:
+                                ans.append(tmp_val)
+                            cnt = 0
+                    print(ans)
+                    result_simple[simulation][location] = [np.array(ans).mean(), np.array(ans).std()]
         xaxis = np.arange(len(locations))
         y = [result_simple[simulation]["homogeneous"][0], result_simple[simulation]["zero"][0], result_simple[simulation]["one"][0], result_simple[simulation]["two"][0], result_simple[simulation]["three"][0], result_simple[simulation]["four"][0]]
         err = [result_simple[simulation]["homogeneous"][1], result_simple[simulation]["zero"][1], result_simple[simulation]["one"][1], result_simple[simulation]["two"][1], result_simple[simulation]["three"][1], result_simple[simulation]["four"][1]]
@@ -65,21 +67,22 @@ def genplot(memory):
                 if line[0] == f"msm_ten_nodes_mim_{location}_{simulation}":
                     print(line[0])
                     tmp = [100/(float(x)-10) for x in line[1:]]
-                    # For some cases (especially when the link is asymmetric) the time to generate 100 BP are different between the two nodes. We use the longer time, since that is when we can confirm to have a bell pair among the link.
-                    
-                    # Initialize variables to store principal components and current maximum
-                    tmp_step1 = []
-                    max_value = tmp[0]
-                    # Iterate through the array to find principal components
-                    for value in tmp[1:]:
-                        if value > max_value:
-                            max_value = value
+                    print(tmp)
+                    ans = []
+                    cnt = 0
+                    tmp_val = tmp[0]
+                    for value in tmp:
+                        if cnt == 0:
+                            tmp_val = value
+                            cnt += 1
                         else:
-                            tmp_step1.append(max_value)
-                            max_value = value
-                    # Add the last maximum value as the principal component
-                    tmp_step1.append(max_value)
-                    result_long[simulation][location] = [np.array(tmp_step1).mean(), np.array(tmp_step1).std()]
+                            if value < tmp_val:
+                                ans.append(value)
+                            else:
+                                ans.append(tmp_val)
+                            cnt = 0
+                    print(ans)
+                    result_long[simulation][location] = [np.array(ans).mean(), np.array(ans).std()]
         xaxis = np.arange(len(locations))
         y = [result_long[simulation]["homogeneous"][0], result_long[simulation]["zero"][0], result_long[simulation]["one"][0], result_long[simulation]["two"][0], result_long[simulation]["three"][0], result_long[simulation]["four"][0]]
         err = [result_long[simulation]["homogeneous"][1], result_long[simulation]["zero"][1], result_long[simulation]["one"][1], result_long[simulation]["two"][1], result_long[simulation]["three"][1], result_long[simulation]["four"][1]]
