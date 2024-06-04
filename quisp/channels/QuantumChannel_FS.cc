@@ -7,6 +7,7 @@
 #include "PhotonicQubit_m.h"
 #include <math.h>
 #include "FSChannel.h"
+#include <unsupported/Eigen/MatrixFunctions>
 
 
 using namespace omnetpp;
@@ -67,7 +68,7 @@ cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOpti
     throw new cRuntimeError("something other than photonic qubit is sent through quantum channel");
   }
 
-  if (!getLOS()) q->setLost(true);
+  if (!checkLOS()) q->setLost(true);
   return {false,getDelay(),0};
   }
 

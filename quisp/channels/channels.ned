@@ -13,10 +13,12 @@ channel FiberChannel extends DatarateChannel {
 }
 
 channel FSChannel extends DatarateChannel {
-    @class(channels::FSChannel);
+    @class(FSChannel);
     double cost = default(1);
-    double distance @unit(m) = default(20km);
-    double speed_of_light_in_FS @unit(m) = default(299792.458km);
+    double distance @unit(km) = default(20km) @mutable;
+    string distance_CSV;
+    double speed_of_light_in_FS @unit(km) = default(299792.458km);
+    double orbital_period @unit(h) = default(24h);
     delay = this.distance / speed_of_light_in_FS * 1s;
     datarate = uniform(1kbps, 100kbps);
 }
