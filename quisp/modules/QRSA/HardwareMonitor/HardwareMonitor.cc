@@ -553,7 +553,6 @@ void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double lin
               << this_node->getFullName() << "<--> QuantumChannel{ cost = " << link_cost << "; distance = " << dis << "km; fidelity = " << fidelity
               << "; bellpair_per_sec = " << bellpair_per_sec << ";} <-->" << neighbor_node->getFullName() << "\n";
   }
-std::cout<<"Purification Type: "<<purification_type;
 }
 
 /**
