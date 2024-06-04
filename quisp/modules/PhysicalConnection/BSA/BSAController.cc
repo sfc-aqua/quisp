@@ -37,10 +37,6 @@ void BSAController::initialize() {
     address = getParentModule()->par("address").intValue();
     left_qnic = getExternalQNICInfoFromPort(0);
   }
-  time_interval_between_photons = SimTime(1, SIMTIME_S) / SimTime(getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue(), SIMTIME_S);
-  simtime_t first_notification_timer = SimTime(par("initial_notification_timing_buffer").doubleValue());
-  right_qnic = getExternalQNICInfoFromPort(1);
-  offset_time_for_first_photon = calculateOffsetTimeFromDistance();
   is_active = strcmp(par("mode").stringValue(), "active") == 0;
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
@@ -57,7 +53,6 @@ void BSAController::initialize() {
 
 void BSAController::handleMessage(cMessage *msg) {
   if (msg == time_out_message) {
-    //P: For satellite links, we need to recalculate this for every pulse train due to variable channel length!
     send(generateFirstNotificationTiming(true), "to_router");
     send(generateFirstNotificationTiming(false), "to_router");
     bsa->resetState();
