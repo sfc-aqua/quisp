@@ -52,7 +52,6 @@ class HardwareMonitor : public IHardwareMonitor {
   int num_purification = 0;
   bool X_Purification = false;
   bool Z_Purification = false;
-  // int purification_type = -1;
   int num_measure;
   int num_end_nodes;
 
