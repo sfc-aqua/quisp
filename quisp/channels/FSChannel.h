@@ -5,8 +5,7 @@
  *      Author: paolo
  */
 
-#ifndef CHANNELS_FSCHANNEL_H_
-#define CHANNELS_FSCHANNEL_H_
+#pragma once
 
 #include <omnetpp.h>
 #include <stdexcept>
@@ -29,6 +28,7 @@ class FSChannel : public cDatarateChannel {
     FSChannel();
     void set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff);
     bool checkLOS();
+    double getDistanceAtTime(const simtime_t time);
     SimTime getNext_check_time();
 private:
     ORBITAL_PARAMETERS op;
@@ -46,4 +46,3 @@ private:
 
 
 
-#endif /* CHANNELS_FSCHANNEL_H_ */
