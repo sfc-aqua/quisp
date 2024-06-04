@@ -52,6 +52,9 @@ bool FSChannel::checkLOS() {
     return false;
 }
 
+double FSChannel::getDistanceAtTime(const simtime_t time) {
+    return dist_par->getPropertyAtTime(time.dbl());
+}
 
 
 /** \fn getNext_check_time()
