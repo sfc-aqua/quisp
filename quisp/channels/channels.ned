@@ -17,9 +17,10 @@ channel FSChannel extends DatarateChannel {
     double cost = default(1);
     double distance @unit(km) = default(20km) @mutable;
     string distance_CSV;
-    double speed_of_light_in_FS @unit(km) = default(299792.458km);
-    double orbital_period @unit(h) = default(24h);
-    delay = this.distance / speed_of_light_in_FS * 1s;
+    double speed_of_light_in_FS @unit(m) = default(299792.458km);
+    double orbital_period @unit(s) = default(24h);
+    bool CSV_varies_delay = default(false);
+    delay = this.distance / speed_of_light_in_FS * 1s @mutable;
     datarate = uniform(1kbps, 100kbps);
 }
 
@@ -49,10 +50,11 @@ channel QuantumChannel_FS extends FSChannel
     double channel_x_error_rate = default(0);
     double channel_z_error_rate = default(0);
     double channel_y_error_rate = default(0);
-    double wavelength @unit(m) = default(810nm);
+    double wavelength @unit(m) = default(1550nm);
     double transmitter_telescope_diameter @unit(m) = default(13.5cm);
     double receiver_telescope_diameter @unit(m) = default(1m);
     double Fried_parameter @unit(m) = default(10cm);
     double elevation_angle @unit(rad) = default(90deg); //TODO: this should be a function of time!
     double atmospheric_attenuation_zenith @unit(dB) = default(-3dB);
+    string Aatm_CSV;
 }

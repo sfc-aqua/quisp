@@ -37,6 +37,7 @@ private:
  protected:
   virtual void initialize() override;
   cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;
+  virtual void recalculateChannelParameters();
 
  private:
     bool line_of_sight;
