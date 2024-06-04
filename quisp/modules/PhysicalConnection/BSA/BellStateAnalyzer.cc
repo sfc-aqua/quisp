@@ -73,8 +73,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
 
   if (photon.from_port == PortNumber::First) {
     first_port_records.emplace_back(photon);
-  }
-  else {
+  } else {
     second_port_records.emplace_back(photon);
   }
   if (!photon.is_last) {
