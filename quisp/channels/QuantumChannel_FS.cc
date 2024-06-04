@@ -2,14 +2,13 @@
  *
  *  \brief QuantumChannel
  */
+#include <math.h>
 #include <omnetpp.h>
 #include <stdexcept>
-#include "PhotonicQubit_m.h"
-#include <math.h>
-#include "FSChannel.h"
-#include "utils/CSVParser.h"
 #include <unsupported/Eigen/MatrixFunctions>
-
+#include "FSChannel.h"
+#include "PhotonicQubit_m.h"
+#include "utils/CSVParser.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -34,7 +33,6 @@ class QuantumChannel_FS : public FSChannel {
  public:
   QuantumChannel_FS();
 
-
  protected:
   virtual void initialize() override;
   virtual cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;
@@ -56,19 +54,16 @@ class QuantumChannel_FS : public FSChannel {
   double r0 = 0;
   double Aatm = 1;
 
-  //calculated in the code from the parameters above
+  // calculated in the code from the parameters above
   double theta_diff = 0;
   double theta_atm = 0;
   double loss_rate = 0;
   double attenuation_rate = 0;
-
 };
 
 Define_Channel(QuantumChannel_FS);
 
 QuantumChannel_FS::QuantumChannel_FS() {}
-
-
 
 void QuantumChannel_FS::initialize() {
   FSChannel::initialize();
@@ -81,12 +76,10 @@ void QuantumChannel_FS::initialize() {
   err.error_rate = err.x_error_rate + err.y_error_rate + err.z_error_rate + err.loss_rate;
   validateParameters();
 
-   //clang-format off
-  transition_matrix << 1 - err.error_rate,  err.x_error_rate,   err.z_error_rate,   err.y_error_rate,   err.loss_rate,
-                       err.x_error_rate,    1 - err.error_rate, err.y_error_rate,   err.z_error_rate,   err.loss_rate,
-                       err.z_error_rate,    err.y_error_rate,   1 - err.error_rate, err.x_error_rate,   err.loss_rate,
-                       err.y_error_rate,    err.z_error_rate,   err.x_error_rate,   1 - err.error_rate, err.loss_rate,
-                       0,                   0,                  0,                  0,                  1;
+  //clang-format off
+  transition_matrix << 1 - err.error_rate, err.x_error_rate, err.z_error_rate, err.y_error_rate, err.loss_rate, err.x_error_rate, 1 - err.error_rate, err.y_error_rate,
+      err.z_error_rate, err.loss_rate, err.z_error_rate, err.y_error_rate, 1 - err.error_rate, err.x_error_rate, err.loss_rate, err.y_error_rate, err.z_error_rate,
+      err.x_error_rate, 1 - err.error_rate, err.loss_rate, 0, 0, 0, 0, 1;
   // clang-format on
 }
 
@@ -97,8 +90,8 @@ cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOpti
   }
 
   if (!checkLOS()) q->setLost(true);
-  return {false,getDelay(),0};
-  }
+  return {false, getDelay(), 0};
+}
 
 void QuantumChannel_FS::validateParameters() {
   if (err.error_rate < 0 || 1 < err.error_rate) {
@@ -119,35 +112,33 @@ void QuantumChannel_FS::validateParameters() {
 }
 
 double QuantumChannel_FS::calculateLossRate() {
-    lambda = par("wavelength");
-    Dt = par("transmitter_telescope_diameter");
-    Dr = par("receiver_telescope_diameter");
-    r0 = par("Fried_parameter");
+  lambda = par("wavelength");
+  Dt = par("transmitter_telescope_diameter");
+  Dr = par("receiver_telescope_diameter");
+  r0 = par("Fried_parameter");
 
-    //hard-coded values from 10.1038/s42005-022-01123-7
-    theta_diff = 1.27*lambda/Dt;
-    theta_atm = 2.1*lambda/r0;
-    attenuation_rate = ((pow(theta_diff,2) + pow(theta_atm,2))/(pow(Dr,2))) * pow(distance,2)/Aatm; // from 10.1038/s42005-022-01123-7
-    loss_rate = 1 - 1/attenuation_rate;
+  // hard-coded values from 10.1038/s42005-022-01123-7
+  theta_diff = 1.27 * lambda / Dt;
+  theta_atm = 2.1 * lambda / r0;
+  attenuation_rate = ((pow(theta_diff, 2) + pow(theta_atm, 2)) / (pow(Dr, 2))) * pow(distance, 2) / Aatm;  // from 10.1038/s42005-022-01123-7
+  loss_rate = 1 - 1 / attenuation_rate;
 
-    return loss_rate;
+  return loss_rate;
 }
 
 void QuantumChannel_FS::recalculateChannelParameters() {
-    FSChannel::recalculateChannelParameters();
-    Aatm = Aatm_CSV->getPropertyAtTime(simTime().dbl());
-    err.loss_rate = calculateLossRate();
-    err.error_rate = err.x_error_rate + err.y_error_rate + err.z_error_rate + err.loss_rate;
-    rereadPars();
-    validateParameters();
+  FSChannel::recalculateChannelParameters();
+  Aatm = Aatm_CSV->getPropertyAtTime(simTime().dbl());
+  err.loss_rate = calculateLossRate();
+  err.error_rate = err.x_error_rate + err.y_error_rate + err.z_error_rate + err.loss_rate;
+  rereadPars();
+  validateParameters();
 
-    //clang-format off
-     transition_matrix << 1 - err.error_rate,  err.x_error_rate,   err.z_error_rate,   err.y_error_rate,   err.loss_rate,
-                          err.x_error_rate,    1 - err.error_rate, err.y_error_rate,   err.z_error_rate,   err.loss_rate,
-                          err.z_error_rate,    err.y_error_rate,   1 - err.error_rate, err.x_error_rate,   err.loss_rate,
-                          err.y_error_rate,    err.z_error_rate,   err.x_error_rate,   1 - err.error_rate, err.loss_rate,
-                          0,                   0,                  0,                  0,                  1;
-     // clang-format on
+  //clang-format off
+  transition_matrix << 1 - err.error_rate, err.x_error_rate, err.z_error_rate, err.y_error_rate, err.loss_rate, err.x_error_rate, 1 - err.error_rate, err.y_error_rate,
+      err.z_error_rate, err.loss_rate, err.z_error_rate, err.y_error_rate, 1 - err.error_rate, err.x_error_rate, err.loss_rate, err.y_error_rate, err.z_error_rate,
+      err.x_error_rate, 1 - err.error_rate, err.loss_rate, 0, 0, 0, 0, 1;
+  // clang-format on
 }
 
-}  // namespace quisp::channels
+}  // namespace channels

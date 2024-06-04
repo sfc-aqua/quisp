@@ -6,12 +6,12 @@
 
 #include <cstring>
 #include <stdexcept>
+#include "channels/FSChannel.h"
 #include "messages/BSA_ipc_messages_m.h"
 #include "messages/base_messages_m.h"
 #include "messages/link_generation_messages_m.h"
 #include "omnetpp/cexception.h"
 #include "omnetpp/cmessage.h"
-#include "channels/FSChannel.h"
 
 using channels::FSChannel;
 
@@ -118,10 +118,7 @@ BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_le
   left_travel_time = getTravelTimeFromPort(0);
   right_travel_time = getTravelTimeFromPort(1);
 
-
-
   auto travel_time = (is_left) ? left_travel_time : right_travel_time;
-
 
   // The node should emit at <arrival_time - travel_time>
   simtime_t arrival_time = simTime() + offset_time_for_first_photon;
@@ -227,7 +224,7 @@ int BSAController::getExternalQNICIndexFromPort(int port) {
 
 simtime_t BSAController::getTravelTimeFromPort(int port) {
   cChannel *channel;
-  double distance = 0; //Initialization to avoid complaints
+  double distance = 0;  // Initialization to avoid complaints
   double speed_of_light_in_channel = 1;
   // this port connects to internal QNIC
   // since only port 0 is supposed to be connected to internal QNIC
@@ -238,30 +235,29 @@ simtime_t BSAController::getTravelTimeFromPort(int port) {
     channel = getParentModule()->getSubmodule("bsa")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
   }
 
-  if (FSChannel* FS_chl = dynamic_cast<FSChannel*>(channel)) {
-      speed_of_light_in_channel = FS_chl->par("speed_of_light_in_FS").doubleValue();  // km/sec
+  if (FSChannel *FS_chl = dynamic_cast<FSChannel *>(channel)) {
+    speed_of_light_in_channel = FS_chl->par("speed_of_light_in_FS").doubleValue();  // km/sec
 
-      //I need to predict where the satellite is going to be when emission starts. If I send the notification now, that's distance(simTime() + travel_time).
-      double current_distance = FS_chl->getDistanceAtTime(simTime());
-      simtime_t current_travel_time = SimTime(current_distance / speed_of_light_in_channel);
+    // I need to predict where the satellite is going to be when emission starts. If I send the notification now, that's distance(simTime() + travel_time).
+    double current_distance = FS_chl->getDistanceAtTime(simTime());
+    simtime_t current_travel_time = SimTime(current_distance / speed_of_light_in_channel);
 
+    double predicted_distance = FS_chl->getDistanceAtTime(simTime() + current_travel_time);
+    double offset = (predicted_distance - current_distance) / speed_of_light_in_channel;
 
-      double predicted_distance = FS_chl->getDistanceAtTime(simTime()+current_travel_time);
-      double offset = (predicted_distance-current_distance)/speed_of_light_in_channel;
-
-     // distance = FS_chl->getDistanceAtTime(simTime());
-      return SimTime(current_distance / speed_of_light_in_channel) + offset;
+    // distance = FS_chl->getDistanceAtTime(simTime());
+    return SimTime(current_distance / speed_of_light_in_channel) + offset;
 
   } else {
-      distance = channel->par("distance").doubleValue();  // km
-      speed_of_light_in_channel = channel->par("speed_of_light_in_fiber").doubleValue();
-      return SimTime(distance / speed_of_light_in_channel);
+    distance = channel->par("distance").doubleValue();  // km
+    speed_of_light_in_channel = channel->par("speed_of_light_in_fiber").doubleValue();
+    return SimTime(distance / speed_of_light_in_channel);
   }
 }
 
 simtime_t BSAController::getTravelTimeFromPortLocal(int port) {
   cChannel *channel;
-  double distance = 0; //Initialization to avoid complaints
+  double distance = 0;  // Initialization to avoid complaints
   double speed_of_light_in_channel = 1;
   // this port connects to internal QNIC
   // since only port 0 is supposed to be connected to internal QNIC
@@ -272,13 +268,13 @@ simtime_t BSAController::getTravelTimeFromPortLocal(int port) {
     channel = getParentModule()->getSubmodule("bsa")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
   }
 
-  if (FSChannel* FS_chl = dynamic_cast<FSChannel*>(channel)) {
-      speed_of_light_in_channel = FS_chl->par("speed_of_light_in_FS").doubleValue();  // km/sec
-      distance = FS_chl->getDistanceAtTime(simTime());
+  if (FSChannel *FS_chl = dynamic_cast<FSChannel *>(channel)) {
+    speed_of_light_in_channel = FS_chl->par("speed_of_light_in_FS").doubleValue();  // km/sec
+    distance = FS_chl->getDistanceAtTime(simTime());
 
   } else {
-      distance = channel->par("distance").doubleValue();  // km
-      speed_of_light_in_channel = channel->par("speed_of_light_in_fiber").doubleValue();
+    distance = channel->par("distance").doubleValue();  // km
+    speed_of_light_in_channel = channel->par("speed_of_light_in_fiber").doubleValue();
   }
   return SimTime(distance / speed_of_light_in_channel);
 }
