@@ -10,21 +10,29 @@
 
 #include <omnetpp.h>
 #include <stdexcept>
-#include <unsupported/Eigen/MatrixFunctions>
 #include "PhotonicQubit_m.h"
 #include "omnetpp/cexception.h"
-#include <cmath>
+#include "utils/CSVParser.h"
+#include <math.h>
 
 using namespace omnetpp;
+
+struct ORBITAL_PARAMETERS {
+  SimTime orbit_period = SIMTIME_MAX;
+  SimTime vis_start_time = SIMTIME_ZERO;
+  SimTime vis_end_time = SIMTIME_MAX;
+};
 
 namespace channels {
 class FSChannel : public cDatarateChannel {
  public:
     FSChannel();
-    void setLOS(bool line_of_sight);
-    void toggleLOS();
-    bool getLOS();
-
+    void set_orbit_parameters(double orb_period,double orb_vis_start_coeff, double orb_vis_end_coeff);
+    bool checkLOS();
+    SimTime getNext_check_time();
+private:
+    ORBITAL_PARAMETERS op;
+    CSVParser* dist_par;
 
  protected:
   virtual void initialize() override;
