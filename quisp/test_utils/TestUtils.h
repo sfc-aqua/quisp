@@ -4,6 +4,7 @@
 #include "Gate.h"
 #include "ModuleType.h"
 #include "QNode.h"
+#include "ChannelType.h"
 #include "Simulation.h"
 #include "StaticEnv.h"
 #include "TestComponentProviderStrategy.h"
