@@ -85,7 +85,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto qnic_index = notification_packet->getQnicIndex();
     stopOnGoingPhotonEmission(type, qnic_index);
     freeFailedEntanglementAttemptQubits(type, qnic_index);
-    schedulePhotonEmission(type, qnic_index, notification_packet);
+    if (getEmitTimeFromBSMNotification(notification_packet) >= simTime())
+      schedulePhotonEmission(type, qnic_index,
+                             notification_packet);  // If this check fails, it means that the BSM notification was from a previous passage and it makes no sense to emit photons.
   } else if (auto *pk = dynamic_cast<EmitPhotonRequest *>(msg)) {
     auto type = pk->getQnicType();
     auto qnic_index = pk->getQnicIndex();
@@ -140,7 +142,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     msm_info.partner_qnic_index = partner_qnic_index;
     msm_info.total_travel_time = notification_packet->getTotalTravelTime();
     stopOnGoingPhotonEmission(QNIC_RP, qnic_index);
-    scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
+    if (notification_packet->getFirstPhotonEmitTime() >= simTime()) scheduleMSMPhotonEmission(QNIC_RP, qnic_index, notification_packet);
     // handle result incoming from bsa
   } else if (auto *click_result = dynamic_cast<SingleClickResult *>(msg)) {
     handleSingleClickResult(click_result);

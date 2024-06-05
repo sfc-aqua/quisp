@@ -1,8 +1,12 @@
 /*
  * FSChannel.h
  *
- *  Created on: Sep 6, 2023
- *      Author: paolo
+ *  \brief Freespace channel
+ *
+ *  Loss model from 10.1038/s42005-022-01123-7.
+ *  Base class for Free-space communication: this channel handles variable length and delay using a CSVParser.
+ *  LOS-related methods are directly callable from outside since the pointing system is expected to be able to directly check whether there is visibility or not.
+ *
  */
 
 #pragma once
