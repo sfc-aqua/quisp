@@ -1,7 +1,10 @@
 /** \file QuantumChannel.cc
  *
- *  \brief QuantumChannel
+ *  \brief Freespace channel
+ *
+ *
  */
+
 #include "FSChannel.h"
 #include <omnetpp.h>
 
@@ -34,13 +37,6 @@ cChannel::Result FSChannel::processMessage(cMessage *msg, const SendOptions &opt
   return result;
 }
 
-/** \fn checkLOS()
- *
- *  \brief Check if one end of the channel can see the other, i.e. we can send msg
- *
- *
- */
-
 bool FSChannel::checkLOS() {
   Enter_Method("checkLOS()");
   const SimTime currentTime = fmod(simTime(), op.orbit_period);
@@ -50,14 +46,10 @@ bool FSChannel::checkLOS() {
   return false;
 }
 
-double FSChannel::getDistanceAtTime(const simtime_t time) { return dist_par->getPropertyAtTime(time.dbl()); }
-
-/** \fn getNext_check_time()
- *
- *  \brief When will this channel have visibility again? 0 if visible now
- *
- *
- */
+double FSChannel::getDistanceAtTime(const simtime_t time) {
+  recalculateChannelParameters();
+  return dist_par->getPropertyAtTime(time.dbl());
+}
 
 SimTime FSChannel::getNext_check_time() {
   Enter_Method("next_check_time()");
