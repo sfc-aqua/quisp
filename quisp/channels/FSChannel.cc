@@ -27,15 +27,15 @@ Define_Channel(FSChannel);
 cChannel::Result FSChannel::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
   Result result;
 
-  if (!checkLOS()) {
-    result.discard = true;
+    if (!checkLOS() and !dynamic_cast<OspfPacket*>(msg)) {
+        result.discard = true;
+    } else {
+    recalculateChannelParameters();
+    result = cDatarateChannel::processMessage(msg, options, t);
+    }
     return result;
   }
-  par("distance").setDoubleValue(dist_par->getPropertyAtTime(simTime().dbl()));
-  par("delay").setDoubleValue(par("distance").doubleValue() / par("speed_of_light_in_FS").doubleValue());
-  result = cDatarateChannel::processMessage(msg, options, t);
-  return result;
-}
+
 
 bool FSChannel::checkLOS() {
   Enter_Method("checkLOS()");
