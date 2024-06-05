@@ -38,8 +38,11 @@ void BSAController::initialize() {
     left_qnic = getExternalQNICInfoFromPort(0);
   }
   is_active = strcmp(par("mode").stringValue(), "active") == 0;
-  left_travel_time = getTravelTimeFromPort(0);
-  right_travel_time = getTravelTimeFromPort(1);
+  left_travel_time = getPredictedTravelTimeFromPort(0);
+  right_travel_time = getPredictedTravelTimeFromPort(1);
+  time_interval_between_photons = SimTime(1, SIMTIME_S) / getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
+  simtime_t first_notification_timer = SimTime(par("initial_notification_timing_buffer").doubleValue());
+  // right_qnic = getExternalQNICInfoFromPort(1);
   time_out_count = 0;
   time_out_message = new BSMNotificationTimeout("bsm_notification_timeout");
   if (is_active) {
@@ -115,12 +118,13 @@ BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_le
   auto *notification_packet = new BSMTimingNotification();
 
   offset_time_for_first_photon = calculateOffsetTimeFromDistance();
-  left_travel_time = getTravelTimeFromPort(0);
-  right_travel_time = getTravelTimeFromPort(1);
+  left_travel_time = getPredictedTravelTimeFromPort(0);
+  right_travel_time = getPredictedTravelTimeFromPort(1);
 
   auto travel_time = (is_left) ? left_travel_time : right_travel_time;
 
   // The node should emit at <arrival_time - travel_time>
+
   simtime_t arrival_time = simTime() + offset_time_for_first_photon;
   simtime_t emit_time = arrival_time - travel_time;
 
@@ -140,8 +144,8 @@ CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) 
   auto *notification_packet = new CombinedBSAresults();
 
   offset_time_for_first_photon = calculateOffsetTimeFromDistance();
-  left_travel_time = getTravelTimeFromPort(0);
-  right_travel_time = getTravelTimeFromPort(1);
+  left_travel_time = getPredictedTravelTimeFromPort(0);
+  right_travel_time = getPredictedTravelTimeFromPort(1);
 
   auto travel_time = (is_left) ? left_travel_time : right_travel_time;
 
@@ -159,8 +163,8 @@ CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) 
 }
 
 simtime_t BSAController::calculateOffsetTimeFromDistance() {
-  auto current_longer_travel_time = std::max(getTravelTimeFromPortLocal(0), getTravelTimeFromPortLocal(1));
-  auto predicted_longer_travel_time = std::max(getTravelTimeFromPort(0), getTravelTimeFromPort(1));
+  auto current_longer_travel_time = std::max(getCurrentTravelTimeFromPort(0), getCurrentTravelTimeFromPort(1));
+  auto predicted_longer_travel_time = std::max(getPredictedTravelTimeFromPort(0), getPredictedTravelTimeFromPort(1));
 
   // we add 10 times the photon interval to offset the travel time for safety in case RuleEngine has internal delay;
   return current_longer_travel_time + predicted_longer_travel_time + time_interval_between_photons * 10;
@@ -222,7 +226,7 @@ int BSAController::getExternalQNICIndexFromPort(int port) {
       ->par("self_qnic_index");
 }
 
-simtime_t BSAController::getTravelTimeFromPort(int port) {
+simtime_t BSAController::getPredictedTravelTimeFromPort(int port) {
   cChannel *channel;
   double distance = 0;  // Initialization to avoid complaints
   double speed_of_light_in_channel = 1;
@@ -255,7 +259,7 @@ simtime_t BSAController::getTravelTimeFromPort(int port) {
   }
 }
 
-simtime_t BSAController::getTravelTimeFromPortLocal(int port) {
+simtime_t BSAController::getCurrentTravelTimeFromPort(int port) {
   cChannel *channel;
   double distance = 0;  // Initialization to avoid complaints
   double speed_of_light_in_channel = 1;
