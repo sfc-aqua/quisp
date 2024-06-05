@@ -16,9 +16,12 @@
 #include <stdexcept>
 #include "PhotonicQubit_m.h"
 #include "omnetpp/cexception.h"
+#include <cmath>
+#include <messages/ospf_messages_m.h>
 #include "utils/CSVParser.h"
 
 using namespace omnetpp;
+using namespace quisp::messages;
 
 struct ORBITAL_PARAMETERS {
   SimTime orbit_period = SIMTIME_MAX;
