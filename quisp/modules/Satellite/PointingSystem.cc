@@ -6,13 +6,13 @@
 #include "messages/visibility_messages_m.h"
 #include "channels/FSChannel.h"
 
-using namespace quisp::channels;
+using namespace channels;
 
 namespace quisp::modules::Satellite {
 
 Define_Module(PointingSystem);
 
-PointingSystem::PointingSystem() {}
+PointingSystem::PointingSystem() : provider(utils::ComponentProvider{this}) {}
 
 PointingSystem::~PointingSystem() {}
 
