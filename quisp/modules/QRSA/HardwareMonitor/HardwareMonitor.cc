@@ -61,7 +61,7 @@ void HardwareMonitor::initialize(int stage) {
   num_purification = par("initial_purification");
   X_Purification = par("x_purification");
   Z_Purification = par("z_purification");
-  purification_type = std::string(par("purification_type").stringValue());
+  purification_type = par("purification_type").stdstringValue();
   num_measure = par("num_measure");
   my_address = provider.getNodeAddr();
 
