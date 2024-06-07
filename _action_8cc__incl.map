@@ -6,7 +6,7 @@
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="174,107,155,131,134,164,116,203,109,246,109,565,113,623,124,681,141,738,160,792,203,886,239,950,234,953,198,888,155,794,135,740,119,683,108,624,104,565,104,245,111,202,129,162,151,128,170,104"/>
 <area shape="rect" id="Node000004" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="537,883,655,909"/>
 <area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="186,105,200,203,215,279,236,367,265,462,302,558,349,652,406,737,444,779,487,817,565,873,562,877,484,821,441,783,402,741,344,654,297,560,260,463,231,368,210,280,195,204,181,106"/>
-<area shape="rect" id="Node000006" href="$modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="220,153,345,178"/>
+<area shape="rect" id="Node000006" href="$modules_2_qubit_8h.html" title="QUBIT." alt="" coords="220,153,345,178"/>
 <area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="201,103,255,141,252,145,198,107"/>
 <area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="544,912,320,963,319,958,542,907"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="898,1134,979,1160"/>
@@ -52,7 +52,7 @@
 <area shape="poly" id="edge25_Node000010_Node000021" title=" " alt="" coords="2365,1070,2444,1208,2439,1211,2361,1073"/>
 <area shape="rect" id="Node000023" href="$_i_random_number_generator_8h.html" title=" " alt="" coords="2432,1127,2622,1167"/>
 <area shape="poly" id="edge27_Node000010_Node000023" title=" " alt="" coords="2381,1069,2476,1117,2474,1122,2379,1074"/>
-<area shape="rect" id="Node000024" href="$backends_2_graph_state_2_q_u_b_i_t_8h.html" title=" " alt="" coords="1762,1134,1825,1160"/>
+<area shape="rect" id="Node000024" href="$backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="1762,1134,1825,1160"/>
 <area shape="poly" id="edge28_Node000010_Node000024" title=" " alt="" coords="2280,1074,1840,1141,1840,1136,2279,1069"/>
 <area shape="poly" id="edge39_Node000010_Node000028" title=" " alt="" coords="2337,1074,2096,1217,2093,1212,2334,1069"/>
 <area shape="rect" id="Node000015" title=" " alt="" coords="2060,1378,2113,1403"/>

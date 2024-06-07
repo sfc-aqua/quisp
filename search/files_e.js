@@ -12,7 +12,7 @@ var searchData=
   ['qrsa_2eh_9',['QRSA.h',['../_q_r_s_a_8h.html',1,'']]],
   ['quantumchannel_2ecc_10',['QuantumChannel.cc',['../_quantum_channel_8cc.html',1,'']]],
   ['qubit_2ecc_11',['Qubit.cc',['../_qubit_8cc.html',1,'']]],
-  ['qubit_2eh_12',['qubit.h',['../backends_2_graph_state_2_q_u_b_i_t_8h.html',1,'(Global Namespace)'],['../modules_2_q_u_b_i_t_8h.html',1,'(Global Namespace)']]],
+  ['qubit_2eh_12',['qubit.h',['../modules_2_qubit_8h.html',1,'(Global Namespace)'],['../backends_2_graph_state_2_qubit_8h.html',1,'(Global Namespace)']]],
   ['qubit_5ftest_2ecc_13',['Qubit_test.cc',['../_qubit__test_8cc.html',1,'']]],
   ['qubitconfiguration_2eh_14',['QubitConfiguration.h',['../_qubit_configuration_8h.html',1,'']]],
   ['qubitid_2eh_15',['QubitId.h',['../_qubit_id_8h.html',1,'']]],

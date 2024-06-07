@@ -15,7 +15,7 @@
 <area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="3006,105,3006,245,3006,808,3011,849,3025,888,3043,923,3061,951,3056,953,3038,925,3020,890,3006,850,3000,809,3000,245,3000,105"/>
 <area shape="rect" id="Node000007" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="2544,883,2662,909"/>
 <area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="2998,106,2971,165,2960,205,2955,245,2955,410,2952,482,2943,543,2928,596,2907,644,2878,688,2842,732,2747,830,2707,859,2662,880,2660,875,2704,855,2744,826,2838,729,2874,685,2902,641,2923,594,2938,542,2947,482,2950,410,2950,245,2955,203,2966,163,2994,104"/>
-<area shape="rect" id="Node000008" href="$modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="2790,153,2915,178"/>
+<area shape="rect" id="Node000008" href="$modules_2_qubit_8h.html" title="QUBIT." alt="" coords="2790,153,2915,178"/>
 <area shape="poly" id="edge10_Node000006_Node000008" title=" " alt="" coords="2979,108,2893,148,2891,143,2976,103"/>
 <area shape="poly" id="edge8_Node000007_Node000002" title=" " alt="" coords="2592,911,2553,946,2495,992,2423,1040,2345,1081,2267,1108,2187,1127,2111,1138,2049,1145,2048,1140,2111,1133,2186,1121,2266,1103,2343,1076,2421,1036,2492,988,2550,941,2588,907"/>
 <area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="2662,904,2997,960,2996,965,2662,910"/>
@@ -59,7 +59,7 @@
 <area shape="poly" id="edge29_Node000012_Node000022" title=" " alt="" coords="630,1068,404,1090,292,1107,247,1118,213,1129,184,1145,157,1165,113,1206,110,1202,153,1161,181,1141,211,1124,246,1113,291,1102,403,1085,629,1062"/>
 <area shape="rect" id="Node000024" href="$_i_random_number_generator_8h.html" title=" " alt="" coords="359,1127,549,1167"/>
 <area shape="poly" id="edge31_Node000012_Node000024" title=" " alt="" coords="671,1074,526,1124,524,1119,669,1069"/>
-<area shape="rect" id="Node000025" href="$backends_2_graph_state_2_q_u_b_i_t_8h.html" title=" " alt="" coords="856,1134,918,1160"/>
+<area shape="rect" id="Node000025" href="$backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="856,1134,918,1160"/>
 <area shape="poly" id="edge32_Node000012_Node000025" title=" " alt="" coords="732,1069,849,1125,847,1130,730,1074"/>
 <area shape="poly" id="edge41_Node000012_Node000029" title=" " alt="" coords="767,1069,865,1092,975,1124,1080,1166,1166,1206,1164,1211,1078,1171,973,1129,864,1097,766,1074"/>
 <area shape="rect" id="Node000016" title=" " alt="" coords="714,1363,767,1388"/>

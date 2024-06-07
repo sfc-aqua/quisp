@@ -82,7 +82,7 @@
 <area shape="poly" id="edge31_Node000041_Node000044" title=" " alt="" coords="2167,607,2200,627,2227,654,2241,680,2252,707,2262,765,2262,820,2257,863,2252,862,2257,819,2257,765,2247,709,2237,682,2222,658,2196,631,2164,612"/>
 <area shape="rect" id="Node000029" href="$_rule_engine__photon__shooting__test_8cc.html" title=" " alt="" coords="1293,863,1463,919"/>
 <area shape="poly" id="edge32_Node000041_Node000029" title=" " alt="" coords="1960,605,1926,611,1875,617,1830,619,1754,618,1718,619,1681,625,1641,637,1595,658,1578,670,1568,682,1545,713,1405,865,1401,861,1541,710,1564,679,1575,666,1593,654,1639,632,1680,620,1718,614,1754,612,1830,613,1875,612,1925,605,1959,599"/>
-<area shape="rect" id="Node000045" href="$modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="1852,671,2013,697"/>
+<area shape="rect" id="Node000045" href="$modules_2_qubit_8h.html" title="QUBIT." alt="" coords="1852,671,2013,697"/>
 <area shape="poly" id="edge33_Node000041_Node000045" title=" " alt="" coords="2018,620,1950,672,1947,668,2014,616"/>
 <area shape="rect" id="Node000063" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="1605,664,1828,704"/>
 <area shape="poly" id="edge34_Node000041_Node000063" title=" " alt="" coords="1961,614,1784,665,1783,660,1959,609"/>

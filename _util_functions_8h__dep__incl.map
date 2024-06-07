@@ -1,6 +1,6 @@
 <map id="quisp/utils/UtilFunctions.h" name="quisp/utils/UtilFunctions.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="3435,5,3606,31"/>
-<area shape="rect" id="Node000002" href="$backends_2_graph_state_2_q_u_b_i_t_8h.html" title=" " alt="" coords="3332,79,3514,120"/>
+<area shape="rect" id="Node000002" href="$backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="3332,79,3514,120"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="3496,43,3449,81,3446,77,3492,39"/>
 <area shape="rect" id="Node000128" href="$_util_functions__test_8cc.html" title=" " alt="" coords="3539,79,3700,120"/>
 <area shape="poly" id="edge109_Node000001_Node000128" title=" " alt="" coords="3549,39,3596,77,3593,81,3546,43"/>
@@ -92,7 +92,7 @@
 <area shape="poly" id="edge33_Node000044_Node000047" title=" " alt="" coords="1185,887,1236,907,1286,935,1302,949,1312,963,1322,977,1337,991,1419,1039,1507,1078,1592,1109,1667,1131,1666,1136,1591,1114,1505,1083,1417,1044,1334,995,1318,980,1308,966,1298,953,1283,939,1234,912,1183,892"/>
 <area shape="rect" id="Node000032" href="$_rule_engine__photon__shooting__test_8cc.html" title=" " alt="" coords="689,1129,859,1185"/>
 <area shape="poly" id="edge34_Node000044_Node000032" title=" " alt="" coords="978,879,914,902,885,918,858,939,840,960,824,984,801,1037,786,1088,779,1129,774,1128,781,1086,796,1035,819,982,835,957,855,935,882,914,912,897,976,874"/>
-<area shape="rect" id="Node000048" href="$modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="1112,952,1273,978"/>
+<area shape="rect" id="Node000048" href="$modules_2_qubit_8h.html" title="QUBIT." alt="" coords="1112,952,1273,978"/>
 <area shape="poly" id="edge35_Node000044_Node000048" title=" " alt="" coords="1123,897,1181,949,1177,953,1120,901"/>
 <area shape="rect" id="Node000066" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="565,945,788,985"/>
 <area shape="poly" id="edge36_Node000044_Node000066" title=" " alt="" coords="978,891,756,946,754,941,976,886"/>
