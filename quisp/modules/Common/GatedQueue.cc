@@ -4,29 +4,15 @@
 
 namespace quisp::modules {
 
-Define_Module(GatedQueue);
-
-
-
-void GatedQueue::initialize() {
-   Queue::initialize();
-   is_busy = false;
-}
-
-void GatedQueue::startTransmitting(cMessage *msg) {
-
-//Find the proper place to do this modification, it's terrible practice to do it here.
-  if (BSMTimingNotification* btn = dynamic_cast<BSMTimingNotification*>(msg)) {
-      if (btn->getFirstPhotonEmitTime() < simTime()) btn->setFirstPhotonEmitTime(simTime()+next_check_time);
-  }
-  Queue::startTransmitting(msg);
-}
-
 void GatedQueue::handleMessage(cMessage *msg)
 {
     if (hasGUI()) {
         bubble("GatedQueue received a message!\n");
       }
+
+    if (msg->arrivedOn("from_ps") and dynamic_cast<VisibilityMessage *>(msg) == nullptr) {
+    throw(cRuntimeError("Non-control message at the control gate of a gated queue, this should not happen."));
+    }
 
     if (auto vco = dynamic_cast<VisCheckOutcome *>(msg)) {
            if (vco->getNext_check_time() == 0) {
