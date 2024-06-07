@@ -19,7 +19,6 @@ using namespace quisp::messages;
 namespace quisp::modules {
 
 class GatedQueue : public Queue
-class GatedQueue : public Queue
 {
   protected:
     simtime_t next_check_time = 0;
