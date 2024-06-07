@@ -12,12 +12,12 @@
 #pragma once
 
 #include <math.h>
+#include <messages/ospf_messages_m.h>
 #include <omnetpp.h>
+#include <cmath>
 #include <stdexcept>
 #include "PhotonicQubit_m.h"
 #include "omnetpp/cexception.h"
-#include <cmath>
-#include <messages/ospf_messages_m.h>
 #include "utils/CSVParser.h"
 
 using namespace omnetpp;

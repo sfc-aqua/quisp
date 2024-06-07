@@ -27,15 +27,14 @@ Define_Channel(FSChannel);
 cChannel::Result FSChannel::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
   Result result;
 
-    if (!checkLOS() and !dynamic_cast<OspfPacket*>(msg)) {
-        result.discard = true;
-    } else {
+  if (!checkLOS() and !dynamic_cast<OspfPacket *>(msg)) {
+    result.discard = true;
+  } else {
     recalculateChannelParameters();
     result = cDatarateChannel::processMessage(msg, options, t);
-    }
-    return result;
   }
-
+  return result;
+}
 
 bool FSChannel::checkLOS() {
   Enter_Method("checkLOS()");
