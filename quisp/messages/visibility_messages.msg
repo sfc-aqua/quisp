@@ -1,12 +1,14 @@
 namespace quisp::messages;
 
-packet VisCheckOutcome {
+packet VisibilityMessage {}
+
+packet VisCheckOutcome extends VisibilityMessage {
     double next_check_time;
 }
 
-packet VisCheckRequest {
+packet VisCheckRequest extends VisibilityMessage {
      string out_gate;  
      int index; 
 }
 
-packet VisCheckRetry {}
+packet VisCheckRetry extends VisibilityMessage {}

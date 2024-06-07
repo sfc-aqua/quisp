@@ -38,7 +38,8 @@ return;
 }
 
 void PointingSystem::handleMessage(cMessage *msg) {
-  if (auto vcr = dynamic_cast<VisCheckRequest *>(msg)) {
+  if (dynamic_cast<VisibilityMessage *>(msg)) {
+    if (auto vcr = dynamic_cast<VisCheckRequest *>(msg)) {
       VisCheckOutcome* vco = new VisCheckOutcome();
       const char* gate_to_check = vcr->getOut_gate();
       int gtc_index = vcr->getIndex();
@@ -53,7 +54,7 @@ void PointingSystem::handleMessage(cMessage *msg) {
       send(vco,"ans");
   delete vcr;
   }
-  //delete msg;
+  } else throw(cRuntimeError("Unexpected Message at Pointing System!"));
   return;
 };
 

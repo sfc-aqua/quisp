@@ -19,13 +19,12 @@ using namespace quisp::messages;
 namespace quisp::modules {
 
 class GatedQueue : public Queue
+class GatedQueue : public Queue
 {
   protected:
     simtime_t next_check_time = 0;
     simtime_t last_polling_time = -1;
     virtual void handleMessage(cMessage *msg) override;
-    void initialize() override;
-    void startTransmitting(cMessage *msg) override;
   private:
     bool pending_vcr = false;
 };
