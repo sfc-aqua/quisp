@@ -815,13 +815,13 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           rule = constructPurifyRule(rule_name, PurType::DOUBLE_SELECTION_XZ_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag);
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(
-              constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_SELECTION_X_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
+              constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_SELECTION_XZ_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
         } else {
           rule_name = "Double selection Dual action Inverse with: " + std::to_string(partner_address);
           rule = constructPurifyRule(rule_name, PurType::DOUBLE_SELECTION_ZX_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag);
           tomography_RuleSet->addRule(std::move(rule));
           tomography_RuleSet->addRule(
-              constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_SELECTION_Z_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
+              constructCorrelationCheckRule("purification correlation check", PurType::DOUBLE_SELECTION_ZX_PURIFICATION, partner_address, qnic_type, qnic_index, shared_tag++));
         }
       }
     } else if (purification_type == 1061) {
