@@ -11,9 +11,10 @@ public:
     ~MockFreeSpaceChannel();
     void initialize() override {};
     void setNext_check_time(SimTime next_check);
-    const cProperties* getProperties() {return props;};
+    virtual cProperties* getProperties() const override {return props;};
     SimTime getNext_check_time() override;
     void addResultRecorders() override {};
+    virtual simtime_t getTransmissionFinishTime() const override {return simTime();};
 private:
     SimTime next_check_time;
     cProperties *props;
