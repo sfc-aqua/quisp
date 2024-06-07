@@ -10,14 +10,13 @@
 #pragma once
 
 #include <omnetpp.h>
-#include "TestUtilFunctions.h"
 #include "ModuleType.h"
+#include "TestUtilFunctions.h"
 
 using quisp_test::module_type::TestModuleType;
 
 class Stub : public omnetpp::cModule {
-  public:
+ public:
   explicit Stub();
-  void addResultRecorders() override {};
-
+  void addResultRecorders() override{};
 };
