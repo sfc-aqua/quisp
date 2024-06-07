@@ -17,25 +17,7 @@ PointingSystem::PointingSystem() {}
 PointingSystem::~PointingSystem() {}
 
 
-void PointingSystem::initialize() {
-  //Setting the FSChannels' orbital parameters
-orbital_period = par("orbital_period");
-vis_start_coeff = par("vis_start_coeff");
-vis_end_coeff = par("vis_end_coeff");
-  if (getParentModule()->par("is_satellite")){
-    for (cModule::GateIterator i(this->getParentModule()); !i.end(); i++) {
-         cGate* gate = *i;
-
-         cChannel* chl = {gate->getType() == cGate::OUTPUT? gate->getChannel() : gate->getPreviousGate()->getChannel()};
-
-
-         if (auto f_chl = dynamic_cast<FSChannel*>(chl)) {
-         f_chl->set_orbit_parameters(orbital_period,vis_start_coeff, vis_end_coeff);
-         }
-  }
-  }
-return;
-}
+void PointingSystem::initialize() {}
 
 void PointingSystem::handleMessage(cMessage *msg) {
   if (dynamic_cast<VisibilityMessage *>(msg)) {
