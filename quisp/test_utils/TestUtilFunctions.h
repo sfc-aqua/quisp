@@ -9,7 +9,6 @@ namespace utils {
 
 using omnetpp::cChannel;
 using omnetpp::cModule;
-using omnetpp::cChannel;
 using quisp_test::simulation::TestSimulation;
 
 void setParInt(cModule *module, const char *name, const int val);

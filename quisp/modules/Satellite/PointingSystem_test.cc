@@ -3,10 +3,9 @@
 #include <test_utils/TestUtils.h>
 
 #include "PointingSystem.h"
-#include "modules/SharedResource/SharedResource.h"
 #include "messages/visibility_messages_m.h"
+#include "modules/SharedResource/SharedResource.h"
 #include "test_utils/MockFreeSpaceChannel.h"
-
 
 using namespace quisp_test;
 using namespace quisp_test::utils;
@@ -24,8 +23,6 @@ class MockNode : public quisp_test::TestQNode {
   bool is_qnode;
 };
 
-
-
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy(MockNode* _qnode) : parent_qnode(_qnode) {}
@@ -42,28 +39,29 @@ class PointingSystem : public OriginalPointingSystem {
  public:
   using OriginalPointingSystem::handleMessage;
   using OriginalPointingSystem::initialize;
-  void addResultRecorders() override {};
-  virtual void send(omnetpp::cMessage *msg, const char *gatename, int gateindex=-1) override {take(msg); OriginalPointingSystem::send(msg,gatename,gateindex);};
-
+  void addResultRecorders() override{};
+  virtual void send(omnetpp::cMessage* msg, const char* gatename, int gateindex = -1) override {
+    take(msg);
+    OriginalPointingSystem::send(msg, gatename, gateindex);
+  };
 
   MockNode* parent;
-  cModule* getParentModule() const override {return parent;};
+  cModule* getParentModule() const override { return parent; };
 
   explicit PointingSystem(MockNode* parent_qnode) : OriginalPointingSystem() {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     this->setComponentType(new TestModuleType("test_pointing_system"));
     parent = parent_qnode;
-    auto *sim = getTestSimulation();
+    auto* sim = getTestSimulation();
     sim->registerComponent(this);
     recPort = new TestGate(this, "rec");
     ansPort = new TestGate(this, "ans");
-    this->addGate("rec",cGate::INPUT);
-    this->addGate("ans",cGate::OUTPUT);
+    this->addGate("rec", cGate::INPUT);
+    this->addGate("ans", cGate::OUTPUT);
   }
 
   TestGate* ansPort;
   TestGate* recPort;
-
 
   std::map<const char*, cGate*> ports{};
   TestGate* gate(const char* gatename, int index = -1) override {
@@ -74,8 +72,6 @@ class PointingSystem : public OriginalPointingSystem {
   }
   bool parentModuleIsQNode() { return dynamic_cast<MockNode*>(provider.getNode())->is_qnode; }
   void setIsQnode(bool is_qnode) { dynamic_cast<MockNode*>(provider.getNode())->is_qnode = is_qnode; }
-
-
 };
 
 class PointingSystemTest : public ::testing::Test {
@@ -87,19 +83,17 @@ class PointingSystemTest : public ::testing::Test {
     chl = new MockFreeSpaceChannel("test_channel");
     stub = new Stub();
 
-    outgate = node->addGate("test_out",cGate::OUTPUT);
+    outgate = node->addGate("test_out", cGate::OUTPUT);
     stub_gate = stub->addGate("stub_gate", cGate::INPUT);
 
-    outgate->connectTo(stub_gate,chl,true);
-    chl->finalizeParameters(); // THIS METHOD MAY ONLY BE CALLED WHEN THE CHANNEL IS CONNECTED
+    outgate->connectTo(stub_gate, chl, true);
+    chl->finalizeParameters();  // THIS METHOD MAY ONLY BE CALLED WHEN THE CHANNEL IS CONNECTED
 
     pointing_system->callInitialize();
     chl->callInitialize();
     stub->callInitialize();
-
   }
-  void TearDown() {
-    }
+  void TearDown() {}
 
   /**
    * This function mimics the behavior of Omnet++ internals
@@ -107,9 +101,7 @@ class PointingSystemTest : public ::testing::Test {
    * Call this function before PointingSystem->handleMessages
    * when you want to retrieve the info of the arrival gate.
    */
-  void mockMessageArrival(cMessage* msg) {
-    msg->setArrival(pointing_system->getId(), pointing_system->findGate("rec"));
-  }
+  void mockMessageArrival(cMessage* msg) { msg->setArrival(pointing_system->getId(), pointing_system->findGate("rec")); }
 
   TestSimulation* sim;
   PointingSystem* pointing_system;
@@ -145,7 +137,7 @@ TEST_F(PointingSystemTest, handleVisRequest_VisibleChannel) {
 }
 
 TEST_F(PointingSystemTest, handleVisRequest_NonVisibleChannel) {
-  chl->setNext_check_time(simTime()+1);
+  chl->setNext_check_time(simTime() + 1);
 
   auto vcr = new VisCheckRequest;
   vcr->setOut_gate("test_out");
@@ -157,7 +149,7 @@ TEST_F(PointingSystemTest, handleVisRequest_NonVisibleChannel) {
   {
     auto* msg = pointing_system->gate("ans")->messages.at(0);
     auto vco = dynamic_cast<VisCheckOutcome*>(msg);
-    ASSERT_EQ(vco->getNext_check_time(), simTime().dbl()+1);
+    ASSERT_EQ(vco->getNext_check_time(), simTime().dbl() + 1);
   }
 }
 
@@ -180,4 +172,3 @@ TEST_F(PointingSystemTest, handleVisRequest_NonFSChannel) {
 }
 
 }  // namespace
-
