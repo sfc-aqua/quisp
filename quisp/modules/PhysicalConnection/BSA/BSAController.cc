@@ -3,7 +3,7 @@
  *  \brief BSAController
  */
 #include "BSAController.h"
-
+#include <fstream>
 #include <cstring>
 #include <stdexcept>
 #include "messages/BSA_ipc_messages_m.h"
@@ -101,6 +101,10 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
     send(click_result, "to_router");
   }
   last_result_send_time = simTime();
+  // std::ofstream logfile;
+  // logfile.open("bellpairtimings", std::ios_base::app);
+  // logfile << simTime() << ",";
+  // logfile.close();
 }
 
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
