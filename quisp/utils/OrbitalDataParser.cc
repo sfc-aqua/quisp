@@ -1,14 +1,14 @@
 /*
- * CSVParser.cc
+ * OrbitalDataParser.cc
  *
  *  Created on: Nov 28, 2023
  *      Author: paolo
  *  Quick parser for CSVs, written for csv-based Free-space channels.
  */
 
-#include "CSVParser.h"
+#include "OrbitalDataParser.h"
 
-CSVParser::CSVParser(const string filename) {
+OrbitalDataParser::OrbitalDataParser(const string filename) {
   file.open(filename);
   if (!file.is_open()) throw cRuntimeError("Couldn't find CSV file!");
   string line;
@@ -23,7 +23,7 @@ CSVParser::CSVParser(const string filename) {
   return;
 }
 
-double CSVParser::getPropertyAtTime(const double time) {
+double OrbitalDataParser::getPropertyAtTime(const double time) {
   if (time < getLowestDatapoint()) return getLowestDatavalue();
   if (time > getHighestDatapoint()) return getHighestDatavalue();
 
@@ -48,12 +48,12 @@ double CSVParser::getPropertyAtTime(const double time) {
   return last_polled_value;
 }
 
-double CSVParser::getLowestDatapoint() { return property.begin()->first; }
+double OrbitalDataParser::getLowestDatapoint() { return property.begin()->first; }
 
-double CSVParser::getHighestDatapoint() { return property.rbegin()->first; }
+double OrbitalDataParser::getHighestDatapoint() { return property.rbegin()->first; }
 
-double CSVParser::getLowestDatavalue() { return property.begin()->second; }
+double OrbitalDataParser::getLowestDatavalue() { return property.begin()->second; }
 
-double CSVParser::getHighestDatavalue() { return property.rbegin()->second; }
+double OrbitalDataParser::getHighestDatavalue() { return property.rbegin()->second; }
 
-CSVParser::~CSVParser() {}
+OrbitalDataParser::~OrbitalDataParser() {}

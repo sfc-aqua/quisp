@@ -1,5 +1,5 @@
 /*
- * CSVParser.h
+ * OrbitalDataParser.h
  *
  *  Created on: Nov 28, 2023
  *      Author: paolo
@@ -14,11 +14,11 @@
 using namespace omnetpp;
 using std::string;
 
-class CSVParser {
+class OrbitalDataParser {
  public:
-  CSVParser();
-  CSVParser(const string filename);
-  virtual ~CSVParser();
+  OrbitalDataParser();
+  OrbitalDataParser(const string filename);
+  virtual ~OrbitalDataParser();
   double getPropertyAtTime(const double time);
   double getLowestDatapoint();
   double getHighestDatapoint();
