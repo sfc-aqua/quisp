@@ -12,15 +12,15 @@ channel FiberChannel extends DatarateChannel {
     delay = this.distance / speed_of_light_in_fiber * 1s;
 }
 
-channel FSChannel extends DatarateChannel {
-    @class(FSChannel);
+channel FreeSpaceChannel extends DatarateChannel {
+    @class(FreeSpaceChannel);
     double cost = default(1);
     double distance @unit(km) = default(20km) @mutable;
-    string distance_CSV;
-    double speed_of_light_in_FS @unit(m) = default(299792.458km);
+    string distance_csv;
+    double speed_of_light_in_freespace @unit(m) = default(299792.458km);
     double orbital_period @unit(s) = default(24h);
-    bool CSV_varies_delay = default(false);
-    delay = this.distance / speed_of_light_in_FS * 1s @mutable;
+    bool csv_varies_delay = default(false);
+    delay = this.distance / speed_of_light_in_freespace * 1s @mutable;
     datarate = uniform(1kbps, 100kbps);
 }
 
@@ -39,12 +39,12 @@ channel QuantumChannel extends FiberChannel
     double channel_y_error_rate = default(0);
 }
 
-channel ClassicalChannel_FS extends FSChannel
+channel ClassicalChannel_FS extends FreeSpaceChannel
 {
 
 }
 
-channel QuantumChannel_FS extends FSChannel
+channel QuantumChannel_FS extends FreeSpaceChannel
 {
     @class(QuantumChannel_FS);
     double channel_x_error_rate = default(0);
@@ -53,7 +53,7 @@ channel QuantumChannel_FS extends FSChannel
     double wavelength @unit(m) = default(1550nm);
     double transmitter_telescope_diameter @unit(m) = default(13.5cm);
     double receiver_telescope_diameter @unit(m) = default(1m);
-    double Fried_parameter @unit(m) = default(10cm);
+    double fried_parameter @unit(m) = default(10cm);
     double elevation_angle @unit(rad) = default(90deg); //TODO: this should be a function of time!
     double atmospheric_attenuation_zenith @unit(dB) = default(-3dB);
     string Aatm_CSV;

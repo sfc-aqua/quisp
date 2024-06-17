@@ -6,14 +6,14 @@
 
 #include <cstring>
 #include <stdexcept>
-#include "channels/FSChannel.h"
+#include "channels/FreeSpaceChannel.h"
 #include "messages/BSA_ipc_messages_m.h"
 #include "messages/base_messages_m.h"
 #include "messages/link_generation_messages_m.h"
 #include "omnetpp/cexception.h"
 #include "omnetpp/cmessage.h"
 
-using channels::FSChannel;
+using channels::FreeSpaceChannel;
 
 namespace quisp::modules {
 
@@ -239,8 +239,8 @@ simtime_t BSAController::getPredictedTravelTimeFromPort(int port) {
     channel = getParentModule()->getSubmodule("bsa")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
   }
 
-  if (FSChannel *FS_chl = dynamic_cast<FSChannel *>(channel)) {
-    speed_of_light_in_channel = FS_chl->par("speed_of_light_in_FS").doubleValue();  // km/sec
+  if (FreeSpaceChannel *FS_chl = dynamic_cast<FreeSpaceChannel *>(channel)) {
+    speed_of_light_in_channel = FS_chl->par("speed_of_light_in_freespace").doubleValue();  // km/sec
 
     // I need to predict where the satellite is going to be when emission starts. If I send the notification now, that's distance(simTime() + travel_time).
     double current_distance = FS_chl->getDistanceAtTime(simTime());
@@ -272,8 +272,8 @@ simtime_t BSAController::getCurrentTravelTimeFromPort(int port) {
     channel = getParentModule()->getSubmodule("bsa")->gate("quantum_port$i", port)->getIncomingTransmissionChannel();
   }
 
-  if (FSChannel *FS_chl = dynamic_cast<FSChannel *>(channel)) {
-    speed_of_light_in_channel = FS_chl->par("speed_of_light_in_FS").doubleValue();  // km/sec
+  if (FreeSpaceChannel *FS_chl = dynamic_cast<FreeSpaceChannel *>(channel)) {
+    speed_of_light_in_channel = FS_chl->par("speed_of_light_in_freespace").doubleValue();  // km/sec
     distance = FS_chl->getDistanceAtTime(simTime());
 
   } else {

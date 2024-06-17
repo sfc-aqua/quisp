@@ -1,5 +1,5 @@
 /*
- * FSChannel.h
+ * FreeSpaceChannel.h
  *
  *  \brief Freespace channel
  *
@@ -23,24 +23,23 @@
 using namespace omnetpp;
 using namespace quisp::messages;
 
-struct ORBITAL_PARAMETERS {
-  SimTime orbit_period = SIMTIME_MAX;
-  SimTime vis_start_time = SIMTIME_ZERO;
-  SimTime vis_end_time = SIMTIME_MAX;
+struct OrbitalParameters {
+  SimTime orbit_period = SIMTIME_MAX;  // Period of orbit
+  SimTime vis_start_time = SIMTIME_ZERO;  // Time at which visibility start during the orbital period
+  SimTime vis_end_time = SIMTIME_MAX;  // Time at which visibility ends during the orbital period
 };
 
 namespace channels {
-class FSChannel : public cDatarateChannel {
+class FreeSpaceChannel : public cDatarateChannel {
  public:
-  FSChannel();
-  void set_orbit_parameters(double orb_period, double orb_vis_start_coeff, double orb_vis_end_coeff);
-  bool checkLOS();
+  FreeSpaceChannel();
+  bool isRecipientVisible();
   double getDistanceAtTime(const simtime_t time);
-  SimTime getNext_check_time();
+  SimTime getNextCheckTime();
 
  private:
-  ORBITAL_PARAMETERS op;
-  OrbitalDataParser *dist_par;
+  OrbitalParameters op;
+  OrbitalDataParser *dist_parser;
 
  protected:
   virtual void initialize() override;

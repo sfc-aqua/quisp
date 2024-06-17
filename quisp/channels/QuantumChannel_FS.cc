@@ -6,7 +6,7 @@
 #include <omnetpp.h>
 #include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
-#include "FSChannel.h"
+#include "FreeSpaceChannel.h"
 #include "PhotonicQubit_m.h"
 #include "utils/OrbitalDataParser.h"
 
@@ -29,7 +29,7 @@ struct channel_error_model {
  *
  *  \brief QuantumChannel_FS
  */
-class QuantumChannel_FS : public FSChannel {
+class QuantumChannel_FS : public FreeSpaceChannel {
  public:
   QuantumChannel_FS();
 
@@ -66,9 +66,13 @@ Define_Channel(QuantumChannel_FS);
 QuantumChannel_FS::QuantumChannel_FS() {}
 
 void QuantumChannel_FS::initialize() {
-  FSChannel::initialize();
+  FreeSpaceChannel::initialize();
   distance = par("distance");
   Aatm_CSV = new OrbitalDataParser(par("Aatm_CSV"));
+  lambda = par("wavelength");
+  Dt = par("transmitter_telescope_diameter");
+  Dr = par("receiver_telescope_diameter");
+  r0 = par("fried_parameter");
   err.loss_rate = calculateLossRate();
   err.x_error_rate = par("channel_x_error_rate");
   err.y_error_rate = par("channel_y_error_rate");
@@ -89,7 +93,7 @@ cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOpti
     throw new cRuntimeError("something other than photonic qubit is sent through quantum channel");
   }
 
-  if (!checkLOS()) q->setLost(true);
+  if (!isRecipientVisible()) q->setLost(true);
   return {false, getDelay(), 0};
 }
 
@@ -112,11 +116,6 @@ void QuantumChannel_FS::validateParameters() {
 }
 
 double QuantumChannel_FS::calculateLossRate() {
-  lambda = par("wavelength");
-  Dt = par("transmitter_telescope_diameter");
-  Dr = par("receiver_telescope_diameter");
-  r0 = par("Fried_parameter");
-
   // hard-coded values from 10.1038/s42005-022-01123-7
   theta_diff = 1.27 * lambda / Dt;
   theta_atm = 2.1 * lambda / r0;
@@ -127,7 +126,7 @@ double QuantumChannel_FS::calculateLossRate() {
 }
 
 void QuantumChannel_FS::recalculateChannelParameters() {
-  FSChannel::recalculateChannelParameters();
+  FreeSpaceChannel::recalculateChannelParameters();
   Aatm = Aatm_CSV->getPropertyAtTime(simTime().dbl());
   err.loss_rate = calculateLossRate();
   err.error_rate = err.x_error_rate + err.y_error_rate + err.z_error_rate + err.loss_rate;
