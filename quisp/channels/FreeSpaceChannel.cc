@@ -11,11 +11,13 @@
 using namespace omnetpp;
 namespace channels {
 
-FreeSpaceChannel::FreeSpaceChannel(){};
+FreeSpaceChannel::FreeSpaceChannel() : parameter_distance(par("distance")), parameter_delay(par("delay")){};
 
 void FreeSpaceChannel::initialize() {
   cDatarateChannel::initialize();
+  speed_of_light_in_freespace = par("speed_of_light_in_freespace").doubleValue();
   const char *filename = par("distance_csv").stringValue();
+  csv_varies_delay = par("csv_varies_delay").boolValue();
   dist_parser = new OrbitalDataParser(filename);
   op.orbit_period = par("orbital_period");
   op.vis_start_time = dist_parser->getLowestDatapoint();
@@ -58,7 +60,7 @@ SimTime FreeSpaceChannel::getNextCheckTime() {
 }
 
 void FreeSpaceChannel::recalculateChannelParameters() {
-  par("distance").setDoubleValue(dist_parser->getPropertyAtTime(simTime().dbl()));
-  if (par("csv_varies_delay").boolValue()) par("delay").setDoubleValue(par("distance").doubleValue() / par("speed_of_light_in_freespace").doubleValue());
+  parameter_distance.setDoubleValue(dist_parser->getPropertyAtTime(simTime().dbl()));
+  if (csv_varies_delay) parameter_delay.setDoubleValue(parameter_distance.doubleValue() / speed_of_light_in_freespace);
 }
 }  // namespace channels
