@@ -16,7 +16,7 @@ FSChannel::FSChannel(){};
 void FSChannel::initialize() {
   cDatarateChannel::initialize();
   const char *filename = par("distance_CSV").stringValue();
-  dist_par = new CSVParser(filename);
+  dist_par = new OrbitalDataParser(filename);
   op.orbit_period = par("orbital_period");
   op.vis_start_time = dist_par->getLowestDatapoint();
   op.vis_end_time = dist_par->getHighestDatapoint();
