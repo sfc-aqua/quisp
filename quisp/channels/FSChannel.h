@@ -4,7 +4,7 @@
  *  \brief Freespace channel
  *
  *  Loss model from 10.1038/s42005-022-01123-7.
- *  Base class for Free-space communication: this channel handles variable length and delay using a CSVParser.
+ *  Base class for Free-space communication: this channel handles variable length and delay using a OrbitalDataParser.
  *  LOS-related methods are directly callable from outside since the pointing system is expected to be able to directly check whether there is visibility or not.
  *
  */
@@ -18,7 +18,7 @@
 #include <stdexcept>
 #include "PhotonicQubit_m.h"
 #include "omnetpp/cexception.h"
-#include "utils/CSVParser.h"
+#include "utils/OrbitalDataParser.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -40,7 +40,7 @@ class FSChannel : public cDatarateChannel {
 
  private:
   ORBITAL_PARAMETERS op;
-  CSVParser *dist_par;
+  OrbitalDataParser *dist_par;
 
  protected:
   virtual void initialize() override;

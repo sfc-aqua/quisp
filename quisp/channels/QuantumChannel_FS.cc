@@ -8,7 +8,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "FSChannel.h"
 #include "PhotonicQubit_m.h"
-#include "utils/CSVParser.h"
+#include "utils/OrbitalDataParser.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -44,7 +44,7 @@ class QuantumChannel_FS : public FSChannel {
 
   Matrix<double, 5, 5> transition_matrix;
   channel_error_model err;
-  CSVParser *Aatm_CSV;
+  OrbitalDataParser *Aatm_CSV;
 
   // Loss model - see 10.1038/s42005-022-01123-7
   double distance = 0;  // in m
@@ -68,7 +68,7 @@ QuantumChannel_FS::QuantumChannel_FS() {}
 void QuantumChannel_FS::initialize() {
   FSChannel::initialize();
   distance = par("distance");
-  Aatm_CSV = new CSVParser(par("Aatm_CSV"));
+  Aatm_CSV = new OrbitalDataParser(par("Aatm_CSV"));
   err.loss_rate = calculateLossRate();
   err.x_error_rate = par("channel_x_error_rate");
   err.y_error_rate = par("channel_y_error_rate");
