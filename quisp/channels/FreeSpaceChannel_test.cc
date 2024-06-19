@@ -3,7 +3,7 @@
 #include <test_utils/ChannelType.h>
 #include <test_utils/TestUtils.h>
 
-#include "FSChannel.h"
+#include "FreeSpaceChannel.h"
 
 #include <fstream>
 
@@ -15,7 +15,7 @@ using namespace quisp::messages;
 using namespace quisp::modules::SharedResource;
 using namespace omnetpp;
 using namespace quisp_test::utils;
-using OriginalFSChannel = channels::FSChannel;
+using OriginalFreeSpaceChannel = channels::FreeSpaceChannel;
 using quisp_test::channel_type::TestChannelType;
 
 namespace {
@@ -27,18 +27,18 @@ class MockNode : public quisp_test::TestQNode {
   bool is_qnode;
 };
 
-class FSChannel : public OriginalFSChannel {
+class FreeSpaceChannel : public OriginalFreeSpaceChannel {
  public:
-  FSChannel() : OriginalFSChannel::FSChannel() {
+  FreeSpaceChannel() : OriginalFreeSpaceChannel::FreeSpaceChannel() {
     setParDouble(this, "distance", 0);
     setParDouble(this, "delay", 0);
     setParDouble(this, "datarate", 0);
     setParDouble(this, "ber", 0);
     setParDouble(this, "per", 0);
     setParDouble(this, "orbital_period", 86400);
-    setParDouble(this, "speed_of_light_in_FS", 299792458);
+    setParDouble(this, "speed_of_light_in_freespace", 299792458);
     setParBool(this, "disabled", false);
-    setParBool(this, "CSV_varies_delay", true);
+    setParBool(this, "csv_varies_delay", true);
 
     setComponentType(new TestChannelType("test channel"));
   }
@@ -80,7 +80,7 @@ class TestSimpleModule : public cSimpleModule {
   }
 };
 
-class FSChannelTest : public ::testing::Test {
+class FreeSpaceChannelTest : public ::testing::Test {
  protected:
   void SetUp() {
     generateTestCSV("channels/test_dist_csv.csv");
@@ -95,11 +95,11 @@ class FSChannelTest : public ::testing::Test {
     sat_gate = sat_node->addGate("sat_gate", cGate::INOUT);
     ground_gate = ground_node->addGate("ground_gate", cGate::INOUT);
 
-    downlink_chl = new FSChannel();
+    downlink_chl = new FreeSpaceChannel();
 
     sim->registerComponent(downlink_chl);
 
-    utils::setParStr(downlink_chl, "distance_CSV", "channels/test_dist_csv.csv");
+    utils::setParStr(downlink_chl, "distance_csv", "channels/test_dist_csv.csv");
 
     sat_node->gate("sat_gate$o")->connectTo(ground_node->gate("ground_gate$i"), downlink_chl, true);
 
@@ -130,19 +130,19 @@ class FSChannelTest : public ::testing::Test {
   TestSimpleModule* sat_simplemodule;
   MockNode* sat_node;
   MockNode* ground_node;
-  FSChannel* downlink_chl;
+  FreeSpaceChannel* downlink_chl;
   cGate* sat_gate;
   cGate* ground_gate;
 };
 
-TEST_F(FSChannelTest, messageWhenNonVisible) {
+TEST_F(FreeSpaceChannelTest, messageWhenNonVisible) {
   cMessage* msg = new cMessage();
   cChannel::Result res = downlink_chl->public_processMessage(msg);
   sim->run();
   ASSERT_EQ(res.discard, true);
 }
 
-TEST_F(FSChannelTest, messageWhenVisible) {
+TEST_F(FreeSpaceChannelTest, messageWhenVisible) {
   auto timeout = new cMessage;
   sat_simplemodule->scheduleAfter(200, timeout);
   sim->executeNextEvent();
@@ -150,11 +150,11 @@ TEST_F(FSChannelTest, messageWhenVisible) {
   cChannel::Result res = downlink_chl->public_processMessage(msg);
   sim->run();
   ASSERT_EQ(res.discard, false);
-  simtime_t delay = downlink_chl->par("distance").doubleValue() / downlink_chl->par("speed_of_light_in_FS").doubleValue();
+  simtime_t delay = downlink_chl->par("distance").doubleValue() / downlink_chl->par("speed_of_light_in_freespace").doubleValue();
   ASSERT_EQ(res.delay.raw(), delay.raw());
 }
 
-TEST_F(FSChannelTest, messageAfterVisible) {
+TEST_F(FreeSpaceChannelTest, messageAfterVisible) {
   auto timeout = new cMessage;
   sat_simplemodule->scheduleAfter(600, timeout);
   sim->executeNextEvent();
@@ -164,7 +164,7 @@ TEST_F(FSChannelTest, messageAfterVisible) {
   ASSERT_EQ(res.discard, true);
 }
 
-TEST_F(FSChannelTest, messageFollowingDayVisible) {
+TEST_F(FreeSpaceChannelTest, messageFollowingDayVisible) {
   auto timeout = new cMessage;
   sat_simplemodule->scheduleAfter(86700, timeout);
   sim->executeNextEvent();
@@ -172,10 +172,10 @@ TEST_F(FSChannelTest, messageFollowingDayVisible) {
   cChannel::Result res = downlink_chl->public_processMessage(msg);
   sim->run();
   ASSERT_EQ(res.discard, false);
-  simtime_t delay = downlink_chl->par("distance").doubleValue() / downlink_chl->par("speed_of_light_in_FS").doubleValue();
+  simtime_t delay = downlink_chl->par("distance").doubleValue() / downlink_chl->par("speed_of_light_in_freespace").doubleValue();
   ASSERT_EQ(res.delay.raw(), delay.raw());  // Comparing the raw int64_t values doesn't lose precision, unlike .dbl().
 }
-TEST_F(FSChannelTest, messageFollowingDayNonVisible) {
+TEST_F(FreeSpaceChannelTest, messageFollowingDayNonVisible) {
   auto timeout = new cMessage;
   sat_simplemodule->scheduleAfter(86801, timeout);
   sim->executeNextEvent();
