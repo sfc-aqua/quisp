@@ -44,9 +44,9 @@ channel ClassicalChannel_FS extends FreeSpaceChannel
 
 }
 
-channel QuantumChannel_FS extends FreeSpaceChannel
+channel FreeSpaceQuantumChannel extends FreeSpaceChannel
 {
-    @class(QuantumChannel_FS);
+    @class(FreeSpaceQuantumChannel);
     double channel_x_error_rate = default(0);
     double channel_z_error_rate = default(0);
     double channel_y_error_rate = default(0);

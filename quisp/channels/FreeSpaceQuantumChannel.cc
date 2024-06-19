@@ -25,13 +25,13 @@ struct channel_error_model {
   double loss_rate;
 };
 
-/** \class QuantumChannel_FS QuantumChannel_FS.cc
+/** \class FreeSpaceQuantumChannel FreeSpaceQuantumChannel.cc
  *
- *  \brief QuantumChannel_FS
+ *  \brief FreeSpaceQuantumChannel
  */
-class QuantumChannel_FS : public FreeSpaceChannel {
+class FreeSpaceQuantumChannel : public FreeSpaceChannel {
  public:
-  QuantumChannel_FS();
+  FreeSpaceQuantumChannel();
 
  protected:
   virtual void initialize() override;
@@ -61,11 +61,11 @@ class QuantumChannel_FS : public FreeSpaceChannel {
   double attenuation_rate = 0;
 };
 
-Define_Channel(QuantumChannel_FS);
+Define_Channel(FreeSpaceQuantumChannel);
 
-QuantumChannel_FS::QuantumChannel_FS() {}
+FreeSpaceQuantumChannel::FreeSpaceQuantumChannel() {}
 
-void QuantumChannel_FS::initialize() {
+void FreeSpaceQuantumChannel::initialize() {
   FreeSpaceChannel::initialize();
   distance = par("distance");
   Aatm_CSV = new OrbitalDataParser(par("Aatm_CSV"));
@@ -87,7 +87,7 @@ void QuantumChannel_FS::initialize() {
   // clang-format on
 }
 
-cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
+cChannel::Result FreeSpaceQuantumChannel::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
   PhotonicQubit *q = dynamic_cast<PhotonicQubit *>(msg);
   if (q == nullptr) {
     throw new cRuntimeError("something other than photonic qubit is sent through quantum channel");
@@ -97,7 +97,7 @@ cChannel::Result QuantumChannel_FS::processMessage(cMessage *msg, const SendOpti
   return {false, getDelay(), 0};
 }
 
-void QuantumChannel_FS::validateParameters() {
+void FreeSpaceQuantumChannel::validateParameters() {
   if (err.error_rate < 0 || 1 < err.error_rate) {
     throw cRuntimeError("quantum channel has invalid total error rate. If this is a free space channel, check that you are in far-field of the transmitting telescope.");
   }
@@ -115,7 +115,7 @@ void QuantumChannel_FS::validateParameters() {
   }
 }
 
-double QuantumChannel_FS::calculateLossRate() {
+double FreeSpaceQuantumChannel::calculateLossRate() {
   // hard-coded values from 10.1038/s42005-022-01123-7
   theta_diff = 1.27 * lambda / Dt;
   theta_atm = 2.1 * lambda / r0;
@@ -125,7 +125,7 @@ double QuantumChannel_FS::calculateLossRate() {
   return loss_rate;
 }
 
-void QuantumChannel_FS::recalculateChannelParameters() {
+void FreeSpaceQuantumChannel::recalculateChannelParameters() {
   FreeSpaceChannel::recalculateChannelParameters();
   Aatm = Aatm_CSV->getPropertyAtTime(simTime().dbl());
   err.loss_rate = calculateLossRate();
