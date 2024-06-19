@@ -161,7 +161,7 @@ void FreeSpaceQuantumChannel::validateParameters() {
 
 double FreeSpaceQuantumChannel::calculateLossRate() {
   // hard-coded values from 10.1038/s42005-022-01123-7
-  distance = parameter_distance.doubleValue();
+  distance = parameter_distance->doubleValue();
   attenuation_rate = ((pow(theta_diff, 2) + pow(theta_atm, 2)) / (pow(Dr, 2))) * pow(distance, 2) / t_atm;  // from 10.1038/s42005-022-01123-7
   loss_rate = 1 - 1 / attenuation_rate;
 
