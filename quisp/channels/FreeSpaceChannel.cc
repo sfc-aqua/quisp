@@ -9,7 +9,7 @@
 #include <omnetpp.h>
 
 using namespace omnetpp;
-namespace channels {
+namespace quisp::channels {
 
 FreeSpaceChannel::FreeSpaceChannel(){};
 
@@ -65,4 +65,4 @@ void FreeSpaceChannel::recalculateChannelParameters() {
   parameter_distance->setDoubleValue(dist_parser->getPropertyAtTime(simTime().dbl()));
   if (csv_varies_delay) parameter_delay->setDoubleValue(parameter_distance->doubleValue() / speed_of_light_in_freespace);
 }
-}  // namespace channels
+}  // namespace quisp::channels

@@ -6,7 +6,7 @@
 #include "channels/FreeSpaceChannel.h"
 #include "messages/visibility_messages_m.h"
 
-using namespace channels;
+using namespace quisp::channels;
 
 namespace quisp::modules::Satellite {
 

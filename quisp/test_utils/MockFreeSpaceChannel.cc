@@ -10,7 +10,7 @@ namespace quisp_test::FreeSpaceChannel {
 using quisp_test::channel_type::TestChannelType;
 using namespace quisp_test::utils;
 
-MockFreeSpaceChannel::MockFreeSpaceChannel(const char* channel_name) : channels::FreeSpaceChannel() {
+MockFreeSpaceChannel::MockFreeSpaceChannel(const char* channel_name) : quisp::channels::FreeSpaceChannel() {
   setComponentType(new TestChannelType("test channel"));
   setName(channel_name);
 

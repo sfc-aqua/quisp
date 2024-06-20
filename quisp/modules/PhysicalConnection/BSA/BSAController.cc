@@ -13,7 +13,7 @@
 #include "omnetpp/cexception.h"
 #include "omnetpp/cmessage.h"
 
-using channels::FreeSpaceChannel;
+using quisp::channels::FreeSpaceChannel;
 
 namespace quisp::modules {
 
