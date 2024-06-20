@@ -8,8 +8,10 @@ DefaultComponentProviderStrategy::DefaultComponentProviderStrategy(cModule *_sel
 
 cModule *DefaultComponentProviderStrategy::getQNode() {
   cModule *currentModule = self->getParentModule();
-  while (currentModule->getModuleType() != QNodeType) {
+  auto *mod_type = currentModule->getModuleType();
+  while (!isQNodeType(mod_type)) {
     currentModule = currentModule->getParentModule();
+    mod_type = currentModule->getModuleType();
     if (currentModule == nullptr) {
       throw cRuntimeError("QNode module not found. Have you changed the type name in ned file?");
     }
@@ -20,7 +22,7 @@ cModule *DefaultComponentProviderStrategy::getQNode() {
 cModule *DefaultComponentProviderStrategy::getNode() {
   cModule *currentModule = self->getParentModule();
   auto *mod_type = currentModule->getModuleType();
-  while (mod_type != QNodeType && mod_type != BSAType && mod_type != EPPSType) {
+  while (mod_type != QNodeType && mod_type != SatelliteQNodeType && mod_type != BSAType && mod_type != EPPSType) {
     currentModule = currentModule->getParentModule();
     mod_type = currentModule->getModuleType();
     if (currentModule == nullptr) {
@@ -118,6 +120,6 @@ cModule *DefaultComponentProviderStrategy::getQRSA() {
 }
 
 bool DefaultComponentProviderStrategy::isBSANodeType(const cModuleType *const type) { return type == BSAType; }
-bool DefaultComponentProviderStrategy::isQNodeType(const cModuleType *const type) { return type == QNodeType; }
+bool DefaultComponentProviderStrategy::isQNodeType(const cModuleType *const type) { return (type == QNodeType or type == SatelliteQNodeType); }
 bool DefaultComponentProviderStrategy::isEPPSNodeType(const cModuleType *const type) { return type == EPPSType; }
 }  // namespace quisp::utils
