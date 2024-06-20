@@ -14,7 +14,7 @@ using namespace omnetpp;
 using namespace quisp::messages;
 using namespace Eigen;
 
-namespace channels {
+namespace quisp::channels {
 
 /* The sum of Z, X and Y error rate equates to error_rate. Value could potentially between 0 ~ 1. */
 struct channel_error_model {
@@ -183,4 +183,4 @@ void FreeSpaceQuantumChannel::recalculateChannelParameters() {
   // clang-format on
 }
 
-}  // namespace channels
+}  // namespace quisp::channels

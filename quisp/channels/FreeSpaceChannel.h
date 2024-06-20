@@ -29,7 +29,7 @@ struct OrbitalParameters {
   SimTime vis_end_time = SIMTIME_MAX;  // Time at which visibility ends during the orbital period
 };
 
-namespace channels {
+namespace quisp::channels {
 class FreeSpaceChannel : public cDatarateChannel {
  public:
   FreeSpaceChannel();
@@ -50,4 +50,4 @@ class FreeSpaceChannel : public cDatarateChannel {
   cPar *parameter_distance;
   cPar *parameter_delay;
 };
-};  // namespace channels
+};  // namespace quisp::channels

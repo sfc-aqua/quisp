@@ -5,7 +5,7 @@
 
 namespace quisp_test::FreeSpaceChannel {
 
-class MockFreeSpaceChannel : public channels::FreeSpaceChannel {
+class MockFreeSpaceChannel : public quisp::channels::FreeSpaceChannel {
  public:
   explicit MockFreeSpaceChannel(const char* channel_name);
   ~MockFreeSpaceChannel();

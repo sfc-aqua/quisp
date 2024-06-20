@@ -15,7 +15,7 @@ using namespace quisp::messages;
 using namespace quisp::modules::SharedResource;
 using namespace omnetpp;
 using namespace quisp_test::utils;
-using OriginalFreeSpaceChannel = channels::FreeSpaceChannel;
+using OriginalFreeSpaceChannel = quisp::channels::FreeSpaceChannel;
 using quisp_test::channel_type::TestChannelType;
 
 namespace {
