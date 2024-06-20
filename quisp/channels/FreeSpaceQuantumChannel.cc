@@ -67,7 +67,7 @@ FreeSpaceQuantumChannel::FreeSpaceQuantumChannel() {}
 
 void FreeSpaceQuantumChannel::initialize() {
   FreeSpaceChannel::initialize();
-  distance = par("distance");
+  distance = par("distance").doubleValueInUnit("m");
   Aatm_CSV = new OrbitalDataParser(par("Aatm_CSV"));
   lambda = par("wavelength");
   Dt = par("transmitter_telescope_diameter");
