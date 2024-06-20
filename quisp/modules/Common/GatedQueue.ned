@@ -1,5 +1,5 @@
-
 package modules.Common;
+@namespace(quisp::modules);
 
 simple GatedQueue extends Queue
 {

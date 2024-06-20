@@ -33,7 +33,7 @@ class GatedQueue : public Queue {
  private:
   bool pending_vcr = false;
 };
-
+Define_Module(GatedQueue);
 }  // namespace quisp::modules
 
 #endif

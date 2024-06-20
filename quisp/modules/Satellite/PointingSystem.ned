@@ -7,9 +7,9 @@ simple PointingSystem
 {
 parameters:
     string name = "VisChecker";
-    double orbital_period @unit(s);// = default(6s);
-    double vis_start_coeff;
-    double vis_end_coeff;
+    double orbital_period @unit(s) = default(1d);
+//    double vis_start_coeff = default(0);
+//    double vis_end_coeff = default(1);
     @class(PointingSystem);
 gates:
     input req;
