@@ -50,7 +50,7 @@ double FreeSpaceChannel::getDistanceAtTime(const simtime_t time) {
 }
 
 SimTime FreeSpaceChannel::getNextCheckTime() {
-  Enter_Method("next_check_time()");
+  Enter_Method("getNextCheckTime()");
   const SimTime current_time = fmod(simTime(), op.orbit_period);
   if (current_time >= op.vis_start_time and current_time <= op.vis_end_time) {
     return 0;

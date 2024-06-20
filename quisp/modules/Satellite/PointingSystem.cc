@@ -3,7 +3,7 @@
  *  \brief PointingSystem
  */
 #include "PointingSystem.h"
-#include "channels/FSChannel.h"
+#include "channels/FreeSpaceChannel.h"
 #include "messages/visibility_messages_m.h"
 
 using namespace channels;
@@ -25,12 +25,12 @@ void PointingSystem::handleMessage(cMessage* msg) {
       const char* gate_to_check = vcr->getOut_gate();
       int gtc_index = vcr->getIndex();
       cChannel* chl = getParentModule()->gate(gate_to_check, gtc_index)->getChannel();
-      if (auto* fs_chl = dynamic_cast<FSChannel*>(chl)) {
-        SimTime next_check_time = fs_chl->getNext_check_time();
-        vco->setNext_check_time(next_check_time.dbl());
+      if (auto* fs_chl = dynamic_cast<FreeSpaceChannel*>(chl)) {
+        SimTime next_check_time = fs_chl->getNextCheckTime();
+        vco->setNextCheckTime(next_check_time.dbl());
       } else {
         EV << "WARNING: checking visibility along a fiber channel. Seems weird.";
-        vco->setNext_check_time(0);
+        vco->setNextCheckTime(0);
       }
       send(vco, "ans");
       delete vcr;

@@ -35,7 +35,7 @@ class FreeSpaceChannel : public cDatarateChannel {
   FreeSpaceChannel();
   bool isRecipientVisible();
   double getDistanceAtTime(const simtime_t time);
-  SimTime getNextCheckTime();
+  virtual SimTime getNextCheckTime();
 
  private:
   OrbitalParameters op;

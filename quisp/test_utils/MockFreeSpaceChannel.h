@@ -1,18 +1,18 @@
 #pragma once
 
 #include <omnetpp.h>
-#include "channels/FSChannel.h"
+#include "channels/FreeSpaceChannel.h"
 
-namespace quisp_test::FSChannel {
+namespace quisp_test::FreeSpaceChannel {
 
-class MockFreeSpaceChannel : public channels::FSChannel {
+class MockFreeSpaceChannel : public channels::FreeSpaceChannel {
  public:
   explicit MockFreeSpaceChannel(const char* channel_name);
   ~MockFreeSpaceChannel();
   void initialize() override{};
-  void setNext_check_time(SimTime next_check);
+  void setNextCheckTime(SimTime next_check);
   virtual cProperties* getProperties() const override { return props; };
-  SimTime getNext_check_time() override;
+  SimTime getNextCheckTime() override;
   void addResultRecorders() override{};
   virtual simtime_t getTransmissionFinishTime() const override { return simTime(); };
 
@@ -21,4 +21,4 @@ class MockFreeSpaceChannel : public channels::FSChannel {
   cProperties* props;
   cConfiguration* cfg;
 };
-}  // namespace quisp_test::FSChannel
+}  // namespace quisp_test::FreeSpaceChannel

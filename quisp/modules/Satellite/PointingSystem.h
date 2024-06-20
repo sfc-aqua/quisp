@@ -5,7 +5,7 @@
 #pragma once
 
 #include <omnetpp.h>
-#include "channels/FSChannel.h"
+#include "channels/FreeSpaceChannel.h"
 #include "messages/visibility_messages_m.h"
 #include "omnetpp/simtime.h"
 
