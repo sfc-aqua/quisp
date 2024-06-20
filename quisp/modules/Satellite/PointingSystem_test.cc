@@ -12,7 +12,7 @@ using namespace quisp_test::utils;
 using namespace quisp::messages;
 using namespace quisp::modules::SharedResource;
 using OriginalPointingSystem = quisp::modules::Satellite::PointingSystem;
-using quisp_test::FSChannel::MockFreeSpaceChannel;
+using quisp_test::FreeSpaceChannel::MockFreeSpaceChannel;
 
 namespace {
 
@@ -120,7 +120,7 @@ TEST_F(PointingSystemTest, handleNonControlMessage) {
 }
 
 TEST_F(PointingSystemTest, handleVisRequest_VisibleChannel) {
-  chl->setNext_check_time(simTime());
+  chl->setNextCheckTime(simTime());
 
   auto vcr = new VisCheckRequest;
   vcr->setOut_gate("test_out");
@@ -132,12 +132,12 @@ TEST_F(PointingSystemTest, handleVisRequest_VisibleChannel) {
   {
     auto* msg = pointing_system->gate("ans")->messages.at(0);
     auto vco = dynamic_cast<VisCheckOutcome*>(msg);
-    ASSERT_EQ(vco->getNext_check_time(), 0);
+    ASSERT_EQ(vco->getNextCheckTime(), 0);
   }
 }
 
 TEST_F(PointingSystemTest, handleVisRequest_NonVisibleChannel) {
-  chl->setNext_check_time(simTime() + 1);
+  chl->setNextCheckTime(simTime() + 1);
 
   auto vcr = new VisCheckRequest;
   vcr->setOut_gate("test_out");
@@ -149,11 +149,11 @@ TEST_F(PointingSystemTest, handleVisRequest_NonVisibleChannel) {
   {
     auto* msg = pointing_system->gate("ans")->messages.at(0);
     auto vco = dynamic_cast<VisCheckOutcome*>(msg);
-    ASSERT_EQ(vco->getNext_check_time(), simTime().dbl() + 1);
+    ASSERT_EQ(vco->getNextCheckTime(), simTime().dbl() + 1);
   }
 }
 
-TEST_F(PointingSystemTest, handleVisRequest_NonFSChannel) {
+TEST_F(PointingSystemTest, handleVisRequest_NonFreeSpaceChannel) {
   outgate->disconnect();
   outgate->connectTo(stub_gate);
 
@@ -167,7 +167,7 @@ TEST_F(PointingSystemTest, handleVisRequest_NonFSChannel) {
   {
     auto* msg = pointing_system->gate("ans")->messages.at(0);
     auto vco = dynamic_cast<VisCheckOutcome*>(msg);
-    ASSERT_EQ(vco->getNext_check_time(), 0);
+    ASSERT_EQ(vco->getNextCheckTime(), 0);
   }
 }
 

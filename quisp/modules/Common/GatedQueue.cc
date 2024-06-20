@@ -21,7 +21,7 @@ void GatedQueue::handleMessage(cMessage *msg) {
   }
 
   if (auto vco = dynamic_cast<VisCheckOutcome *>(msg)) {
-    if (vco->getNext_check_time() == 0) {
+    if (vco->getNextCheckTime() == 0) {
       last_polling_time = simTime();
       pending_vcr = false;
       msg = (cMessage *)queue.pop();
@@ -30,7 +30,7 @@ void GatedQueue::handleMessage(cMessage *msg) {
       startTransmitting(msg);
     } else {
       VisCheckRetry *retry = new VisCheckRetry();
-      next_check_time = vco->getNext_check_time();
+      next_check_time = vco->getNextCheckTime();
       scheduleAfter(next_check_time, retry);
     }
     delete vco;

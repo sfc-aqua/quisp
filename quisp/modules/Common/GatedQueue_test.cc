@@ -11,7 +11,7 @@ using namespace quisp_test;
 using namespace quisp_test::utils;
 using namespace quisp::messages;
 using namespace quisp::modules::SharedResource;
-using quisp_test::FSChannel::MockFreeSpaceChannel;
+using quisp_test::FreeSpaceChannel::MockFreeSpaceChannel;
 using OriginalGatedQueue = quisp::modules::GatedQueue;
 namespace {
 
@@ -156,7 +156,7 @@ TEST_F(GatedQueueTest, handleOutgoingMessage_Visible) {
   ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(), 1);  // Must request Vis info
   ASSERT_EQ(gated_queue->gate("line$o")->messages.size(), 0);  // Must not send message yet
   VisCheckOutcome* vco = new VisCheckOutcome();
-  vco->setNext_check_time(0);
+  vco->setNextCheckTime(0);
   vco->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"), simTime());
   gated_queue->handleMessage(vco);
   ASSERT_EQ(*gated_queue->gate("line$o")->messages.front()->getName(), *pkt->getName());  // If receiver is visible, we can send the message.
@@ -170,7 +170,7 @@ TEST_F(GatedQueueTest, handleOutgoingMessage_NonVisible) {
   ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(), 1);  // Must request Vis info
   ASSERT_EQ(gated_queue->gate("line$o")->messages.size(), 0);  // Must not send message yet
   VisCheckOutcome* vco = new VisCheckOutcome();
-  vco->setNext_check_time(1);
+  vco->setNextCheckTime(1);
   vco->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"), simTime());
   gated_queue->handleMessage(vco);
   ASSERT_EQ(gated_queue->gate("line$o")->messages.size(), 0);  // Must not send message yet
@@ -180,7 +180,7 @@ TEST_F(GatedQueueTest, handleOutgoingMessage_NonVisible) {
   ASSERT_EQ(gated_queue->gate("to_ps")->messages.size(), 2);  // Must request Vis info
   ASSERT_EQ(gated_queue->gate("line$o")->messages.size(), 0);  // Must not send message yet
   VisCheckOutcome* second_vco = new VisCheckOutcome();
-  second_vco->setNext_check_time(0);
+  second_vco->setNextCheckTime(0);
   second_vco->setArrival(gated_queue->getId(), gated_queue->findGate("from_ps"), simTime());
   gated_queue->handleMessage(second_vco);
   ASSERT_EQ(gated_queue->gate("line$o")->messages.size(), 1);  // Finally send the message
