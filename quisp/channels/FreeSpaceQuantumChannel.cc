@@ -88,12 +88,57 @@ void FreeSpaceQuantumChannel::initialize() {
 }
 
 cChannel::Result FreeSpaceQuantumChannel::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
+  recalculateChannelParameters();
   PhotonicQubit *q = dynamic_cast<PhotonicQubit *>(msg);
+
   if (q == nullptr) {
     throw new cRuntimeError("something other than photonic qubit is sent through quantum channel");
+    }
+
+
+  if (!isRecipientVisible()) {
+    q->setLost(true);
+    return {false, getDelay(), 0};
   }
 
-  if (!isRecipientVisible()) q->setLost(true);
+
+
+  MatrixXd probability_vector(1, 5);  // I, X, Z, Y, Photon Lost
+  if (q->isLost()) {
+    probability_vector << 0, 0, 0, 0, 1;  // Photon already lost due to the coupling lost.
+  } else {
+    probability_vector << 1, 0, 0, 0, 0;  // No error
+  }
+  MatrixXd output_probability_vector(1, 5);
+  output_probability_vector = probability_vector * transition_matrix;
+
+  // |-- no error --|-- x_error --|-- z_error --|-- y_error --|-- lost --|
+  double no_error_ceil = output_probability_vector(0, 0);
+  double x_error_ceil = no_error_ceil + output_probability_vector(0, 1);
+  double z_error_ceil = x_error_ceil + output_probability_vector(0, 2);
+  double y_error_ceil = z_error_ceil + output_probability_vector(0, 3);
+
+  double rand = dblrand();
+  if (rand < no_error_ceil) {
+    // Qubit will end up with no error
+  } else if (rand < x_error_ceil) {
+    // X error
+    q->getQubitRefForUpdate()->noiselessX();
+    q->setXError(true);
+  } else if (rand < z_error_ceil) {
+    // Z error
+    q->getQubitRefForUpdate()->noiselessZ();
+    q->setZError(true);
+  } else if (rand < y_error_ceil) {
+    // Y error
+    q->getQubitRefForUpdate()->noiselessX();
+    q->getQubitRefForUpdate()->noiselessZ();
+    q->setXError(true);
+    q->setZError(true);
+  } else {
+    // photon is lost
+    q->setLost(true);
+  }
   return {false, getDelay(), 0};
 }
 
