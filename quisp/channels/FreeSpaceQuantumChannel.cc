@@ -44,7 +44,7 @@ class FreeSpaceQuantumChannel : public FreeSpaceChannel {
 
   Matrix<double, 5, 5> transition_matrix;
   channel_error_model err;
-  OrbitalDataParser *Aatm_CSV;
+  OrbitalDataParser *t_atm_csv;
 
   // Loss model - see 10.1038/s42005-022-01123-7
   double distance = 0;  // in m
@@ -52,7 +52,7 @@ class FreeSpaceQuantumChannel : public FreeSpaceChannel {
   double Dt = 0;
   double Dr = 0;
   double r0 = 0;
-  double Aatm = 1;
+  double t_atm = 1;
 
   // calculated in the code from the parameters above
   double theta_diff = 0;
@@ -68,7 +68,7 @@ FreeSpaceQuantumChannel::FreeSpaceQuantumChannel() {}
 void FreeSpaceQuantumChannel::initialize() {
   FreeSpaceChannel::initialize();
   distance = par("distance").doubleValueInUnit("m");
-  Aatm_CSV = new OrbitalDataParser(par("Aatm_CSV"));
+  t_atm_csv = new OrbitalDataParser(par("t_atm_csv"));
   lambda = par("wavelength");
   Dt = par("transmitter_telescope_diameter");
   Dr = par("receiver_telescope_diameter");
@@ -95,15 +95,12 @@ cChannel::Result FreeSpaceQuantumChannel::processMessage(cMessage *msg, const Se
 
   if (q == nullptr) {
     throw new cRuntimeError("something other than photonic qubit is sent through quantum channel");
-    }
-
+  }
 
   if (!isRecipientVisible()) {
     q->setLost(true);
     return {false, getDelay(), 0};
   }
-
-
 
   MatrixXd probability_vector(1, 5);  // I, X, Z, Y, Photon Lost
   if (q->isLost()) {
@@ -165,7 +162,7 @@ void FreeSpaceQuantumChannel::validateParameters() {
 double FreeSpaceQuantumChannel::calculateLossRate() {
   // hard-coded values from 10.1038/s42005-022-01123-7
   distance = parameter_distance.doubleValue();
-  attenuation_rate = ((pow(theta_diff, 2) + pow(theta_atm, 2)) / (pow(Dr, 2))) * pow(distance, 2) / Aatm;  // from 10.1038/s42005-022-01123-7
+  attenuation_rate = ((pow(theta_diff, 2) + pow(theta_atm, 2)) / (pow(Dr, 2))) * pow(distance, 2) / t_atm;  // from 10.1038/s42005-022-01123-7
   loss_rate = 1 - 1 / attenuation_rate;
 
   return loss_rate;
@@ -173,7 +170,7 @@ double FreeSpaceQuantumChannel::calculateLossRate() {
 
 void FreeSpaceQuantumChannel::recalculateChannelParameters() {
   FreeSpaceChannel::recalculateChannelParameters();
-  Aatm = Aatm_CSV->getPropertyAtTime(simTime().dbl());
+  t_atm = t_atm_csv->getPropertyAtTime(simTime().dbl());
   err.loss_rate = calculateLossRate();
   err.error_rate = err.x_error_rate + err.y_error_rate + err.z_error_rate + err.loss_rate;
   rereadPars();
