@@ -67,7 +67,7 @@ FreeSpaceQuantumChannel::FreeSpaceQuantumChannel() {}
 
 void FreeSpaceQuantumChannel::initialize() {
   FreeSpaceChannel::initialize();
-  distance = par("distance").doubleValueInUnit("m");
+  distance = parameter_distance->doubleValueInUnit("m");
   t_atm_csv = new OrbitalDataParser(par("t_atm_csv"));
   lambda = par("wavelength");
   Dt = par("transmitter_telescope_diameter");
@@ -161,7 +161,6 @@ void FreeSpaceQuantumChannel::validateParameters() {
 
 double FreeSpaceQuantumChannel::calculateLossRate() {
   // hard-coded values from 10.1038/s42005-022-01123-7
-  distance = parameter_distance->doubleValue();
   attenuation_rate = ((pow(theta_diff, 2) + pow(theta_atm, 2)) / (pow(Dr, 2))) * pow(distance, 2) / t_atm;  // from 10.1038/s42005-022-01123-7
   loss_rate = 1 - 1 / attenuation_rate;
 
@@ -170,6 +169,7 @@ double FreeSpaceQuantumChannel::calculateLossRate() {
 
 void FreeSpaceQuantumChannel::recalculateChannelParameters() {
   FreeSpaceChannel::recalculateChannelParameters();
+  distance = parameter_distance->doubleValueInUnit("m");
   t_atm = t_atm_csv->getPropertyAtTime(simTime().dbl());
   err.loss_rate = calculateLossRate();
   err.error_rate = err.x_error_rate + err.y_error_rate + err.z_error_rate + err.loss_rate;

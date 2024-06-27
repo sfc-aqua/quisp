@@ -17,7 +17,7 @@ channel FreeSpaceChannel extends DatarateChannel {
     double cost = default(1);
     double distance @unit(km) = default(20km) @mutable;
     string distance_csv;
-    double speed_of_light_in_freespace @unit(m) = default(299792.458km);
+    double speed_of_light_in_freespace @unit(km) = default(299792.458km);
     double orbital_period @unit(s) = default(24h);
     bool csv_varies_delay = default(true);
     delay = this.distance / speed_of_light_in_freespace * 1s @mutable;

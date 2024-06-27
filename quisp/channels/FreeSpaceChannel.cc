@@ -17,7 +17,7 @@ void FreeSpaceChannel::initialize() {
   cDatarateChannel::initialize();
   parameter_distance = &par("distance");
   parameter_delay = &par("delay");
-  speed_of_light_in_freespace = par("speed_of_light_in_freespace").doubleValue();
+  speed_of_light_in_freespace = par("speed_of_light_in_freespace").doubleValueInUnit("m");
   const char *filename = par("distance_csv").stringValue();
   csv_varies_delay = par("csv_varies_delay").boolValue();
   dist_parser = new OrbitalDataParser(filename);
@@ -62,7 +62,7 @@ SimTime FreeSpaceChannel::getNextCheckTime() {
 }
 
 void FreeSpaceChannel::recalculateChannelParameters() {
-  parameter_distance->setDoubleValue(dist_parser->getPropertyAtTime(simTime().dbl()));
-  if (csv_varies_delay) parameter_delay->setDoubleValue(parameter_distance->doubleValue() / speed_of_light_in_freespace);
+  parameter_distance->setDoubleValue(dist_parser->getPropertyAtTime(simTime().dbl()) / 1000);  // km
+  if (csv_varies_delay) parameter_delay->setDoubleValue(parameter_distance->doubleValueInUnit("m") / speed_of_light_in_freespace);
 }
 }  // namespace quisp::channels
