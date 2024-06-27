@@ -56,5 +56,5 @@ channel FreeSpaceQuantumChannel extends FreeSpaceChannel
     double fried_parameter @unit(m) = default(10cm);
     double elevation_angle @unit(rad) = default(90deg); //TODO: this should be a function of time!
     double atmospheric_attenuation_zenith @unit(dB) = default(-3dB);
-    string Aatm_CSV;
+    string t_atm_csv;
 }
