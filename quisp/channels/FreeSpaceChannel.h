@@ -40,8 +40,6 @@ class FreeSpaceChannel : public cDatarateChannel {
  private:
   OrbitalParameters op;
   OrbitalDataParser *dist_parser;
-  cPar &parameter_distance;
-  cPar &parameter_delay;
   bool csv_varies_delay = true;
   double speed_of_light_in_freespace = 0;
 
@@ -49,8 +47,7 @@ class FreeSpaceChannel : public cDatarateChannel {
   virtual void initialize() override;
   cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;
   virtual void recalculateChannelParameters();
-
- private:
-  bool line_of_sight;
+  cPar &parameter_distance;
+  cPar &parameter_delay;
 };
 };  // namespace channels

@@ -73,6 +73,8 @@ void FreeSpaceQuantumChannel::initialize() {
   Dt = par("transmitter_telescope_diameter");
   Dr = par("receiver_telescope_diameter");
   r0 = par("fried_parameter");
+  theta_diff = 1.27 * lambda / Dt;
+  theta_atm = 2.1 * lambda / r0;
   err.loss_rate = calculateLossRate();
   err.x_error_rate = par("channel_x_error_rate");
   err.y_error_rate = par("channel_y_error_rate");
@@ -162,8 +164,7 @@ void FreeSpaceQuantumChannel::validateParameters() {
 
 double FreeSpaceQuantumChannel::calculateLossRate() {
   // hard-coded values from 10.1038/s42005-022-01123-7
-  theta_diff = 1.27 * lambda / Dt;
-  theta_atm = 2.1 * lambda / r0;
+  distance = parameter_distance.doubleValue();
   attenuation_rate = ((pow(theta_diff, 2) + pow(theta_atm, 2)) / (pow(Dr, 2))) * pow(distance, 2) / Aatm;  // from 10.1038/s42005-022-01123-7
   loss_rate = 1 - 1 / attenuation_rate;
 
