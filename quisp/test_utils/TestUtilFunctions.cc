@@ -34,6 +34,19 @@ void setParDouble(cModule *module, const char *name, const double val) {
   module->addPar(p);
 }
 
+void setParDouble(cModule *module, const char *name, const double val, const char *unit) {
+  if (module->findPar(name) != -1) {
+    module->par(name) = val;
+    return;
+  }
+  cParImpl *p = new cDoubleParImpl();
+  p->setName(name);
+  p->setDoubleValue(val);
+  p->setUnit(unit);
+  p->setIsMutable(true);
+  module->addPar(p);
+}
+
 void setParStr(cModule *module, const char *name, const char *val) {
   if (module->findPar(name) != -1) {
     module->par(name) = val;
@@ -90,6 +103,19 @@ void setParDouble(cChannel *channel, const char *name, const double val) {
   cParImpl *p = new cDoubleParImpl();
   p->setName(name);
   p->setDoubleValue(val);
+  p->setIsMutable(true);
+  channel->addPar(p);
+}
+
+void setParDouble(cChannel *channel, const char *name, const double val, const char *unit) {
+  if (channel->findPar(name) != -1) {
+    channel->par(name) = val;
+    return;
+  }
+  cParImpl *p = new cDoubleParImpl();
+  p->setName(name);
+  p->setDoubleValue(val);
+  p->setUnit(unit);
   p->setIsMutable(true);
   channel->addPar(p);
 }
