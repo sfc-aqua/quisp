@@ -52,7 +52,6 @@ class HardwareMonitor : public IHardwareMonitor {
   int num_purification = 0;
   bool X_Purification = false;
   bool Z_Purification = false;
-  int purification_type = -1;
   int num_measure;
   int num_end_nodes;
 
@@ -70,6 +69,7 @@ class HardwareMonitor : public IHardwareMonitor {
   LinkCostMap *tomography_runningtime_holder;
   std::string tomography_output_filename;
   std::string file_dir_name;
+  std::string purification_type;
 
  protected:
   void initialize(int stage) override;

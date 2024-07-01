@@ -204,7 +204,7 @@ TEST_F(RuleSetGeneratorTest, PurificationRule) {
 
   auto purification_rule = rsg->purifyRule(partner_addr, purification_type, 15);
   auto serialized = purification_rule->serialize_json();
-  //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
+  //  rule_id is given by RuleSet and next_rule_id is given outside of Rule declaration.
   json expected = R"({
    "name":"purification with 1",
    "send_tag": 15,

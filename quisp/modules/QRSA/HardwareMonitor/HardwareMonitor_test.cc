@@ -55,7 +55,7 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
     setParInt(this, "initial_purification", 0);
     setParBool(this, "x_purification", true);
     setParBool(this, "z_purification", true);
-    setParInt(this, "purification_type", 0);
+    setParStr(this, "purification_type", "");
     setParInt(this, "num_measure", 0);
 
     this->setName("hardware_monitor_test_target");
