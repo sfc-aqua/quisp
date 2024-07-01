@@ -152,6 +152,7 @@ var hierarchy =
     [ "quisp::modules::RuleEngine::MSMInfo", "structquisp_1_1modules_1_1_rule_engine_1_1_m_s_m_info.html", null ],
     [ "quisp::modules::NeighborInfo", "structquisp_1_1modules_1_1_neighbor_info.html", null ],
     [ "quisp::runtime::Op< I >", "structquisp_1_1runtime_1_1_op.html", null ],
+    [ "OrbitalDataParser", "class_orbital_data_parser.html", null ],
     [ "quisp::modules::ospf::OspfNeighborInfo", "structquisp_1_1modules_1_1ospf_1_1_ospf_neighbor_info.html", null ],
     [ "quisp::modules::OutputCount", "structquisp_1_1modules_1_1_output_count.html", null ],
     [ "PhotonRecord", "struct_photon_record.html", null ],

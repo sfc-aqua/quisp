@@ -1,0 +1,5 @@
+<map id="quisp::runtime::Instruction&lt; OpLit, Operands &gt;" name="quisp::runtime::Instruction&lt; OpLit, Operands &gt;">
+<area shape="rect" id="Node000001" title="This class represents IR (intermediate representation) instruction. Program consists of Instructions." alt="" coords="5,94,174,135"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="63,5,116,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,46,92,93,87,93,87,46"/>
+</map>

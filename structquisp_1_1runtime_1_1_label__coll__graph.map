@@ -1,0 +1,5 @@
+<map id="quisp::runtime::Label" name="quisp::runtime::Label">
+<area shape="rect" id="Node000001" title="label to annotate the instruction index in a Program." alt="" coords="5,94,145,120"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="48,5,102,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,47,78,94,72,94,72,47"/>
+</map>

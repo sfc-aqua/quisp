@@ -1,7 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classquisp_1_1modules_1_1qnic__store_1_1_i_q_nic_store.html" title="The QNicStore interface." alt="" coords="5,39,143,79"/>
-<area shape="rect" id="Node000001" href="$classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html" title=" " alt="" coords="215,5,353,46"/>
-<area shape="poly" id="edge60_Node000000_Node000001" title=" " alt="" coords="158,43,214,34,215,39,158,48"/>
-<area shape="rect" id="Node000002" href="$classquisp__test_1_1mock__modules_1_1qnic__store_1_1_mock_q_nic_store.html" title=" " alt="" coords="191,71,377,111"/>
-<area shape="poly" id="edge61_Node000000_Node000002" title=" " alt="" coords="159,69,190,74,190,79,158,74"/>
+<area shape="rect" id="Node000000" href="$classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html" title="Interface for QNIC record." alt="" coords="5,5,151,46"/>
+<area shape="rect" id="Node000001" href="$classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html" title=" " alt="" coords="199,5,340,46"/>
+<area shape="poly" id="edge59_Node000000_Node000001" title=" " alt="" coords="166,23,198,23,198,28,166,28"/>
 </map>

@@ -224,6 +224,7 @@ var annotated_dup =
     [ "std", "namespacestd.html", [
       [ "hash< pair< quisp::modules::QNIC_type, int > >", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4.html", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4" ]
     ] ],
+    [ "OrbitalDataParser", "class_orbital_data_parser.html", "class_orbital_data_parser" ],
     [ "PhotonRecord", "struct_photon_record.html", "struct_photon_record" ],
     [ "RoutingDaemon", "class_routing_daemon.html", null ],
     [ "SwappingConfig", "struct_swapping_config.html", "struct_swapping_config" ]

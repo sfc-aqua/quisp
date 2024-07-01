@@ -71,5 +71,5 @@ var searchData=
   ['type_68',['type',['../structquisp_1_1modules_1_1_b_s_a_controller_1_1_q_nic_info.html#ac5c2db77428939900ff1da732f62acd3',1,'quisp::modules::BSAController::QNicInfo::type'],['../structquisp_1_1modules_1_1_q_n_i_c.html#a7a4b6c84a493c000e9ff7915c5d3d06a',1,'quisp::modules::QNIC::type'],['../classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html#a286203cf7087d7ecd82993bc859d69b6',1,'quisp::modules::qnic_record::QNicRecord::type'],['../classquisp_1_1runtime_1_1_memory_value.html#ac0c1c70da6a2d3c1d20ec1a5c076ba31',1,'quisp::runtime::MemoryValue::type'],['../structquisp__test_1_1strategy_1_1_q_nic_spec.html#aa43d752af210a60952295b0173c3b565',1,'quisp_test::strategy::QNicSpec::type']]],
   ['types_69',['Storage types',['../md_quisp_2runtime_2_r_e_a_d_m_e.html#autotoc_md59',1,'']]],
   ['types_2ecc_70',['types.cc',['../types_8cc.html',1,'']]],
-  ['types_2eh_71',['types.h',['../modules_2_physical_connection_2_b_s_a_2types_8h.html',1,'(Global Namespace)'],['../backends_2_graph_state_2types_8h.html',1,'(Global Namespace)'],['../runtime_2types_8h.html',1,'(Global Namespace)']]]
+  ['types_2eh_71',['types.h',['../runtime_2types_8h.html',1,'(Global Namespace)'],['../modules_2_physical_connection_2_b_s_a_2types_8h.html',1,'(Global Namespace)'],['../backends_2_graph_state_2types_8h.html',1,'(Global Namespace)']]]
 ];

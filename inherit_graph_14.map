@@ -1,9 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="5,39,173,79"/>
-<area shape="rect" id="Node000001" href="$classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html" title=" " alt="" coords="222,5,402,46"/>
-<area shape="poly" id="edge46_Node000000_Node000001" title=" " alt="" coords="187,42,221,37,222,42,188,47"/>
-<area shape="rect" id="Node000003" href="$classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html" title=" " alt="" coords="221,71,403,111"/>
-<area shape="poly" id="edge48_Node000000_Node000003" title=" " alt="" coords="188,71,220,75,220,80,188,76"/>
-<area shape="rect" id="Node000002" href="$classquisp__test_1_1backends_1_1graph__state_1_1_backend.html" title=" " alt="" coords="451,5,603,46"/>
-<area shape="poly" id="edge47_Node000001_Node000002" title=" " alt="" coords="417,23,451,23,451,28,417,28"/>
+<area shape="rect" id="Node000000" href="$classquisp_1_1backends_1_1abstract_1_1_i_configuration.html" title="just an interface for the configuration to the backend" alt="" coords="5,5,173,46"/>
+<area shape="rect" id="Node000001" href="$classquisp_1_1backends_1_1_stationary_qubit_configuration.html" title="Configuration class contains all parameters and provides the way to retrieve it." alt="" coords="221,5,399,46"/>
+<area shape="poly" id="edge45_Node000000_Node000001" title=" " alt="" coords="188,23,220,23,220,28,188,28"/>
 </map>

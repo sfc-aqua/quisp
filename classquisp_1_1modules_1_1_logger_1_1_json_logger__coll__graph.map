@@ -1,5 +1,7 @@
 <map id="quisp::modules::Logger::JsonLogger" name="quisp::modules::Logger::JsonLogger">
-<area shape="rect" id="Node000001" title="JsonLogger class uses spdlog library and yields jsonl format log." alt="" coords="5,94,159,135"/>
+<area shape="rect" id="Node000001" title="JsonLogger class uses spdlog library and yields jsonl format log." alt="" coords="69,109,223,150"/>
 <area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="5,5,159,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,62,85,94,79,94,79,62"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,58,136,107,131,110,100,61"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="183,13,237,39"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="197,53,161,110,156,107,192,50"/>
 </map>
