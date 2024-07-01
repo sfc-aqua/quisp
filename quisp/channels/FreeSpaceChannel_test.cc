@@ -30,13 +30,13 @@ class MockNode : public quisp_test::TestQNode {
 class FreeSpaceChannel : public OriginalFreeSpaceChannel {
  public:
   FreeSpaceChannel() : OriginalFreeSpaceChannel::FreeSpaceChannel() {
-    setParDouble(this, "distance", 0);
+    setParDouble(this, "distance", 0, "km");
     setParDouble(this, "delay", 0);
     setParDouble(this, "datarate", 0);
     setParDouble(this, "ber", 0);
     setParDouble(this, "per", 0);
     setParDouble(this, "orbital_period", 86400);
-    setParDouble(this, "speed_of_light_in_freespace", 299792458);
+    setParDouble(this, "speed_of_light_in_freespace", 299792.458, "km");
     setParBool(this, "disabled", false);
     setParBool(this, "csv_varies_delay", true);
 
