@@ -71,11 +71,11 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     }
   }
 
-  if (photon.from_port == PortNumber::First)
+  if (photon.from_port == PortNumber::First) {
     first_port_records.emplace_back(photon);
-  else
+  } else {
     second_port_records.emplace_back(photon);
-
+  }
   if (!photon.is_last) {
     return;
   }
@@ -98,9 +98,9 @@ void BellStateAnalyzer::processPhotonRecords() {
   for (int i = 0; i < number_of_possible_pairs; i++) {
     auto p = first_port_records[i];
     auto q = second_port_records[i];
-
     if (fabs(p.arrival_time - q.arrival_time) < indistinguishability_window) {
-      batch_click_msg->appendClickResults(processIndistinguishPhotons(p, q));
+      BSAClickResult res = processIndistinguishPhotons(p, q);
+      batch_click_msg->appendClickResults(res);
     } else {
       batch_click_msg->appendClickResults({.success = false, .correction_operation = PauliOperator::I});
       discardPhoton(p);

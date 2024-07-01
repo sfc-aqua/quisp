@@ -24,7 +24,7 @@ namespace modules {
  *  \brief Queue
  */
 class Queue : public cSimpleModule {
- private:
+ protected:
   long frame_capacity;
   cQueue queue;
   cMessage *end_transmission_event;
