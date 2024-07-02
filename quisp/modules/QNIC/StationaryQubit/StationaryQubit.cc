@@ -214,7 +214,7 @@ bool StationaryQubit::isLocked() { return locked; }
  */
 PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   Enter_Method("generateEntangledPhoton()");
-  auto *photon = new PhotonicQubit("Photon");
+  auto *photon = new PhotonicQubit();
   auto *photon_ref = backend->getShortLiveQubit();
   qubit_ref->noiselessH();
   qubit_ref->noiselessCNOT(photon_ref);
