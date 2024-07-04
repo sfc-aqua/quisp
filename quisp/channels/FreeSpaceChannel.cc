@@ -65,4 +65,9 @@ void FreeSpaceChannel::recalculateChannelParameters() {
   parameter_distance->setDoubleValue(dist_parser->getPropertyAtTime(simTime().dbl()) / 1000);  // km
   if (csv_varies_delay) parameter_delay->setDoubleValue(parameter_distance->doubleValueInUnit("m") / speed_of_light_in_freespace);
 }
+
+void FreeSpaceChannel::finish() {
+  recalculateChannelParameters();  // To recalculate the distance for the final output printing.
+}
+
 }  // namespace quisp::channels

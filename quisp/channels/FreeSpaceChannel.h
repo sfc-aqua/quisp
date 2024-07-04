@@ -46,6 +46,7 @@ class FreeSpaceChannel : public cDatarateChannel {
  protected:
   virtual void initialize() override;
   cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;
+  virtual void finish() override;
   virtual void recalculateChannelParameters();
   cPar *parameter_distance;
   cPar *parameter_delay;
