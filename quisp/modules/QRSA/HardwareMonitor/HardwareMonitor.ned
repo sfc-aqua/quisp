@@ -18,7 +18,7 @@ simple HardwareMonitor
         string file_dir_name = default("results/");
 	// purification control
         int initial_purification;
-        int purification_type;
+        string purification_type;
 	// these two are obsolete controls for purification
         bool x_purification = default(false);
         bool z_purification = default(false);
