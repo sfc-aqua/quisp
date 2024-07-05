@@ -22,11 +22,15 @@ To run a simulation with a satellite link, choose one of the SAT configurations 
 Even though simulation tests for quantum links are present in the code base, satellite links' time-varying nature makes them more difficult to validate through simulation tests. Therefore, in addition to the description found in [our paper](https://arxiv.org/abs/2405.07589), we provide here a comparison of results obtained by simulating two satellite MM links with QuISP against our theoretical model. The links modeled by our CSV files have the following parameters:
 
 ![Link Parameters](img/satellite/SAT_LinkParams.svg)
-### Simulation tests, Scenario 1
+### MM Link, Scenario 1
 <img src="img/satellite/SAT_C1_match_number.svg" width="400"> <img src="img/satellite/SAT_C1_match_rate.svg" width="400">
 
-### Simulation tests, Scenario 2
+### MM Link, Scenario 2
 <img src="img/satellite/SAT_C2_match_number.svg" width="400"> <img src="img/satellite/SAT_C2_match_rate.svg" width="400">
+
+### Dual MM Link, Entanglement Swapping on the Satellite
+<img src="img/satellite/SAT_C1C2_swap_match.svg" width="400">
+
 
 ## Code Breakdown
 
