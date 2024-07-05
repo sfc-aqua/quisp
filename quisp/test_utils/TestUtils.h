@@ -1,11 +1,14 @@
 #pragma once
 
 #include "AccessPrivate.h"
+#include "ChannelType.h"
 #include "Gate.h"
+#include "MockFreeSpaceChannel.h"
 #include "ModuleType.h"
 #include "QNode.h"
 #include "Simulation.h"
 #include "StaticEnv.h"
+#include "Stub.h"
 #include "TestComponentProviderStrategy.h"
 #include "TestUtilFunctions.h"
 #include "mock_backends/MockBackendQubit.h"
@@ -15,7 +18,6 @@
 #include "mock_modules/MockQubit.h"
 #include "mock_modules/MockRealTimeController.h"
 #include "mock_modules/MockRoutingDaemon.h"
-
 namespace quisp_test {
 
 // use these functions and classes in your unit test.

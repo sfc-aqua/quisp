@@ -178,7 +178,10 @@ void Router::handleOspfHelloPacket(cMessage *msg) {
   }
 }
 
-bool Router::parentModuleIsQNode() { return provider.getNode()->getModuleType() == cModuleType::get("modules.QNode"); }
+bool Router::parentModuleIsQNode() {
+  auto *type = provider.getNode()->getModuleType();
+  return (type == cModuleType::get("modules.QNode") or type == cModuleType::get("modules.SatelliteQNode"));
+}
 
 /**
  * @details Unlike QNodes, BSA nodes are connected to only two nodes (at least that is the assumption)
