@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AccessPrivate.h"
+#include "ChannelType.h"
 #include "Gate.h"
 #include "ModuleType.h"
 #include "QNode.h"
