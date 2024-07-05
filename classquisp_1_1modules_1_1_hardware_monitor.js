@@ -35,7 +35,7 @@ var classquisp_1_1modules_1_1_hardware_monitor =
     [ "num_qnic_total", "classquisp_1_1modules_1_1_hardware_monitor.html#adaeda69e137a24c4637da1c687f93bcd", null ],
     [ "Pauli", "classquisp_1_1modules_1_1_hardware_monitor.html#a34a7b3d23be779949189005311f28afe", null ],
     [ "provider", "classquisp_1_1modules_1_1_hardware_monitor.html#ac0d06857a13d981170e1a345d2b28b11", null ],
-    [ "purification_type", "classquisp_1_1modules_1_1_hardware_monitor.html#abea007dc494d2b29d3e8ec21f48e28d6", null ],
+    [ "purification_type", "classquisp_1_1modules_1_1_hardware_monitor.html#a8f459637fb289e06a11600d6b524b868", null ],
     [ "qnic_partner_map", "classquisp_1_1modules_1_1_hardware_monitor.html#a9ead24255064977561c176e18b78ce9d", null ],
     [ "routing_daemon", "classquisp_1_1modules_1_1_hardware_monitor.html#aff8f89681b18715ea16ea825cb3b296f", null ],
     [ "temporal_tomography_output", "classquisp_1_1modules_1_1_hardware_monitor.html#a3cf39669f747199d73dfa6e1726c1a3a", null ],

@@ -1,22 +1,14 @@
 var searchData=
 [
-  ['undisposedobject_0',['undisposedObject',['../classquisp__test_1_1env_1_1_static_env.html#a6f9be36c1b84afdb1445c6fc8ce244c6',1,'quisp_test::env::StaticEnv']]],
-  ['uniqueqnicrecord_1',['UniqueQNicRecord',['../namespacequisp_1_1modules_1_1qnic__store.html#a67d90664942a2f29099dcfb036f975be',1,'quisp::modules::qnic_store']]],
-  ['unit_20testing_2',['Unit Testing',['../md_quisp_2utils_2_r_e_a_d_m_e.html#autotoc_md70',1,'']]],
-  ['unit_5ftest_5fmain_2ecc_3',['unit_test_main.cc',['../unit__test__main_8cc.html',1,'']]],
-  ['unknown_4',['Unknown',['../namespacequisp_1_1modules_1_1_logger.html#a3a0d52194cb4fdee8ab9d5c6cfa4c228a88183b946cc5f0e8c96b2e66e1c74a7e',1,'quisp::modules::Logger']]],
-  ['unlock_5',['unlock',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#a7994f362fba966f10ffc8dd24cecfd3d',1,'quisp::modules::IStationaryQubit::Unlock()'],['../classquisp_1_1modules_1_1_stationary_qubit.html#a56fc6c0cd54b3e6cbb025ad058053efb',1,'quisp::modules::StationaryQubit::Unlock()']]],
-  ['unrefosgnode_6',['unrefOsgNode',['../classquisp__test_1_1env_1_1_static_env.html#a6f3b720479d093d912573d3df9247921',1,'quisp_test::env::StaticEnv']]],
-  ['unsupported_7',['unsupported',['../classquisp__test_1_1env_1_1_static_env.html#af372c0c3b4bce34b7d0b240aae07c40a',1,'quisp_test::env::StaticEnv']]],
-  ['updatechannelweightsintopology_8',['updateChannelWeightsInTopology',['../classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html#a5b1580ad93853b7df101e0a9f6f4378b',1,'quisp::modules::SharedResource::SharedResource']]],
-  ['updatechannelweightsofnode_9',['updateChannelWeightsOfNode',['../classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html#a433cb4c3e7eb042b110a53200bc43a99',1,'quisp::modules::SharedResource::SharedResource']]],
-  ['updated_5ftime_10',['updated_time',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a12b48cbd5182d6ab7a92721d88c6c1ff',1,'quisp::backends::graph_state::GraphStateQubit']]],
-  ['updatelinkstatedatabase_11',['updateLinkStateDatabase',['../classquisp_1_1modules_1_1ospf_1_1_link_state_database.html#af197758f7c49f7e6194109b6e74c0e88',1,'quisp::modules::ospf::LinkStateDatabase']]],
-  ['usage_12',['usage',['../md_quisp_2modules_2_logger_2_r_e_a_d_m_e.html#autotoc_md14',1,'Usage'],['../md_quisp_2modules_2_physical_connection_2_e_p_p_s_2_r_e_a_d_m_e.html#autotoc_md20',1,'Usage'],['../md_quisp_2test__utils_2_r_e_a_d_m_e.html#autotoc_md65',1,'Usage']]],
-  ['useful_20work_13',['Moving into useful work',['../index.html#autotoc_md7',1,'']]],
-  ['usetestrng_14',['useTestRNG',['../namespacequisp__test_1_1utils.html#ac9608fdc54533daf8f1d6f999bce6e56',1,'quisp_test::utils']]],
-  ['utilfunctions_2eh_15',['UtilFunctions.h',['../_util_functions_8h.html',1,'']]],
-  ['utilfunctions_5ftest_2ecc_16',['UtilFunctions_test.cc',['../_util_functions__test_8cc.html',1,'']]],
-  ['utilities_17',['Test Utilities',['../md_quisp_2test__utils_2_r_e_a_d_m_e.html',1,'']]],
-  ['utils_2eh_18',['utils.h',['../utils_8h.html',1,'']]]
+  ['wait_20for_20tt_20interval_20tt_20time_20and_20call_20emit_5fphotons_5fmsm_20tt_20interval_20tt_0',['1. Wait for &lt;tt&gt;interval&lt;/tt&gt; time and call EMIT_PHOTONS_MSM(&lt;tt&gt;interval&lt;/tt&gt;)',['../md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md49',1,'']]],
+  ['web_1',['Trying it out on the web',['../index.html#autotoc_md5',1,'']]],
+  ['weight_2',['weight',['../classquisp_1_1modules_1_1ospf_1_1_link_state_database.html#a8c6a98d246db970db641c3a7c70a9fb0',1,'quisp::modules::ospf::LinkStateDatabase']]],
+  ['where_20the_20bsm_20results_20are_20different_3',['Explanation of applying the Pauli Z gate for the case where the BSM results are different',['../md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md54',1,'']]],
+  ['which_20take_20part_20in_20epps_20modules_4',['MSM protocol details which take part in EPPS modules',['../md_quisp_2modules_2_physical_connection_2_e_p_p_s_2_r_e_a_d_m_e.html#autotoc_md21',1,'']]],
+  ['which_20take_20part_20in_20the_20ruleengine_5',['MSM protocol details which take part in the RuleEngine',['../md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html',1,'']]],
+  ['willupdate_6',['willupdate',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend_1_1_i_callback.html#a7f20c3ca19d09591f7c173d0ad4314d6',1,'quisp::backends::graph_state::GraphStateBackend::ICallback::willUpdate()'],['../classquisp_1_1modules_1_1backend_1_1_backend_container.html#ac0e390346cfb91ded328ab536b1f4f32',1,'quisp::modules::backend::BackendContainer::willUpdate()']]],
+  ['with_20runtime_7',['RuleSet Execution with Runtime',['../md_quisp_2runtime_2_r_e_a_d_m_e.html#autotoc_md57',1,'']]],
+  ['work_8',['Moving into useful work',['../index.html#autotoc_md7',1,'']]],
+  ['works_9',['How BellStateAnalyzer Module works',['../md_quisp_2modules_2_physical_connection_2_b_s_a_2_r_e_a_d_m_e.html#autotoc_md16',1,'']]],
+  ['writetofile_5ftopology_5fwith_5flinkcost_10',['writeToFile_Topology_with_LinkCost',['../classquisp_1_1modules_1_1_hardware_monitor.html#a18a07055653367c6f2120d21acf81b1f',1,'quisp::modules::HardwareMonitor']]]
 ];

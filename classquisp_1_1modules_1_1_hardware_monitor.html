@@ -136,8 +136,8 @@ Collaboration diagram for quisp::modules::HardwareMonitor:</div>
 <area shape="poly" title=" " alt="" coords="430,188,565,166,588,162,589,167,565,171,431,193"/>
 <area shape="rect" title=" " alt="" coords="50,193,127,219"/>
 <area shape="poly" title=" " alt="" coords="143,203,245,203,245,208,143,208"/>
-<area shape="rect" title=" " alt="" coords="303,257,357,283"/>
-<area shape="poly" title=" " alt="" coords="372,268,462,262,514,252,564,235,590,221,614,203,652,167,656,171,617,207,593,225,566,240,516,257,463,267,372,273"/>
+<area shape="rect" title=" " alt="" coords="303,272,357,297"/>
+<area shape="poly" title=" " alt="" coords="372,284,414,283,463,278,515,268,564,250,592,232,617,211,656,167,660,171,621,215,595,237,566,255,516,273,464,284,414,288,372,289"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -225,8 +225,6 @@ Private Attributes</h2></td></tr>
 <tr class="separator:ac8aa961dd13dd7360a42b6b52b12b0d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aa832ec90f9c644018146f26ca28dbd" id="r_a6aa832ec90f9c644018146f26ca28dbd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html#a6aa832ec90f9c644018146f26ca28dbd">Z_Purification</a> = false</td></tr>
 <tr class="separator:a6aa832ec90f9c644018146f26ca28dbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abea007dc494d2b29d3e8ec21f48e28d6" id="r_abea007dc494d2b29d3e8ec21f48e28d6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html#abea007dc494d2b29d3e8ec21f48e28d6">purification_type</a> = -1</td></tr>
-<tr class="separator:abea007dc494d2b29d3e8ec21f48e28d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ff4b98f94b50074229acec626be05f5" id="r_a7ff4b98f94b50074229acec626be05f5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html#a7ff4b98f94b50074229acec626be05f5">num_measure</a></td></tr>
 <tr class="separator:a7ff4b98f94b50074229acec626be05f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d2d54ec86a0d82eaf6fdb679fab69a4" id="r_a2d2d54ec86a0d82eaf6fdb679fab69a4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html#a2d2d54ec86a0d82eaf6fdb679fab69a4">num_end_nodes</a></td></tr>
@@ -249,6 +247,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a34b8d855ffd99fd801d32d32c330d12b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae83525d3bb10c0b6d03fffc98c6a73e0" id="r_ae83525d3bb10c0b6d03fffc98c6a73e0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html#ae83525d3bb10c0b6d03fffc98c6a73e0">file_dir_name</a></td></tr>
 <tr class="separator:ae83525d3bb10c0b6d03fffc98c6a73e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f459637fb289e06a11600d6b524b868" id="r_a8f459637fb289e06a11600d6b524b868"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html#a8f459637fb289e06a11600d6b524b868">purification_type</a></td></tr>
+<tr class="separator:a8f459637fb289e06a11600d6b524b868"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html" title="HardwareMonitor.">HardwareMonitor</a>. </p>
@@ -892,14 +892,14 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>A complex function defining RuleSets for purification and tomography on the link. This function creates one rule per purification. As the work proceeds, a resource gets promoted from rule to rule (on purification success), so if you ask for three rounds of purification, it will emit three purification rules.</p>
-<p>For example, with 2002, the first instance of "first stage X
+<p>For example, with "2N_ALTERNATE_SINGLE_X_WITH_SINGLE_Z", the first instance of "first stage X
 purification" (Rule0) includes allocating the resources from the base pair pool, executing the purification circuit (including measurement), exchanging the result messages, comparing and either promoting or discarding, so a one-way classical messaging latency is incurred here.</p>
 <p>Then, the "second stage Z purification" (Rule1, the first time through the loop) begins by drawing two Bell pairs that have each been promoted by the first X purification (rule 0). An additional one-way latency is incurred here.</p>
 <p>These actions are alternated initial_purification times, for a total of 2n rules (and 2n times the one-way latency). Note that the semantics of initial_purification vary depending on the purification_type. In the descriptions below, $n$ is initial_purification.</p>
 <p>Pumping doesn't really work because of the way resources are controlled as they are promoted from rule to rule. At the moment, base Bell pairs (those created directly by the link) exist in a pool, ordered by age. Over in <a class="el" href="_action_8cc.html">Action.cc</a>, you will find Action::getResource_fromTop(). This selects the oldest Bell pair. At the moment, only the first rule (Rule0) draws from this pool; however, pumping would require that later rules also be able to draw from the pool.</p>
 <p>A purification scheme must be characterized by both the circuit being executed, and the scheduling discipline for selecting the inputs to the circuit. The scheduling discipline in theory can be pumping, symmetric tree (perfect binary tree), or banded, and should also specify how the resources are sorted. Currently, this is hard-coded to select oldest first, and is geared toward symmetric tree. </p>
 <h1><a class="anchor" id="autotoc_md22"></a>
-Purification_type 2002:</h1>
+Purification_type "2N_ALTERNATE_SINGLE_X_WITH_SINGLE_Z":</h1>
 <ul>
 <li>name: Ss-Sp / perfect binary tree, even rounds</li>
 <li>rounds: 2n</li>
@@ -911,10 +911,10 @@ Purification_type 2002:</h1>
 <h2><a class="anchor" id="autotoc_md23"></a>
 description:</h2>
 <p>Ss-Sp is single selection, single error purification. Between rounds, Hadamard gates are applied to switch basis, creating alternating rounds of X and Z purification.</p>
-<p>The only difference between 2002 and 3003 is the semantics of initial_purification. Here, each iteration results in two rules, guaranteeing an even number of rounds.</p>
+<p>The only difference between "2N_ALTERNATE_SINGLE_X_WITH_SINGLE_Z" and "N_ALTERNATE_SINGLE_X_WITH_SINGLE_Z" is the semantics of initial_purification. Here, each iteration results in two rules, guaranteeing an even number of rounds.</p>
 <p>X always goes first. <img src="../img/PhysRevA.100.052320-Fig11.png" alt="" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md24"></a>
-Purification_type 3003:</h1>
+Purification_type "N_ALTERNATE_SINGLE_X_WITH_SINGLE_Z":</h1>
 <ul>
 <li>name: Ss-Sp / perfect binary tree, odd or even rounds</li>
 <li>rounds: n</li>
@@ -926,9 +926,9 @@ Purification_type 3003:</h1>
 <h2><a class="anchor" id="autotoc_md25"></a>
 description:</h2>
 <p>Ss-Sp is single selection, single error purification. Between rounds, Hadamard gates are applied to switch basis, creating alternating rounds of X and Z purification.</p>
-<p>The only difference between 2002 and 3003 is the semantics of initial_purification. Here, each iteration results in one rule, X for even-numbered rounds (counting from zero), Z for odd-numbered ones, so it is possible to do XZX or XZXZX (but not ZXZ or ZXZXZ). <img src="../img/PhysRevA.100.052320-Fig11.png" alt="" class="inline"/></p>
+<p>The only difference between "2N_ALTERNATE_SINGLE_X_WITH_SINGLE_Z" and "N_ALTERNATE_SINGLE_X_WITH_SINGLE_Z" is the semantics of initial_purification. Here, each iteration results in one rule, X for even-numbered rounds (counting from zero), Z for odd-numbered ones, so it is possible to do XZX or XZXZX (but not ZXZ or ZXZXZ). <img src="../img/PhysRevA.100.052320-Fig11.png" alt="" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md26"></a>
-Purification_type 1001:</h1>
+Purification_type "N_SINGLE_XZ":</h1>
 <ul>
 <li>name: Ss-Dp XZ Purification</li>
 <li>rounds: n</li>
@@ -939,9 +939,9 @@ Purification_type 1001:</h1>
 </ul>
 <h2><a class="anchor" id="autotoc_md27"></a>
 description:</h2>
-<p>Both X and Z purification in a single action. If A is the pair being purified, and C and E are tools, CNOT(A,C), MEAS(C), CNOT(E,A), MEAS(E) then select after comparing outcomes. Note that bases are not flipped between rounds. Similar to 1221. <img src="../img/PhysRevA.100.052320-Fig12.png" alt="" class="inline"/></p>
+<p>Both X and Z purification in a single action. If A is the pair being purified, and C and E are tools, CNOT(A,C), MEAS(C), CNOT(E,A), MEAS(E) then select after comparing outcomes. Note that bases are not flipped between rounds. Similar to "N_ALTERNATE_SINGLE_XZ_WITH_SINGLE_ZX". <img src="../img/PhysRevA.100.052320-Fig12.png" alt="" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md28"></a>
-Purification_type 1221:</h1>
+Purification_type "N_ALTERNATE_SINGLE_XZ_WITH_SINGLE_ZX":</h1>
 <ul>
 <li>name: Ss-Dp XZ, ZX alternating</li>
 <li>rounds: n</li>
@@ -952,9 +952,9 @@ Purification_type 1221:</h1>
 </ul>
 <h2><a class="anchor" id="autotoc_md29"></a>
 description:</h2>
-<p>Almost the same as 1001, but first round is XZ, second round is ZX. Results in better alternating error suppression, but still not great. <img src="../img/PhysRevA.100.052320-Fig12.png" alt="" class="inline"/></p>
+<p>Almost the same as "N_SINGLE_XZ", but first round is XZ, second round is ZX. Results in better alternating error suppression, but still not great. <img src="../img/PhysRevA.100.052320-Fig12.png" alt="" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md30"></a>
-Purification_type 1011:</h1>
+Purification_type "N_DOUBLE_X":</h1>
 <ul>
 <li>name: Ds-Sp: Fujii-san's Double selection purification</li>
 <li>rounds: n</li>
@@ -965,9 +965,9 @@ Purification_type 1011:</h1>
 </ul>
 <h2><a class="anchor" id="autotoc_md31"></a>
 description:</h2>
-<p>Similar to 1001 and 1221 except that the control and target of the first CNOT are flipped, corresponding to Fujii-san's paper (PRA 80, 042308). Every round is identical. Note there is no basis change between rounds. <img src="../img/arxiv.1904.08605-Fig13.png" alt="" class="inline"/></p>
+<p>Similar to "N_SINGLE_XZ" and "N_ALTERNATE_SINGLE_XZ_WITH_SINGLE_ZX" except that the control and target of the first CNOT are flipped, corresponding to Fujii-san's paper (PRA 80, 042308). Every round is identical. Note there is no basis change between rounds. <img src="../img/arxiv.1904.08605-Fig13.png" alt="" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md32"></a>
-Purification_type 1021:</h1>
+Purification_type "N_ALTERNATE_DOUBLE_X_WITH_DOUBLE_Z":</h1>
 <ul>
 <li>name: Ds-Sp: Fujii-san's Double selection purification (alternating)</li>
 <li>rounds: n</li>
@@ -978,9 +978,9 @@ Purification_type 1021:</h1>
 </ul>
 <h2><a class="anchor" id="autotoc_md33"></a>
 description:</h2>
-<p>Similar to 1011, almost corresponding to Fujii-san's paper (PRA 80, 042308). Note there is no basis change between rounds, but that the first round is XZ, second is ZX. <img src="../img/arxiv.1904.08605-Fig13.png" alt="" class="inline"/></p>
+<p>Similar to "N_DOUBLE_X", almost corresponding to Fujii-san's paper (PRA 80, 042308). Note there is no basis change between rounds, but that the first round is XZ, second is ZX. <img src="../img/arxiv.1904.08605-Fig13.png" alt="" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md34"></a>
-Purification_type 1031:</h1>
+Purification_type "N_ALTERNATE_DOUBLE_XZ_WITH_DOUBLE_ZX":</h1>
 <ul>
 <li>name: Ds-Dp: full double selection purification (alternating)</li>
 <li>rounds: n</li>
@@ -991,9 +991,9 @@ Purification_type 1031:</h1>
 </ul>
 <h2><a class="anchor" id="autotoc_md35"></a>
 description:</h2>
-<p>A combination of 1001 and 1011 (Figs. 12 &amp; 13). Resource requirements are high; two rounds of this requires 25 Bell pairs. With a low base Bell pair generation rate and realistic memory decoherence, this will be impractical. <img src="../img/arxiv.1904.08605-Fig14.png" alt="" class="inline"/></p>
+<p>A combination of "N_SINGLE_XZ" and "N_DOUBLE_X" (Figs. 12 &amp; 13). Resource requirements are high; two rounds of this requires 25 Bell pairs. With a low base Bell pair generation rate and realistic memory decoherence, this will be impractical. <img src="../img/arxiv.1904.08605-Fig14.png" alt="" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md36"></a>
-Purification_type 1061:</h1>
+Purification_type "N_ALTERNATE_DOUBLE_X_SINGLE_Z_WITH_DOUBLE_Z_SINGLE_X":</h1>
 <ul>
 <li>name: half double selection, half single selection</li>
 <li>rounds: n</li>
@@ -1006,7 +1006,7 @@ Purification_type 1061:</h1>
 description:</h2>
 <p>Does double selection on X, single selection on Z Switches bases between rounds. Investigated for possibly highly asymmetric X/Z error rates in base Bell pairs. Initial results weren't very promised, not extensively used.</p>
 <h1><a class="anchor" id="autotoc_md38"></a>
-Purification_type 5555:</h1>
+Purification_type "2+N_DOUBLE_X_THEN_DOUBLE_Z_ALTERNATE_SINGLE_X_WITH_SINGLE_Z":</h1>
 <ul>
 <li>name: Switching (B)</li>
 <li>rounds: n</li>
@@ -1019,7 +1019,7 @@ Purification_type 5555:</h1>
 description:</h2>
 <p>Two rounds of Ds-Sp, then Ss-Sp. The point of this was to show that you don't have to stick with one scheme, but can use different schemes in different rounds.</p>
 <h1><a class="anchor" id="autotoc_md40"></a>
-Purification_type 5556:</h1>
+Purification_type "1+N_DOUBLE_X_ALTERNATE_SINGLE_Z_WITH_SINGLE_X":</h1>
 <ul>
 <li>name: Switching (A)</li>
 <li>rounds: n</li>
@@ -1382,8 +1382,8 @@ description:</h2>
 
 </div>
 </div>
-<a id="abea007dc494d2b29d3e8ec21f48e28d6" name="abea007dc494d2b29d3e8ec21f48e28d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abea007dc494d2b29d3e8ec21f48e28d6">&#9670;&#160;</a></span>purification_type</h2>
+<a id="a8f459637fb289e06a11600d6b524b868" name="a8f459637fb289e06a11600d6b524b868"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f459637fb289e06a11600d6b524b868">&#9670;&#160;</a></span>purification_type</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1392,7 +1392,7 @@ description:</h2>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int quisp::modules::HardwareMonitor::purification_type = -1</td>
+          <td class="memname">std::string quisp::modules::HardwareMonitor::purification_type</td>
         </tr>
       </table>
   </td>
