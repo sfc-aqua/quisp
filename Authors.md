@@ -9,6 +9,7 @@
 * Sara Metwalli
 * Michal Hadjusek
 * Makoto Nakai
+* Paolo Fittipaldi
 
 ## Senior Advisors:
 
