@@ -1,5 +1,7 @@
 #include "RuntimeManager.h"
 #include "omnetpp/cexception.h"
+#include "omnetpp/csimulation.h"
+#include <iostream>
 
 namespace quisp::runtime {
 
@@ -21,6 +23,7 @@ void RuntimeManager::exec() {
     it->exec();
     if (it->terminated) {
       it = runtimes.erase(it);
+      std::cout <<  "sim time: " << simTime() << std::endl;
     } else {
       ++it;
     }
