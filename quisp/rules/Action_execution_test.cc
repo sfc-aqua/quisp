@@ -17,6 +17,7 @@ namespace {
 using namespace quisp_test;
 using namespace quisp::runtime;
 using namespace testing;
+using quisp::backends::abstract::Basis;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_N;
 using quisp::modules::QNIC_R;
@@ -28,6 +29,7 @@ using quisp::rules::Purification;
 using quisp::rules::PurType;
 using quisp::rules::Tomography;
 using quisp::rules::rs_converter::RuleSetConverter;
+
 Program terminator{"terminator", {INSTR_RET_ReturnCode_{{ReturnCode::RS_TERMINATED}}}};
 Program always_pass{"cond", {INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}}}};
 class ActionExecutionTest : public testing::Test {
@@ -94,8 +96,8 @@ TEST_F(ActionExecutionTest, Tomography) {
   runtime->assignQubitToRuleSet(partner_addr, qubit1);
   ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
-  EXPECT_CALL(*callback, measureQubitRandomly(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = true}));
-  EXPECT_CALL(*callback, sendLinkTomographyResult(ruleset_id, _, 0, QNodeAddr(partner_addr), 1, MeasurementOutcome{.basis = 'X', .outcome_is_plus = true}, 500, _)).Times(1);
+  EXPECT_CALL(*callback, measureQubitRandomly(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = quisp::backends::abstract::Basis::X, .outcome_is_plus = true}));
+  EXPECT_CALL(*callback, sendLinkTomographyResult(ruleset_id, _, 0, QNodeAddr(partner_addr), 1, MeasurementOutcome{.basis = Basis::X, .outcome_is_plus = true}, 500, _)).Times(1);
   runtime->exec();
   ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 0);
 
@@ -103,8 +105,8 @@ TEST_F(ActionExecutionTest, Tomography) {
   runtime->assignQubitToRuleSet(partner_addr, qubit2);
   ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
-  EXPECT_CALL(*callback, measureQubitRandomly(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}));
-  EXPECT_CALL(*callback, sendLinkTomographyResult(ruleset_id, _, 0, QNodeAddr(partner_addr), 2, MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}, 500, _)).Times(1);
+  EXPECT_CALL(*callback, measureQubitRandomly(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = quisp::backends::abstract::Basis::Z, .outcome_is_plus = false}));
+  EXPECT_CALL(*callback, sendLinkTomographyResult(ruleset_id, _, 0, QNodeAddr(partner_addr), 2, MeasurementOutcome{.basis = Basis::Z, .outcome_is_plus = false}, 500, _)).Times(1);
   runtime->exec();
   ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 0);
 }
@@ -121,8 +123,8 @@ TEST_F(ActionExecutionTest, Swapping) {
   finalizeRuleset();
 
   EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
-  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = true}));
-  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = true}));
+  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = Basis::X, .outcome_is_plus = true}));
+  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = Basis::Z, .outcome_is_plus = true}));
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, 123, 1, 0b00)).Times(1);
@@ -136,8 +138,8 @@ TEST_F(ActionExecutionTest, Swapping) {
 
   runtime->terminated = false;
   EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
-  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = false}));
-  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}));
+  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = Basis::X, .outcome_is_plus = false}));
+  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = Basis::Z, .outcome_is_plus = false}));
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, 123, 2, 0b11)).Times(1);
@@ -151,8 +153,8 @@ TEST_F(ActionExecutionTest, Swapping) {
 
   runtime->terminated = false;
   EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
-  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = true}));
-  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}));
+  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = Basis::X, .outcome_is_plus = true}));
+  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = Basis::Z, .outcome_is_plus = false}));
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, 123, 3, 0b10)).Times(1);
@@ -166,8 +168,8 @@ TEST_F(ActionExecutionTest, Swapping) {
 
   runtime->terminated = false;
   EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
-  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = false}));
-  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = true}));
+  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = Basis::X, .outcome_is_plus = false}));
+  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = Basis::Z, .outcome_is_plus = true}));
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, 123, 4, 0b01)).Times(1);
