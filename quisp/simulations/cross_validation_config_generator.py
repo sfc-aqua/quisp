@@ -82,6 +82,7 @@ def generate_swapping_config(
         f"**.qrsa.hm.link_tomography = true",
         f"**.qrsa.hm.initial_purification = 0",
         f"**.qrsa.hm.purification_type = \"\"",
+        f"*.EndNode1.is_initiator = true",
     ]
     return [config_name, network_name, *error_params, *other_params]
 
