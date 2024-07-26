@@ -10,40 +10,50 @@ import modules.SharedResource.SharedResource;
 import channels.*;
 
 
-network CrossValidationTwoHop
+network cross_validation_swapping
 {
     submodules:
         backend: Backend;
         logger: Logger;
         sharedResource: SharedResource;
-        EndNode[2]: QNode {
-            address = index;
+
+        EndNode1: QNode {
+            address = 1;
             node_type = "EndNode";
-            @display("i=COMP;");
-            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
-            //emission_timing_uncertainty = 10;
+            @display("i=COMP;p=56,202");
         }
-
-        repeater: QNode {
-            address = 1234;
+        EndNode2: QNode {
+            address = 5;
+            node_type = "EndNode";
+            @display("i=COMP;p=473,202");
+        }
+        Repeater: QNode {
+            address = 3;
             node_type = "Repeater";
-            //buffers = 25;
-            @display("i=REP1G");
+            @display("i=REP1G;p=264,203");
         }
-
-        BSA: BSANode {
+        BSA1: BSANode {
             address = 2;
-            @display("i=BSA");
+            node_type = "BSA";
+            @dispaly("p=42,150");
+            @display("p=158,86");
         }
-
+        BSA2: BSANode {
+            address = 4;
+            node_type = "BSA";
+            @dispaly("p=42,150");
+            @display("p=371,86");
+        }
     connections:
-        EndNode[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> repeater.port++;
-        repeater.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA.port++;
-        BSA.port++ <--> ClassicalChannel {  distance = 10km; } <--> EndNode[1].port++;
+        EndNode1.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA1.port++;
+        Repeater.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA1.port++;
+        Repeater.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA2.port++;
+        EndNode2.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA2.port++;
 
-        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 10km; } <--> repeater.quantum_port++;
-        repeater.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA.quantum_port++;
-        BSA.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> EndNode[1].quantum_port++;
+        EndNode1.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA1.quantum_port++;
+        Repeater.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA1.quantum_port++;
+        Repeater.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA2.quantum_port++;
+        EndNode2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA2.quantum_port++;
 }
 
 network cross_validation_mim_link_middle
