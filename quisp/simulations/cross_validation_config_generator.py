@@ -42,9 +42,9 @@ def generate_swapping_config(cnot_error_prob: float, measurement_error_prob: flo
     error_params = [
         f"**.cnot_gate_error_rate = {cnot_error_prob}",
         #
-        f"*.Repeater.x_measurement_error_rate = {measurement_error_prob}",
-        f"*.Repeater.y_measurement_error_rate = {measurement_error_prob}",
-        f"*.Repeater.z_measurement_error_rate = {measurement_error_prob}",
+        f"*.Repeater.**.x_measurement_error_rate = {measurement_error_prob}",
+        f"*.Repeater.**.y_measurement_error_rate = {measurement_error_prob}",
+        f"*.Repeater.**.z_measurement_error_rate = {measurement_error_prob}",
         #
         f"**.memory_x_error_rate = {p_decoherence}",
         f"**.memory_y_error_rate = {p_decoherence}",
