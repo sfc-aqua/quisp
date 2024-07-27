@@ -21,14 +21,14 @@ pids=()
 
 for i in 0 1 2 3 4 5 6 7 8 9 10;
 do
-    alicedist = "$((20 - $i))"
+    alicedist="$((20 - $i))"
     echo "Running imbalanced BSA placement with distance $i - $alicedist"
     ./quisp -n "./networks:./channels:./modules:./simulations" \
         -i ./images ./simulations/cross_validation.ini -u Cmdenv \
         -c "mim_imbalanced_${alicedist}_${i}" --cmdenv-status-frequency=10s > "exp2-raw-${alicedist}_${i}" &
-    pids += ($ !)
+    pids+=($!)
 done
-wait for all pids
+# wait for all pids
 echo "waiting for second experiments"
 for pid in ${pids[*]};
 do
