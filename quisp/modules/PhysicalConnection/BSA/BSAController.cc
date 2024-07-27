@@ -41,6 +41,9 @@ void BSAController::initialize() {
   time_out_message = new BSMNotificationTimeout("bsm_notification_timeout");
   if (is_active) {
     time_interval_between_photons = SimTime(1, SIMTIME_S) / SimTime(getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue(), SIMTIME_S);
+    // TODO: hardcoded the interval here for now. to be fixed.
+    time_interval_between_photons = SimTime(1, SIMTIME_NS);
+    std::cout << "time interval: " << time_interval_between_photons << "\n";
     simtime_t first_notification_timer = SimTime(par("initial_notification_timing_buffer").doubleValue());
     right_qnic = getExternalQNICInfoFromPort(1);
     offset_time_for_first_photon = calculateOffsetTimeFromDistance();
