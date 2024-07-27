@@ -2,24 +2,40 @@
 
 pids=()
 
-# for i in 1 2 4 8 16 32 64;
-# do
-#     echo "Running first exp with $i memories"
-#     ./quisp -n "./networks:./channels:./modules:./simulations" \
-#         -i ./images./simulations/mim_generation_test.ini -u Cmdenv \
-#         -c "memory_$i" --cmdenv-status-frequency=10s > "out-$i" &
-#     pids += ($ !)
-# done
+for i in 1 2 4 8 16 32 64;
+do
+    echo "Running first exp with $i memories"
+    ./quisp -n "./networks:./channels:./modules:./simulations" \
+        -i ./images ./simulations/mim_generation_test.ini -u Cmdenv \
+        -c "memory_$i" --cmdenv-status-frequency=10s > "exp1-raw-memories-$i" &
+    pids+=($!)
+done
+# wait for all pids
+echo "waiting for first experiments"
+for pid in ${pids[*]};
+do
+    echo "waiting on pid = $pid"
+    wait $pid
+done
+pids=()
 
-# for i in 0 1 2 3 4 5 6 7 8 9 10;
-# do
-#     alicedist = "$((20 - $i))"
-#     echo "Running imbalanced BSA placement with distance $i - $alicedist"
-#     ./quisp -n "./networks:./channels:./modules:./simulations" \
-#          -i ./images./simulations/cross_validation.ini -u Cmdenv \
-#          -c "mim_imbalanced_${alicedist}_${i}" --cmdenv-status-frequency=10s > "exp2-raw-${alicedist}_${i}" &
-#     pids += ($ !)
-# done
+for i in 0 1 2 3 4 5 6 7 8 9 10;
+do
+    alicedist = "$((20 - $i))"
+    echo "Running imbalanced BSA placement with distance $i - $alicedist"
+    ./quisp -n "./networks:./channels:./modules:./simulations" \
+        -i ./images ./simulations/cross_validation.ini -u Cmdenv \
+        -c "mim_imbalanced_${alicedist}_${i}" --cmdenv-status-frequency=10s > "exp2-raw-${alicedist}_${i}" &
+    pids += ($ !)
+done
+wait for all pids
+echo "waiting for second experiments"
+for pid in ${pids[*]};
+do
+    echo "waiting on pid = $pid"
+    wait $pid
+done
+pids=()
 
 for cnot in 0 025 05 075 1 125 15 175 2 225 25 275 3 325 35 375 4 425 45 475 5;
 do
@@ -37,6 +53,14 @@ do
         --cmdenv-status-frequency=10s > "exp3-raw-${cnot}_0_without_decoherence" &
     pids+=($!)
 done
+# wait for all pids
+echo "waiting for third experiments (CNOT error)"
+for pid in ${pids[*]};
+do
+    echo "waiting on pid = $pid"
+    wait $pid
+done
+pids=()
 
 for meas in 025 05 075 1 125 15 175 2 225 25 275 3 325 35 375 4 425 45 475 5;
 do
@@ -54,11 +78,13 @@ do
         --cmdenv-status-frequency=10s > "exp3-raw-0_${meas}_without_decoherence" &
     pids+=($!)
 done
-
 # wait for all pids
+echo "waiting for third experiments (measurement error)"
 for pid in ${pids[*]};
 do
     echo "waiting on pid = $pid"
-    wait $pid done
+    wait $pid
 done
+pids=()
+
 echo "All simulations finished"

@@ -8,26 +8,7 @@ import numpy as np
 def generate_mim_exp_config(num_memories: int, alice_to_bsa: int, bob_to_bsa: int):
     # [Config mim_imbalanced_10_10]
     # network = networks.cross_validation_mim_link_imbalanced_10_10
-    # **.qrsa.hm.link_tomography = true
-    # **.qrsa.hm.initial_purification = 0
-    # **.qrsa.hm.purification_type = ""
-    # **.buffers = 1
     pass
-    # config_name = f"[Config swapping_validation_cnot_only_{cnot_error_prob}]"
-    # network_name = f"networks.cross_validation_swapping"
-    # error_params = [
-    #     f"**.cnot_gate_error_rate = {cnot_error_prob}",
-    #     f"**.cnot_gate_iz_error_ratio = {1/9}",
-    #     f"**.cnot_gate_zi_error_ratio = {1/9}",
-    #     f"**.cnot_gate_zz_error_ratio = {1/9}",
-    #     f"**.cnot_gate_ix_error_ratio = {1/9}",
-    #     f"**.cnot_gate_xi_error_ratio = {1/9}",
-    #     f"**.cnot_gate_xx_error_ratio = {1/9}",
-    #     f"**.cnot_gate_iy_error_ratio = {1/9}",
-    #     f"**.cnot_gate_yi_error_ratio = {1/9}",
-    #     f"**.cnot_gate_yy_error_ratio = {1/9}",
-    # ]
-    # return [config_name, network_name, *error_params]
 
 
 def generate_swapping_config(cnot_error_prob: float, measurement_error_prob: float, with_depolarizing: bool):
@@ -61,9 +42,9 @@ def generate_swapping_config(cnot_error_prob: float, measurement_error_prob: flo
     error_params = [
         f"**.cnot_gate_error_rate = {cnot_error_prob}",
         #
-        f"**.x_measurement_error_rate = {measurement_error_prob}",
-        f"**.y_measurement_error_rate = {measurement_error_prob}",
-        f"**.z_measurement_error_rate = {measurement_error_prob}",
+        f"*.Repeater.x_measurement_error_rate = {measurement_error_prob}",
+        f"*.Repeater.y_measurement_error_rate = {measurement_error_prob}",
+        f"*.Repeater.z_measurement_error_rate = {measurement_error_prob}",
         #
         f"**.memory_x_error_rate = {p_decoherence}",
         f"**.memory_y_error_rate = {p_decoherence}",

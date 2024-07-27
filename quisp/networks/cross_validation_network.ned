@@ -77,10 +77,10 @@ network cross_validation_mim_link_middle
             @display("i=COMP");
         }
     connections:
-        alice.port++ <--> ClassicalChannel {  distance = 20km; } <--> BSA.port++;
-        BSA.port++ <--> ClassicalChannel {  distance = 20km; } <--> bob.port++;
-        alice.quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> BSA.quantum_port++;
-        BSA.quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> bob.quantum_port++;
+        alice.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA.port++;
+        BSA.port++ <--> ClassicalChannel {  distance = 10km; } <--> bob.port++;
+        alice.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA.quantum_port++;
+        BSA.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> bob.quantum_port++;
 }
 
 network cross_validation_mim_link_imbalanced_10_10
