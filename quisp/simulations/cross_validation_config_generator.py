@@ -5,13 +5,37 @@ import os
 import numpy as np
 
 
+def get_p_from_decoherence_time(decoherence_time_mu_s: int) -> float:
+    left: float = 0.0
+    right: float = 0.3
+    iter_count = 0
+    while left < right:
+        p = (left + right) / 2
+        iter_count += 1
+        if iter_count > 100:
+            print("exceed max iteration")
+            break
+        Q = np.matrix([[1 - 3 * p, p, p, p], [p, 1 - 3 * p, p, p], [p, p, 1 - 3 * p, p], [p, p, p, 1 - 3 * p]])
+        Qt = Q**decoherence_time_mu_s
+        if Qt[0, 0] > 1 / np.e:
+            left = p
+        else:
+            right = p
+        if round(Qt[0, 0], 10) == round(1 / np.e, 10):
+            break
+    # print(f"we got p = {p}")
+    # print(f"    expected: {1/np.e}")
+    # print(f"    obtained: {Qt[0, 0]}")
+    return p
+
+
 def generate_mim_exp_config(num_memories: int, alice_to_bsa: int, bob_to_bsa: int):
     # [Config mim_imbalanced_10_10]
     # network = networks.cross_validation_mim_link_imbalanced_10_10
     pass
 
 
-def generate_swapping_config(cnot_error_prob: float, measurement_error_prob: float, with_depolarizing: bool):
+def generate_swapping_config(cnot_error_prob: float, measurement_error_prob: float, with_depolarizing: bool, coherence_time_in_mu_s: int):
     # [Config mim_imbalanced_10_10]
     # network = networks.cross_validation_mim_link_imbalanced_10_10
     # **.qrsa.hm.link_tomography = true
@@ -32,9 +56,9 @@ def generate_swapping_config(cnot_error_prob: float, measurement_error_prob: flo
         measurement_error_prob_str = "0"
 
     if with_depolarizing:
-        config_name = f"[Config swapping_validation_cnot_{cnot_error_prob_str}_meas_{measurement_error_prob_str}_with_1ms_decoherence]"
-        # p = 0.0004623208506703652 --> resulting in P_I = 0.36781054 after 1ms
-        p_decoherence = 0.0004623208506703652
+        config_name = f"[Config swapping_validation_cnot_{cnot_error_prob_str}_meas_{measurement_error_prob_str}_with_decoherence]"
+        # get close value up to 10th decimal place
+        p_decoherence = get_p_from_decoherence_time(coherence_time_in_mu_s)
     else:
         config_name = f"[Config swapping_validation_cnot_{cnot_error_prob_str}_meas_{measurement_error_prob_str}_without_decoherence]"
         p_decoherence = 0
@@ -77,10 +101,13 @@ def write_config(filename: str, configs: list[list[str]]):
 # exp 3: gate error
 # exp 3: measurement error
 # exp 3: with decoherence
-swapping_configs_gate_error = [generate_swapping_config(gp, 0, False) for gp in np.arange(0, 0.51, 0.025)]
-swapping_configs_gate_error_with_depo = [generate_swapping_config(gp, 0, True) for gp in np.arange(0, 0.51, 0.025)]
-swapping_configs_meas_error = [generate_swapping_config(0, gp, False) for gp in np.arange(0, 0.51, 0.025)]
-swapping_configs_meas_error_with_depo = [generate_swapping_config(0, gp, True) for gp in np.arange(0, 0.51, 0.025)]
+# coherence_time = 100000  # in microsecond (100ms)
+coherence_time = 10000  # in microsecond   (10ms)
+# coherence_time = 1000  # in microsecond     (1ms)
+swapping_configs_gate_error = [generate_swapping_config(gp, 0, False, coherence_time) for gp in np.arange(0, 1.00, 0.025)]
+swapping_configs_gate_error_with_depo = [generate_swapping_config(gp, 0, True, coherence_time) for gp in np.arange(0, 1.00, 0.025)]
+swapping_configs_meas_error = [generate_swapping_config(0, gp, False, coherence_time) for gp in np.arange(0, 1.00, 0.025)]
+swapping_configs_meas_error_with_depo = [generate_swapping_config(0, gp, True, coherence_time) for gp in np.arange(0, 1.00, 0.025)]
 
 # delete the duplicate config in the lists, "swapping_validation_cnot_0_meas_0_"
 swapping_configs_gate_error = swapping_configs_gate_error[1:]
