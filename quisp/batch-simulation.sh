@@ -2,6 +2,19 @@
 
 pids=()
 
+echo "Running to find base Bell pair fidelity"
+./quisp -n "./networks:./channels:./modules:./simulations" \
+    -i ./images ./simulations/mim_generation_test.ini -u Cmdenv \
+    -c "base_fidelity" --cmdenv-status-frequency=10s > "exp-base-fidelity" &
+pids+=($!)
+echo "waiting for base fidelity experiment"
+for pid in ${pids[*]};
+do
+    echo "waiting on pid = $pid"
+    wait $pid
+done
+pids=()
+
 for i in 1 2 4 8 16 32 64;
 do
     echo "Running first exp with $i memories"
@@ -37,13 +50,13 @@ do
 done
 pids=()
 
-for cnot in 0 025 05 075 1 125 15 175 2 225 25 275 3 325 35 375 4 425 45 475 5;
+for cnot in 0 025 05 075 1 125 15 175 2 225 25 275 3 325 35 375 4 425 45 475 5 525 55 575 6 625 65 675 7 725 75 775 8 825 85 875 9 925 95 975;
 do
-    echo "Running experiment 3 - CNOT error: $cnot, measurement error: 0, with 1ms decoherence"
+    echo "Running experiment 3 - CNOT error: $cnot, measurement error: 0, with decoherence"
     ./quisp -n "./networks:./channels:./modules:./simulations" \
         -i ./images ./simulations/cross_validation_config_generated.ini -u Cmdenv \
-        -c "swapping_validation_cnot_${cnot}_meas_0_with_1ms_decoherence" \
-        --cmdenv-status-frequency=10s > "exp3-raw-${cnot}_0_with_1ms_decoherence" &
+        -c "swapping_validation_cnot_${cnot}_meas_0_with_decoherence" \
+        --cmdenv-status-frequency=10s > "exp3-raw-${cnot}_0_with_decoherence" &
     pids+=($!)
 
     echo "Running experiment 3 - CNOT error: $cnot, measurement error: 0, without decoherence"
@@ -62,13 +75,13 @@ do
 done
 pids=()
 
-for meas in 025 05 075 1 125 15 175 2 225 25 275 3 325 35 375 4 425 45 475 5;
+for meas in 025 05 075 1 125 15 175 2 225 25 275 3 325 35 375 4 425 45 475 5 525 55 575 6 625 65 675 7 725 75 775 8 825 85 875 9 925 95 975;
 do
-    echo "Running experiment 3 - CNOT error: 0, measurement error: $meas, with 1ms decoherence"
+    echo "Running experiment 3 - CNOT error: 0, measurement error: $meas, with decoherence"
     ./quisp -n "./networks:./channels:./modules:./simulations" \
         -i ./images ./simulations/cross_validation_config_generated.ini -u Cmdenv \
-        -c "swapping_validation_cnot_0_meas_${meas}_with_1ms_decoherence" \
-        --cmdenv-status-frequency=10s > "exp3-raw-0_${meas}_with_1ms_decoherence" &
+        -c "swapping_validation_cnot_0_meas_${meas}_with_decoherence" \
+        --cmdenv-status-frequency=10s > "exp3-raw-0_${meas}_with_decoherence" &
     pids+=($!)
 
     echo "Running experiment 3 - CNOT error: 0, measurement error: $meas, without decoherence"
