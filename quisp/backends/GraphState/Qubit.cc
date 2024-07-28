@@ -3,7 +3,6 @@
 #include <string>
 #include "Backend.h"
 #include "backends/interfaces/IQubit.h"
-#include "backends/interfaces/IQubitId.h"
 #include "types.h"
 
 namespace quisp::backends::graph_state {
@@ -31,8 +30,10 @@ void GraphStateQubit::configure(std::unique_ptr<StationaryQubitConfiguration> c)
   gate_err_h.setParams(c->h_gate_x_err_ratio, c->h_gate_y_err_ratio, c->h_gate_z_err_ratio, c->h_gate_err_rate);
   gate_err_x.setParams(c->x_gate_x_err_ratio, c->x_gate_y_err_ratio, c->x_gate_z_err_ratio, c->x_gate_err_rate);
   gate_err_z.setParams(c->z_gate_x_err_ratio, c->z_gate_y_err_ratio, c->z_gate_z_err_ratio, c->z_gate_err_rate);
-  gate_err_cnot.setParams(c->cnot_gate_err_rate, c->cnot_gate_ix_err_ratio, c->cnot_gate_xi_err_ratio, c->cnot_gate_xx_err_ratio, c->cnot_gate_iz_err_ratio,
-                          c->cnot_gate_zi_err_ratio, c->cnot_gate_zz_err_ratio, c->cnot_gate_iy_err_ratio, c->cnot_gate_yi_err_ratio, c->cnot_gate_yy_err_ratio);
+  gate_err_cnot.setParams(c->cnot_gate_err_rate, c->cnot_gate_ix_err_ratio, c->cnot_gate_iy_err_ratio, c->cnot_gate_iz_err_ratio, c->cnot_gate_xi_err_ratio,
+                          c->cnot_gate_xx_err_ratio, c->cnot_gate_xy_err_ratio, c->cnot_gate_xz_err_ratio, c->cnot_gate_yi_err_ratio, c->cnot_gate_yx_err_ratio,
+                          c->cnot_gate_yy_err_ratio, c->cnot_gate_yz_err_ratio, c->cnot_gate_zi_err_ratio, c->cnot_gate_zx_err_ratio, c->cnot_gate_zy_err_ratio,
+                          c->cnot_gate_zz_err_ratio);
 }
 void GraphStateQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate) {
   memory_err.x_error_rate = x_error_rate;
@@ -85,17 +86,23 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
     return;
   }
 
-  enum class ErrorLabel : int { NO_ERR, IX, XI, XX, IY, YI, YY, IZ, ZI, ZZ };
+  enum class ErrorLabel : int { NO_ERR, IX, IY, IZ, XI, XX, XY, XZ, YI, YX, YY, YZ, ZI, ZX, ZY, ZZ };
   std::map<ErrorLabel, double> weights{
       {ErrorLabel::NO_ERR, 1 - err.pauli_error_rate},
       {ErrorLabel::IX, err.ix_error_rate},
-      {ErrorLabel::XI, err.xi_error_rate},
-      {ErrorLabel::XX, err.xx_error_rate},
       {ErrorLabel::IY, err.iy_error_rate},
-      {ErrorLabel::YI, err.yi_error_rate},
-      {ErrorLabel::YY, err.yy_error_rate},
       {ErrorLabel::IZ, err.iz_error_rate},
+      {ErrorLabel::XI, err.zi_error_rate},
+      {ErrorLabel::XX, err.xx_error_rate},
+      {ErrorLabel::XY, err.xy_error_rate},
+      {ErrorLabel::XZ, err.xz_error_rate},
+      {ErrorLabel::YI, err.yi_error_rate},
+      {ErrorLabel::YX, err.yx_error_rate},
+      {ErrorLabel::YY, err.yy_error_rate},
+      {ErrorLabel::YZ, err.yz_error_rate},
       {ErrorLabel::ZI, err.zi_error_rate},
+      {ErrorLabel::ZX, err.zx_error_rate},
+      {ErrorLabel::ZY, err.zy_error_rate},
       {ErrorLabel::ZZ, err.zz_error_rate},
   };
   double rand = backend->dblrand();
@@ -105,34 +112,58 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
     case ErrorLabel::NO_ERR:
       break;
     case ErrorLabel::IX:
-      this->applyClifford(CliffordOperator::X);
+      another_qubit->applyClifford(CliffordOperator::X);
+      break;
+    case ErrorLabel::IY:
+      another_qubit->applyClifford(CliffordOperator::Y);
+      break;
+    case ErrorLabel::IZ:
+      another_qubit->applyClifford(CliffordOperator::Z);
       break;
     case ErrorLabel::XI:
-      another_qubit->applyClifford(CliffordOperator::X);
+      this->applyClifford(CliffordOperator::X);
       break;
     case ErrorLabel::XX:
       this->applyClifford(CliffordOperator::X);
       another_qubit->applyClifford(CliffordOperator::X);
       break;
-    case ErrorLabel::IZ:
-      this->applyClifford(CliffordOperator::Z);
+    case ErrorLabel::XY:
+      this->applyClifford(CliffordOperator::X);
+      another_qubit->applyClifford(CliffordOperator::Y);
       break;
-    case ErrorLabel::ZI:
+    case ErrorLabel::XZ:
+      this->applyClifford(CliffordOperator::X);
       another_qubit->applyClifford(CliffordOperator::Z);
-      break;
-    case ErrorLabel::ZZ:
-      this->applyClifford(CliffordOperator::Z);
-      another_qubit->applyClifford(CliffordOperator::Z);
-      break;
-    case ErrorLabel::IY:
-      this->applyClifford(CliffordOperator::Y);
       break;
     case ErrorLabel::YI:
-      another_qubit->applyClifford(CliffordOperator::Y);
+      this->applyClifford(CliffordOperator::Y);
+      break;
+    case ErrorLabel::YX:
+      this->applyClifford(CliffordOperator::Y);
+      another_qubit->applyClifford(CliffordOperator::X);
       break;
     case ErrorLabel::YY:
       this->applyClifford(CliffordOperator::Y);
       another_qubit->applyClifford(CliffordOperator::Y);
+      break;
+    case ErrorLabel::YZ:
+      this->applyClifford(CliffordOperator::Y);
+      another_qubit->applyClifford(CliffordOperator::Z);
+      break;
+    case ErrorLabel::ZI:
+      this->applyClifford(CliffordOperator::Z);
+      break;
+    case ErrorLabel::ZX:
+      this->applyClifford(CliffordOperator::Z);
+      another_qubit->applyClifford(CliffordOperator::X);
+      break;
+    case ErrorLabel::ZY:
+      this->applyClifford(CliffordOperator::Z);
+      another_qubit->applyClifford(CliffordOperator::Y);
+      break;
+    case ErrorLabel::ZZ:
+      this->applyClifford(CliffordOperator::Z);
+      another_qubit->applyClifford(CliffordOperator::Z);
       break;
   }
 }
