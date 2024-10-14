@@ -20,6 +20,7 @@
 #include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
 #include <rules/Action.h>
 #include <utils/ComponentProvider.h>
+#include <utils/ReservationRegistry.h>
 
 struct SwappingConfig {
   int left_partner;
@@ -66,6 +67,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   std::map<int, int> connection_retry_count;  // key is qnic address
   std::vector<int> reserved_qnics = {};  // reserved qnic address table
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
+  utils::ReservationRegistry reservation_registry;
   bool simultaneous_es_enabled;
   bool es_with_purify = false;
   int num_remote_purification;
