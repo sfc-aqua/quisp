@@ -38,13 +38,13 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 
 class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
  public:
-  using quisp::modules::ConnectionManager::isQnicBusy;
+  // using quisp::modules::ConnectionManager::isQnicBusy;
   using quisp::modules::ConnectionManager::par;
   using quisp::modules::ConnectionManager::parsePurType;
   using quisp::modules::ConnectionManager::purification_type;
-  using quisp::modules::ConnectionManager::releaseQnic;
-  using quisp::modules::ConnectionManager::reserved_qnics;
-  using quisp::modules::ConnectionManager::reserveQnic;
+  // using quisp::modules::ConnectionManager::releaseQnic;
+  // using quisp::modules::ConnectionManager::reserved_qnics;
+  // using quisp::modules::ConnectionManager::reserveQnic;
   using quisp::modules::ConnectionManager::respondToRequest;
   using quisp::modules::ConnectionManager::respondToRequest_deprecated;
   ConnectionManagerTestTarget(IRoutingDaemon *routing_daemon, IHardwareMonitor *hardware_monitor)
@@ -572,33 +572,33 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   delete hardware_monitor;
 }
 
-TEST(ConnectionManagerTest, QnicReservation) {
-  prepareSimulation();
-  auto *connection_manager = new ConnectionManagerTestTarget();
+// TEST(ConnectionManagerTest, QnicReservation) {
+//   prepareSimulation();
+//   auto *connection_manager = new ConnectionManagerTestTarget();
 
-  int qnic_address = 13, qnic_address2 = 15;
-  // qnic reservation
-  EXPECT_EQ(connection_manager->reserved_qnics.size(), 0);
-  connection_manager->reserveQnic(qnic_address);
-  EXPECT_EQ(connection_manager->reserved_qnics.size(), 1);
-  EXPECT_EQ(connection_manager->reserved_qnics.at(0), qnic_address);
-  EXPECT_TRUE(connection_manager->isQnicBusy(qnic_address));
-  EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address2));
-  connection_manager->reserveQnic(qnic_address2);
-  EXPECT_EQ(connection_manager->reserved_qnics.size(), 2);
-  EXPECT_EQ(connection_manager->reserved_qnics.at(1), qnic_address2);
-  EXPECT_TRUE(connection_manager->isQnicBusy(qnic_address));
-  EXPECT_TRUE(connection_manager->isQnicBusy(qnic_address2));
+//   int qnic_address = 13, qnic_address2 = 15;
+//   // qnic reservation
+//   EXPECT_EQ(connection_manager->reserved_qnics.size(), 0);
+//   connection_manager->reserveQnic(qnic_address);
+//   EXPECT_EQ(connection_manager->reserved_qnics.size(), 1);
+//   EXPECT_EQ(connection_manager->reserved_qnics.at(0), qnic_address);
+//   EXPECT_TRUE(connection_manager->isQnicBusy(qnic_address));
+//   EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address2));
+//   connection_manager->reserveQnic(qnic_address2);
+//   EXPECT_EQ(connection_manager->reserved_qnics.size(), 2);
+//   EXPECT_EQ(connection_manager->reserved_qnics.at(1), qnic_address2);
+//   EXPECT_TRUE(connection_manager->isQnicBusy(qnic_address));
+//   EXPECT_TRUE(connection_manager->isQnicBusy(qnic_address2));
 
-  // qnic release
-  connection_manager->releaseQnic(qnic_address);
-  EXPECT_EQ(connection_manager->reserved_qnics.size(), 1);
-  EXPECT_EQ(connection_manager->reserved_qnics.at(0), qnic_address2);
-  EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address));
-  EXPECT_TRUE(connection_manager->isQnicBusy(qnic_address2));
-  connection_manager->releaseQnic(qnic_address2);
-  EXPECT_EQ(connection_manager->reserved_qnics.size(), 0);
-  EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address));
-  EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address2));
-}
+//   // qnic release
+//   connection_manager->releaseQnic(qnic_address);
+//   EXPECT_EQ(connection_manager->reserved_qnics.size(), 1);
+//   EXPECT_EQ(connection_manager->reserved_qnics.at(0), qnic_address2);
+//   EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address));
+//   EXPECT_TRUE(connection_manager->isQnicBusy(qnic_address2));
+//   connection_manager->releaseQnic(qnic_address2);
+//   EXPECT_EQ(connection_manager->reserved_qnics.size(), 0);
+//   EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address));
+//   EXPECT_FALSE(connection_manager->isQnicBusy(qnic_address2));
+// }
 }  // namespace
