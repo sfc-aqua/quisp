@@ -11,13 +11,22 @@ namespace quisp {
 namespace utils {
 
 void ReservationRegister::registerReservation(int qnic_addr, unsigned long ruleset_id) {
-  std::set<int> *target_qnic_set = &(ruleset_id_to_qnic_addrs.find(ruleset_id)->second);
-  if (target_qnic_set->find(qnic_addr) != target_qnic_set->end()) {
-    throw cRuntimeError("Error when registering QNIC reservation by ruleset id: QNIC Reservation already registered.");}
-  else {
-    target_qnic_set->insert(qnic_addr);
-    qnic_addr_to_ruleset_id[qnic_addr] = ruleset_id;}
+  if (auto target_entry = ruleset_id_to_qnic_addrs.find(ruleset_id); target_entry == ruleset_id_to_qnic_addrs.end()) {  // If entry already present, use that
+    ruleset_id_to_qnic_addrs[ruleset_id] = std::set<int>();
+  }
 
+  auto &target_qnic_set = ruleset_id_to_qnic_addrs[ruleset_id];
+
+  if (target_qnic_set.find(qnic_addr) != target_qnic_set.end()) {  // If qnic already in this entry, complain
+    throw cRuntimeError("Error when registering QNIC reservation by ruleset id: QNIC Reservation already registered.");
+  }
+
+  target_qnic_set.insert(qnic_addr);
+
+  if (auto search = qnic_addr_to_ruleset_id.find(qnic_addr); search != qnic_addr_to_ruleset_id.end()) {
+    throw cRuntimeError("Error when registering QNIC reservation by qnic id: QNIC already reserved.");
+  }
+  qnic_addr_to_ruleset_id[qnic_addr] = ruleset_id;
 }  // register a reservation with the provisional connection ID
 
 void ReservationRegister::deleteReservationByQnicAddr(int qnic_addr) {
@@ -47,7 +56,7 @@ void ReservationRegister::updateReservationId(unsigned long new_ruleset_id, unsi
   }
 }
 
-bool ReservationRegister::isQnicReserved(int qnic_addr) {
+bool ReservationRegister::isQnicBusy(int qnic_addr) {
   auto it = qnic_addr_to_ruleset_id.find(qnic_addr);
   if (it == qnic_addr_to_ruleset_id.end()) {
     return false;
