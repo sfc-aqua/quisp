@@ -8,6 +8,7 @@ packet ConnectionSetupRequest extends Header
     int application_id @getter(getApplicationId) @setter(setApplicationId);
     int actual_destAddr;
     int actual_srcAddr;
+    unsigned long connection_setup_request_id @setter(setConnectionSetupRequestId) @getter(getConnectionSetupRequestId);
     int num_measure;
     int number_of_required_Bellpairs;
     int stack_of_QNodeIndexes[];
