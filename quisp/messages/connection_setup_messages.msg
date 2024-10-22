@@ -19,6 +19,7 @@ packet ConnectionSetupRequest extends Header
 packet RejectConnectionSetupRequest extends Header
 {
     int application_id @getter(getApplicationId) @setter(setApplicationId);
+    unsigned long connection_setup_request_id @setter(setConnectionSetupRequestId) @getter(getConnectionSetupRequestId);
     int actual_destAddr;
     int actual_srcAddr;
     int number_of_required_Bellpairs;
@@ -29,6 +30,7 @@ packet ConnectionSetupResponse extends Header
     int application_id @getter(getApplicationId) @setter(setApplicationId);
     int actual_srcAddr;
     int actual_destAddr;
+    unsigned long connection_setup_request_id @setter(setConnectionSetupRequestId) @getter(getConnectionSetupRequestId);
     unsigned long RuleSet_id;
     json ruleSet;
     int application_type;

@@ -98,6 +98,8 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 
   if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
+    reservation_register.updateReservationId(resp->getConnectionSetupRequestId(), resp->getRuleSet_id());
+
     int initiator_addr = resp->getActual_destAddr();
     int responder_addr = resp->getActual_srcAddr();
 
@@ -200,12 +202,14 @@ void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) 
 void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
   int application_id = req->getApplicationId();
   int hop_count = req->getStack_of_QNodeIndexesArraySize();
+  unsigned long connection_setup_request_id = req->getConnectionSetupRequestId();
   std::vector<int> path;
   for (int i = 0; i < hop_count; i++) {
     int destination_address = req->getStack_of_QNodeIndexes(i);
     RejectConnectionSetupRequest *packet = new RejectConnectionSetupRequest("RejectConnSetup");
     packet->setApplicationId(application_id);
     packet->setKind(6);
+    packet->setConnectionSetupRequestId(connection_setup_request_id);
     packet->setDestAddr(destination_address);
     packet->setSrcAddr(my_address);
     packet->setActual_destAddr(req->getActual_destAddr());
@@ -247,11 +251,13 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
   const auto &rulesets = ruleset_gen.generateRuleSets(req, createUniqueId());
+  auto connection_setup_request_id = req->getConnectionSetupRequestId();
 
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
     ConnectionSetupResponse *pkt = new ConnectionSetupResponse("ConnectionSetupResponse");
     pkt->setApplicationId(application_id);
+    pkt->setConnectionSetupRequestId(connection_setup_request_id);
     pkt->setRuleSet(rs);
     pkt->setSrcAddr(my_address);
     pkt->setDestAddr(owner_address);
@@ -261,7 +267,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setKind(2);
     send(pkt, "RouterPort$o");
   }
-  reservation_register.registerReservation(qnic_addr, req->getConnectionSetupRequestId());
+  reservation_register.registerReservation(qnic_addr, connection_setup_request_id);
 }
 
 /**
@@ -317,24 +323,9 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   send(req, "RouterPort$o");
 }
 
-// // This is not good way. This property should be held in qnic property.
-// void ConnectionManager::reserveQnic(int qnic_address, unsigned long reserver_id) {
-//   reservation_register.registerReservation(reserver_id, qnic_address);
-// }
-
-// void ConnectionManager::releaseQnic(int qnic_address) {
-//   reservation_register.deleteReservationByQnicAddr(qnic_address);
-// }
-
-// bool ConnectionManager::isQnicBusy(int qnic_address) {
-//   return reservation_register.isQnicBusy(qnic_address);
-// }
-
 void ConnectionManager::initiator_reject_req_handler(RejectConnectionSetupRequest *pk) {
-  int actual_dest = pk->getActual_destAddr();
-  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_dest);
-
-  reservation_register.deleteReservationByQnicAddr(outbound_qnic_address);
+  reservation_register.deleteReservationByRulesetId(pk->getConnectionSetupRequestId());
+  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(pk->getActual_destAddr());
   scheduleRequestRetry(outbound_qnic_address);
 }
 
@@ -355,17 +346,7 @@ void ConnectionManager::responder_reject_req_handler(RejectConnectionSetupReques
  * This function is called when we discover that we can't fulfill the connection request,
  * primarily due to resource reservation conflicts.
  **/
-void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupRequest *pk) {
-  int actual_dst = pk->getActual_destAddr();  // responder address
-  int actual_src = pk->getActual_srcAddr();  // initiator address (to get input qnic)
-
-  // Currently, sending path and returning path are same, but for future, this might not good way
-  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_dst);
-  int inbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_src);
-
-  reservation_register.deleteReservationByQnicAddr(outbound_qnic_address);
-  reservation_register.deleteReservationByQnicAddr(inbound_qnic_address);
-}
+void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupRequest *pk) { reservation_register.deleteReservationByRulesetId(pk->getConnectionSetupRequestId()); }
 
 unsigned long ConnectionManager::createUniqueId() {
   std::string time = SimTime().str();
@@ -444,9 +425,10 @@ void ConnectionManager::initiateApplicationRequest(int qnic_address) {
     return;
   }
 
-  auto req = request_queue.front();
-  reservation_register.registerReservation(qnic_address, req->getConnectionSetupRequestId());
-  send(req->dup(), "RouterPort$o");
+  auto to_send = request_queue.front()->dup();
+  to_send->setConnectionSetupRequestId(createUniqueId());
+  reservation_register.registerReservation(qnic_address, to_send->getConnectionSetupRequestId());
+  send(to_send, "RouterPort$o");
 }
 
 void ConnectionManager::scheduleRequestRetry(int qnic_address) {
