@@ -371,7 +371,13 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   }
 }
 
-void RuleEngine::executeAllRuleSets() { runtimes.exec(); }
+void RuleEngine::executeAllRuleSets() {
+  runtimes.exec();
+  const auto &terminated_rulesets_ids = runtimes.getTerminatedRulesetIds();
+  if (terminated_rulesets_ids.size() > 0) {
+    sendTerminatedRulesetIds(terminated_rulesets_ids);
+  }
+}
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationary_qubit_address"));
@@ -383,4 +389,13 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
   bell_pair_store.eraseQubit(qubit_record);
 }
 
+void RuleEngine::sendTerminatedRulesetIds(const std::vector<unsigned long> &terminated_rulesets_ids) {
+  InternalTerminatedRulesetIdsNotifier *pkt = new InternalTerminatedRulesetIdsNotifier();
+  pkt->setSrcAddr(parentAddress);
+  pkt->setDestAddr(parentAddress);
+  for (auto id : terminated_rulesets_ids) {
+    pkt->appendTerminatedRulesetId(id);
+  }
+  send(pkt, "RouterPort$o");
+}
 }  // namespace quisp::modules

@@ -17,9 +17,11 @@ Runtime *RuntimeManager::findById(unsigned long long ruleset_id) {
 }
 
 void RuntimeManager::exec() {
+  terminated_rulesets.clear();
   for (auto it = runtimes.begin(); it != runtimes.end();) {
     it->exec();
     if (it->terminated) {
+      terminated_rulesets.push_back(it->ruleset.id);
       it = runtimes.erase(it);
     } else {
       ++it;
@@ -31,5 +33,5 @@ std::vector<Runtime>::iterator RuntimeManager::begin() { return runtimes.begin()
 std::vector<Runtime>::iterator RuntimeManager::end() { return runtimes.end(); }
 std::vector<Runtime>::reference RuntimeManager::at(size_t index) { return runtimes.at(index); }
 size_t RuntimeManager::size() const { return runtimes.size(); }
-
+const std::vector<unsigned long> &RuntimeManager::getTerminatedRulesetIds() const { return terminated_rulesets; }
 }  // namespace quisp::runtime

@@ -36,3 +36,7 @@ packet ConnectionSetupResponse extends Header
     int application_type;
     int stack_of_QNodeIndexes[];
 }
+
+packet InternalTerminatedRulesetIdsNotifier extends Header {
+    unsigned long terminated_rulesets_ids[] @appender(appendTerminatedRulesetId);
+}

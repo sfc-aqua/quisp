@@ -13,9 +13,11 @@ class RuntimeManager {
   std::vector<Runtime>::iterator end();
   std::vector<Runtime>::reference at(size_t);
   size_t size() const;
+  const std::vector<unsigned long>& getTerminatedRulesetIds() const;
 
  protected:
   std::vector<Runtime> runtimes = {};
   std::unique_ptr<Runtime::ICallBack> callback;
+  std::vector<unsigned long> terminated_rulesets;
 };
 }  // namespace quisp::runtime

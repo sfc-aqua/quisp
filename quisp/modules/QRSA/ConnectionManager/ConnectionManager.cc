@@ -126,6 +126,11 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     delete msg;
     return;
   }
+
+  if (auto *pk = dynamic_cast<InternalTerminatedRulesetIdsNotifier *>(msg)) {
+    delete msg;
+    return;
+  }
 }
 
 PurType ConnectionManager::parsePurType(const std::string &pur_type) {

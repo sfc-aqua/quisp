@@ -142,6 +142,10 @@ void Router::handleMessage(cMessage *msg) {
   } else if (dest_addr == my_address && dynamic_cast<OspfPacket *>(msg)) {
     send(pk, "rdPort$o");
     return;
+  } else if (dest_addr == my_address && dynamic_cast<InternalTerminatedRulesetIdsNotifier *>(msg)) {
+    bubble("Terminated rulesets IDs list received");
+    send(pk, "cmPort$o");
+    return;
   }
 
   // RoutingDaemon sends hello packet without desination specified
