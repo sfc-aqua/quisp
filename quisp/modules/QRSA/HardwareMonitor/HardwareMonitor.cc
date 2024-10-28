@@ -126,6 +126,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     pk->setKind(6);
     pk->setQnic_index(info->qnic.index);
     pk->setQnic_type(info->qnic.type);
+    pk->setQnicAddr(info->qnic.address);
 
     send(pk, "RouterPort$o");
     delete request;
@@ -144,12 +145,14 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     }
 
     // RuleSets sent for this node and the partner node.
-    long RuleSet_id = createUniqueId();
-    sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info->qnic.type, my_qnic_info->qnic.index, RuleSet_id);
+    unsigned long ruleset_id = createUniqueId();
+    makeQnicReservationForTomography(my_address, my_qnic_info->qnic.address, ruleset_id);
+    sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info->qnic.type, my_qnic_info->qnic.index, ruleset_id);
 
     QNIC_type partner_qnic_type = ack->getQnic_type();
     int partner_qnic_index = ack->getQnic_index();
-    sendLinkTomographyRuleSet(partner_address, my_address, partner_qnic_type, partner_qnic_index, RuleSet_id);
+    makeQnicReservationForTomography(partner_address, ack->getQnicAddr(), ruleset_id);
+    sendLinkTomographyRuleSet(partner_address, my_address, partner_qnic_type, partner_qnic_index, ruleset_id);
     delete ack;
     return;
   }
@@ -1246,6 +1249,15 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
       "This simulator only recognizes the following network level node "
       "types: QNode, EPPS and BSA. Not %s",
       thisNode.getClassName());
+}
+
+void HardwareMonitor::makeQnicReservationForTomography(int node_address, int qnic_addr, unsigned long ruleset_id) {
+  RequestQnicReservation *pkt = new RequestQnicReservation();
+  pkt->setSrcAddr(my_address);
+  pkt->setDestAddr(node_address);
+  pkt->setQnicAddr(qnic_addr);
+  pkt->setRuleSet_id(ruleset_id);
+  send(pkt, "RouterPort$o");
 }
 
 }  // namespace quisp::modules

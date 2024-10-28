@@ -15,6 +15,7 @@ packet LinkTomographyAck extends Header
 {
     QNIC_type qnic_type;
     int qnic_index;
+    int qnic_address @getter(getQnicAddr) @setter(setQnicAddr);
 }
 
 packet LinkTomographyResult extends Header

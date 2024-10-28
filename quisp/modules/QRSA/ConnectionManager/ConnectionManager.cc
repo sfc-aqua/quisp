@@ -135,6 +135,10 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   if (auto *td = dynamic_cast<ConnectionTeardown *>(msg)) {
     reservation_register.deleteReservationByRulesetId(td->getRuleSet_id());
   }
+
+  if (auto *req = dynamic_cast<RequestQnicReservation *>(msg)) {
+    reservation_register.registerReservation(req->getQnicAddr(), req->getRuleSet_id());
+  }
 }
 
 PurType ConnectionManager::parsePurType(const std::string &pur_type) {

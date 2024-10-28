@@ -44,3 +44,9 @@ packet InternalTerminatedRulesetIdsNotifier extends Header {
 packet ConnectionTeardown extends Header {
     unsigned long RuleSet_id;
 }
+
+packet RequestQnicReservation extends Header
+{
+    unsigned long RuleSet_id;
+    int qnic_addr @getter(getQnicAddr) @setter(setQnicAddr);
+}
