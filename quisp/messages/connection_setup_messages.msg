@@ -30,6 +30,8 @@ packet ConnectionSetupResponse extends Header
     int application_id @getter(getApplicationId) @setter(setApplicationId);
     int actual_srcAddr;
     int actual_destAddr;
+    int initiator_addr @setter(setInitiatorAddr) @getter(getInitiatorAddr);
+    int responder_addr @setter(setResponderAddr) @getter(getResponderAddr);
     unsigned long connection_setup_request_id @setter(setConnectionSetupRequestId) @getter(getConnectionSetupRequestId);
     unsigned long RuleSet_id;
     json ruleSet;

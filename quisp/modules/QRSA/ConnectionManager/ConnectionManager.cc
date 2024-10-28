@@ -100,8 +100,8 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
     reservation_register.updateReservationId(resp->getConnectionSetupRequestId(), resp->getRuleSet_id());
 
-    int initiator_addr = resp->getActual_destAddr();
-    int responder_addr = resp->getActual_srcAddr();
+    int initiator_addr = resp->getInitiatorAddr();
+    int responder_addr = resp->getResponderAddr();
 
     if (initiator_addr == my_address || responder_addr == my_address) {
       // this node is not a swapper
@@ -279,6 +279,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     resp->setDestAddr(owner_address);
     resp->setActual_srcAddr(my_address);
     resp->setActual_destAddr(owner_address);
+    resp->setInitiatorAddr(req->getActual_srcAddr());
+    resp->setResponderAddr(my_address);
     resp->setApplication_type(0);
     resp->setKind(2);
     send(resp, "RouterPort$o");
