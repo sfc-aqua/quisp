@@ -38,5 +38,9 @@ packet ConnectionSetupResponse extends Header
 }
 
 packet InternalTerminatedRulesetIdsNotifier extends Header {
-    unsigned long terminated_rulesets_ids[] @appender(appendTerminatedRulesetId);
+    unsigned long terminated_rulesets_ids[] @getter(getTerminatedRulesetId) @appender(appendTerminatedRulesetId) @sizeGetter(getNumberOfTerminatedRulesets);
+}
+
+packet ConnectionTeardown extends Header {
+    unsigned long RuleSet_id;
 }

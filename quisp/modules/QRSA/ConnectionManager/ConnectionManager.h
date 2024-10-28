@@ -75,6 +75,8 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   rules::PurType purification_type;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
+  std::map<unsigned long, std::vector<messages::ConnectionTeardown *>>
+      connection_teardown_messages;  // This map stores the CTMs for every connection for which this node is the responder.
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;
@@ -100,6 +102,8 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   // void reserveQnic(int qnic_address, unsigned long reserver_id);
   // void releaseQnic(int qnic_address);
   // bool isQnicBusy(int qnic_address);
+
+  void teardownConnections(messages::InternalTerminatedRulesetIdsNotifier *pkt);
 
   static rules::PurType parsePurType(const std::string &pur_type);
 

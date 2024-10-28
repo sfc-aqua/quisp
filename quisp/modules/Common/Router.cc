@@ -146,6 +146,10 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Terminated rulesets IDs list received");
     send(pk, "cmPort$o");
     return;
+  } else if (dest_addr == my_address && dynamic_cast<ConnectionTeardown *>(msg)) {
+    bubble("Connection Teardown received");
+    send(pk, "cmPort$o");
+    return;
   }
 
   // RoutingDaemon sends hello packet without desination specified
