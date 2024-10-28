@@ -208,6 +208,27 @@ TEST_F(RouterTest, handleStopEmitting) {
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
+TEST_F(RouterTest, handleInternalTerminatedRulesetIds) {
+  auto msg = new InternalTerminatedRulesetIdsNotifier;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->cmPort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleConnectionTeardown) {
+  auto msg = new ConnectionTeardown;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->cmPort->messages.size(), 1);
+}
+
+TEST_F(RouterTest, handleRequestQnicReservation) {
+  auto msg = new RequestQnicReservation;
+  msg->setDestAddr(10);
+  router->handleMessage(msg);
+  ASSERT_EQ(router->cmPort->messages.size(), 1);
+}
+
 TEST_F(RouterTest, handleOspfPacket) {
   auto msg = new OspfPacket;
   msg->setDestAddr(10);
