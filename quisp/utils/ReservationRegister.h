@@ -22,6 +22,7 @@ class ReservationRegister {
   void deleteReservationByRulesetId(unsigned long ruleset_id);
   void updateReservationId(unsigned long old_ruleset_id, unsigned long new_ruleset_id);
   bool isQnicBusy(int qnic_addr);
+  const std::set<int> getReservedQnics(unsigned long ruleset_id) const;
 
   const int getRsidToQnicAddrMapSize() const;
   const int getQnicAddrToRsidMapSize() const;

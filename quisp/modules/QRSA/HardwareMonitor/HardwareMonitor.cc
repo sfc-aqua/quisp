@@ -146,12 +146,12 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
 
     // RuleSets sent for this node and the partner node.
     unsigned long ruleset_id = createUniqueId();
-    makeQnicReservationForTomography(my_address, my_qnic_info->qnic.address, ruleset_id);
+    makeQnicReservationForTomography(my_address, partner_address, my_qnic_info->qnic.address, ruleset_id,true);
     sendLinkTomographyRuleSet(my_address, partner_address, my_qnic_info->qnic.type, my_qnic_info->qnic.index, ruleset_id);
 
     QNIC_type partner_qnic_type = ack->getQnic_type();
     int partner_qnic_index = ack->getQnic_index();
-    makeQnicReservationForTomography(partner_address, ack->getQnicAddr(), ruleset_id);
+    makeQnicReservationForTomography(partner_address, my_address, ack->getQnicAddr(), ruleset_id,false);
     sendLinkTomographyRuleSet(partner_address, my_address, partner_qnic_type, partner_qnic_index, ruleset_id);
     delete ack;
     return;
@@ -1251,12 +1251,14 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
       thisNode.getClassName());
 }
 
-void HardwareMonitor::makeQnicReservationForTomography(int node_address, int qnic_addr, unsigned long ruleset_id) {
+void HardwareMonitor::makeQnicReservationForTomography(int node_address, int partner_address, int qnic_addr, unsigned long ruleset_id, bool prepare_teardown) {
   RequestQnicReservation *pkt = new RequestQnicReservation();
   pkt->setSrcAddr(my_address);
   pkt->setDestAddr(node_address);
   pkt->setQnicAddr(qnic_addr);
   pkt->setRuleSet_id(ruleset_id);
+  pkt->setPrepareTeardown(prepare_teardown);
+  pkt->setPartnerAddress(partner_address);
   send(pkt, "RouterPort$o");
 }
 

@@ -181,6 +181,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
     handleStopEmitting(pkt);
+  } else if (auto *pkt = dynamic_cast<RequestRulesetTermination *>(msg)) {
+    runtimes.terminateRuleset(pkt->getRuleSet_id());
   }
 
   for (int i = 0; i < number_of_qnics; i++) {

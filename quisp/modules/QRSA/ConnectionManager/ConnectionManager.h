@@ -104,6 +104,10 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   // bool isQnicBusy(int qnic_address);
 
   void teardownConnections(messages::InternalTerminatedRulesetIdsNotifier *pkt);
+  void handleTeardownMessage(messages::ConnectionTeardown *td);
+  void removeAcceptedConnectionSetupRequestFromQueue(messages::ConnectionSetupResponse *resp);
+  void makeQnicReservationForTomography(messages::RequestQnicReservation* req);
+  void requestTerminationOfSwappingRulesets(unsigned long ruleset_id);
 
   static rules::PurType parsePurType(const std::string &pur_type);
 

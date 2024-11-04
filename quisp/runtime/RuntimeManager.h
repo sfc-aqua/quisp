@@ -13,6 +13,7 @@ class RuntimeManager {
   std::vector<Runtime>::iterator end();
   std::vector<Runtime>::reference at(size_t);
   size_t size() const;
+  void terminateRuleset(const unsigned long ruleset_id);
   const std::vector<unsigned long>& getTerminatedRulesetIds() const;
 
  protected:

@@ -85,7 +85,7 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual Eigen::Matrix4cd reconstruct_density_matrix(int qnic_id, int partner);
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
-  virtual void makeQnicReservationForTomography(int node_address, int qnic_addr, unsigned long ruleset_id);
+  virtual void makeQnicReservationForTomography(int node_address, int partner_address, int qnic_addr, unsigned long ruleset_id, bool prepare_teardown);
 
   std::unique_ptr<quisp::rules::Rule> constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address, const QNIC_type qnic_type,
                                                           const int qnic_index, const int send_tag) const;

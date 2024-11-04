@@ -89,6 +89,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
       delete msg;
     } else if (actual_src == my_address) {
       // initiator node
+      req->setConnectionSetupRequestId(createUniqueId());
       queueApplicationRequest(req);
     } else {
       // intermediate node
@@ -98,10 +99,14 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 
   if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
-    reservation_register.updateReservationId(resp->getConnectionSetupRequestId(), resp->getRuleSet_id());
-
     int initiator_addr = resp->getInitiatorAddr();
     int responder_addr = resp->getResponderAddr();
+
+    if (initiator_addr == my_address) {
+      removeAcceptedConnectionSetupRequestFromQueue(resp);
+    }
+
+    reservation_register.updateReservationId(resp->getConnectionSetupRequestId(), resp->getRuleSet_id());
 
     if (initiator_addr == my_address || responder_addr == my_address) {
       // this node is not a swapper
@@ -111,6 +116,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
       // currently, destinations are separated. (Not accumulated.)
       storeRuleSet(resp);
     }
+
     delete msg;
     return;
   }
@@ -129,15 +135,20 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
   if (auto *pk = dynamic_cast<InternalTerminatedRulesetIdsNotifier *>(msg)) {
     teardownConnections(pk);
+    delete msg;
     return;
   }
 
   if (auto *td = dynamic_cast<ConnectionTeardown *>(msg)) {
-    reservation_register.deleteReservationByRulesetId(td->getRuleSet_id());
+    handleTeardownMessage(td);
+    delete msg;
+    return;
   }
 
   if (auto *req = dynamic_cast<RequestQnicReservation *>(msg)) {
-    reservation_register.registerReservation(req->getQnicAddr(), req->getRuleSet_id());
+    makeQnicReservationForTomography(req);
+    delete msg;
+    return;
   }
 }
 
@@ -266,8 +277,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   auto ruleset_id = createUniqueId();
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
   const auto &rulesets = ruleset_gen.generateRuleSets(req, ruleset_id);
-
-  connection_teardown_messages[ruleset_id].clear();
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
     ConnectionSetupResponse *resp = new ConnectionSetupResponse("ConnectionSetupResponse");
@@ -423,12 +432,12 @@ void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
 
 void ConnectionManager::popApplicationRequest(int qnic_address) {
   auto &request_queue = connection_setup_buffer[qnic_address];
-  auto *req = request_queue.front();
+  //  auto *req = request_queue.front();
 
   connection_retry_count[qnic_address] = 0;
-  request_queue.pop();
-  delete req;
-  reservation_register.deleteReservationByQnicAddr(qnic_address);
+  // request_queue.pop(); // Old connection, served.
+  //   delete req;
+  //  reservation_register.deleteReservationByQnicAddr(qnic_address);
 
   if (!request_queue.empty()) {
     EV << "schedule from pop" << endl;
@@ -450,7 +459,6 @@ void ConnectionManager::initiateApplicationRequest(int qnic_address) {
   }
 
   auto to_send = request_queue.front()->dup();
-  to_send->setConnectionSetupRequestId(createUniqueId());
   reservation_register.registerReservation(qnic_address, to_send->getConnectionSetupRequestId());
   send(to_send, "RouterPort$o");
 }
@@ -468,17 +476,59 @@ void ConnectionManager::scheduleRequestRetry(int qnic_address) {
 }
 
 void ConnectionManager::teardownConnections(messages::InternalTerminatedRulesetIdsNotifier *pkt) {
-  if (connection_teardown_messages.size() > 0) {
-    int terminated_rulesets_number = pkt->getNumberOfTerminatedRulesets();
-    for (int i = 0; i < terminated_rulesets_number; i++) {
-      auto search = connection_teardown_messages.find(pkt->getTerminatedRulesetId(i));
-      if (search == connection_teardown_messages.end())
-        error("ConnectionManager Error: Trying to tear down a connection but the related ConnectionTeardown messages are not ready. This is likely a bug in the code.");
-      auto messages_to_send = search->second;
-      for (auto msg : messages_to_send) {
-        send(msg, "RouterPort$o");
+
+for (int i = 0; i < pkt->getNumberOfTerminatedRulesets(); i++) {
+auto search = connection_teardown_messages.find(pkt->getTerminatedRulesetId(i));
+if (search != connection_teardown_messages.end()) { //This node is in charge of terminating this connection.
+auto messages_to_send = search->second;
+for (auto msg : messages_to_send) {
+        send(msg->dup(), "RouterPort$o");
       }
+      connection_teardown_messages.erase(search->first);
     }
   }
 }
+
+void ConnectionManager::handleTeardownMessage(messages::ConnectionTeardown *td) {
+  auto qnic_addresses = reservation_register.getReservedQnics(td->getRuleSet_id());
+  reservation_register.deleteReservationByRulesetId(td->getRuleSet_id());
+  requestTerminationOfSwappingRulesets(td->getRuleSet_id());
+  for (int qnic_addr : qnic_addresses) {
+    popApplicationRequest(qnic_addr);
+  }
+}
+
+void ConnectionManager::removeAcceptedConnectionSetupRequestFromQueue(ConnectionSetupResponse *resp) {
+  unsigned long connection_setup_id = resp->getConnectionSetupRequestId();
+  int qnic_addr = *(reservation_register.getReservedQnics(connection_setup_id).begin());  // Should be only one bc this is the initiator.
+  auto &first_queue = connection_setup_buffer[qnic_addr];
+  if (first_queue.front()->getConnectionSetupRequestId() == resp->getConnectionSetupRequestId()) {
+    first_queue.pop();
+    return;
+  }
+  throw cRuntimeError("Mismatched ConnectionSetupRequestId when popping request queue.");
+}
+
+void ConnectionManager::makeQnicReservationForTomography(RequestQnicReservation* req) {
+  reservation_register.registerReservation(req->getQnicAddr(), req->getRuleSet_id());
+  if (!req->getPrepareTeardown()) return;
+  unsigned long ruleset_id = req->getRuleSet_id();
+  ConnectionTeardown *td_partner = new ConnectionTeardown("ConnectionTeardown");
+  td_partner->setSrcAddr(my_address);
+  td_partner->setDestAddr(req->getPartnerAddress());
+  td_partner->setRuleSet_id(ruleset_id);
+  auto td_myself = td_partner->dup();
+  td_myself->setDestAddr(my_address);
+  connection_teardown_messages[ruleset_id].push_back(td_myself);
+  connection_teardown_messages[ruleset_id].push_back(td_partner);
+}
+
+void ConnectionManager::requestTerminationOfSwappingRulesets(unsigned long ruleset_id) {
+    auto *rst = new RequestRulesetTermination();
+    rst->setSrcAddr(my_address);
+    rst->setDestAddr(my_address);
+    rst->setRuleSet_id(ruleset_id);
+    send(rst,"RouterPort$o");
+}
+
 }  // namespace quisp::modules

@@ -51,4 +51,11 @@ packet RequestQnicReservation extends Header
 {
     unsigned long RuleSet_id;
     int qnic_addr @getter(getQnicAddr) @setter(setQnicAddr);
+    int partner_address @getter(getPartnerAddress) @setter(setPartnerAddress);
+    bool prepare_teardown @setter(setPrepareTeardown) @getter(getPrepareTeardown);
+}
+
+packet RequestRulesetTermination extends Header
+{
+    unsigned long RuleSet_id;
 }
