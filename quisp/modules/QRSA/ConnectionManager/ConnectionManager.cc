@@ -493,6 +493,7 @@ void ConnectionManager::handleTeardownMessage(messages::ConnectionTeardown *td) 
   auto qnic_addresses = reservation_register.getReservedQnics(td->getRuleSet_id());
   reservation_register.deleteReservationByRulesetId(td->getRuleSet_id());
   requestTerminationOfSwappingRulesets(td->getRuleSet_id());
+  sendReleaseResources(qnic_addresses);
   for (int qnic_addr : qnic_addresses) {
     popApplicationRequest(qnic_addr);
   }
@@ -531,4 +532,13 @@ void ConnectionManager::requestTerminationOfSwappingRulesets(unsigned long rules
     send(rst,"RouterPort$o");
 }
 
+void ConnectionManager::sendReleaseResources(std::set<int> qnic_addresses) {
+    ReleaseResources* rel = new ReleaseResources();
+    rel->setSrcAddr(my_address);
+    rel->setDestAddr(my_address);
+    for (int qnic_addr : qnic_addresses) {
+        rel->appendQnicAddr(qnic_addr);
+    }
+    send(rel,"RouterPort$o");
+}
 }  // namespace quisp::modules

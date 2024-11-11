@@ -158,7 +158,11 @@ void Router::handleMessage(cMessage *msg) {
       bubble("Ruleset Termination Request received");
       send(pk, "rePort$o");
       return;
-    }
+  } else if (dest_addr == my_address && dynamic_cast<ReleaseResources *>(msg)) {
+      bubble("Release Resources Request received");
+      send(pk, "rePort$o");
+      return;
+  }
 
   // RoutingDaemon sends hello packet without desination specified
   if (dest_addr == unidentified_destination && dynamic_cast<OspfHelloPacket *>(msg)) {

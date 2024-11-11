@@ -183,6 +183,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     handleStopEmitting(pkt);
   } else if (auto *pkt = dynamic_cast<RequestRulesetTermination *>(msg)) {
     runtimes.terminateRuleset(pkt->getRuleSet_id());
+  } else if (auto *pkt = dynamic_cast<ReleaseResources *>(msg)) {
+    releaseResources(pkt);
   }
 
   for (int i = 0; i < number_of_qnics; i++) {
@@ -356,6 +358,7 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
 // Allocates those resources to a particular ruleset, from top to bottom (all of it).
 void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   for (auto &runtime : runtimes) {
+      if (!runtime.terminated) {
     auto &partners = runtime.partners;
     for (auto &partner_addr : partners) {
       auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr.val);
@@ -372,7 +375,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
     }
   }
 }
-
+}
 void RuleEngine::executeAllRuleSets() {
   runtimes.exec();
   const auto &terminated_rulesets_ids = runtimes.getTerminatedRulesetIds();
@@ -383,7 +386,7 @@ void RuleEngine::executeAllRuleSets() {
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationary_qubit_address"));
-  realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
+  realtime_controller->ReInitialize_StationaryQubit(qubit_record, true);
   qubit_record->setBusy(false);
   if (qubit_record->isAllocated()) {
     qubit_record->setAllocated(false);
@@ -400,4 +403,28 @@ void RuleEngine::sendTerminatedRulesetIds(const std::vector<unsigned long> &term
   }
   send(pkt, "RouterPort$o");
 }
+
+std::pair<QNIC_type,int> RuleEngine::qnicAddrToQnicTypeAndIndex(int qnic_addr) {
+    if (qnic_addr < number_of_qnics) return std::pair<QNIC_type,int>(QNIC_E,qnic_addr);
+    else if (qnic_addr < number_of_qnics + number_of_qnics_r) return std::pair<QNIC_type,int>(QNIC_R,qnic_addr - number_of_qnics);
+    else if (qnic_addr < number_of_qnics + number_of_qnics_r + number_of_qnics_rp) return std::pair<QNIC_type,int>(QNIC_RP,qnic_addr - number_of_qnics - number_of_qnics_r);
+    else error("QNIC address out of bounds");
+}
+
+void RuleEngine::releaseResources(ReleaseResources* rel) {
+    int number_of_qnics_to_release = rel->getNumberOfQnicAddrs();
+    for (int it = 0; it < number_of_qnics_to_release; it++) {
+    auto [qnic_type, qnic_index] = qnicAddrToQnicTypeAndIndex(rel->getQnicAddr(it));
+    stopOnGoingPhotonEmission(qnic_type,qnic_index);
+    auto &emitted_indices = emitted_photon_order_map[{qnic_type, qnic_index}];
+      for (auto qubit_index : emitted_indices) {
+        realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, qnic_type, false);
+        qnic_store->setQubitBusy(qnic_type, qnic_index, qubit_index, false);
+        if (qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index)->isAllocated())  qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index)->setAllocated(false);
+      }
+      emitted_indices.clear();
+    }
+}
+
+
 }  // namespace quisp::modules
