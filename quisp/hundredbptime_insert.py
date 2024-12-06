@@ -4,7 +4,7 @@ import numpy as np
 # Create a dictionary to store the results
 simple_simulations = ["simple", "simple_adaptive"]
 long_simulations = ["long", "long_adaptive"]
-locations = ["homogeneous", "zero", "one", "two", "three", "four"]
+locations = ["homogeneous", "zero", "one", "two", "three", "four", "five", "six", "seven", "eight"]
 
 
 def genplot(memory):
@@ -13,7 +13,7 @@ def genplot(memory):
     plt.clf()
     lines = data.readlines()
     data.close()
-    result_simple = {"simple": {"homogeneous": {}, "zero": {}, "one": {}, "two": {}, "three": {}, "four": {} }, "simple_adaptive": {"homogeneous": {}, "zero": {}, "one": {}, "two": {}, "three": {}, "four": {} }}
+    result_simple = {"simple": {"homogeneous": {}, "zero": {}, "one": {}, "two": {}, "three": {}, "four": {}, "five": {}, "six": {}, "seven": {}, "eight": {}}, "simple_adaptive": {"homogeneous": {}, "zero": {}, "one": {}, "two": {}, "three": {}, "four": {}, "five": {}, "six": {}, "seven": {}, "eight": {}}}
     dist = 0
     for simulation in simple_simulations:
         for location in locations:
@@ -40,8 +40,8 @@ def genplot(memory):
                     print(ans)
                     result_simple[simulation][location] = [np.array(ans).mean(), np.array(ans).std()]
         xaxis = np.arange(len(locations))
-        y = [result_simple[simulation]["homogeneous"][0], result_simple[simulation]["zero"][0], result_simple[simulation]["one"][0], result_simple[simulation]["two"][0], result_simple[simulation]["three"][0], result_simple[simulation]["four"][0]]
-        err = [result_simple[simulation]["homogeneous"][1], result_simple[simulation]["zero"][1], result_simple[simulation]["one"][1], result_simple[simulation]["two"][1], result_simple[simulation]["three"][1], result_simple[simulation]["four"][1]]
+        y = [result_simple[simulation]["homogeneous"][0], result_simple[simulation]["zero"][0], result_simple[simulation]["one"][0], result_simple[simulation]["two"][0], result_simple[simulation]["three"][0], result_simple[simulation]["four"][0], result_simple[simulation]["five"][0], result_simple[simulation]["six"][0], result_simple[simulation]["seven"][0], result_simple[simulation]["eight"][0]]
+        err = [result_simple[simulation]["homogeneous"][1], result_simple[simulation]["zero"][1], result_simple[simulation]["one"][1], result_simple[simulation]["two"][1], result_simple[simulation]["three"][1], result_simple[simulation]["four"][1], result_simple[simulation]["five"][1], result_simple[simulation]["six"][1], result_simple[simulation]["seven"][1], result_simple[simulation]["eight"][1]]
         if(simulation == "simple"):
             simulation = "non-adaptive MSM"
         else:
@@ -57,7 +57,7 @@ def genplot(memory):
     plt.savefig(f"1kmdist_inserted_{memory}mem.png", dpi=1000, bbox_inches='tight')
     plt.savefig(f"1kmdist_inserted_{memory}mem.pdf", dpi=1000, bbox_inches='tight')
     plt.clf()
-    result_long = {"long": {"homogeneous": {}, "zero": {}, "one": {}, "two": {}, "three": {}, "four": {} }, "long_adaptive": {"homogeneous": {}, "zero": {}, "one": {}, "two": {}, "three": {}, "four": {} }}
+    result_long = {"long":{"homogeneous": {}, "zero": {}, "one": {}, "two": {}, "three": {}, "four": {}, "five": {}, "six": {}, "seven": {}, "eight": {}}, "long_adaptive": {"homogeneous": {}, "zero": {}, "one": {}, "two": {}, "three": {}, "four": {}, "five": {}, "six": {}, "seven": {}, "eight": {}}}
     dist = 0
     for simulation in long_simulations:
         for location in locations:
@@ -84,8 +84,8 @@ def genplot(memory):
                     print(ans)
                     result_long[simulation][location] = [np.array(ans).mean(), np.array(ans).std()]
         xaxis = np.arange(len(locations))
-        y = [result_long[simulation]["homogeneous"][0], result_long[simulation]["zero"][0], result_long[simulation]["one"][0], result_long[simulation]["two"][0], result_long[simulation]["three"][0], result_long[simulation]["four"][0]]
-        err = [result_long[simulation]["homogeneous"][1], result_long[simulation]["zero"][1], result_long[simulation]["one"][1], result_long[simulation]["two"][1], result_long[simulation]["three"][1], result_long[simulation]["four"][1]]
+        y = [result_long[simulation]["homogeneous"][0], result_long[simulation]["zero"][0], result_long[simulation]["one"][0], result_long[simulation]["two"][0], result_long[simulation]["three"][0], result_long[simulation]["four"][0], result_long[simulation]["five"][0], result_long[simulation]["six"][0], result_long[simulation]["seven"][0], result_long[simulation]["eight"][0]]
+        err = [result_long[simulation]["homogeneous"][1], result_long[simulation]["zero"][1], result_long[simulation]["one"][1], result_long[simulation]["two"][1], result_long[simulation]["three"][1], result_long[simulation]["four"][1], result_long[simulation]["five"][1], result_long[simulation]["six"][1], result_long[simulation]["seven"][1], result_long[simulation]["eight"][1]]
         if(simulation == "long"):
             simulation = "non-adaptive MSM"
         else:
@@ -99,5 +99,5 @@ def genplot(memory):
     plt.ylabel('Bell pair generation rate (BP/s)', fontsize=15)
     plt.savefig(f"20kmdist_inserted_{memory}mem.png", dpi=1000, bbox_inches='tight')
     plt.savefig(f"20kmdist_inserted_{memory}mem.pdf", dpi=1000, bbox_inches='tight')
-for (memory) in ["4", "32"]:
+for (memory) in ["4","32"]:
     genplot(memory)
