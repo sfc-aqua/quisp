@@ -432,12 +432,7 @@ void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
 
 void ConnectionManager::popApplicationRequest(int qnic_address) {
   auto &request_queue = connection_setup_buffer[qnic_address];
-  //  auto *req = request_queue.front();
-
   connection_retry_count[qnic_address] = 0;
-  // request_queue.pop(); // Old connection, served.
-  //   delete req;
-  //  reservation_register.deleteReservationByQnicAddr(qnic_address);
 
   if (!request_queue.empty()) {
     EV << "schedule from pop" << endl;
@@ -476,13 +471,13 @@ void ConnectionManager::scheduleRequestRetry(int qnic_address) {
 }
 
 void ConnectionManager::teardownConnections(messages::InternalTerminatedRulesetIdsNotifier *pkt) {
-
-for (int i = 0; i < pkt->getNumberOfTerminatedRulesets(); i++) {
-auto search = connection_teardown_messages.find(pkt->getTerminatedRulesetId(i));
-if (search != connection_teardown_messages.end()) { //This node is in charge of terminating this connection.
-auto messages_to_send = search->second;
-for (auto msg : messages_to_send) {
+  for (int i = 0; i < pkt->getNumberOfTerminatedRulesets(); i++) {
+    auto search = connection_teardown_messages.find(pkt->getTerminatedRulesetId(i));
+    if (search != connection_teardown_messages.end()) {  // This node is in charge of terminating this connection.
+      auto messages_to_send = search->second;
+      for (auto msg : messages_to_send) {
         send(msg->dup(), "RouterPort$o");
+        delete msg;
       }
       connection_teardown_messages.erase(search->first);
     }
@@ -491,9 +486,9 @@ for (auto msg : messages_to_send) {
 
 void ConnectionManager::handleTeardownMessage(messages::ConnectionTeardown *td) {
   auto qnic_addresses = reservation_register.getReservedQnics(td->getRuleSet_id());
-  reservation_register.deleteReservationByRulesetId(td->getRuleSet_id());
   requestTerminationOfSwappingRulesets(td->getRuleSet_id());
   sendReleaseResources(qnic_addresses);
+  reservation_register.deleteReservationByRulesetId(td->getRuleSet_id());
   for (int qnic_addr : qnic_addresses) {
     popApplicationRequest(qnic_addr);
   }
@@ -504,13 +499,15 @@ void ConnectionManager::removeAcceptedConnectionSetupRequestFromQueue(Connection
   int qnic_addr = *(reservation_register.getReservedQnics(connection_setup_id).begin());  // Should be only one bc this is the initiator.
   auto &first_queue = connection_setup_buffer[qnic_addr];
   if (first_queue.front()->getConnectionSetupRequestId() == resp->getConnectionSetupRequestId()) {
+    auto req = first_queue.front();
     first_queue.pop();
+    delete req;
     return;
   }
   throw cRuntimeError("Mismatched ConnectionSetupRequestId when popping request queue.");
 }
 
-void ConnectionManager::makeQnicReservationForTomography(RequestQnicReservation* req) {
+void ConnectionManager::makeQnicReservationForTomography(RequestQnicReservation *req) {
   reservation_register.registerReservation(req->getQnicAddr(), req->getRuleSet_id());
   if (!req->getPrepareTeardown()) return;
   unsigned long ruleset_id = req->getRuleSet_id();
@@ -525,20 +522,21 @@ void ConnectionManager::makeQnicReservationForTomography(RequestQnicReservation*
 }
 
 void ConnectionManager::requestTerminationOfSwappingRulesets(unsigned long ruleset_id) {
-    auto *rst = new RequestRulesetTermination();
-    rst->setSrcAddr(my_address);
-    rst->setDestAddr(my_address);
-    rst->setRuleSet_id(ruleset_id);
-    send(rst,"RouterPort$o");
+  auto *rst = new RequestRulesetTermination();
+  rst->setSrcAddr(my_address);
+  rst->setDestAddr(my_address);
+  rst->setRuleSet_id(ruleset_id);
+  send(rst, "RouterPort$o");
 }
 
 void ConnectionManager::sendReleaseResources(std::set<int> qnic_addresses) {
-    ReleaseResources* rel = new ReleaseResources();
-    rel->setSrcAddr(my_address);
-    rel->setDestAddr(my_address);
-    for (int qnic_addr : qnic_addresses) {
-        rel->appendQnicAddr(qnic_addr);
-    }
-    send(rel,"RouterPort$o");
+  ReleaseResources *rel = new ReleaseResources();
+  rel->setSrcAddr(my_address);
+  rel->setDestAddr(my_address);
+  for (int qnic_addr : qnic_addresses) {
+    rel->appendQnicAddr(qnic_addr);
+  }
+  rel->setRuleSet_id(reservation_register.getReservingRuleset(*(qnic_addresses.begin())));
+  send(rel, "RouterPort$o");
 }
 }  // namespace quisp::modules

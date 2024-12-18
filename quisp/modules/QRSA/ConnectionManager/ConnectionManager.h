@@ -106,7 +106,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   void teardownConnections(messages::InternalTerminatedRulesetIdsNotifier *pkt);
   void handleTeardownMessage(messages::ConnectionTeardown *td);
   void removeAcceptedConnectionSetupRequestFromQueue(messages::ConnectionSetupResponse *resp);
-  void makeQnicReservationForTomography(messages::RequestQnicReservation* req);
+  void makeQnicReservationForTomography(messages::RequestQnicReservation *req);
   void requestTerminationOfSwappingRulesets(unsigned long ruleset_id);
   void sendReleaseResources(std::set<int> qnic_addresses);
 
