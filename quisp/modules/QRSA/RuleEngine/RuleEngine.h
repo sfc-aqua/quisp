@@ -93,8 +93,9 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void scheduleMSMPhotonEmission(QNIC_type qnic_type, int qnic_index, messages::EPPSTimingNotification *notification);
   void handleStopEmitting(messages::StopEmitting *stop_emit);
   void sendTerminatedRulesetIds(const std::vector<unsigned long> &terminated_rulesets_ids);
-  std::pair<QNIC_type,int> qnicAddrToQnicTypeAndIndex(int qnic_addr);
-  void releaseResources(messages::ReleaseResources* rel);
+  std::pair<QNIC_type, int> qnicAddrToQnicTypeAndIndex(int qnic_addr);
+  std::map<unsigned long, std::set<int>> partners_register;
+  void releaseResources(messages::ReleaseResources *rel);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;

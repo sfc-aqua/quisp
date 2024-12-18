@@ -155,13 +155,13 @@ void Router::handleMessage(cMessage *msg) {
     send(pk, "cmPort$o");
     return;
   } else if (dest_addr == my_address && dynamic_cast<RequestRulesetTermination *>(msg)) {
-      bubble("Ruleset Termination Request received");
-      send(pk, "rePort$o");
-      return;
+    bubble("Ruleset Termination Request received");
+    send(pk, "rePort$o");
+    return;
   } else if (dest_addr == my_address && dynamic_cast<ReleaseResources *>(msg)) {
-      bubble("Release Resources Request received");
-      send(pk, "rePort$o");
-      return;
+    bubble("Release Resources Request received");
+    send(pk, "rePort$o");
+    return;
   }
 
   // RoutingDaemon sends hello packet without desination specified

@@ -78,6 +78,14 @@ const std::set<int> ReservationRegister::getReservedQnics(unsigned long ruleset_
     return search->second;
 }
 
+const unsigned long ReservationRegister::getReservingRuleset(int qnic_addr) {
+  auto search = qnic_addr_to_ruleset_id.find(qnic_addr);
+  if (search == qnic_addr_to_ruleset_id.end()) {
+    throw cRuntimeError("No rulesets reserving this qnic!");
+  } else
+    return search->second;
+}
+
 const int ReservationRegister::getRsidToQnicAddrMapSize() const { return ruleset_id_to_qnic_addrs.size(); };
 const int ReservationRegister::getQnicAddrToRsidMapSize() const { return qnic_addr_to_ruleset_id.size(); };
 const std::map<unsigned long, std::set<int>>& ReservationRegister::getRsidToQnicAddrMap() const { return ruleset_id_to_qnic_addrs; };

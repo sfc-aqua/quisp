@@ -150,6 +150,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
+    auto partners = runtimes.findById(ruleset->ruleset_id)->partners;  // This is not yet coded in the best way. It was an attempt at a solution but it does not fully work.
+    std::set<int> partners_cast;
+    for (auto partner : partners) {
+      partners_cast.insert(partner.val);
+    }
+    partners_register.emplace(ruleset->ruleset_id, partners_cast);
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
     handlePurificationResult(pkt);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
@@ -161,24 +167,24 @@ void RuleEngine::handleMessage(cMessage *msg) {
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
+    auto partners = runtimes.findById(ruleset.ruleset_id)->partners;
+    std::set<int> partners_cast;  // This is not yet coded in the best way. It was an attempt at a solution but it does not fully work.
+    for (auto partner : partners) {
+      partners_cast.insert(partner.val);
+    }
+    partners_register.emplace(ruleset.ruleset_id, partners_cast);
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     if (pkt->getApplication_type() != 0) error("This application is not recognized yet");
     auto serialized_ruleset = pkt->getRuleSet();
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
-  } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
-    // add actual process
-    auto serialized_ruleset = pkt->getRuleSet();
-    RuleSet ruleset(0, 0);
-    ruleset.deserialize_json(serialized_ruleset);
-    runtimes.acceptRuleSet(ruleset.construct());
-  } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
-    if (pkt->getApplication_type() != 0) error("This application is not recognized yet");
-    auto serialized_ruleset = pkt->getRuleSet();
-    RuleSet ruleset(0, 0);
-    ruleset.deserialize_json(serialized_ruleset);
-    runtimes.acceptRuleSet(ruleset.construct());
+    auto partners = runtimes.findById(ruleset.ruleset_id)->partners;
+    std::set<int> partners_cast;  // This is not yet coded in the best way. It was an attempt at a solution but it does not fully work.
+    for (auto partner : partners) {
+      partners_cast.insert(partner.val);
+    }
+    partners_register.emplace(ruleset.ruleset_id, partners_cast);
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
     handleStopEmitting(pkt);
   } else if (auto *pkt = dynamic_cast<RequestRulesetTermination *>(msg)) {
@@ -358,23 +364,23 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
 // Allocates those resources to a particular ruleset, from top to bottom (all of it).
 void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   for (auto &runtime : runtimes) {
-      if (!runtime.terminated) {
-    auto &partners = runtime.partners;
-    for (auto &partner_addr : partners) {
-      auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr.val);
-      for (auto it = range.first; it != range.second; ++it) {
-        auto qubit_record = it->second;
+    if (!runtime.terminated) {
+      auto &partners = runtime.partners;
+      for (auto &partner_addr : partners) {
+        auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr.val);
+        for (auto it = range.first; it != range.second; ++it) {
+          auto qubit_record = it->second;
 
-        // 3. if the qubit is not allocated yet, and the qubit has not been allocated to this rule,
-        // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
-        if (!qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
-          qubit_record->setAllocated(true);
-          runtime.assignQubitToRuleSet(partner_addr, qubit_record);
+          // 3. if the qubit is not allocated yet, and the qubit has not been allocated to this rule,
+          // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
+          if (!qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
+            qubit_record->setAllocated(true);
+            runtime.assignQubitToRuleSet(partner_addr, qubit_record);
+          }
         }
       }
     }
   }
-}
 }
 void RuleEngine::executeAllRuleSets() {
   runtimes.exec();
@@ -386,7 +392,7 @@ void RuleEngine::executeAllRuleSets() {
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationary_qubit_address"));
-  realtime_controller->ReInitialize_StationaryQubit(qubit_record, true);
+  realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
   qubit_record->setBusy(false);
   if (qubit_record->isAllocated()) {
     qubit_record->setAllocated(false);
@@ -404,27 +410,35 @@ void RuleEngine::sendTerminatedRulesetIds(const std::vector<unsigned long> &term
   send(pkt, "RouterPort$o");
 }
 
-std::pair<QNIC_type,int> RuleEngine::qnicAddrToQnicTypeAndIndex(int qnic_addr) {
-    if (qnic_addr < number_of_qnics) return std::pair<QNIC_type,int>(QNIC_E,qnic_addr);
-    else if (qnic_addr < number_of_qnics + number_of_qnics_r) return std::pair<QNIC_type,int>(QNIC_R,qnic_addr - number_of_qnics);
-    else if (qnic_addr < number_of_qnics + number_of_qnics_r + number_of_qnics_rp) return std::pair<QNIC_type,int>(QNIC_RP,qnic_addr - number_of_qnics - number_of_qnics_r);
-    else error("QNIC address out of bounds");
+std::pair<QNIC_type, int> RuleEngine::qnicAddrToQnicTypeAndIndex(int qnic_addr) {
+  if (qnic_addr < number_of_qnics)
+    return std::pair<QNIC_type, int>(QNIC_E, qnic_addr);
+  else if (qnic_addr < number_of_qnics + number_of_qnics_r)
+    return std::pair<QNIC_type, int>(QNIC_R, qnic_addr - number_of_qnics);
+  else if (qnic_addr < number_of_qnics + number_of_qnics_r + number_of_qnics_rp)
+    return std::pair<QNIC_type, int>(QNIC_RP, qnic_addr - number_of_qnics - number_of_qnics_r);
+  else
+    error("QNIC address out of bounds");
 }
 
-void RuleEngine::releaseResources(ReleaseResources* rel) {
-    int number_of_qnics_to_release = rel->getNumberOfQnicAddrs();
-    for (int it = 0; it < number_of_qnics_to_release; it++) {
-    auto [qnic_type, qnic_index] = qnicAddrToQnicTypeAndIndex(rel->getQnicAddr(it));
-    stopOnGoingPhotonEmission(qnic_type,qnic_index);
-    auto &emitted_indices = emitted_photon_order_map[{qnic_type, qnic_index}];
-      for (auto qubit_index : emitted_indices) {
-        realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, qnic_type, false);
-        qnic_store->setQubitBusy(qnic_type, qnic_index, qubit_index, false);
-        if (qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index)->isAllocated())  qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index)->setAllocated(false);
+void RuleEngine::releaseResources(ReleaseResources *rel) {
+  int number_of_qnics_to_release = rel->getNumberOfQnicAddrs();
+  auto &partners = partners_register.at(rel->getRuleSet_id());
+  for (int itr_qnicaddr = 0; itr_qnicaddr < number_of_qnics_to_release; itr_qnicaddr++) {
+    auto [qnic_type, qnic_index] = qnicAddrToQnicTypeAndIndex(rel->getQnicAddr(itr_qnicaddr));
+    stopOnGoingPhotonEmission(qnic_type, qnic_index);
+    freeFailedEntanglementAttemptQubits(qnic_type, qnic_index);
+    for (auto partner_addr : partners) {
+      auto range = bell_pair_store.getBellPairsRange(qnic_type, qnic_index, partner_addr);
+      for (auto it = range.first; it != range.second; ++it) {
+        auto qubit_record = it->second;
+        if (qubit_record->isAllocated()) {
+          qubit_record->setAllocated(false);
+        }
       }
-      emitted_indices.clear();
     }
+  }
+  partners_register.erase(rel->getRuleSet_id());
 }
-
 
 }  // namespace quisp::modules

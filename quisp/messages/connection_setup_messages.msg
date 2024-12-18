@@ -63,4 +63,5 @@ packet RequestRulesetTermination extends Header
 packet ReleaseResources extends Header
 {
     int qnic_addresses[] @getter(getQnicAddr) @appender(appendQnicAddr) @sizeGetter(getNumberOfQnicAddrs);
+    unsigned long RuleSet_id;
 }

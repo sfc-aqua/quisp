@@ -28,6 +28,7 @@ class ReservationRegister {
   const int getQnicAddrToRsidMapSize() const;
   const std::map<unsigned long, std::set<int>>& getRsidToQnicAddrMap() const;
   const std::map<int, unsigned long>& getQnicAddrToRsidMap() const;
+  const unsigned long getReservingRuleset(int qnic_addr);
 
  private:
   std::map<unsigned long, std::set<int>> ruleset_id_to_qnic_addrs;

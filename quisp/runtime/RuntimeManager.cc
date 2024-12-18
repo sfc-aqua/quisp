@@ -30,11 +30,11 @@ void RuntimeManager::exec() {
 }
 
 void RuntimeManager::terminateRuleset(unsigned long ruleset_id) {
-    auto *rst = findById(ruleset_id);
-    if (rst != nullptr and !rst->terminated) {
+  auto *rst = findById(ruleset_id);
+  if (rst != nullptr and !rst->terminated) {
     rst->terminated = true;
-    //terminated_rulesets.push_back(ruleset_id);
-    }
+    // terminated_rulesets.push_back(ruleset_id);
+  }
 }
 
 std::vector<Runtime>::iterator RuntimeManager::begin() { return runtimes.begin(); }
