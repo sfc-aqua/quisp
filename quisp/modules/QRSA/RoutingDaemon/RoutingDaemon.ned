@@ -4,7 +4,7 @@ package modules.QRSA.RoutingDaemon;
 simple RoutingDaemon
 {
     parameters:
-        bool run_ospf = default(true);
+        bool run_ospf = default(false);
     gates:
         inout RouterPort @loose;
 }
