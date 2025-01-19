@@ -411,7 +411,7 @@ void HardwareMonitor::finish() {
                      << "; GOD_Z_pair_total=" << GOD_Z_pair_total << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
                      << "; Y=" << Yerr_rate << endl;
     // this is a temporary implementation so that the e2e-test can read fidelity and error rates
-    std::cout << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
+    EV << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
               << ";bellpair_per_sec=" << tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec << ";}<-->" << partner_node->getFullName()
               << "; Fidelity=" << fidelity << "; Xerror=" << Xerr_rate << "; Zerror=" << Zerr_rate << "; Yerror=" << Yerr_rate << endl;
   }
