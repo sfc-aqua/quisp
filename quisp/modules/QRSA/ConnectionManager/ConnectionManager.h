@@ -64,6 +64,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   int num_of_qnics;
   std::map<int, std::queue<messages::ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
   std::map<int, int> connection_retry_count;  // key is qnic address
+  std::map<unsigned long, std::vector<messages::TerminatedIdNotification *>> connection_teardown_messages;  // This map stores the CTMs for every connection for which this node is the responder.
   std::vector<int> reserved_qnics = {};  // reserved qnic address table
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
   bool simultaneous_es_enabled;

@@ -92,6 +92,8 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void schedulePhotonEmission(QNIC_type qnic_type, int qnic_index, messages::BSMTimingNotification *notification);
   void scheduleMSMPhotonEmission(QNIC_type qnic_type, int qnic_index, messages::EPPSTimingNotification *notification);
   void handleStopEmitting(messages::StopEmitting *stop_emit);
+  void sendTerminatedRuleSetId(unsigned long id);
+  void deallocateResources(messages::DeallocateResources* pkt);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;

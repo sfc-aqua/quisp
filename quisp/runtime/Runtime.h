@@ -485,5 +485,7 @@ class Runtime {
    */
   bool debugging = false;
   //@}
+
+  bool stopped = false;
 };
 }  // namespace quisp::runtime

@@ -142,7 +142,16 @@ void Router::handleMessage(cMessage *msg) {
   } else if (dest_addr == my_address && dynamic_cast<OspfPacket *>(msg)) {
     send(pk, "rdPort$o");
     return;
-  }
+  } else if (dest_addr == my_address && dynamic_cast<TerminatedIdNotification *>(msg)) {
+    send(pk, "cmPort$o");
+    return;
+  } else if (dest_addr == my_address && dynamic_cast<InternalTerminatedIdNotification *>(msg)) {
+      send(pk, "cmPort$o");
+      return;
+  } else if (dest_addr == my_address && dynamic_cast<DeallocateResources *>(msg)) {
+      send(pk, "rePort$o");
+      return;
+   }
 
   // RoutingDaemon sends hello packet without desination specified
   if (dest_addr == unidentified_destination && dynamic_cast<OspfHelloPacket *>(msg)) {

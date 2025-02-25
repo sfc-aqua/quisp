@@ -181,7 +181,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
     runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
     handleStopEmitting(pkt);
+  } else if (auto *pkt = dynamic_cast<DeallocateResources *>(msg)) {
+    deallocateResources(pkt);
   }
+
 
   for (int i = 0; i < number_of_qnics; i++) {
     ResourceAllocation(QNIC_E, i);
@@ -354,6 +357,7 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
 // Allocates those resources to a particular ruleset, from top to bottom (all of it).
 void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   for (auto &runtime : runtimes) {
+    if (!runtime.terminated) {
     auto &partners = runtime.partners;
     for (auto &partner_addr : partners) {
       auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr.val);
@@ -366,16 +370,32 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
           qubit_record->setAllocated(true);
           runtime.assignQubitToRuleSet(partner_addr, qubit_record);
         }
+        }
       }
     }
   }
 }
 
-void RuleEngine::executeAllRuleSets() { runtimes.exec(); }
+void RuleEngine::executeAllRuleSets() {
+    runtimes.exec();
+    auto terminated_ruleset_ids = runtimes.getTerminatedRuleSetIds();
+    for (auto rt : terminated_ruleset_ids) {
+    sendTerminatedRuleSetId(rt);
+    }
+    runtimes.clearTerminatedRulesetIds();
+}
+
+void RuleEngine::sendTerminatedRuleSetId(unsigned long id) {
+    InternalTerminatedIdNotification* pkt = new InternalTerminatedIdNotification();
+    pkt->setRuleSetId(id);
+    pkt->setSrcAddr(parentAddress);
+    pkt->setDestAddr(parentAddress);
+    send(pkt,"RouterPort$o");
+}
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationary_qubit_address"));
-  realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
+  realtime_controller->ReInitialize_StationaryQubit(qubit_record, true);
   qubit_record->setBusy(false);
   if (qubit_record->isAllocated()) {
     qubit_record->setAllocated(false);
@@ -383,4 +403,67 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
   bell_pair_store.eraseQubit(qubit_record);
 }
 
+void RuleEngine::deallocateResources(DeallocateResources* pkt) {
+    std::vector<qrsa::IQubitRecord *> to_erase = {};
+    unsigned long ruleset_id = pkt->getRuleSetId();
+    auto &partners = runtimes.findById(ruleset_id)->partners;
+    for (auto &partner_addr : partners) {
+        for (int i = 0; i < number_of_qnics; i++) {
+            auto to_deallocate_E = bell_pair_store.getBellPairsRange(QNIC_E, i, partner_addr.val);
+            for (auto it = to_deallocate_E.first; it != to_deallocate_E.second; ++it) {
+                    auto qubit_record = it->second;
+                    if (qubit_record->isAllocated()) {
+                        qubit_record->setAllocated(false);
+                        //bell_pair_store.eraseQubit(qubit_record);
+                        to_erase.push_back(qubit_record);
+                        realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
+                        qubit_record->setBusy(false);
+                    } if (qubit_record->isBusy()) {
+                        realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
+                        qubit_record->setBusy(false);
+                    }
+            }
+            stopOnGoingPhotonEmission(QNIC_E, i);
+            freeFailedEntanglementAttemptQubits(QNIC_E, i);
+        }
+        for (int i = 0; i < number_of_qnics_r; i++) {
+            auto to_deallocate_R = bell_pair_store.getBellPairsRange(QNIC_R, i, partner_addr.val);
+            for (auto it = to_deallocate_R.first; it != to_deallocate_R.second; ++it) {
+                    auto qubit_record = it->second;
+                    if (qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
+                      qubit_record->setAllocated(false);
+                      to_erase.push_back(qubit_record);
+                      realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
+                      qubit_record->setBusy(false);
+                    } if (qubit_record->isBusy()) {
+                        realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
+                        qubit_record->setBusy(false);
+                    }
+            }
+            stopOnGoingPhotonEmission(QNIC_R, i);
+            freeFailedEntanglementAttemptQubits(QNIC_R, i);
+            }
+        for (int i = 0; i < number_of_qnics_rp; i++) {
+            auto to_deallocate_RP = bell_pair_store.getBellPairsRange(QNIC_RP, i, partner_addr.val);
+            for (auto it = to_deallocate_RP.first; it != to_deallocate_RP.second; ++it) {
+                    auto qubit_record = it->second;
+                    if (qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
+                      qubit_record->setAllocated(false);
+                      to_erase.push_back(qubit_record);
+                      realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
+                      qubit_record->setBusy(false);
+                    } if (qubit_record->isBusy()) {
+                        realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
+                        qubit_record->setBusy(false);
+                    }
+            }
+            stopOnGoingPhotonEmission(QNIC_RP, i);
+            freeFailedEntanglementAttemptQubits(QNIC_RP, i);
+          }
+   }
+    for (auto qb : to_erase) {
+        bell_pair_store.eraseQubit(qb);
+    }
+    runtimes.killRuntime(ruleset_id);
+}
 }  // namespace quisp::modules

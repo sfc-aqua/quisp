@@ -124,6 +124,35 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     delete msg;
     return;
   }
+
+  if (auto *pk = dynamic_cast<InternalTerminatedIdNotification *>(msg)) { //From RuleEngine
+      auto search = connection_teardown_messages.find(pk->getRuleSetId());
+          if (search != connection_teardown_messages.end()) {  // This node is in charge of terminating this connection.
+            auto messages_to_send = search->second;
+            for (auto td : messages_to_send) {
+              send(td->dup(), "RouterPort$o");
+              delete td;
+            }
+            connection_teardown_messages.erase(search->first);
+          }
+      delete msg;
+      return;
+  }
+
+  if (auto *pk = dynamic_cast<TerminatedIdNotification *>(msg)) { //From Responder
+      DeallocateResources* dr = new DeallocateResources();
+      dr->setSrcAddr(my_address);
+      dr->setDestAddr(my_address);
+      dr->setRuleSetId(pk->getRuleSetId());
+      send(dr,"RouterPort$o");
+      for (int addr : reserved_qnics) {
+          if (!connection_setup_buffer[addr].empty()) {
+              popApplicationRequest(addr);
+          } else releaseQnic(addr);
+      }
+      delete msg;
+      return;
+    }
 }
 
 PurType ConnectionManager::parsePurType(const std::string &pur_type) {
@@ -246,7 +275,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   }
 
   ruleset_gen::RuleSetGenerator ruleset_gen{my_address};
-  auto rulesets = ruleset_gen.generateRuleSets(req, createUniqueId());
+  unsigned long ruleset_id = createUniqueId();
+  auto rulesets = ruleset_gen.generateRuleSets(req, ruleset_id);
 
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
@@ -260,6 +290,12 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setApplication_type(0);
     pkt->setKind(2);
     send(pkt, "RouterPort$o");
+
+    TerminatedIdNotification *td = new TerminatedIdNotification();
+    td->setSrcAddr(my_address);
+    td->setDestAddr(owner_address);
+    td->setRuleSetId(ruleset_id);
+    connection_teardown_messages[ruleset_id].push_back(td);
   }
   reserveQnic(qnic_addr);
 }
