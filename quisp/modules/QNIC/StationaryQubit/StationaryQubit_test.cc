@@ -79,14 +79,20 @@ class StatQubitTarget : public StationaryQubit {
 
     setParDouble(this, "cnot_gate_error_rate", 1. / 2000);
     setParDouble(this, "cnot_gate_ix_error_ratio", 1);
+    setParDouble(this, "cnot_gate_iy_error_ratio", 1);
+    setParDouble(this, "cnot_gate_iz_error_ratio", 1);
     setParDouble(this, "cnot_gate_xi_error_ratio", 1);
     setParDouble(this, "cnot_gate_xx_error_ratio", 1);
-    setParDouble(this, "cnot_gate_iz_error_ratio", 1);
-    setParDouble(this, "cnot_gate_zi_error_ratio", 1);
-    setParDouble(this, "cnot_gate_zz_error_ratio", 1);
-    setParDouble(this, "cnot_gate_iy_error_ratio", 1);
+    setParDouble(this, "cnot_gate_xy_error_ratio", 1);
+    setParDouble(this, "cnot_gate_xz_error_ratio", 1);
     setParDouble(this, "cnot_gate_yi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_yx_error_ratio", 1);
     setParDouble(this, "cnot_gate_yy_error_ratio", 1);
+    setParDouble(this, "cnot_gate_yz_error_ratio", 1);
+    setParDouble(this, "cnot_gate_zi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_zx_error_ratio", 1);
+    setParDouble(this, "cnot_gate_zy_error_ratio", 1);
+    setParDouble(this, "cnot_gate_zz_error_ratio", 1);
 
     setParDouble(this, "x_measurement_error_rate", 1. / 2000);
     setParDouble(this, "y_measurement_error_rate", 1. / 2000);
@@ -139,14 +145,20 @@ TEST_F(StatQubitTest, StationaryQubitConfigurationOverwrite) {
   auto *config = new StationaryQubitConfiguration();
   setParDouble(qubit, "cnot_gate_error_rate", 0.01);
   setParDouble(qubit, "cnot_gate_ix_error_ratio", 0.02);
-  setParDouble(qubit, "cnot_gate_xi_error_ratio", 0.03);
-  setParDouble(qubit, "cnot_gate_xx_error_ratio", 0.04);
-  setParDouble(qubit, "cnot_gate_iz_error_ratio", 0.05);
-  setParDouble(qubit, "cnot_gate_zi_error_ratio", 0.06);
-  setParDouble(qubit, "cnot_gate_zz_error_ratio", 0.07);
-  setParDouble(qubit, "cnot_gate_iy_error_ratio", 0.08);
+  setParDouble(qubit, "cnot_gate_iy_error_ratio", 0.03);
+  setParDouble(qubit, "cnot_gate_iz_error_ratio", 0.04);
+  setParDouble(qubit, "cnot_gate_xi_error_ratio", 0.05);
+  setParDouble(qubit, "cnot_gate_xx_error_ratio", 0.06);
+  setParDouble(qubit, "cnot_gate_xy_error_ratio", 0.07);
+  setParDouble(qubit, "cnot_gate_xz_error_ratio", 0.08);
   setParDouble(qubit, "cnot_gate_yi_error_ratio", 0.09);
-  setParDouble(qubit, "cnot_gate_yy_error_ratio", 0.10);
+  setParDouble(qubit, "cnot_gate_yx_error_ratio", 0.10);
+  setParDouble(qubit, "cnot_gate_yy_error_ratio", 0.11);
+  setParDouble(qubit, "cnot_gate_yz_error_ratio", 0.12);
+  setParDouble(qubit, "cnot_gate_zi_error_ratio", 0.13);
+  setParDouble(qubit, "cnot_gate_zx_error_ratio", 0.14);
+  setParDouble(qubit, "cnot_gate_zy_error_ratio", 0.15);
+  setParDouble(qubit, "cnot_gate_zz_error_ratio", 0.16);
 
   setParDouble(qubit, "h_gate_error_rate", 0.11);
   setParDouble(qubit, "h_gate_x_error_ratio", 0.12);
