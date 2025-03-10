@@ -85,15 +85,21 @@ std::unique_ptr<IConfiguration> StationaryQubit::prepareBackendQubitConfiguratio
     et_conf->z_gate_z_err_ratio = par("z_gate_z_error_ratio").doubleValue();
 
     et_conf->cnot_gate_err_rate = par("cnot_gate_error_rate").doubleValue();
-    et_conf->cnot_gate_iz_err_ratio = par("cnot_gate_iz_error_ratio").doubleValue();
-    et_conf->cnot_gate_zi_err_ratio = par("cnot_gate_zi_error_ratio").doubleValue();
-    et_conf->cnot_gate_zz_err_ratio = par("cnot_gate_zz_error_ratio").doubleValue();
     et_conf->cnot_gate_ix_err_ratio = par("cnot_gate_ix_error_ratio").doubleValue();
+    et_conf->cnot_gate_iy_err_ratio = par("cnot_gate_iy_error_ratio").doubleValue();
+    et_conf->cnot_gate_iz_err_ratio = par("cnot_gate_iz_error_ratio").doubleValue();
     et_conf->cnot_gate_xi_err_ratio = par("cnot_gate_xi_error_ratio").doubleValue();
     et_conf->cnot_gate_xx_err_ratio = par("cnot_gate_xx_error_ratio").doubleValue();
-    et_conf->cnot_gate_iy_err_ratio = par("cnot_gate_iy_error_ratio").doubleValue();
+    et_conf->cnot_gate_xy_err_ratio = par("cnot_gate_xy_error_ratio").doubleValue();
+    et_conf->cnot_gate_xz_err_ratio = par("cnot_gate_xz_error_ratio").doubleValue();
     et_conf->cnot_gate_yi_err_ratio = par("cnot_gate_yi_error_ratio").doubleValue();
+    et_conf->cnot_gate_yx_err_ratio = par("cnot_gate_yx_error_ratio").doubleValue();
     et_conf->cnot_gate_yy_err_ratio = par("cnot_gate_yy_error_ratio").doubleValue();
+    et_conf->cnot_gate_yz_err_ratio = par("cnot_gate_yz_error_ratio").doubleValue();
+    et_conf->cnot_gate_zi_err_ratio = par("cnot_gate_zi_error_ratio").doubleValue();
+    et_conf->cnot_gate_zx_err_ratio = par("cnot_gate_zx_error_ratio").doubleValue();
+    et_conf->cnot_gate_zy_err_ratio = par("cnot_gate_zy_error_ratio").doubleValue();
+    et_conf->cnot_gate_zz_err_ratio = par("cnot_gate_zz_error_ratio").doubleValue();
 
     et_conf->memory_x_err_rate = par("memory_x_error_rate").doubleValue();
     et_conf->memory_y_err_rate = par("memory_y_error_rate").doubleValue();

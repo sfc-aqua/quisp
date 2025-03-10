@@ -55,15 +55,21 @@ simple StationaryQubit
         double z_gate_z_error_ratio = default(1);
 
         double cnot_gate_error_rate = default(0);
-        double cnot_gate_iz_error_ratio = default(1);
-        double cnot_gate_zi_error_ratio = default(1);
-        double cnot_gate_zz_error_ratio = default(1);
         double cnot_gate_ix_error_ratio = default(1);
+        double cnot_gate_iy_error_ratio = default(1);
+        double cnot_gate_iz_error_ratio = default(1);
         double cnot_gate_xi_error_ratio = default(1);
         double cnot_gate_xx_error_ratio = default(1);
-        double cnot_gate_iy_error_ratio = default(1);
+        double cnot_gate_xy_error_ratio = default(1);
+        double cnot_gate_xz_error_ratio = default(1);
         double cnot_gate_yi_error_ratio = default(1);
+        double cnot_gate_yx_error_ratio = default(1);
         double cnot_gate_yy_error_ratio = default(1);
+        double cnot_gate_yz_error_ratio = default(1);
+        double cnot_gate_zi_error_ratio = default(1);
+        double cnot_gate_zx_error_ratio = default(1);
+        double cnot_gate_zy_error_ratio = default(1);
+        double cnot_gate_zz_error_ratio = default(1);
 
         double x_measurement_error_rate = default(0);
         double y_measurement_error_rate = default(0);

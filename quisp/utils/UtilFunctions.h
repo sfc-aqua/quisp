@@ -33,5 +33,6 @@ Label samplingWithWeights(std::map<Label, double> weights, double rand) {
       return l;
     }
   }
+  return (--weights.end())->first;
 }
 }  // namespace quisp::util_functions

@@ -37,15 +37,22 @@ class StationaryQubitConfiguration : public abstract::IConfiguration {
   double h_gate_z_err_ratio = 0;
   double h_gate_err_rate = 0;
 
-  double cnot_gate_iz_err_ratio = 0;
-  double cnot_gate_zi_err_ratio = 0;
-  double cnot_gate_zz_err_ratio = 0;
   double cnot_gate_ix_err_ratio = 0;
+  double cnot_gate_iy_err_ratio = 0;
+  double cnot_gate_iz_err_ratio = 0;
   double cnot_gate_xi_err_ratio = 0;
   double cnot_gate_xx_err_ratio = 0;
-  double cnot_gate_iy_err_ratio = 0;
+  double cnot_gate_xy_err_ratio = 0;
+  double cnot_gate_xz_err_ratio = 0;
   double cnot_gate_yi_err_ratio = 0;
+  double cnot_gate_yx_err_ratio = 0;
   double cnot_gate_yy_err_ratio = 0;
+  double cnot_gate_yz_err_ratio = 0;
+  double cnot_gate_zi_err_ratio = 0;
+  double cnot_gate_zx_err_ratio = 0;
+  double cnot_gate_zy_err_ratio = 0;
+  double cnot_gate_zz_err_ratio = 0;
+
   double cnot_gate_err_rate = 0;
 
  protected:
