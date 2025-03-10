@@ -9,6 +9,7 @@ var classquisp_1_1modules_1_1_logger_1_1_json_logger =
     [ "setModule", "classquisp_1_1modules_1_1_logger_1_1_json_logger.html#a63156a01b50ccb24feb189213959f6b3", null ],
     [ "setQNodeAddress", "classquisp_1_1modules_1_1_logger_1_1_json_logger.html#a8bea9a139c31d22976b4aa835b601974", null ],
     [ "_logger", "classquisp_1_1modules_1_1_logger_1_1_json_logger.html#aca4734d3c16f948c268b08fdfeb732ea", null ],
+    [ "module", "classquisp_1_1modules_1_1_logger_1_1_json_logger.html#a7e4a1d4eb276dc1e8a16c55c82a585fe", null ],
     [ "module_path", "classquisp_1_1modules_1_1_logger_1_1_json_logger.html#a462b2467e185a21ce4b1198c00c38e5c", null ],
     [ "qnode_address", "classquisp_1_1modules_1_1_logger_1_1_json_logger.html#a2af197dcff0df039938eff09fa6c90f9", null ]
 ];

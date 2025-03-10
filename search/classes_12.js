@@ -7,7 +7,7 @@ var searchData=
   ['testlogger_4',['TestLogger',['../classquisp__test_1_1_logger_1_1_test_logger.html',1,'quisp_test::Logger']]],
   ['testmoduletype_5',['TestModuleType',['../classquisp__test_1_1module__type_1_1_test_module_type.html',1,'quisp_test::module_type']]],
   ['testqnode_6',['TestQNode',['../classquisp__test_1_1qnode_1_1_test_q_node.html',1,'quisp_test::qnode']]],
-  ['testrng_7',['testrng',['../classquisp__test_1_1backends_1_1graph__state_1_1_test_r_n_g.html',1,'quisp_test::backends::graph_state::TestRNG'],['../classquisp__test_1_1rng_1_1_test_r_n_g.html',1,'quisp_test::rng::TestRNG']]],
+  ['testrng_7',['TestRNG',['../classquisp__test_1_1backends_1_1graph__state_1_1_test_r_n_g.html',1,'quisp_test::backends::graph_state::TestRNG'],['../classquisp__test_1_1rng_1_1_test_r_n_g.html',1,'quisp_test::rng::TestRNG']]],
   ['testsimulation_8',['TestSimulation',['../classquisp__test_1_1simulation_1_1_test_simulation.html',1,'quisp_test::simulation']]],
   ['tomography_9',['Tomography',['../classquisp_1_1rules_1_1_tomography.html',1,'quisp::rules']]],
   ['tomographyoutcome_10',['TomographyOutcome',['../structquisp_1_1modules_1_1_tomography_outcome.html',1,'quisp::modules']]],

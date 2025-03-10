@@ -9,5 +9,7 @@ var searchData=
   ['x_5fgate_5fz_5ferr_5fratio_6',['x_gate_z_err_ratio',['../classquisp_1_1backends_1_1_stationary_qubit_configuration.html#a7aa93f87b67868effaa8b6023d64b59a',1,'quisp::backends::StationaryQubitConfiguration']]],
   ['x_5fpurification_7',['X_Purification',['../classquisp_1_1modules_1_1_hardware_monitor.html#ac8aa961dd13dd7360a42b6b52b12b0d8',1,'quisp::modules::HardwareMonitor']]],
   ['xi_5ferror_5frate_8',['xi_error_rate',['../structquisp_1_1backends_1_1graph__state_1_1types_1_1_two_qubit_gate_error_model.html#a2be00cf39fd25b5397408ef8c16a3e09',1,'quisp::backends::graph_state::types::TwoQubitGateErrorModel']]],
-  ['xx_5ferror_5frate_9',['xx_error_rate',['../structquisp_1_1backends_1_1graph__state_1_1types_1_1_two_qubit_gate_error_model.html#ae13f8ec15755caee233e633c7b04c20d',1,'quisp::backends::graph_state::types::TwoQubitGateErrorModel']]]
+  ['xx_5ferror_5frate_9',['xx_error_rate',['../structquisp_1_1backends_1_1graph__state_1_1types_1_1_two_qubit_gate_error_model.html#ae13f8ec15755caee233e633c7b04c20d',1,'quisp::backends::graph_state::types::TwoQubitGateErrorModel']]],
+  ['xy_5ferror_5frate_10',['xy_error_rate',['../structquisp_1_1backends_1_1graph__state_1_1types_1_1_two_qubit_gate_error_model.html#ae14428a5ef1d61c429602a0d4ea67b96',1,'quisp::backends::graph_state::types::TwoQubitGateErrorModel']]],
+  ['xz_5ferror_5frate_11',['xz_error_rate',['../structquisp_1_1backends_1_1graph__state_1_1types_1_1_two_qubit_gate_error_model.html#a31156c4db560f3d5cf98367daf4c4def',1,'quisp::backends::graph_state::types::TwoQubitGateErrorModel']]]
 ];

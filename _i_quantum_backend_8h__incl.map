@@ -1,5 +1,5 @@
 <map id="quisp/backends/interfaces/IQuantumBackend.h" name="quisp/backends/interfaces/IQuantumBackend.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="175,5,349,46"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="175,5,348,46"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,94,148,120"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,49,120,90,118,85,215,44"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="172,94,240,120"/>
@@ -8,10 +8,10 @@
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="278,45,303,79,299,83,274,48"/>
 <area shape="rect" id="Node000006" href="$_i_qubit_id_8h.html" title=" " alt="" coords="398,94,475,120"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="307,44,397,85,395,90,304,49"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="293,168,346,193"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="322,120,322,152,317,152,317,120"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="292,168,346,193"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="322,120,322,152,316,152,316,120"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="387,168,451,193"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="436,121,428,153,423,152,431,119"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="475,168,553,193"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="475,168,552,193"/>
 <area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="451,118,492,155,488,159,448,122"/>
 </map>

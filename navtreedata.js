@@ -50,14 +50,14 @@ var NAVTREE =
       [ "MSM protocol details which take part in EPPS modules", "md_quisp_2modules_2_physical_connection_2_e_p_p_s_2_r_e_a_d_m_e.html#autotoc_md21", null ]
     ] ],
     [ "MSM protocol details which take part in the RuleEngine", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html", [
-      [ "- <tt>success_list</tt>: List to store the information of memory qubits that succeeded local BSM. Contains the qubit information and the correction information.", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md47", [
+      [ "success_list: List to store the information of memory qubits that succeeded local BSM....", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md47", [
         [ "Pseudocodes", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md45", [
           [ "Global Variables", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md46", null ],
           [ "Function to emit photons from qnodes in msm links", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md48", null ]
         ] ]
       ] ],
-      [ "1. Wait for <tt>interval</tt> time and call EMIT_PHOTONS_MSM(<tt>interval</tt>)", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md49", null ],
-      [ "1. Free <tt>qubit</tt>", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md53", [
+      [ "Wait for interval time and call EMIT_PHOTONS_MSM(interval)", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md49", null ],
+      [ "Free qubit", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md53", [
         [ "Explanation of applying the Pauli Z gate for the case where the BSM results are different", "md_quisp_2modules_2_q_r_s_a_2_rule_engine_2_r_e_a_d_m_e.html#autotoc_md54", null ]
       ] ]
     ] ],
@@ -120,22 +120,23 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_access_private_8h.html",
-"_q_nic_record_8cc.html",
-"classquisp_1_1backends_1_1_stationary_qubit_configuration.html#ac84fdd15d7552b70bbddf8c6dacc5a79",
-"classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a86b7a0efb64a393eed44e15de3e5f174",
-"classquisp_1_1modules_1_1_connection_manager.html#a3a824b1a14988370a212d1279ae60fc4",
-"classquisp_1_1modules_1_1_i_real_time_controller.html",
-"classquisp_1_1modules_1_1_rule_engine.html#a0810738c792d45dadb9801529779f365",
-"classquisp_1_1modules_1_1ospf_1_1_link_state_database.html#aeeb42e20284c4c029a4e026c761a4b35",
-"classquisp_1_1rules_1_1_clause.html",
-"classquisp_1_1runtime_1_1_memory_value.html#ac0c1c70da6a2d3c1d20ec1a5c076ba31",
-"classquisp_1_1utils_1_1_component_provider.html#aa884f367bb4b3e65983bc0efbf30e78f",
-"classquisp__test_1_1env_1_1_static_env.html#a2dd86b3e8deaeb6b3203ab7cf08e0ff5",
-"classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a044110daabca465601139e24d7d13b8d",
-"functions_func_h.html",
-"namespacequisp_1_1modules_1_1_shared_resource.html",
-"struct_swapping_config.html#a1e46873030558351cc3c5982a36e5e20",
-"structquisp_1_1modules_1_1ospf_1_1_ospf_neighbor_info.html#a0179a73f71916afa10c541095f9ee7c5"
+"_q_nic_store_8cc.html",
+"classquisp_1_1backends_1_1_stationary_qubit_configuration.html#ac633940bd209bfcb482a83ad738c30f2",
+"classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a6ffffdac99605903cc6c3dac0956becb",
+"classquisp_1_1modules_1_1_connection_manager.html#a1ddec25e389403352907743365f1f213",
+"classquisp_1_1modules_1_1_i_hardware_monitor.html#a6548e4eb710e57ddf7f7fab275202da1",
+"classquisp_1_1modules_1_1_router.html#af8e6b46744df0cdec2b0ca837350666d",
+"classquisp_1_1modules_1_1ospf_1_1_link_state_database.html#a9923611107f1b6564ebaf110fdc68fb0",
+"classquisp_1_1rules_1_1_action.html#a80c6a356aa72092117eef5a18d856cd5",
+"classquisp_1_1rules_1_1rs__converter_1_1_rule_set_converter.html#af554764eaa1c0ad2e8d93417729f303a",
+"classquisp_1_1utils_1_1_component_provider.html#a862000e20ec1c73da6baa792485a443c",
+"classquisp__test_1_1env_1_1_static_env.html#a2167b5fb5e5d847d70dae9370b3d5d20",
+"classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html#afccbd2ac4bc4d3a8341f4cacf7cfe0ce",
+"functions_d.html",
+"namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3da18aba56dae027f8a6ffaf49c8bf39d17",
+"struct_photon_record.html#a0f850027ce84eb6bad23dc18cfc0a4e1",
+"structquisp_1_1modules_1_1ospf_1_1_link_state_advertisement.html#aaac4e0fb3d25d2683e42482706b31f4f",
+"types_8cc.html#aabfabd5cce3026543ee0842fa581744f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

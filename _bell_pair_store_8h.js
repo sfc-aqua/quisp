@@ -1,10 +1,8 @@
 var _bell_pair_store_8h =
 [
     [ "quisp::modules::BellPairStore", "classquisp_1_1modules_1_1_bell_pair_store.html", "classquisp_1_1modules_1_1_bell_pair_store" ],
-    [ "PartnerAddrQubitMap", "_bell_pair_store_8h.html#aaddacfaab29681c46ad5a418968ecb7d", null ],
-    [ "PartnerAddrQubitMapRange", "_bell_pair_store_8h.html#abf60aac8c13704b1b501124d946bbf2a", null ],
-    [ "QNicIndex", "_bell_pair_store_8h.html#ac15251b960056e05af47534b467cd5b6", null ],
-    [ "QNodeAddr", "_bell_pair_store_8h.html#a0f71b198c963a11406c9846dc8062c8c", null ],
-    [ "ResourceKey", "_bell_pair_store_8h.html#ac2ba3b50171b853416c32771dd1ab2cd", null ],
+    [ "PartnerAddrQubitMap", "_bell_pair_store_8h.html#a0520fc5c563162e89ddb9ed611df713f", null ],
+    [ "PartnerAddrQubitMapRange", "_bell_pair_store_8h.html#aa7d3d61fb3ac58cca891b7fede6c5a5b", null ],
+    [ "ResourceKey", "_bell_pair_store_8h.html#a14a20daaff325f9709b373a3b60b7936", null ],
     [ "operator<<", "_bell_pair_store_8h.html#ae92612e42b2ab887cec43d831fbe1a9b", null ]
 ];

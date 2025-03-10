@@ -1,6 +1,6 @@
 <map id="quisp::modules::backend::BackendContainer" name="quisp::modules::backend::BackendContainer">
 <area shape="rect" id="Node000001" title=" " alt="" coords="97,94,259,135"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,13,172,39"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,13,172,38"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,48,159,92,156,95,110,51"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="196,5,341,46"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,59,200,95,196,92,235,55"/>

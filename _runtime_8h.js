@@ -3,11 +3,11 @@ var _runtime_8h =
     [ "quisp::runtime::Register", "structquisp_1_1runtime_1_1_register.html", "structquisp_1_1runtime_1_1_register" ],
     [ "quisp::runtime::Runtime", "classquisp_1_1runtime_1_1_runtime.html", "classquisp_1_1runtime_1_1_runtime" ],
     [ "quisp::runtime::Runtime::ICallBack", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back" ],
-    [ "Memory", "_runtime_8h.html#a83426325f358c6d138f0f6adabbba45b", null ],
-    [ "MessageResources", "_runtime_8h.html#adcf4ef619a02a77cfa25edff265c9378", null ],
-    [ "QubitNameMap", "_runtime_8h.html#a5b5f4e76c5e6e7b0fc3857a7baa35df2", null ],
-    [ "QubitResources", "_runtime_8h.html#a30c8180919b26edab48097494bafc239", null ],
-    [ "QubitResourcesWithSequenceNumbers", "_runtime_8h.html#af01ff277b2e2a9857efa7fbe064145ad", null ],
-    [ "SequenceNumberCounter", "_runtime_8h.html#a8777b193f2965186fc8423fcae7c33fe", null ],
-    [ "SequenceNumberTracker", "_runtime_8h.html#a2aee4d03c941cd0e563cc64846c06b91", null ]
+    [ "Memory", "_runtime_8h.html#a3b943b993889c9487bed6ad6c67f0a47", null ],
+    [ "MessageResources", "_runtime_8h.html#aaacd664dac0780856ae6a5a3f906742f", null ],
+    [ "QubitNameMap", "_runtime_8h.html#a1ca61759267c2c2613b4b11367ed195a", null ],
+    [ "QubitResources", "_runtime_8h.html#ae2140b7bfd4ab0ff8267f149a9f35c46", null ],
+    [ "QubitResourcesWithSequenceNumbers", "_runtime_8h.html#a7241c05bec7d0ceaa1ecb6559a8d0e66", null ],
+    [ "SequenceNumberCounter", "_runtime_8h.html#a81d7d7ce13a188052a6572a3cba0502d", null ],
+    [ "SequenceNumberTracker", "_runtime_8h.html#a45a5f4dafe49c82ce3190811093426b1", null ]
 ];

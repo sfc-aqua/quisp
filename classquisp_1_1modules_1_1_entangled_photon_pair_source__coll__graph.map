@@ -4,6 +4,6 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,31,284,45,308,49,307,54,283,50,205,37"/>
 <area shape="rect" id="Node000003" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="5,55,208,80"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="223,65,307,65,307,70,223,70"/>
-<area shape="rect" id="Node000004" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="23,105,190,145"/>
+<area shape="rect" id="Node000004" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="23,104,190,145"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="205,102,307,82,308,87,206,108"/>
 </map>

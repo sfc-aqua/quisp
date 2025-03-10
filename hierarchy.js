@@ -77,14 +77,14 @@ var hierarchy =
     ] ],
     [ "quisp::backends::abstract::IQubitId::Hash", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_hash.html", null ],
     [ "std::hash< pair< quisp::modules::QNIC_type, int > >", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4.html", null ],
-    [ "GraphStateBackend::ICallback", null, [
-      [ "quisp::modules::backend::BackendContainer", "classquisp_1_1modules_1_1backend_1_1_backend_container.html", null ]
-    ] ],
-    [ "quisp::backends::graph_state::GraphStateBackend::ICallback", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend_1_1_i_callback.html", null ],
     [ "quisp::runtime::Runtime::ICallBack", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html", [
       [ "quisp::modules::runtime_callback::RuntimeCallback", "structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback.html", null ],
       [ "quisp_test::MockRuntimeCallback", "classquisp__test_1_1_mock_runtime_callback.html", null ]
     ] ],
+    [ "GraphStateBackend::ICallback", null, [
+      [ "quisp::modules::backend::BackendContainer", "classquisp_1_1modules_1_1backend_1_1_backend_container.html", null ]
+    ] ],
+    [ "quisp::backends::graph_state::GraphStateBackend::ICallback", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend_1_1_i_callback.html", null ],
     [ "quisp::utils::IComponentProviderStrategy", "classquisp_1_1utils_1_1_i_component_provider_strategy.html", [
       [ "quisp::utils::DefaultComponentProviderStrategy", "classquisp_1_1utils_1_1_default_component_provider_strategy.html", null ],
       [ "quisp_test::strategy::TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html", null ]

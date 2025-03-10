@@ -12,31 +12,31 @@
 <area shape="poly" id="edge21_Node000000_Node000008" title=" " alt="" coords="138,469,221,499,254,510,252,515,219,504,136,474"/>
 <area shape="rect" id="Node000011" href="$classquisp_1_1modules_1_1_i_hardware_monitor.html" title=" " alt="" coords="238,759,411,799"/>
 <area shape="poly" id="edge23_Node000000_Node000011" title=" " alt="" coords="97,480,109,536,133,607,149,645,169,681,193,715,221,745,239,757,236,761,218,749,189,719,165,684,144,647,128,609,104,537,92,481"/>
-<area shape="rect" id="Node000014" href="$classquisp_1_1modules_1_1_i_real_time_controller.html" title=" " alt="" coords="238,824,411,865"/>
+<area shape="rect" id="Node000014" href="$classquisp_1_1modules_1_1_i_real_time_controller.html" title=" " alt="" coords="238,824,410,865"/>
 <area shape="poly" id="edge26_Node000000_Node000014" title=" " alt="" coords="94,480,104,547,125,635,141,682,162,728,189,771,221,809,239,822,236,826,218,813,185,774,158,731,136,684,119,637,98,548,89,481"/>
-<area shape="rect" id="Node000010" href="$classquisp_1_1modules_1_1_i_rule_engine.html" title=" " alt="" coords="233,709,416,735"/>
+<area shape="rect" id="Node000010" href="$classquisp_1_1modules_1_1_i_rule_engine.html" title=" " alt="" coords="233,709,416,734"/>
 <area shape="poly" id="edge29_Node000000_Node000010" title=" " alt="" coords="99,479,114,526,138,585,174,644,196,671,221,694,242,706,239,711,218,698,192,675,169,647,134,587,109,528,94,480"/>
-<area shape="rect" id="Node000017" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="237,921,412,962"/>
-<area shape="poly" id="edge31_Node000000_Node000017" title=" " alt="" coords="94,480,104,555,125,658,141,714,163,771,189,825,222,875,247,900,277,919,274,923,244,904,218,878,185,828,158,773,136,716,120,659,98,556,89,481"/>
+<area shape="rect" id="Node000017" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="237,925,412,966"/>
+<area shape="poly" id="edge31_Node000000_Node000017" title=" " alt="" coords="95,480,104,555,126,657,142,714,163,770,190,825,222,875,249,902,280,923,277,927,245,906,218,878,185,827,158,772,137,715,120,659,99,555,89,481"/>
 <area shape="rect" id="Node000020" href="$classquisp_1_1modules_1_1_logger_1_1_logger_module.html" title=" " alt="" coords="248,5,401,46"/>
 <area shape="poly" id="edge34_Node000000_Node000020" title=" " alt="" coords="88,423,95,351,115,253,132,200,154,148,182,100,218,57,246,39,249,43,221,61,187,103,158,151,137,202,120,254,101,351,93,424"/>
-<area shape="rect" id="Node000021" href="$classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch." alt="" coords="242,71,407,111"/>
+<area shape="rect" id="Node000021" href="$classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch." alt="" coords="242,71,406,111"/>
 <area shape="poly" id="edge35_Node000000_Node000021" title=" " alt="" coords="90,424,101,362,123,280,140,237,161,195,187,156,218,121,240,106,243,110,221,125,191,159,165,198,144,239,128,282,106,363,95,425"/>
 <area shape="rect" id="Node000022" href="$classquisp_1_1modules_1_1_queue.html" title="Queue." alt="" coords="249,136,400,161"/>
 <area shape="poly" id="edge36_Node000000_Node000022" title=" " alt="" coords="92,424,105,370,128,301,145,265,165,230,189,198,218,170,247,155,249,159,221,174,193,202,169,233,149,268,133,303,110,371,97,425"/>
-<area shape="rect" id="Node000023" href="$classquisp_1_1modules_1_1_router.html" title="Router routes messages to components or other qnode according to the message header." alt="" coords="249,185,400,211"/>
+<area shape="rect" id="Node000023" href="$classquisp_1_1modules_1_1_router.html" title="Router routes messages to components or other qnode according to the message header." alt="" coords="249,185,400,210"/>
 <area shape="poly" id="edge37_Node000000_Node000023" title=" " alt="" coords="95,424,111,379,136,324,171,268,193,243,218,221,247,206,250,210,221,225,197,247,176,271,141,326,116,381,100,425"/>
 <area shape="rect" id="Node000024" href="$classquisp_1_1modules_1_1_shared_resource_1_1_shared_resource.html" title=" " alt="" coords="220,235,429,275"/>
 <area shape="poly" id="edge38_Node000000_Node000024" title=" " alt="" coords="102,424,147,355,180,317,218,285,238,273,241,278,221,289,184,321,152,358,106,427"/>
-<area shape="rect" id="Node000025" href="$classquisp_1_1modules_1_1backend_1_1_backend_container.html" title=" " alt="" coords="243,987,406,1027"/>
-<area shape="poly" id="edge39_Node000000_Node000025" title=" " alt="" coords="96,480,111,588,138,735,155,810,175,878,197,934,222,972,245,988,241,993,218,975,193,937,170,880,150,812,133,737,106,589,91,481"/>
+<area shape="rect" id="Node000025" href="$classquisp_1_1modules_1_1backend_1_1_backend_container.html" title=" " alt="" coords="243,991,406,1031"/>
+<area shape="poly" id="edge39_Node000000_Node000025" title=" " alt="" coords="96,480,111,589,138,738,155,813,175,882,197,938,222,976,245,992,241,997,218,979,192,940,170,883,150,814,132,739,106,590,91,481"/>
 <area shape="rect" id="Node000027" href="$classquisp_1_1modules_1_1dummy_module.html" title="dummyModule" alt="" coords="226,300,423,325"/>
 <area shape="poly" id="edge40_Node000000_Node000027" title=" " alt="" coords="109,426,156,380,186,356,218,335,248,323,250,328,221,340,189,360,159,384,113,430"/>
-<area shape="rect" id="Node000005" href="$classquisp_1_1modules_1_1_application.html" title="Application." alt="" coords="501,464,678,489"/>
+<area shape="rect" id="Node000005" href="$classquisp_1_1modules_1_1_application.html" title="Application." alt="" coords="500,464,678,489"/>
 <area shape="poly" id="edge20_Node000004_Node000005" title=" " alt="" coords="430,474,500,474,500,479,430,479"/>
 <area shape="rect" id="Node000007" href="$classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager." alt="" coords="500,521,678,562"/>
 <area shape="poly" id="edge22_Node000008_Node000007" title=" " alt="" coords="431,534,500,536,500,542,431,540"/>
-<area shape="rect" id="Node000012" href="$classquisp_1_1modules_1_1_hardware_monitor.html" title="HardwareMonitor." alt="" coords="505,743,674,783"/>
+<area shape="rect" id="Node000012" href="$classquisp_1_1modules_1_1_hardware_monitor.html" title="HardwareMonitor." alt="" coords="504,743,674,783"/>
 <area shape="poly" id="edge24_Node000011_Node000012" title=" " alt="" coords="427,770,504,765,504,771,427,775"/>
 <area shape="rect" id="Node000013" href="$classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html" title=" " alt="" coords="477,663,701,719"/>
 <area shape="poly" id="edge25_Node000011_Node000013" title=" " alt="" coords="408,751,428,744,508,717,510,722,430,750,410,756"/>
@@ -47,11 +47,11 @@
 <area shape="rect" id="Node000009" href="$classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine." alt="" coords="500,596,678,621"/>
 <area shape="poly" id="edge30_Node000010_Node000009" title=" " alt="" coords="413,701,428,694,442,684,451,673,461,661,476,649,508,632,540,619,542,624,510,637,478,653,465,665,455,676,446,687,430,699,416,706"/>
 <area shape="rect" id="Node000018" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="504,1017,675,1058"/>
-<area shape="poly" id="edge32_Node000017_Node000018" title=" " alt="" coords="413,966,430,973,454,987,478,1002,510,1014,508,1019,476,1007,452,992,428,977,411,970"/>
+<area shape="poly" id="edge32_Node000017_Node000018" title=" " alt="" coords="411,969,430,977,478,1002,512,1014,511,1019,476,1007,428,981,409,974"/>
 <area shape="rect" id="Node000019" href="$classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html" title=" " alt="" coords="496,952,683,993"/>
-<area shape="poly" id="edge33_Node000017_Node000019" title=" " alt="" coords="428,951,496,959,495,964,427,956"/>
-<area shape="rect" id="Node000026" title=" " alt="" coords="16,987,161,1027"/>
-<area shape="poly" id="edge41_Node000026_Node000025" title=" " alt="" coords="176,1004,243,1004,243,1010,176,1010"/>
+<area shape="poly" id="edge33_Node000017_Node000019" title=" " alt="" coords="428,953,496,960,495,966,428,959"/>
+<area shape="rect" id="Node000026" title=" " alt="" coords="16,991,161,1031"/>
+<area shape="poly" id="edge41_Node000026_Node000025" title=" " alt="" coords="176,1008,243,1008,243,1014,176,1014"/>
 <area shape="rect" id="Node000006" href="$classquisp_1_1modules_1_1_logger_1_1_logger_base.html" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="248,579,401,619"/>
 <area shape="poly" id="edge42_Node000006_Node000005" title=" " alt="" coords="414,571,427,564,442,550,451,536,460,522,476,507,520,487,522,492,478,512,464,525,455,539,446,553,431,568,417,576"/>
 <area shape="poly" id="edge43_Node000006_Node000007" title=" " alt="" coords="416,577,499,558,500,564,417,582"/>

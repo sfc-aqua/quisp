@@ -1,7 +1,7 @@
 <map id="quisp::modules::ConnectionManager" name="quisp::modules::ConnectionManager">
 <area shape="rect" id="Node000001" title="ConnectionManager." alt="" coords="614,136,792,177"/>
 <area shape="rect" id="Node000002" href="$classquisp_1_1modules_1_1_i_connection_manager.html" title=" " alt="" coords="268,5,450,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="457,48,524,69,591,94,668,133,666,138,589,99,522,74,455,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="460,48,525,68,591,93,669,133,667,138,589,97,523,73,458,53"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,78,172,104"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="159,71,271,44,272,49,160,77"/>
 <area shape="rect" id="Node000007" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="278,71,440,111"/>
@@ -13,7 +13,7 @@
 <area shape="rect" id="Node000005" href="$classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="12,201,165,242"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="181,219,282,219,282,224,181,224"/>
 <area shape="rect" id="Node000006" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="258,266,460,292"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="428,259,459,251,525,236,589,216,631,196,668,175,670,179,633,201,591,220,527,241,461,256,429,264"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="428,259,459,251,525,235,589,214,667,175,669,179,591,219,527,240,461,256,429,264"/>
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="455,106,614,137,613,142,454,112"/>
 <area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="461,154,614,154,614,159,461,159"/>
 </map>

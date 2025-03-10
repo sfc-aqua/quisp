@@ -2,8 +2,8 @@ var _q_n_i_c_8h =
 [
     [ "quisp::modules::QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", "structquisp_1_1modules_1_1_q_n_i_c" ],
     [ "std::hash< pair< quisp::modules::QNIC_type, int > >", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4.html", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4" ],
-    [ "json", "_q_n_i_c_8h.html#ac5600e2cedff8162864c3e7019ccd4d3", null ],
-    [ "QNicPairInfo", "_q_n_i_c_8h.html#adb942d915d9698476f24ad3bec904755", null ],
+    [ "json", "_q_n_i_c_8h.html#a0c01dbde6677d7e4769b85716c69c491", null ],
+    [ "QNicPairInfo", "_q_n_i_c_8h.html#ab0651e018f1126bdedcbe46b5d3aa734", null ],
     [ "QNIC_type", "_q_n_i_c_8h.html#af32f152795f192fb6a9b311e0eabae3d", [
       [ "QNIC_E", "_q_n_i_c_8h.html#af32f152795f192fb6a9b311e0eabae3da045495d91222801283ae27e8a0913da7", null ],
       [ "QNIC_R", "_q_n_i_c_8h.html#af32f152795f192fb6a9b311e0eabae3dafd6a234f2c0ba28b3ad1c3995eae6fce", null ],

@@ -1,9 +1,9 @@
 <map id="quisp::modules::IHardwareMonitor" name="quisp::modules::IHardwareMonitor">
 <area shape="rect" id="Node000001" title=" " alt="" coords="220,41,393,82"/>
-<area shape="rect" id="Node000003" href="$classquisp_1_1modules_1_1_hardware_monitor.html" title="HardwareMonitor." alt="" coords="469,5,638,46"/>
+<area shape="rect" id="Node000003" href="$classquisp_1_1modules_1_1_hardware_monitor.html" title="HardwareMonitor." alt="" coords="468,5,638,46"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="408,44,468,35,468,41,409,49"/>
 <area shape="rect" id="Node000004" href="$classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html" title=" " alt="" coords="441,70,665,126"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="409,74,441,79,440,84,408,79"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,49,172,75"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,49,172,74"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,59,219,59,219,64,187,64"/>
 </map>

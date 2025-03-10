@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title="This module takes the click event from BSA, compile the result and report back to QNode that sent the..." alt="" coords="663,103,858,128"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="51,5,162,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,9,351,3,456,5,559,16,601,24,640,40,697,70,742,100,740,105,694,75,638,45,599,29,559,21,455,11,351,8,177,15"/>
-<area shape="rect" id="Node000006" href="$classquisp_1_1modules_1_1_bell_state_analyzer.html" title="BellStateAnalyzer." alt="" coords="378,95,545,136"/>
+<area shape="rect" id="Node000006" href="$classquisp_1_1modules_1_1_bell_state_analyzer.html" title="BellStateAnalyzer." alt="" coords="378,95,544,136"/>
 <area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="172,33,385,92,383,97,170,38"/>
 <area shape="rect" id="Node000003" href="$structquisp_1_1modules_1_1_b_s_a_controller_1_1_q_nic_info.html" title=" " alt="" coords="364,30,559,71"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="573,72,699,100,698,105,572,77"/>
@@ -10,7 +10,7 @@
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="161,290,241,302,341,310,396,309,451,305,506,295,558,280,590,266,620,248,675,205,718,161,747,127,751,131,722,165,678,209,623,252,592,271,560,285,507,301,452,310,396,315,341,315,240,308,160,295"/>
 <area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="146,258,363,153,407,134,409,139,365,158,149,263"/>
 <area shape="rect" id="Node000005" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="5,332,208,358"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="224,357,300,361,385,359,473,350,558,329,595,313,628,290,659,262,685,232,726,172,751,128,755,130,731,175,689,235,662,266,632,294,598,318,560,335,474,355,385,365,300,366,223,362"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="221,357,297,362,383,361,472,351,558,331,595,314,629,291,659,263,685,232,726,172,751,128,755,130,731,175,689,236,663,267,632,295,598,319,560,336,473,357,384,366,297,367,221,363"/>
 <area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="159,324,207,304,247,288,280,278,308,263,338,234,347,214,348,195,350,175,362,154,387,134,391,139,366,157,355,177,354,196,352,216,342,238,311,267,282,283,249,293,209,309,161,329"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="560,113,663,113,663,118,560,118"/>
 <area shape="rect" id="Node000007" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="23,95,190,136"/>
