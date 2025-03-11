@@ -140,6 +140,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 
   if (auto *pk = dynamic_cast<TerminatedIdNotification *>(msg)) { //From Responder
+      EV_DEBUG << "Received termination notification for RS " << pk->getRuleSetId() << " at node: " << my_address << ", issuing Deallocation\n";
       DeallocateResources* dr = new DeallocateResources();
       dr->setSrcAddr(my_address);
       dr->setDestAddr(my_address);
@@ -206,7 +207,12 @@ void ConnectionManager::storeRuleSet(ConnectionSetupResponse *pk) {
   pk_internal->setKind(4);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
   pk_internal->setRuleSet(pk->getRuleSet());
+  double delay = pk->getStartTime().dbl() - simTime().dbl();
+  if (delay < 0) {
   send(pk_internal, "RouterPort$o");
+  }
+  else sendDelayed(pk_internal,delay,"RouterPort$o");
+
 }
 
 /**
@@ -223,7 +229,12 @@ void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) 
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
   pk_internal->setRuleSet(pk->getRuleSet());
   pk_internal->setApplication_type(pk->getApplication_type());
-  send(pk_internal, "RouterPort$o");
+  double delay = pk->getStartTime().dbl() - simTime().dbl();
+   if (delay < 0) {
+   send(pk_internal, "RouterPort$o");
+   }
+   else sendDelayed(pk_internal,delay,"RouterPort$o");
+
 }
 
 void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
@@ -288,6 +299,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setActual_srcAddr(my_address);
     pkt->setActual_destAddr(owner_address);
     pkt->setApplication_type(0);
+    pkt->setStartTime(simTime()+SimTime(10,SIMTIME_MS));
     pkt->setKind(2);
     send(pkt, "RouterPort$o");
 

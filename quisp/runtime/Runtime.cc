@@ -187,6 +187,7 @@ void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr n
   sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit_record]);
   sequence_number_to_qubit[{new_partner_addr, next_rule_id, next_rule_sequence_number}] = qubit_record;
   qubit_to_sequence_number[qubit_record] = {new_partner_addr, next_rule_id, next_rule_sequence_number};
+  callback->promoteQubitWithNewPartner(qubit_record, new_partner_addr);
 }
 void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) {
   qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record);

@@ -25,6 +25,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
 
   MeasurementOutcome measureQubitRandomly(IQubitRecord *qubit_rec) override {
     auto qubit = provider.getStationaryQubit(qubit_rec);
+    EV_DEBUG << "[MEAS] Node " << rule_engine->parentAddress << " measured qubit (" << qubit_rec->getQNicType() << ", " << qubit_rec->getQNicIndex() << ", " << qubit_rec->getQubitIndex() << ") for tomo\n";
     return qubit->measureRandomPauliBasis();
   }
 
@@ -178,6 +179,12 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     std::stringstream ss;
     ss << "QNodeAddr:" << std::to_string(rule_engine->parentAddress) << ", event #" << std::to_string(omnetpp::getSimulation()->getEventNumber());
     return ss.str();
+  }
+
+  void promoteQubitWithNewPartner(IQubitRecord *qubit_record, QNodeAddr new_partner_addr) override {
+      rule_engine->bell_pair_store.eraseQubit(qubit_record);
+      rule_engine->bell_pair_store.insertEntangledQubit(new_partner_addr.val,qubit_record);
+      EV_DEBUG << "[SWAP]: Node " << rule_engine->parentAddress << " promoted qubit (" << qubit_record->getQNicType() << ", " << qubit_record->getQNicIndex() << ", " << qubit_record->getQubitIndex() << ") with new partner " << new_partner_addr << ".\n";
   }
 
   RuleEngine *rule_engine;

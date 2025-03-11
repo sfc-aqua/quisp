@@ -76,6 +76,7 @@ class BSAController : public cSimpleModule {
   // cache information for timing notification
   simtime_t offset_time_for_first_photon;
   BSMNotificationTimeout* time_out_message;
+  BSMNotificationTimeout* time_out_message_DBG;
   std::vector<BSAClickResult> click_results;
   int time_out_count;
 

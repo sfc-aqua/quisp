@@ -44,7 +44,9 @@ void BSAController::initialize() {
     simtime_t first_notification_timer = SimTime(par("initial_notification_timing_buffer").doubleValue());
     right_qnic = getExternalQNICInfoFromPort(1);
     offset_time_for_first_photon = calculateOffsetTimeFromDistance();
+    time_out_message_DBG = time_out_message->dup();
     scheduleAt(first_notification_timer, time_out_message);
+   // scheduleAfter(11, time_out_message_DBG);
   }
 }
 
@@ -226,6 +228,7 @@ BSAController::QNicInfo BSAController::getExternalQNICInfoFromPort(int port) {
 
 void BSAController::cancelBSMTimeOut() {
   cancelEvent(time_out_message);
+  //if (simTime().dbl() > 11) cancelEvent(time_out_message_DBG);
   time_out_count = 0;
 }
 

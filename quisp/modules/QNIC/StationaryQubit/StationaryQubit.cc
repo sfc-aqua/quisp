@@ -168,7 +168,7 @@ void StationaryQubit::setFree(bool consumed) {
   action_index = -1;
   emitted_time = -1;
 
-  EV_DEBUG << "Freeing this qubit! " << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
+//  EV_DEBUG << "Freeing this qubit! " << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
   if (hasGUI()) {
     if (consumed) {
       bubble("Consumed!");

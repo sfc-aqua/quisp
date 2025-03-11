@@ -32,6 +32,7 @@ packet ConnectionSetupResponse extends Header
     json ruleSet;
     int application_type;
     int stack_of_QNodeIndexes[];
+    simtime_t execution_start_time @setter(setStartTime) @getter(getStartTime);
 }
 
 packet TerminatedIdNotification extends Header {

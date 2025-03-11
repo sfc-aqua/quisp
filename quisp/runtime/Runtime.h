@@ -63,6 +63,7 @@ class Runtime {
     virtual bool isQubitLocked(IQubitRecord* const) = 0;
     virtual void lockQubit(IQubitRecord* const, unsigned long rs_id, int rule_id, int action_index) = 0;
     virtual int getActionIndex(IQubitRecord* const) = 0;
+    virtual void promoteQubitWithNewPartner(IQubitRecord *qubit_record, QNodeAddr new_partner_addr) = 0;
 
     // Quantum Operations
     virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
