@@ -3,7 +3,7 @@ package modules;
 
 import modules.Application.Application;
 import modules.QRSA.quantumRoutingSoft;
-import modules.QNIC.*;
+import modules.QNIC;
 import modules.Common.*;
 
 module QNode
@@ -29,11 +29,11 @@ module QNode
     submodules:
         app: Application {
             parameters:
-                @display("p=30,43");
+                @display("p=19,19");
         }
         router: Router {
             parameters:
-                @display("p=140,94");
+                @display("p=78,133");
             gates:
                 fromQueue[sizeof(parent.port)];
                 toQueue[sizeof(parent.port)];
@@ -43,7 +43,7 @@ module QNode
                 address = index;
                 //buffer = 8;
                 //@display("p=198,43");
-                @display("p=68,122");
+                @display("p=265,182");
         }
         qrsa: quantumRoutingSoft {
             parameters:

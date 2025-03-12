@@ -1,9 +1,12 @@
 #include "SharedResource.h"
+#include <channels/FSChannel.h>
 #include <memory>
 #include <random>
 #include <vector>
 #include "omnetpp/ctopology.h"
 #include "utils/ComponentProvider.h"
+
+using namespace quisp::channels;
 
 namespace quisp::modules::SharedResource {
 
@@ -77,7 +80,10 @@ void SharedResource::updateChannelWeightsOfNode(cTopology::Node *node, std::opti
 
 // The cost metric is taken from https://arxiv.org/abs/1206.5655
 double SharedResource::calculateSecPerBellPair(const cModule *const rd_module, const cTopology::LinkOut *const outgoing_link) {
-  double speed_of_light_in_fiber = outgoing_link->getLocalGate()->getChannel()->par("speed_of_light_in_fiber");
+  cChannel *channel = outgoing_link->getLocalGate()->getChannel();
+  const char *speed_of_light_name = {dynamic_cast<FSChannel *>(channel) == nullptr ? "speed_of_light_in_fiber" : "speed_of_light_in_FS"};
+
+  double speed_of_light_in_medium = channel->par(speed_of_light_name);
   double channel_length = outgoing_link->getLocalGate()->getChannel()->par("distance");
 
   auto *some_stationary_qubit_in_qnic = rd_module->findModuleByPath("^.^.qnic[0].statQubit[0]");
@@ -96,7 +102,7 @@ double SharedResource::calculateSecPerBellPair(const cModule *const rd_module, c
     error("cannot read emission_success_probability from file");
   }
 
-  return (channel_length / speed_of_light_in_fiber) * emission_prob;
+  return (channel_length / speed_of_light_in_medium) * emission_prob;
 }
 
 /**

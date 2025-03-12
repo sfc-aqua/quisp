@@ -8,6 +8,7 @@ namespace gate {
 using omnetpp::cSimulation;
 
 TempGate::TempGate() {}
+
 bool TempGate::deliver(cMessage *msg, const omnetpp::SendOptions &options, simtime_t at) { return true; }
 
 TestGate::TestGate(cModule *mod, const char *name) {
@@ -16,7 +17,8 @@ TestGate::TestGate(cModule *mod, const char *name) {
   desc->name = new omnetpp::cGate::Name{name, omnetpp::cGate::Type::OUTPUT};
   desc->owner = mod;
   // output gate needs nextGate to be filled. actually temp_gate do nothing.
-  nextGate = &temp_gate;
+  temp_gate = new TempGate();
+  nextGate = temp_gate;
   desc->setOutputGate(this);
 }
 
@@ -27,6 +29,11 @@ TestGate::TestGate(cModule *mod, const char *name) {
 bool TestGate::deliver(cMessage *msg, const omnetpp::SendOptions &options, simtime_t at) {
   messages.push_back(msg->dup());
   return true;
+}
+
+void TestGate::quiet_connectTo(cGate *target) {
+  nextGate = target;
+  // target->prevGate = this;
 }
 
 }  // namespace gate
