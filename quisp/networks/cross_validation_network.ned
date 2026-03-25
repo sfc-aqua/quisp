@@ -10,6 +10,34 @@ import modules.SharedResource.SharedResource;
 import channels.*;
 
 
+network cross_validation_purification
+{
+    submodules:
+        backend: Backend;
+        logger: Logger;
+        sharedResource: SharedResource;
+        alice: QNode {
+            address = 1;
+            node_type = "EndNode";
+            @display("i=COMP");
+        }
+        BSA: BSANode {
+            address = 2;
+            @display("i=BSA");
+        }
+        bob: QNode {
+            address = 3;
+            node_type = "EndNode";
+            @display("i=COMP");
+        }
+    connections:
+        alice.port++         <--> ClassicalChannel {  distance = 20km; } <--> BSA.port++;
+        BSA.port++           <--> ClassicalChannel {  distance = 20km; } <--> bob.port++;
+
+        alice.quantum_port++ <--> QuantumChannel {  distance = 20km; }  <--> BSA.quantum_port++;
+        BSA.quantum_port++   <--> QuantumChannel {  distance = 20km; }  <--> bob.quantum_port++;
+}
+
 network cross_validation_swapping
 {
     submodules:

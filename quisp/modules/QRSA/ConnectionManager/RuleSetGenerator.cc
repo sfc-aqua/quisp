@@ -43,12 +43,12 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
   }
 
   // // if you want to do e2e purification before tomography do it here
-  // int left_addr = path.front();
-  // int right_addr = path.back();
-  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, ++shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
-  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
-  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
+  int left_addr = path.front();
+  int right_addr = path.back();
+  rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, ++shared_rule_tag));
+  rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
+  rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
+  rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, shared_rule_tag));
 
   // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_SELECTION_Z_PURIFICATION, ++shared_rule_tag));
   // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_SELECTION_Z_PURIFICATION, shared_rule_tag));
