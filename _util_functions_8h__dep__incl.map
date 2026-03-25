@@ -1,6 +1,6 @@
 <map id="quisp/utils/UtilFunctions.h" name="quisp/utils/UtilFunctions.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="3435,5,3606,31"/>
-<area shape="rect" id="Node000002" href="$backends_2_graph_state_2_q_u_b_i_t_8h.html" title=" " alt="" coords="3332,79,3514,120"/>
+<area shape="rect" id="Node000002" href="$backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="3332,79,3514,120"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="3496,43,3449,81,3446,77,3492,39"/>
 <area shape="rect" id="Node000129" href="$_util_functions__test_8cc.html" title=" " alt="" coords="3538,79,3700,120"/>
 <area shape="poly" id="edge109_Node000001_Node000129" title=" " alt="" coords="3549,39,3596,77,3593,81,3546,43"/>
@@ -92,7 +92,7 @@
 <area shape="poly" id="edge33_Node000044_Node000047" title=" " alt="" coords="1209,893,1248,912,1286,935,1302,949,1312,963,1321,977,1337,991,1419,1039,1507,1078,1592,1109,1667,1131,1666,1136,1591,1114,1505,1083,1417,1044,1334,995,1317,981,1308,967,1298,953,1283,939,1246,916,1206,898"/>
 <area shape="rect" id="Node000032" href="$_rule_engine__photon__shooting__test_8cc.html" title=" " alt="" coords="689,1129,858,1185"/>
 <area shape="poly" id="edge34_Node000044_Node000032" title=" " alt="" coords="1008,874,969,883,929,896,892,914,858,939,839,960,823,984,800,1036,786,1087,779,1129,774,1128,781,1086,795,1034,819,981,835,957,855,935,889,910,927,891,967,877,1007,869"/>
-<area shape="rect" id="Node000048" href="$modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="1112,952,1273,978"/>
+<area shape="rect" id="Node000048" href="$modules_2_qubit_8h.html" title="QUBIT." alt="" coords="1112,952,1273,978"/>
 <area shape="poly" id="edge35_Node000044_Node000048" title=" " alt="" coords="1145,900,1185,950,1181,953,1140,903"/>
 <area shape="rect" id="Node000066" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="565,944,788,985"/>
 <area shape="poly" id="edge36_Node000044_Node000066" title=" " alt="" coords="1009,889,761,947,760,941,1007,884"/>
