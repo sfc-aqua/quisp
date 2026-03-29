@@ -45,12 +45,12 @@ network cross_validation_swapping
         logger: Logger;
         sharedResource: SharedResource;
 
-        EndNode1: QNode {
+        alice: QNode {
             address = 1;
             node_type = "EndNode";
             @display("i=COMP;p=56,202");
         }
-        EndNode2: QNode {
+        bob: QNode {
             address = 5;
             node_type = "EndNode";
             @display("i=COMP;p=473,202");
@@ -73,15 +73,15 @@ network cross_validation_swapping
             @display("p=371,86");
         }
     connections:
-        EndNode1.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA1.port++;
+        alice.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA1.port++;
         Repeater.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA1.port++;
         Repeater.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA2.port++;
-        EndNode2.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA2.port++;
+        bob.port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA2.port++;
 
-        EndNode1.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA1.quantum_port++;
+        alice.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA1.quantum_port++;
         Repeater.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA1.quantum_port++;
         Repeater.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA2.quantum_port++;
-        EndNode2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA2.quantum_port++;
+        bob.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA2.quantum_port++;
 }
 
 network cross_validation_mim_link_middle
