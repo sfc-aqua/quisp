@@ -2,6 +2,8 @@
 
 pids=()
 
+# experiment 0: baseline
+##########
 echo "Running to find base Bell pair fidelity"
 ./quisp -n "./networks:./channels:./modules:./simulations" \
     -i ./images ./simulations/mim_generation_test.ini -u Cmdenv \
@@ -15,6 +17,8 @@ do
 done
 pids=()
 
+# experiment 1: varying memories
+##########
 for i in 1 2 4 8 16 32 64;
 do
     echo "Running first exp with $i memories"
@@ -32,6 +36,8 @@ do
 done
 pids=()
 
+# experiment 2: varying BSA placement
+##########
 for i in 0 1 2 3 4 5 6 7 8 9 10;
 do
     alicedist="$((20 - $i))"
@@ -50,6 +56,8 @@ do
 done
 pids=()
 
+# experiment 3.1: varying CNOT error rate
+##########
 for cnot in 0 025 05 075 1 125 15 175 2 225 25 275 3 325 35 375 4 425 45 475 5 525 55 575 6 625 65 675 7 725 75 775 8 825 85 875 9 925 95 975;
 do
     echo "Running experiment 3 - CNOT error: $cnot, measurement error: 0, with decoherence"
@@ -75,6 +83,8 @@ do
 done
 pids=()
 
+# experiment 3.2: varying Measurement error rate
+##########
 for meas in 025 05 075 1 125 15 175 2 225 25 275 3 325 35 375 4 425 45 475 5 525 55 575 6 625 65 675 7 725 75 775 8 825 85 875 9 925 95 975;
 do
     echo "Running experiment 3 - CNOT error: 0, measurement error: $meas, with decoherence"
