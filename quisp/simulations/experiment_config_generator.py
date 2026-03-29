@@ -115,7 +115,7 @@ def generate_imbalanced_mim_config(
         f"**.qrsa.hm.num_measure = {num_bellpairs}",
     ]
     other_params = [
-        "repeat = 100",
+        "repeat = 200",
         "seed-set =  ${repetition}",
         "**.photon_detection_per_second = 1000000000 # 1GHz",
         "**.qrsa.hm.link_tomography = false",
@@ -169,7 +169,7 @@ def generate_swapping_config(
         f"**.memory_z_error_rate = {p_decoherence}",
     ]
     other_params = [
-        "repeat = 100",
+        "repeat = 200",
         "seed-set =  ${repetition}",
         "**.photon_detection_per_second = 1000000000 # 1GHz",
         "**.qrsa.hm.link_tomography = false",
