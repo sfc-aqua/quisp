@@ -42,7 +42,7 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
     std::reverse(rs.begin(), rs.end());
   }
 
-  // // if you want to do e2e purification before tomography do it here
+  // if you want to do e2e purification before tomography do it here
   int left_addr = path.front();
   int right_addr = path.back();
   rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_SELECTION_X_PURIFICATION, ++shared_rule_tag));
