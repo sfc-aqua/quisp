@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
-from pathlib import Path
-
 import os
+from pathlib import Path
 
 import numpy as np
 
@@ -69,7 +68,7 @@ def get_channel_fidelity_from_symmetric_link_fidelity(f):
     return p
 
 
-def get_p_from_decoherence_time(decoherence_time_mu_s: int) -> float:
+def get_p_memory_channel_from_coherence_time(decoherence_time_mu_s: int) -> float:
     """Returns the X, Y, Z error probability of the memory channel;
     p = px = py = pz, meaning probability of no error is 1 - 3p."""
     # Although QuISP allows for relaxation/excitation noise, we do not include it here.
@@ -156,7 +155,7 @@ def generate_swapping_config(
     if with_decoherence:
         coherence_time_str = str(coherence_time_in_mu_s).split(".")[0]
     p_decoherence = (
-        get_p_from_decoherence_time(coherence_time_in_mu_s) if with_decoherence else 0
+        get_p_memory_channel_from_coherence_time(coherence_time_in_mu_s) if with_decoherence else 0
     )
 
     config_name = f"[Config swapping_validation_cnot_{cnot_error_prob_str}_meas_{measurement_error_prob_str}_with_{coherence_time_str}_coherence_time_for_{num_bell_pairs}_pairs]"
@@ -173,7 +172,7 @@ def generate_swapping_config(
         f"**.memory_z_error_rate = {p_decoherence}",
     ]
     other_params = [
-        "repeat = 25",
+        "repeat = 30",
         "seed-set =  ${repetition}",
         "**.photon_detection_per_second = 1000000000 # 1GHz",
         "**.qrsa.hm.link_tomography = false",
@@ -220,13 +219,13 @@ def generate_purification_experiment_config(
         channel_error_single_prob = 0
 
     initial_fidelity = round(initial_link_fidelity, 6)
-    initial_f_str = str(initial_fidelity)[2:] if initial_fidelity != 1 else 1
+    initial_f_str = str(initial_fidelity)[2:] if initial_fidelity != 1 else 'unit'
 
     coherence_time_str = "inf"
     if with_decoherence:
         coherence_time_str = str(coherence_time_in_mu_s).split(".")[0]
     p_decoherence = (
-        get_p_from_decoherence_time(coherence_time_in_mu_s) if with_decoherence else 0
+        get_p_memory_channel_from_coherence_time(coherence_time_in_mu_s) if with_decoherence else 0
     )
 
     config_name = f"[Config purification_validation_with_{coherence_time_str}_coherence_for_{num_bellpairs}_pairs_with_link_fidelity_{initial_f_str}]"
@@ -242,7 +241,7 @@ def generate_purification_experiment_config(
         f"**.channel_y_error_rate = {channel_error_single_prob}",
     ]
     other_params = [
-        "repeat = 25",
+        "repeat = 30",
         "seed-set =  ${repetition}",
         "sim-time-limit = 1000s",
         "**.qrsa.hm.link_tomography = false",
@@ -344,17 +343,17 @@ config_exp_2_varying_bsa_dist = [
 
 # model validation 0.1 model validation: varying CNOT error; fixed meas error at 0.1
 config_model_validation_varying_cnot_err = [
-    generate_swapping_config(10_000, p_cnot, fixed_meas_err, False, 0, False)
+    generate_swapping_config(100_000, p_cnot, fixed_meas_err, False, 0, False)
     for p_cnot in list(np.linspace(0, 1, 41))
 ]
 # model validation 0.2: varying measurement error; fixed cnot error at 0.05
 config_model_validation_varying_meas_err = [
-    generate_swapping_config(10_000, fixed_cnot_err, p_meas, False, 0, False)
+    generate_swapping_config(100_000, fixed_cnot_err, p_meas, False, 0, False)
     for p_meas in list(np.linspace(0, 1, 41))
 ]
 # model validation 0.3: varying coherence time; fixed cnot error at 0.05 and meas error at 0.1
 config_model_validation_varying_coherence = [
-    generate_swapping_config(10_000, fixed_cnot_err, fixed_meas_err, True, coh_time, False)
+    generate_swapping_config(100_000, fixed_cnot_err, fixed_meas_err, True, coh_time, False)
     for coh_time in list(np.round(1000 * np.logspace(0, 2, 40, endpoint=True)).astype(int))
 ]
 
@@ -363,13 +362,13 @@ config_model_validation_varying_coherence = [
 
 # experiment 3.1: varying coherence time and varying cnot error; no other errors.
 config_exp_3_varying_cnot_varying_coherence_adjusted = [
-    generate_swapping_config(10_000, p_cnot, 0, coh_time != 0, coh_time, True)
+    generate_swapping_config(100_000, p_cnot, 0, coh_time != 0, coh_time, True)
     for coh_time in memory_coherence_time_params
     for p_cnot in list(15 / 16 * np.linspace(0, 1, 41))
 ]
 # experiment 3.2: varying coherence time and varying meas error; no other errors.
-config_exp_3_varying_cnot_varying_coherence_adjusted = [
-    generate_swapping_config(10_000, 0, p_meas, coh_time != 0, coh_time, True)
+config_exp_3_varying_meas_varying_coherence_adjusted = [
+    generate_swapping_config(100_000, 0, p_meas, coh_time != 0, coh_time, True)
     for coh_time in memory_coherence_time_params
     for p_meas in list(np.linspace(0, 1, 41))
 ]
@@ -410,7 +409,8 @@ write_run_commands_to_bash_script("cross-validation-sim-exp-0-model-validation.s
 confignames = write_config(
     "cross_validation_config_experiment_3.ini",
     [
-        *config_exp_3_varying_cnot_varying_coherence_adjusted
+        *config_exp_3_varying_cnot_varying_coherence_adjusted,
+        *config_exp_3_varying_meas_varying_coherence_adjusted,
     ],
 )
 write_run_commands_to_bash_script("cross-validation-sim-exp-3.sh", "cross_validation_config_experiment_3.ini", confignames, "cross-validation/exp3")
