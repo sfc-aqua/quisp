@@ -1,6 +1,11 @@
 import os
-import numpy as np
+import re
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from experiment_config_generator import get_p_memory_channel_from_coherence_time
 
 ######################### CONSTANTS #########################
 # Speed of light in optical fiber (m/s)
@@ -252,6 +257,86 @@ def get_analytical_values_with_decoherence(
     return analytical_times, analytical_probabilities, analytical_fidelities
 
 
+def get_swap_fidelity(p_cnot: float, p_meas: float) -> float:
+    p_no_error = (1 - p_cnot) * (1 - p_meas) ** 2
+    p_cnot_err = 3 / 15 * p_cnot * (1 - p_meas) ** 2
+    p_single_meas_err = 8 / 15 * p_cnot * (1 - p_meas) * p_meas
+    p_two_meas_err = 4 / 15 * p_cnot * p_meas**2
+    return p_no_error + p_cnot_err + p_single_meas_err + p_two_meas_err
+
+
+def get_fidelity_decay_factor_from_decoherence(
+    total_time_mu_s: int, coherence_time: int
+) -> float:
+    """Returns the fidelity factor of total effect from decoherence.
+    This is an approximation and a trick utilizing stabilizer by moving the memory error channel to always
+    act on idling memories; e.g., photons are always perfect, memories at swapper are perfect by multiplying
+    stabilizer element to move the effect of noise to end nodes."""
+    # Constant for QuISP's 1/e definition
+    kappa = -np.log((4 / np.e - 1) / 3)
+    decay_factor = np.exp(-kappa * (total_time_mu_s / coherence_time))
+
+    return 0.25 + 0.75 * decay_factor
+
+
+def get_analytical_fidelity_for_entanglement_swap_experiment(
+    p_cnot: float, p_meas: float, t_coh: int, with_deterministic_link: bool = False
+) -> float:
+    """Returns expected fidelity for entanglement swap request given:
+    - error probability of CNOT
+    - error probability of measurement
+    - coherence time in microsecond"""
+    fidelity_swap = get_swap_fidelity(p_cnot, p_meas)
+    fidelity_mem = 1
+
+    # t is time taken (in microsecond) for 1 trip from alice (bob) to repeater (L_0).
+    # not to be confused with L (overall distance)
+    t = round(2 * L_HALF_M_SWAP / C_FIBER_M_S * 1_000_000)
+    p_link = (
+        0.5 * photon_arrival_probability_from_km_distance(L_HALF_M_SWAP // 1000) ** 2
+    )
+
+    if t_coh != 0:
+        fidelity_mem = 0
+        t_round = round(10 * T_SEP_S * 1_000_000 + t)
+        for i in range(20):
+            f_stale = get_fidelity_decay_factor_from_decoherence(
+                # first pair minimum time
+                2 * t
+                # fisrt pair additional wait time
+                + 2 * t_round * i
+                # second pair minimum time
+                + 2 * t
+                # e2e pair time after swap
+                + 2 * t,
+                t_coh,
+            )
+            fidelity_mem += p_link * (1 - p_link) ** i * f_stale
+
+    f_total = (
+        fidelity_mem * fidelity_swap + ((1 - fidelity_mem) * (1 - fidelity_swap)) / 3.0
+    )
+    return f_total
+
+
+def get_analytical_completion_time_link_request(
+    num_mems: int, num_pairs: int, alice_dist_km: int, bob_dist_km: int
+) -> float:
+    """Returns expected time to complete the request"""
+    L = alice_dist_km + bob_dist_km
+    d = max(alice_dist_km, bob_dist_km)
+    p_success = (
+        photon_arrival_probability_from_km_distance(alice_dist_km)
+        * photon_arrival_probability_from_km_distance(bob_dist_km)
+        * 0.5
+    )
+    expected_rounds = np.ceil(num_pairs / (num_mems * p_success))
+    T_0 = 1000 * d / C_FIBER_M_S
+    T_setup = 1000 * (2 * L + d) / C_FIBER_M_S
+    T_round = 2 * T_0 + 10 * T_SEP_S + (num_mems - 1) * T_SEP_S
+    return T_setup + expected_rounds * T_round
+
+
 ######################### FILE EXTRACTION HELPERS #########################
 
 
@@ -284,11 +369,13 @@ def extract_lines_below_keyword(fn: str, kw: str) -> list[str]:
 
 
 def extract_completion_time(fn: str):
+    """Returns mean and std of completion time found in the log file (given fn string)"""
     lines = extract_lines_by_keyword(fn, "sim time:")
     completion_times = []
     for line in lines:
         try:
             t = float(line.split("sim time: ")[1].split(";")[0].strip())
+            # We assume that the link start time (first BSA message) is sent at 10.00s.
             completion_times.append(t - 10)
         except IndexError:
             continue
@@ -299,6 +386,7 @@ def extract_completion_time(fn: str):
 
 
 def extract_fidelity(fn: str):
+    """Returns mean and std of fidelities found in the log file (given fn string)"""
     lines = extract_lines_by_keyword(fn, "Fidelity=")
     fidelities = []
     for line in lines:
@@ -331,231 +419,199 @@ def extract_purification_success(fn: str, target_count: int, num_memories: int =
     return np.mean(total_events), np.std(total_events)
 
 
-######################### MAIN SCRIPT #########################
+######################### LOG EXTRACTION TO CSV #########################
+experiment_0_file_pattern = re.compile(
+    r"swapping_validation_cnot_(\d+)_meas_(\d+)_with_(\d+|inf)_coherence_time_for_(\d+)_pairs"
+)
+experiment_1_file_pattern = re.compile(
+    r"cross_validation_mim_link_imbalanced_10km_10km_(\d+)_memories_for_(\d+)"
+)
+experiment_2_file_pattern = re.compile(
+    r"cross_validation_mim_link_imbalanced_(\d+)km_(\d+)km_1_memories_for_(\d+)"
+)
+experiment_3_file_pattern = re.compile(
+    r"swapping_validation_cnot_(\d+)_meas_(\d+)_with_(\d+|inf)_coherence_time_for_(\d+)_pairs"
+)
+experiment_4_file_pattern = re.compile(
+    r"purification_validation_with_(\d+|inf)_coherence_for_(\d+)_pairs_with_link_fidelity_(\d+|unit)"
+)
 
-# Define paths
 base_path = os.path.dirname(__file__)
-without_decoherence_long = [
-    f"/cross-validation/no-error/long/purification-fidelity-no-error-initial-fidelity-{i}"
-    for i in range(60, 101, 2)
-]
-without_decoherence_short = [
-    f"/cross-validation/no-error/short/purification-fidelity-no-error-initial-fidelity-{i}"
-    for i in range(60, 101, 2)
-]
-short_time_files = [
-    f"/cross-validation/short-1000-purification-fidelity-no-error-initial-fidelity-{i}"
-    for i in range(60, 101, 2)
-]
-with_18ms_decoherence_short = [
-    f"/cross-validation/18ms/short/purification-fidelity-with-18ms-initial-fidelity-{i}"
-    for i in range(60, 101, 2)
-]
-with_18ms_decoherence_long = [
-    f"/cross-validation/18ms/long/purification-fidelity-with-18ms-initial-fidelity-{i}"
-    for i in range(60, 101, 2)
-]
-with_55ms_decoherence_short = [
-    f"/cross-validation/55ms/short/purification-fidelity-with-55ms-initial-fidelity-{i}"
-    for i in range(60, 101, 2)
-]
-with_55ms_decoherence_long = [
-    f"/cross-validation/55ms/long/purification-fidelity-with-55ms-initial-fidelity-{i}"
-    for i in range(60, 101, 2)
-]
+base_path = str(Path(base_path).parents[0])
+base_path = f"{base_path}/cross-validation"
 
-# --- SELECT SCENARIO ---
-# selected_scenario = without_decoherence_long
-# selected_scenario = without_decoherence_short
-selected_scenario = with_18ms_decoherence_long
-# selected_scenario = with_55ms_decoherence_long
-# selected_scenario = with_18ms_decoherence_short
+# extract logs of exp 1
+exp_1_base_path = f"{base_path}/exp1"
+exp_1_data = []
 
-# number_of_requested_bellpairs = 500 # short
-number_of_requested_bellpairs = 100_000  # long
-
-# --- DETECT COHERENCE TIME ---
-scenario_name = selected_scenario[0]
-if "no-error" in scenario_name:
-    T_COH = np.inf
-    scenario_title = "Ideal Memories"
-elif "18ms" in scenario_name:
-    T_COH = 0.018  # 18ms
-    scenario_title = "18ms Coherence"
-elif "55ms" in scenario_name:
-    T_COH = 0.055  # 55ms
-    scenario_title = "55ms Coherence"
-else:
-    T_COH = np.inf
-    scenario_title = "Unknown Coherence"
-
-print(f"Processing Scenario: {scenario_title}")
-
-# number_of_requested_bellpairs = 500 # short
-# number_of_requested_bellpairs = 100_000 # long
-
-# --- Extract Simulation Data ---
-abs_files = [os.path.join(base_path, rel.lstrip("/")) for rel in selected_scenario]
-initial_fidelities = [i / 100 for i in range(60, 101, 2)]
-
-# Note: Using long files for fidelity/prob, but short files for time (as per your comment in original code)
-# If you want to use long files for everything, ensure completion_times points to long_completion_times
-long_completion_times = [
-    extract_completion_time(os.path.join(base_path, fn.lstrip("/")))
-    for fn in selected_scenario
-]
-# Use long completion times as default based on your snippet
-completion_times_raw = long_completion_times
-
-fidelities_raw = [
-    extract_fidelity(os.path.join(base_path, fn.lstrip("/")))
-    for fn in selected_scenario
-]
-success_rates_raw = [
-    extract_purification_success(
-        os.path.join(base_path, fn.lstrip("/")), number_of_requested_bellpairs
+for fn in os.listdir(exp_1_base_path):
+    match = experiment_1_file_pattern.match(fn)
+    if match is None:
+        continue
+    num_mems, num_pairs = map(int, match.groups())
+    mu, sigma = extract_completion_time(os.path.join(exp_1_base_path, fn.lstrip("/")))
+    exp_1_data.append(
+        {
+            "num_mem": num_mems,
+            "num_bellpairs": num_pairs,
+            "completion_time_mean": mu,
+            "completion_time_std": sigma,
+            "completion_time_analytical": get_analytical_completion_time_link_request(
+                num_mems, num_pairs, 10, 10
+            ),
+        }
     )
-    for fn in selected_scenario
-]
+df_exp1 = pd.DataFrame(exp_1_data)
+df_exp1.sort_values("num_mem").to_csv(
+    f"{os.path.dirname(__file__)}/exp1.csv", index=False
+)
 
-# Unzip data
-completion_times, completion_times_err = map(list, zip(*completion_times_raw))
-fidelities, fidelities_err = map(list, zip(*fidelities_raw))
-success_rates, success_rates_err = map(list, zip(*success_rates_raw))
+# extract logs of exp 2
+exp_2_base_path = f"{base_path}/exp2"
+exp_2_data = []
 
-print("=========================")
-for sr in success_rates_err:
-    print(sr)
-print("=========================")
-
-
-# --- Calculate Analytical Data ---
-N_REQUESTED_PAIRS = number_of_requested_bellpairs
-WAIT_TIME_S = 1e-8
-initial_fidelities_arr = np.linspace(0.6, 1.0, 21)
-
-ana_completion_times, ana_success_rates, ana_fidelities = (
-    get_analytical_values_with_decoherence(
-        N_REQUESTED_PAIRS, WAIT_TIME_S, initial_fidelities_arr, T_COH
+for fn in os.listdir(exp_2_base_path):
+    match = experiment_2_file_pattern.match(fn)
+    if match is None:
+        continue
+        # raise RuntimeError("cannot find files for exp 1 to extract.")
+    alice_dist, bob_dist, num_pairs = map(int, match.groups())
+    mu, sigma = extract_completion_time(os.path.join(exp_2_base_path, fn.lstrip("/")))
+    exp_2_data.append(
+        {
+            "alice_dist": alice_dist,
+            "bob_dist": bob_dist,
+            "num_bellpairs": num_pairs,
+            "completion_time_mean": mu,
+            "completion_time_std": sigma,
+            "completion_time_analytical": get_analytical_completion_time_link_request(
+                1, num_pairs, alice_dist, bob_dist
+            ),
+        }
     )
+df_exp2 = pd.DataFrame(exp_2_data)
+df_exp2.sort_values("alice_dist").to_csv(
+    f"{os.path.dirname(__file__)}/exp2.csv", index=False
 )
 
-for i in range(len(ana_completion_times)):
-    print(f"{ana_completion_times[i]}, {ana_fidelities[i]}, {ana_success_rates[i]}")
 
-# --- Console Output ---
-print(f"Initial Fid | Time (Sim) +/- Err | Fid (Sim) +/- Err | Succ (Sim) +/- Err")
-for i in range(len(completion_times)):
-    print(
-        f"{initial_fidelities[i]:.2f} | {completion_times[i]:.4f} +/- {completion_times_err[i]:.4f} | {fidelities[i]:.4f} +/- {fidelities_err[i]:.4f} | {success_rates[i]:.4f} +/- {success_rates_err[i]:.4f}"
+# extract logs of exp 3
+exp_3_base_path = f"{base_path}/exp3"
+exp_3_data = []
+
+for fn in os.listdir(exp_3_base_path):
+    match = experiment_3_file_pattern.match(fn)
+    if match is None:
+        continue
+        # raise RuntimeError("cannot find files for exp 1 to extract.")
+    p_cnot, p_meas, coh_time, num_pairs = match.groups()
+    # correcting the data from file name
+    coh_time = int(coh_time) if coh_time != "inf" else 0
+    p_cnot = float(f"0.{p_cnot}")
+    p_meas = float(f"0.{p_meas}")
+    num_pairs = int(num_pairs)
+
+    mu, sigma = extract_fidelity(os.path.join(exp_3_base_path, fn.lstrip("/")))
+    exp_3_data.append(
+        {
+            "num_bellpairs": num_pairs,
+            "cnot_err_prob": p_cnot,
+            "meas_err_prob": p_meas,
+            "coherence_time": coh_time,
+            "fidelity_mean": mu,
+            "fidelity_std": sigma,
+            "fidelity_analytical": get_analytical_fidelity_for_entanglement_swap_experiment(
+                p_cnot, p_meas, coh_time
+            ),
+        }
+    )
+df_exp3 = pd.DataFrame(exp_3_data)
+df_exp3.sort_values(["num_bellpairs", "coherence_time", "cnot_err_prob", "meas_err_prob"]).to_csv(
+    f"{os.path.dirname(__file__)}/exp3.csv", index=False
+)
+
+# extract logs of exp 0 (validation of error model)
+exp_0_base_path = f"{base_path}/validation"
+exp_0_data = []
+
+for fn in os.listdir(exp_0_base_path):
+    match = experiment_0_file_pattern.match(fn)
+    if match is None:
+        continue
+        # raise RuntimeError("cannot find files for exp 1 to extract.")
+    p_cnot, p_meas, coh_time, num_pairs = match.groups()
+    # correcting the data from file name
+    coh_time = int(coh_time) if coh_time != "inf" else 0
+    p_cnot = float(f"0.{p_cnot}")
+    p_meas = float(f"0.{p_meas}")
+    num_pairs = int(num_pairs)
+
+    mu, sigma = extract_fidelity(os.path.join(exp_0_base_path, fn.lstrip("/")))
+    exp_0_data.append(
+        {
+            "num_bellpairs": num_pairs,
+            "cnot_err_prob": p_cnot,
+            "meas_err_prob": p_meas,
+            "coherence_time": coh_time,
+            "fidelity_mean": mu,
+            "fidelity_std": sigma,
+            "fidelity_analytical": get_analytical_fidelity_for_entanglement_swap_experiment(
+                p_cnot, p_meas, coh_time
+            ),
+        }
+    )
+df_exp0 = pd.DataFrame(exp_0_data)
+df_exp0.sort_values(
+    ["num_bellpairs", "coherence_time", "cnot_err_prob", "meas_err_prob"]
+).to_csv(f"{os.path.dirname(__file__)}/exp0.csv", index=False)
+
+
+# extract logs of exp 4
+exp_4_base_path = f"{base_path}/exp4"
+exp_4_data = []
+
+for fn in os.listdir(exp_4_base_path):
+    match = experiment_4_file_pattern.match(fn)
+    if match is None:
+        continue
+        # raise RuntimeError("cannot find files for exp 1 to extract.")
+    coh_time, num_pairs, link_fidelity = match.groups()
+    # correcting the data from file name
+    coh_time = int(coh_time) if coh_time != "inf" else 0
+    num_pairs = int(num_pairs)
+    if link_fidelity != "unit":
+        link_fidelity = float(f"0.{link_fidelity}")
+    else:
+        link_fidelity = 1.0
+
+    f_mu, f_sigma = extract_fidelity(os.path.join(exp_4_base_path, fn.lstrip("/")))
+    t_mu, t_sigma = extract_completion_time(
+        os.path.join(exp_4_base_path, fn.lstrip("/"))
+    )
+    p_succ_mu, p_succ_sigma = extract_purification_success(
+        os.path.join(exp_4_base_path, fn.lstrip("/")), num_pairs
     )
 
-
-# --- Plotting ---
-fig, ax1 = plt.subplots(figsize=(12, 7))
-
-# Plot 1: Completion Times (Left Y-axis)
-color1 = "tab:red"
-ax1.set_xlabel("Initial Fidelity", fontsize=14)
-ax1.set_ylabel("Completion Time (s)", color=color1, fontsize=14)
-(p1_ana,) = ax1.plot(
-    initial_fidelities_arr,
-    ana_completion_times,
-    color=color1,
-    linestyle="-",
-    label="Analytical Time",
+    f_ana, t_ana, p_succ_ana = get_analytical_values_with_decoherence(
+        num_pairs, 1e-8, np.array([link_fidelity]), coh_time
+    )
+    exp_4_data.append(
+        {
+            "num_bellpairs": num_pairs,
+            "coherence_time": coh_time,
+            "link_fidelity": link_fidelity,
+            "fidelity_mean": f_mu,
+            "fidelity_std": f_sigma,
+            "completion_time_mean": t_mu,
+            "completion_time_std": t_sigma,
+            "purification_success_prob_mean": p_succ_mu,
+            "purification_success_prob_std": p_succ_sigma,
+            "fidelity_analytical": get_analytical_fidelity_for_entanglement_swap_experiment(
+                p_cnot, p_meas, coh_time
+            ),
+        }
+    )
+df_exp4 = pd.DataFrame(exp_4_data)
+df_exp4.sort_values(["coherence_time", "num_bellpairs", "link_fidelity"]).to_csv(
+    f"{os.path.dirname(__file__)}/exp4.csv", index=False
 )
-p1_sim = ax1.errorbar(
-    initial_fidelities,
-    completion_times,
-    yerr=completion_times_err,
-    color=color1,
-    fmt="o",
-    capsize=6,
-    label="QuISP Time",
-)
-ax1.tick_params(axis="y", labelcolor=color1)
-ax1.grid(True, linestyle="--", alpha=0.6)
-
-# Plot 2: Fidelities (Right Y-axis 1)
-ax2 = ax1.twinx()
-color2 = "tab:blue"
-ax2.set_ylabel("Final Fidelity", color=color2, fontsize=14)
-(p2_ana,) = ax2.plot(
-    initial_fidelities_arr,
-    ana_fidelities,
-    color=color2,
-    linestyle="--",
-    label="Analytical Fidelity",
-)
-p2_sim = ax2.errorbar(
-    initial_fidelities,
-    fidelities,
-    yerr=fidelities_err,
-    color=color2,
-    fmt="s",
-    capsize=6,
-    label="QuISP Fidelity",
-)
-ax2.tick_params(axis="y", labelcolor=color2)
-
-# Plot 3: Reference Fidelity Line (y=x)
-(p_ref,) = ax2.plot(
-    initial_fidelities_arr,
-    initial_fidelities_arr,
-    color="black",
-    linestyle=":",
-    alpha=0.6,
-    label="Ref Fidelity (y=x)",
-)
-
-# Plot 4: Success Rates (Right Y-axis 2)
-ax3 = ax1.twinx()
-color3 = "tab:green"
-# Offset the third y-axis to not overlap
-ax3.spines["right"].set_position(("outward", 60))
-ax3.set_ylabel("Success Rate", color=color3, fontsize=14)
-(p3_ana,) = ax3.plot(
-    initial_fidelities_arr,
-    ana_success_rates,
-    color=color3,
-    linestyle="-.",
-    label="Analytical Success Rate",
-)
-p3_sim = ax3.errorbar(
-    initial_fidelities,
-    success_rates,
-    yerr=success_rates_err,
-    color=color3,
-    fmt="^",
-    capsize=6,
-    label="QuISP Success Rate",
-)
-ax3.tick_params(axis="y", labelcolor=color3)
-
-# Plot Limits & Title
-# Set reasonable limits for visualization (adjust as needed based on data)
-y_lim_range = (0.5, 1.05)
-ax2.set_ylim(y_lim_range)
-ax3.set_ylim(y_lim_range)
-
-plt.title(f"Performance Metrics vs. Initial Fidelity ({scenario_title})", fontsize=16)
-
-# Combined Legend
-handles = [p1_ana, p1_sim, p2_ana, p2_sim, p_ref, p3_ana, p3_sim]
-fig.legend(
-    handles=handles,
-    loc="upper center",
-    bbox_to_anchor=(0.5, 0.95),
-    ncol=4,
-    frameon=False,
-)
-
-fig.tight_layout()
-
-# Save
-filename = f'purification_{scenario_title.replace(" ", "_").lower()}_performance.png'
-plt.savefig(filename, dpi=300, bbox_inches="tight")
-print(f"Plot saved to {filename}")
-
-plt.show()
