@@ -22,7 +22,7 @@ def get_channel_error_from_link_werner_noise(fidelity, dist_in_km) -> float:
         p = (left + right) / 2
         iter_count += 1
         if iter_count > 100:
-            print("exceed max iteration")
+            print("exceed max iteration in getting channel error from link werner noise")
             break
         Q = np.matrix(
             [
@@ -80,7 +80,10 @@ def get_p_from_decoherence_time(decoherence_time_mu_s: int) -> float:
         p = (left + right) / 2
         iter_count += 1
         if iter_count > 100:
-            print("exceed max iteration")
+            print(f"exceed max iteration in getting channel error for decoherence: given {decoherence_time_mu_s}")
+            print(f"we got p (memory) = {p}")
+            print(f"    expected (fidelity has decohere): {1/np.e}")
+            print(f"    obtained after T time has passed: {Qt[0, 0]}")
             break
         Q = np.matrix(
             [
@@ -127,6 +130,7 @@ def generate_imbalanced_mim_config(
 
 
 def generate_swapping_config(
+    num_bell_pairs: int,
     cnot_error_prob: float,
     measurement_error_prob: float,
     with_decoherence: bool,
@@ -155,7 +159,7 @@ def generate_swapping_config(
         get_p_from_decoherence_time(coherence_time_in_mu_s) if with_decoherence else 0
     )
 
-    config_name = f"[Config swapping_validation_cnot_{cnot_error_prob_str}_meas_{measurement_error_prob_str}_with_{coherence_time_str}_coherence_time]"
+    config_name = f"[Config swapping_validation_cnot_{cnot_error_prob_str}_meas_{measurement_error_prob_str}_with_{coherence_time_str}_coherence_time_for_{num_bell_pairs}_pairs]"
     network_name = "network = networks.cross_validation_swapping"
     error_params = [
         f"**.cnot_gate_error_rate = {cnot_error_prob}",
@@ -169,13 +173,17 @@ def generate_swapping_config(
         f"**.memory_z_error_rate = {p_decoherence}",
     ]
     other_params = [
-        "repeat = 200",
+        "repeat = 25",
         "seed-set =  ${repetition}",
         "**.photon_detection_per_second = 1000000000 # 1GHz",
         "**.qrsa.hm.link_tomography = false",
         "**.qrsa.hm.initial_purification = 0",
         '**.qrsa.hm.purification_type = ""',
         "*.alice.is_initiator = true",
+        #
+        "**.buffers = 1",
+        f"**.app.number_of_bellpair = {num_bell_pairs}",
+        "**.qrsa.hm.num_measure = 10",
     ]
     return [config_name, network_name, *error_params, *other_params]
 
@@ -274,14 +282,26 @@ def write_run_commands_to_bash_script(filename: str, ini_file: str, configs: lis
     dirname = str(Path(dirname).parents[0])
     filename = os.path.join(dirname, filename)
 
-    pre_commands = [f"mkdir -p {result_dest}"]
-    run_commands = [f"""
+    pre_commands = [f"mkdir -p {result_dest}\n", "pids=()\n\n"]
+    run_commands = []
+    for i, config in enumerate(configs):
+        run_commands.append(f"""
 echo "Running {config}"
 ./quisp -n "./networks:./channels:./modules:./simulations" \\
     -i ./images ./simulations/{ini_file} -u Cmdenv \\
     -c "{config}" --cmdenv-status-frequency=10s > "{result_dest}/{config.replace('-', '_')}" &
 pids+=($!)
-    """ for config in configs]
+        """)
+        if i % 16 == 15:
+            run_commands.append("""
+echo "waiting for experiments"
+for pid in ${pids[*]};
+do
+    echo "waiting on pid = $pid"
+    wait $pid
+done
+pids=()
+""")
     post_commands = [
         """
 echo "waiting for experiments"
@@ -302,7 +322,7 @@ pids=()
             the_file.write(cmd)
 
 
-memory_coherence_time_params = [18 * 1000, 55 * 1000]  # in milliseconds
+memory_coherence_time_params = [0, 18 * 1000, 55 * 1000]  # in milliseconds
 link_fidelities = list(np.linspace(0.6, 1, 21))
 
 fixed_cnot_err = 0.05
@@ -322,43 +342,42 @@ config_exp_2_varying_bsa_dist = [
     for bob_dist in range(11)
 ]
 
-# experiment 3.1: varying CNOT error
-config_exp_3_varying_cnot_err = [
-    generate_swapping_config(p_cnot, fixed_meas_err, False, 0, False)
+# model validation 0.1 model validation: varying CNOT error; fixed meas error at 0.1
+config_model_validation_varying_cnot_err = [
+    generate_swapping_config(10_000, p_cnot, fixed_meas_err, False, 0, False)
     for p_cnot in list(np.linspace(0, 1, 41))
 ]
+# model validation 0.2: varying measurement error; fixed cnot error at 0.05
+config_model_validation_varying_meas_err = [
+    generate_swapping_config(10_000, fixed_cnot_err, p_meas, False, 0, False)
+    for p_meas in list(np.linspace(0, 1, 41))
+]
+# model validation 0.3: varying coherence time; fixed cnot error at 0.05 and meas error at 0.1
+config_model_validation_varying_coherence = [
+    generate_swapping_config(10_000, fixed_cnot_err, fixed_meas_err, True, coh_time, False)
+    for coh_time in list(np.round(1000 * np.logspace(0, 2, 40, endpoint=True)).astype(int))
+]
 
-# experiment 3.2: varying measurement error
-config_exp_3_varying_meas_err = [
-    generate_swapping_config(fixed_cnot_err, p_meas, False, 0, False)
+## Below are experiments where we need to adjust CNOT error probability and coherence time to
+##     SeQUeNCe's error description
+
+# experiment 3.1: varying coherence time and varying cnot error; no other errors.
+config_exp_3_varying_cnot_varying_coherence_adjusted = [
+    generate_swapping_config(10_000, p_cnot, 0, coh_time != 0, coh_time, True)
+    for coh_time in memory_coherence_time_params
+    for p_cnot in list(15 / 16 * np.linspace(0, 1, 41))
+]
+# experiment 3.2: varying coherence time and varying meas error; no other errors.
+config_exp_3_varying_cnot_varying_coherence_adjusted = [
+    generate_swapping_config(10_000, 0, p_meas, coh_time != 0, coh_time, True)
+    for coh_time in memory_coherence_time_params
     for p_meas in list(np.linspace(0, 1, 41))
 ]
 
-# experiment 3.3: varying coherence time
-config_exp_3_varying_coherence = [
-    generate_swapping_config(fixed_cnot_err, fixed_meas_err, True, coh_time, False)
-    for coh_time in memory_coherence_time_params
-]
-
-# experiment 3.4: varying coherence time adjusted for sequence; both for CNOT error and coherence time
-config_exp_3_varying_coherence_adjusted = [
-    generate_swapping_config(
-        fixed_cnot_err_adjusted, fixed_meas_err, True, coh_time, True
-    )
-    for coh_time in memory_coherence_time_params
-]
-
 # experiment 4: varying link fidelity with inf coherence time; only with adjusted coherence time with SeQUeNCe
-config_exp_4_varying_link_fidelities_inf_coh = [
-    generate_purification_experiment_config(50_000, False, 0, False, f_link)
-    for f_link in link_fidelities
-]
-config_exp_4_varying_link_fidelities_18ms_coh = [
-    generate_purification_experiment_config(50_000, True, 18_000, True, f_link)
-    for f_link in link_fidelities
-]
-config_exp_4_varying_link_fidelities_55ms_coh = [
-    generate_purification_experiment_config(50_000, True, 55_000, True, f_link)
+config_exp_4_varying_link_fidelities_adjusted = [
+    generate_purification_experiment_config(100_000, coh_time != 0, coh_time, True, f_link)
+    for coh_time in memory_coherence_time_params
     for f_link in link_fidelities
 ]
 
@@ -379,11 +398,19 @@ confignames = write_config(
 write_run_commands_to_bash_script("cross-validation-sim-exp-2.sh", "cross_validation_config_experiment_2.ini", confignames, "cross-validation/exp2")
 
 confignames = write_config(
+    "cross_validation_config_experiment_0_model_validation.ini",
+    [
+        *config_model_validation_varying_cnot_err,
+        *config_model_validation_varying_meas_err,
+        *config_model_validation_varying_coherence,
+    ],
+)
+write_run_commands_to_bash_script("cross-validation-sim-exp-0-model-validation.sh", "cross_validation_config_experiment_0_model_validation.ini", confignames, "cross-validation/validation")
+
+confignames = write_config(
     "cross_validation_config_experiment_3.ini",
     [
-        *config_exp_3_varying_cnot_err,
-        *config_exp_3_varying_meas_err,
-        *config_exp_3_varying_coherence,
+        *config_exp_3_varying_cnot_varying_coherence_adjusted
     ],
 )
 write_run_commands_to_bash_script("cross-validation-sim-exp-3.sh", "cross_validation_config_experiment_3.ini", confignames, "cross-validation/exp3")
@@ -391,9 +418,7 @@ write_run_commands_to_bash_script("cross-validation-sim-exp-3.sh", "cross_valida
 confignames = write_config(
     "cross_validation_config_experiment_4.ini",
     [
-        *config_exp_4_varying_link_fidelities_inf_coh,
-        *config_exp_4_varying_link_fidelities_18ms_coh,
-        *config_exp_4_varying_link_fidelities_55ms_coh,
+        *config_exp_4_varying_link_fidelities_adjusted
     ],
 )
 write_run_commands_to_bash_script("cross-validation-sim-exp-4.sh", "cross_validation_config_experiment_4.ini", confignames, "cross-validation/exp4")
