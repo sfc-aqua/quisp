@@ -44,9 +44,9 @@ void BSAController::initialize() {
     long long photon_per_second = getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
     long long time_between_photon_in_atto = ((long long) 1000000000000000000) / photon_per_second;
     time_interval_between_photons = SimTime(time_between_photon_in_atto, SIMTIME_AS);
-    std::cout << "raw rate given: " << getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue() << " hi hiiii \n";
+    std::cout << "raw rate given: " << getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue() << "\n";
     std::cout << "interval in attosecond " << time_between_photon_in_atto << " atto.s\n";
-    std::cout << "time interval: " << time_interval_between_photons << " hi hiiii \n";
+    std::cout << "time interval: " << time_interval_between_photons << "\n";
     simtime_t first_notification_timer = SimTime(par("initial_notification_timing_buffer").doubleValue());
     right_qnic = getExternalQNICInfoFromPort(1);
     offset_time_for_first_photon = calculateOffsetTimeFromDistance();
