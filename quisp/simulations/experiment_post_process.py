@@ -592,8 +592,8 @@ for fn in os.listdir(exp_4_base_path):
         os.path.join(exp_4_base_path, fn.lstrip("/")), num_pairs
     )
 
-    f_ana, t_ana, p_succ_ana = get_analytical_values_with_decoherence(
-        num_pairs, 1e-8, np.array([link_fidelity]), coh_time
+    t_ana, p_succ_ana, f_ana = get_analytical_values_with_decoherence(
+        num_pairs, 1e-8, np.array([link_fidelity]), coh_time / 1_000_000
     )
     exp_4_data.append(
         {
@@ -606,9 +606,9 @@ for fn in os.listdir(exp_4_base_path):
             "completion_time_std": t_sigma,
             "purification_success_prob_mean": p_succ_mu,
             "purification_success_prob_std": p_succ_sigma,
-            "fidelity_analytical": get_analytical_fidelity_for_entanglement_swap_experiment(
-                p_cnot, p_meas, coh_time
-            ),
+            "fidelity_analytical": f_ana[0],
+            "completion_time_analytical": t_ana[0],
+            "purification_success_prob_analytical": p_succ_ana[0],
         }
     )
 df_exp4 = pd.DataFrame(exp_4_data)
