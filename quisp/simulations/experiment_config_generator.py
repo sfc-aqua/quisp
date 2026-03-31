@@ -243,6 +243,7 @@ def generate_purification_experiment_config(
     other_params = [
         "repeat = 30",
         "seed-set =  ${repetition}",
+        "**.photon_detection_per_second = 1000000000 # 1GHz",
         "sim-time-limit = 1000s",
         "**.qrsa.hm.link_tomography = false",
         "**.qrsa.hm.initial_purification = 0",
@@ -343,17 +344,18 @@ config_exp_2_varying_bsa_dist = [
 
 # model validation 0.1 model validation: varying CNOT error; fixed meas error at 0.1
 config_model_validation_varying_cnot_err = [
-    generate_swapping_config(100_000, p_cnot, fixed_meas_err, False, 0, False)
+    generate_swapping_config(10_000, p_cnot, fixed_meas_err, False, 0, False)
     for p_cnot in list(np.linspace(0, 1, 41))
 ]
 # model validation 0.2: varying measurement error; fixed cnot error at 0.05
 config_model_validation_varying_meas_err = [
-    generate_swapping_config(100_000, fixed_cnot_err, p_meas, False, 0, False)
+    generate_swapping_config(10_000, fixed_cnot_err, p_meas, False, 0, False)
     for p_meas in list(np.linspace(0, 1, 41))
 ]
 # model validation 0.3: varying coherence time; fixed cnot error at 0.05 and meas error at 0.1
+#                       coherence times are in the range 1000 mu_s to 100_000 mu_s
 config_model_validation_varying_coherence = [
-    generate_swapping_config(100_000, fixed_cnot_err, fixed_meas_err, True, coh_time, False)
+    generate_swapping_config(10_000, fixed_cnot_err, fixed_meas_err, True, coh_time, False)
     for coh_time in list(np.round(1000 * np.logspace(0, 2, 40, endpoint=True)).astype(int))
 ]
 
