@@ -40,6 +40,10 @@ class TestModuleType : public cModuleType {
   std::string getCxxNamespaceForType(const char *type) const override { return "mock cxx namespace"; };
 #endif
 
+#if OMNETPP_VERSION >= 0x602
+  std::string getDocumentation() const override { return ""; };
+#endif
+
   const char *getSourceFileName() const override { return "no source"; };
   bool isInnerType() const override { return false; };
 

@@ -87,9 +87,17 @@ class StaticEnv : public omnetpp::cEnvir {
   cRNG *getRNG(int k) override;
 
   // output vectors
+#if OMNETPP_VERSION >= 0x601
+  void *registerOutputVector(const char *modulename, const char *vectorname, opp_string_map *attributes = nullptr) override { return nullptr; }
+#else
   void *registerOutputVector(const char *modulename, const char *vectorname) override { return nullptr; }
+#endif
   void deregisterOutputVector(void *vechandle) override {}
+#if OMNETPP_VERSION >= 0x601
+  void setVectorAttribute(void *vechandle, const char *name, const char *value) {}
+#else
   void setVectorAttribute(void *vechandle, const char *name, const char *value) override {}
+#endif
   bool recordInOutputVector(void *vechandle, simtime_t t, double value) override { return false; }
 
   // output scalars
@@ -134,6 +142,10 @@ class StaticEnv : public omnetpp::cEnvir {
   double getAnimationTime() const override { return 0; }
   double getAnimationSpeed() const override { return 0; }
   double getRemainingAnimationHoldTime() const override { return 0; }
+
+#if OMNETPP_VERSION >= 0x601
+  std::ostream& getOutputStream() override { return std::cout; }
+#endif
 
   // lifecycle listeners
   void addLifecycleListener(cISimulationLifecycleListener *listener) override {}

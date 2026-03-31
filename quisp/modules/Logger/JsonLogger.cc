@@ -24,14 +24,14 @@ void JsonLogger::setQNodeAddress(int addr) { qnode_address = addr; }
 
 void JsonLogger::logPacket(const std::string& event_type, omnetpp::cMessage const* const msg) {
   auto current_time = omnetpp::simTime();
-  _logger->info("\"simtime\": {}, \"event_type\": \"{}\", \"address\": \"{}\", {}", current_time, event_type, qnode_address, format(msg));
+  _logger->info("\"simtime\": {}, \"event_type\": \"{}\", \"address\": \"{}\", {}", current_time.str(), event_type, qnode_address, format(msg));
 }
 
 void JsonLogger::logQubitState(quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_busy, bool is_allocated) {
   auto current_time = omnetpp::simTime();
   _logger->info(
       "\"simtime\": {}, \"event_type\": \"QubitStateChange\", \"address\": \"{}\", \"qnic_type\": {}, \"qnic_index\": {}, \"qubit_index\": {}, \"busy\": {}, \"allocated\": {}",
-      current_time, qnode_address, qnic_type, qnic_index, qubit_index, is_busy, is_allocated);
+      current_time.str(), qnode_address, qnic_type, qnic_index, qubit_index, is_busy, is_allocated);
 }
 
 std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
@@ -78,7 +78,7 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
 void JsonLogger::logBellPairInfo(const std::string& event_type, int partner_addr, quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index) {
   auto current_time = omnetpp::simTime();
   _logger->info("\"simtime\": {}, \"event_type\": \"BellPair{}\", \"address\": \"{}\", \"partner_addr\": {}, \"qnic_type\": {}, \"qnic_index\": {}, \"qubit_index\": {}",
-                current_time, event_type, qnode_address, partner_addr, qnic_type, qnic_index, qubit_index);
+                current_time.str(), event_type, qnode_address, partner_addr, qnic_type, qnic_index, qubit_index);
 }
 
 }  // namespace quisp::modules::Logger
