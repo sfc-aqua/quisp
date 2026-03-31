@@ -19,6 +19,7 @@ using namespace quisp::runtime;
 using quisp::modules::RuleEngine;
 using quisp::runtime::QNodeAddr;
 using namespace quisp::messages;
+using quisp::backends::abstract::Basis;
 
 struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   RuntimeCallback(RuleEngine *re) : rule_engine(re), provider(re->provider) {}
@@ -30,17 +31,17 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
 
   MeasurementOutcome measureQubitX(IQubitRecord *qubit_rec) override {
     auto qubit = provider.getStationaryQubit(qubit_rec);
-    return MeasurementOutcome{.basis = 'X', .outcome_is_plus = qubit->measureX() == types::EigenvalueResult::PLUS_ONE};
+    return MeasurementOutcome{.basis = Basis::X, .outcome_is_plus = qubit->measureX() == types::EigenvalueResult::PLUS_ONE};
   }
 
   MeasurementOutcome measureQubitZ(IQubitRecord *qubit_rec) override {
     auto qubit = provider.getStationaryQubit(qubit_rec);
-    return MeasurementOutcome{.basis = 'Z', .outcome_is_plus = qubit->measureZ() == types::EigenvalueResult::PLUS_ONE};
+    return MeasurementOutcome{.basis = Basis::Z, .outcome_is_plus = qubit->measureZ() == types::EigenvalueResult::PLUS_ONE};
   }
 
   MeasurementOutcome measureQubitY(IQubitRecord *qubit_rec) override {
     auto qubit = provider.getStationaryQubit(qubit_rec);
-    return MeasurementOutcome{.basis = 'Y', .outcome_is_plus = qubit->measureY() == types::EigenvalueResult::PLUS_ONE};
+    return MeasurementOutcome{.basis = Basis::Y, .outcome_is_plus = qubit->measureY() == types::EigenvalueResult::PLUS_ONE};
   }
 
   void gateX(IQubitRecord *qubit_rec) override {
