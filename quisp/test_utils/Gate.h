@@ -31,9 +31,10 @@ class TestGate : public omnetpp::cGate {
  public:
   explicit TestGate(cModule *mod, const char *name);
   std::vector<cMessage *> messages;
+  void quiet_connectTo(cGate *target);  // To connect to a gate skipping all the listeners checks, which create problems if a full-fledged sim environment is not up.
 
  protected:
-  TempGate temp_gate;
+  TempGate *temp_gate;
   bool deliver(cMessage *msg, const omnetpp::SendOptions &options, simtime_t at) override;
 };
 
