@@ -28,6 +28,7 @@ using quisp::rules::Purification;
 using quisp::rules::PurType;
 using quisp::rules::Tomography;
 using quisp::rules::rs_converter::RuleSetConverter;
+using quisp::runtime::RuleSet;
 Program terminator{"terminator", {INSTR_RET_ReturnCode_{{ReturnCode::RS_TERMINATED}}}};
 Program always_pass{"cond", {INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}}}};
 class ActionExecutionTest : public testing::Test {
