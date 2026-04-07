@@ -87,9 +87,13 @@ class StaticEnv : public omnetpp::cEnvir {
   cRNG *getRNG(int k) override;
 
   // output vectors
-  void *registerOutputVector(const char *modulename, const char *vectorname) override { return nullptr; }
+  void *registerOutputVector(const char *modulename, const char *vectorname, opp_string_map *attributes = nullptr) override { 
+        return nullptr; 
+    }
   void deregisterOutputVector(void *vechandle) override {}
-  void setVectorAttribute(void *vechandle, const char *name, const char *value) override {}
+  void setVectorAttribute(void *vechandle, const char *name, const char *value) {
+        // Implementation if needed
+    }
   bool recordInOutputVector(void *vechandle, simtime_t t, double value) override { return false; }
 
   // output scalars
@@ -103,6 +107,7 @@ class StaticEnv : public omnetpp::cEnvir {
     unsupported();
     return nullptr;
   }
+  
   void releaseStreamForSnapshot(std::ostream *os) override { unsupported(); }
 
   // misc
