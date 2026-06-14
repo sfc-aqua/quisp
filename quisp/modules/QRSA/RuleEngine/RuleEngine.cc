@@ -167,18 +167,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
-  } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
-    // add actual process
-    auto serialized_ruleset = pkt->getRuleSet();
-    RuleSet ruleset(0, 0);
-    ruleset.deserialize_json(serialized_ruleset);
-    runtimes.acceptRuleSet(ruleset.construct());
-  } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
-    if (pkt->getApplication_type() != 0) error("This application is not recognized yet");
-    auto serialized_ruleset = pkt->getRuleSet();
-    RuleSet ruleset(0, 0);
-    ruleset.deserialize_json(serialized_ruleset);
-    runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
     handleStopEmitting(pkt);
   }
